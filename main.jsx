@@ -54,26 +54,37 @@ useEffect(() => {
         throw new Error(result.error || 'PayPal-Zahlung konnte nicht bestätigt werden')
       }
 
-      if (hasSupabase) {
-        await supabase
-          .from('participants')
-          .update({
-            payment_status: 'bezahlt',
-            payment_method: 'paypal',
-            payment_date: new Date().toISOString(),
-            payment_id: token
-          })
-          .eq('id', participantId)
-      }
-await fetch('/api/send-payment-email', {
-  method: 'POST',
-  headers: {
-    'Content-Type': 'application/json'
-  },
-  body: JSON.stringify({
-    email: participant.email,
-    firstname: participant.firstname,
-    lastname: participant.lastname
+      if if (hasSupabase) {
+  const { data: participant } = await supabase
+    .from('participants')
+    .select('*')
+    .eq('id', participantId)
+    .single()
+
+  await supabase
+    .from('participants')
+    .update({
+      payment_status: 'bezahlt',
+      payment_method: 'paypal',
+      payment_date: new Date().toISOString(),
+      payment_id: token
+    })
+    .eq('id', participantId)
+
+  if (participant?.email) {
+    await fetch('/api/send-payment-email', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        email: participant.email,
+        firstname: participant.firstname,
+        lastname: participant.lastname
+      })
+    })
+  }
+}
   })
 })
       setMessage('Zahlung erfolgreich bestätigt. Vielen Dank!')
