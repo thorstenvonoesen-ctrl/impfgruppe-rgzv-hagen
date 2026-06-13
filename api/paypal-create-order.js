@@ -1,3 +1,10 @@
+import { createClient } from '@supabase/supabase-js'
+
+const supabase = createClient(
+  process.env.VITE_SUPABASE_URL,
+  process.env.SUPABASE_SERVICE_ROLE_KEY
+)
+
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' })
@@ -22,11 +29,7 @@ export default async function handler(req, res) {
     const tokenData = await tokenRes.json()
 
     if (!tokenRes.ok) {
-      return res.status(500).json({
-        step: 'token',
-        status: tokenRes.status,
-        paypal: tokenData
-      })
+      return res.status(500).json({ step: 'token', paypal: tokenData })
     }
 
     const orderRes = await fetch('https://api-m.paypal.com/v2/checkout/orders', {
@@ -39,7 +42,7 @@ export default async function handler(req, res) {
         intent: 'CAPTURE',
         purchase_units: [
           {
-            custom_id: participantId || 'rgzv-hagen',
+            custom_id: participantId,
             description: 'Impfgruppe RGZV Hagen',
             amount: {
               currency_code: 'EUR',
@@ -52,7 +55,7 @@ export default async function handler(req, res) {
           landing_page: 'LOGIN',
           user_action: 'PAY_NOW',
           return_url: `https://${req.headers.host}/?paypal=success`,
-cancel_url: `https://${req.headers.host}/?paypal=cancel`
+          cancel_url: `https://${req.headers.host}/?paypal=cancel`
         }
       })
     })
@@ -60,11 +63,14 @@ cancel_url: `https://${req.headers.host}/?paypal=cancel`
     const order = await orderRes.json()
 
     if (!orderRes.ok) {
-      return res.status(500).json({
-        step: 'order',
-        status: orderRes.status,
-        paypal: order
-      })
+      return res.status(500).json({ step: 'order', paypal: order })
+    }
+
+    if (participantId && order.id) {
+      await supabase
+        .from('participants')
+        .update({ paypal_order_id: order.id })
+        .eq('id', participantId)
     }
 
     const approveUrl = order.links?.find(link => link.rel === 'approve')?.href
