@@ -9,15 +9,15 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@supabase/supabase-js": "latest",
-    "@vitejs/plugin-react": "latest",
-    "vite": "latest",
-    "react": "latest",
-    "react-dom": "latest",
-    "jspdf": "latest",
-    "jspdf-autotable": "latest",
-    "lucide-react": "latest"
-    "resend": "^4.0.0"
-  },
+  "@supabase/supabase-js": "latest",
+  "@vitejs/plugin-react": "latest",
+  "vite": "latest",
+  "react": "latest",
+  "react-dom": "latest",
+  "jspdf": "latest",
+  "jspdf-autotable": "latest",
+  "lucide-react": "latest",
+  "resend": "^4.0.0"
+}
   "devDependencies": {}
 }
