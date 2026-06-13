@@ -82,7 +82,10 @@ useEffect(() => {
     const payload = { ...form, animal_count: Number(form.animal_count), payment_status: 'offen', payment_amount: 10 }
     try {
       if (hasSupabase) {
-        const { error } = await supabase.from('participants').insert(payload)
+        const { data, error } = await supabase
+  .from('participants')
+  .insert(payload)
+  .select()
         if (error) throw error
       } else {
         const list = JSON.parse(localStorage.getItem('participants') || '[]')
