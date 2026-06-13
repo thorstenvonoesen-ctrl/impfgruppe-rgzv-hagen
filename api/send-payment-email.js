@@ -22,7 +22,7 @@ export default async function handler(req, res) {
         <p>Mit freundlichen Grüßen<br>RGZV Hagen</p>
       `
     })
-
+console.log('MAIL WIRD GESENDET AN:', email)
     return res.status(200).json({ success: true })
   } catch (error) {
     return res.status(500).json({ error: error.message })
