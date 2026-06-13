@@ -57,7 +57,10 @@ const result = await response.json()
 if (result.url) {
   window.location.href = result.url
 } else {
-  setMessage('Fehler bei der PayPal-Zahlung')
+  setMessage(
+    'Fehler bei PayPal: ' +
+    (result.paypal?.message || result.paypal?.name || result.error || JSON.stringify(result))
+  )
 }
     } catch (err) { setMessage('Fehler: ' + err.message) }
     finally { setLoading(false) }
