@@ -101,7 +101,7 @@ useEffect(() => {
   headers: {
     'Content-Type': 'application/json'
   },
-  body: JSON.stringify({ participantId: data?.[0]?.id })
+  body: JSON.stringify({ participantId })
 })
 
 const result = await response.json()
