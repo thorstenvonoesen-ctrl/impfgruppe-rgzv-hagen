@@ -65,7 +65,17 @@ useEffect(() => {
           })
           .eq('id', participantId)
       }
-
+await fetch('/api/send-payment-email', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({
+    email: participant.email,
+    firstname: participant.firstname,
+    lastname: participant.lastname
+  })
+})
       setMessage('Zahlung erfolgreich bestätigt. Vielen Dank!')
       window.history.replaceState({}, document.title, window.location.pathname)
     } catch (error) {
