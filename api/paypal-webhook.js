@@ -24,10 +24,30 @@ export default async function handler(req, res) {
       return res.status(200).json({ ignored: true })
     }
 
-    await supabase
-      .from('participants')
-      .update({ payment_status: 'bezahlt' })
-      .eq('paypal_order_id', orderId)
+    const { data: participant } = await supabase
+  .from('participants')
+  .select('*')
+  .eq('paypal_order_id', orderId)
+  .single()
+
+await supabase
+  .from('participants')
+  .update({ payment_status: 'bezahlt' })
+  .eq('paypal_order_id', orderId)
+
+if (participant?.email) {
+  await fetch(`https://${req.headers.host}/api/send-payment-email`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      email: participant.email,
+      firstname: participant.firstname,
+      lastname: participant.lastname
+    })
+  })
+}
 
     return res.status(200).json({ success: true })
   } catch (error) {
