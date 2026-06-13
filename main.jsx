@@ -29,7 +29,54 @@ function PublicSignup() {
   const [loading, setLoading] = useState(false)
   const [message, setMessage] = useState('')
   const update = e => setForm({ ...form, [e.target.name]: e.target.value })
+useEffect(() => {
+  async function finishPaypalPayment() {
+    const params = new URLSearchParams(window.location.search)
+    const paypal = params.get('paypal')
+    const token = params.get('token')
+    const participantId = params.get('participant')
 
+    if (paypal !== 'success' || !token || !participantId) return
+
+    setMessage('PayPal-Zahlung wird bestätigt...')
+    setLoading(true)
+
+    try {
+      const response = await fetch('/api/paypal-capture-order', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ token })
+      })
+
+      const result = await response.json()
+
+      if (!result.success) {
+        throw new Error(result.error || 'PayPal-Zahlung konnte nicht bestätigt werden')
+      }
+
+      if (hasSupabase) {
+        await supabase
+          .from('participants')
+          .update({
+            payment_status: 'bezahlt',
+            payment_method: 'paypal',
+            payment_date: new Date().toISOString(),
+            payment_id: token
+          })
+          .eq('id', participantId)
+      }
+
+      setMessage('Zahlung erfolgreich bestätigt. Vielen Dank!')
+      window.history.replaceState({}, document.title, window.location.pathname)
+    } catch (error) {
+      setMessage('Fehler bei Zahlungsbestätigung: ' + error.message)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  finishPaypalPayment()
+}, [])
   async function submit(e) {
     e.preventDefault(); setMessage(''); setLoading(true)
     const payload = { ...form, animal_count: Number(form.animal_count), payment_status: 'offen', payment_amount: 10 }
