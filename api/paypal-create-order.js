@@ -21,6 +21,14 @@ export default async function handler(req, res) {
 
     const tokenData = await tokenRes.json()
 
+    if (!tokenRes.ok) {
+      return res.status(500).json({
+        step: 'token',
+        status: tokenRes.status,
+        paypal: tokenData
+      })
+    }
+
     const orderRes = await fetch('https://api-m.paypal.com/v2/checkout/orders', {
       method: 'POST',
       headers: {
@@ -31,7 +39,7 @@ export default async function handler(req, res) {
         intent: 'CAPTURE',
         purchase_units: [
           {
-            custom_id: participantId || '',
+            custom_id: participantId || 'rgzv-hagen',
             description: 'Impfgruppe RGZV Hagen',
             amount: {
               currency_code: 'EUR',
@@ -43,21 +51,32 @@ export default async function handler(req, res) {
           brand_name: 'RGZV Hagen',
           landing_page: 'LOGIN',
           user_action: 'PAY_NOW',
-          return_url: `${req.headers.origin}/?paypal=success&participant=${participantId}`,
+          return_url: `${req.headers.origin}/?paypal=success`,
           cancel_url: `${req.headers.origin}/?paypal=cancel`
         }
       })
     })
 
     const order = await orderRes.json()
-    const approveUrl = order.links?.find(link => link.rel === 'approve')?.href
 
-    if (!approveUrl) {
-      return res.status(500).json({ error: 'Keine PayPal-Zahlungsseite erhalten', details: order })
+    if (!orderRes.ok) {
+      return res.status(500).json({
+        step: 'order',
+        status: orderRes.status,
+        paypal: order
+      })
     }
 
-    return res.status(200).json({ url: approveUrl })
+    const approveUrl = order.links?.find(link => link.rel === 'approve')?.href
+
+    return res.status(200).json({
+      url: approveUrl || null,
+      order
+    })
   } catch (error) {
-    return res.status(500).json({ error: error.message })
+    return res.status(500).json({
+      step: 'catch',
+      error: error.message
+    })
   }
 }
