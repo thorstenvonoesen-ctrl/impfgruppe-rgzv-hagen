@@ -85,8 +85,7 @@ useEffect(() => {
     })
   }
 }
-  })
-})
+ 
       setMessage('Zahlung erfolgreich bestätigt. Vielen Dank!')
       window.history.replaceState({}, document.title, window.location.pathname)
     } catch (error) {
