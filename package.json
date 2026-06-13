@@ -17,6 +17,7 @@
     "jspdf": "latest",
     "jspdf-autotable": "latest",
     "lucide-react": "latest"
+    "resend": "^4.0.0"
   },
   "devDependencies": {}
 }
