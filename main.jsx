@@ -54,7 +54,7 @@ useEffect(() => {
         throw new Error(result.error || 'PayPal-Zahlung konnte nicht bestätigt werden')
       }
 
-      if if (hasSupabase) {
+      if (hasSupabase) {
   const { data: participant } = await supabase
     .from('participants')
     .select('*')
