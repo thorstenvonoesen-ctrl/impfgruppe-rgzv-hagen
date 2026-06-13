@@ -186,13 +186,45 @@ function AdminDashboard({ onLogout }) {
   }
   useEffect(()=>{ load() }, [])
   async function markPaid(id, paid) {
-    if (hasSupabase) await supabase.from('participants').update({ payment_status: paid?'bezahlt':'offen', payment_date: paid ? new Date().toISOString() : null }).eq('id', id)
-    else {
-      const list = participants.map(p=>p.id===id ? {...p, payment_status: paid?'bezahlt':'offen'} : p)
-      localStorage.setItem('participants', JSON.stringify(list)); setParticipants(list); return
+  if (hasSupabase) {
+    const { data: participant } = await supabase
+      .from('participants')
+      .select('*')
+      .eq('id', id)
+      .single()
+
+    await supabase
+      .from('participants')
+      .update({
+        payment_status: paid ? 'bezahlt' : 'offen',
+        payment_date: paid ? new Date().toISOString() : null
+      })
+      .eq('id', id)
+
+    if (paid && participant?.email) {
+      await fetch('/api/send-payment-email', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          email: participant.email,
+          firstname: participant.firstname,
+          lastname: participant.lastname
+        })
+      })
     }
-    load()
+  } else {
+    const list = participants.map(p =>
+      p.id === id ? { ...p, payment_status: paid ? 'bezahlt' : 'offen' } : p
+    )
+    localStorage.setItem('participants', JSON.stringify(list))
+    setParticipants(list)
+    return
   }
+
+  load()
+}
   const filtered = participants.filter(p => `${p.firstname} ${p.lastname} ${p.city} ${p.email}`.toLowerCase().includes(q.toLowerCase()))
   const stats = useMemo(()=>({ total:participants.length, animals:participants.reduce((s,p)=>s+Number(p.animal_count||0),0), paid:participants.filter(p=>p.payment_status==='bezahlt').length, open:participants.filter(p=>p.payment_status!=='bezahlt').length }),[participants])
   return <div className="page admin"><Header admin />
