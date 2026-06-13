@@ -44,8 +44,21 @@ function PublicSignup() {
       }
       setMessage('Anmeldung gespeichert. Du wirst jetzt zur Bezahlung weitergeleitet.')
       setForm(emptyForm())
-      if (PAYMENT_URL) setTimeout(() => { location.href = PAYMENT_URL }, 900)
-      else setMessage('Anmeldung gespeichert. Zahlungslink ist noch nicht eingerichtet.')
+      const response = await fetch('/api/paypal-create-order', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({})
+})
+
+const result = await response.json()
+
+if (result.url) {
+  window.location.href = result.url
+} else {
+  setMessage('Fehler bei der PayPal-Zahlung')
+}
     } catch (err) { setMessage('Fehler: ' + err.message) }
     finally { setLoading(false) }
   }
