@@ -293,6 +293,12 @@ function AdminDashboard({ onLogout }) {
 >
   Löschen
 </button>
+          <button
+  className="small"
+  onClick={() => window.location.href = `mailto:${p.email}`}
+>
+  E-Mail
+</button>
 </td></tr>)}</tbody></table></div>}
       </section>
       {editingParticipant && (
