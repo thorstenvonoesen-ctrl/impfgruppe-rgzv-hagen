@@ -399,8 +399,8 @@ setNewDateNote('')
       </thead>
 
       <tbody>
-        {filtered.map(p => {
-          const termin = vaccinationDates.find(v => v.id === p.vaccination_date_id)
+        {filtered.map(p => (
+          
 
           return (
             <tr key={p.id}>
@@ -410,7 +410,7 @@ setNewDateNote('')
               <td>{p.tsk_number}</td>
               <td>{p.animal_count}</td>
               <td>{p.vaccine}</td>
-              <td>{termin ? `${termin.title} - ${termin.date}` : '-'}</td>
+              
               <td>
                 <span className={p.payment_status === 'bezahlt' ? 'paid' : 'open'}>
                   {p.payment_status}
