@@ -184,6 +184,12 @@ function AdminDashboard({ onLogout }) {
     if (hasSupabase) {
       const { data, error } = await supabase.from('participants').select('*').order('created_at', { ascending:false })
       if (!error) setParticipants(data || [])
+      const { data: dates } = await supabase
+  .from('vaccination_dates')
+  .select('*')
+  .order('date', { ascending: true })
+
+setVaccinationDates(dates || [])
     } else setParticipants(JSON.parse(localStorage.getItem('participants') || '[]'))
     setLoading(false)
   }
