@@ -196,7 +196,7 @@ setVaccinationDates(dates || [])
     setLoading(false)
   }
   async function addVaccinationDate() {
-  if (!newDate) return
+  if (!newDate || !newDateTitle) return
 
   await supabase
     .from('vaccination_dates')
