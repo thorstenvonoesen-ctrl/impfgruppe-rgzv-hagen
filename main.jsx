@@ -23,7 +23,7 @@ function emptyForm() {
   tsk_number:'',
   animal_count:'',
   vaccine:'Newcastle',
-  vaccination_date:''
+  vaccination_date_id:''
 }
 }
 
@@ -125,7 +125,7 @@ useEffect(() => {
     const payload = {
   ...form,
   animal_count: Number(form.animal_count),
-  vaccination_date_id: form.vaccination_date,
+  vaccination_date_id: form.vaccination_date_id,
   payment_status: 'offen',
   payment_amount: 10
 }
@@ -186,8 +186,8 @@ if (result.url) {
           <Input label="Tierseuchenkassen-Nr." name="tsk_number" value={form.tsk_number} onChange={update} required/>
           <div className="two"><Input label="Anzahl Tiere" name="animal_count" type="number" min="1" value={form.animal_count} onChange={update} required/><label>Impfstoff<select name="vaccine" value={form.vaccine} onChange={update}>{vaccines.map(v=><option key={v}>{v}</option>)}</select></label></div>
           <select
-  name="vaccination_date"
-  value={form.vaccination_date}
+  name="vaccination_date_id"
+value={form.vaccination_date_id}
   onChange={update}
   required
 >
