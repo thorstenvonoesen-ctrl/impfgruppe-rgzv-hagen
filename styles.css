@@ -25,3 +25,28 @@
   width: 100%;
   margin-bottom: 10px;
 }
+.center .card {
+  max-width: 520px;
+  text-align: center;
+}
+
+.center .card input {
+  width: 100%;
+  margin-bottom: 18px;
+}
+
+.center .card .primary {
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+.center .card a {
+  display: inline-block;
+  color: #1f3b57;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.center .card a:hover {
+  text-decoration: underline;
+}
