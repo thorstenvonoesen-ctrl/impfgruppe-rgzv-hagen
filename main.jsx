@@ -178,6 +178,7 @@ function AdminDashboard({ onLogout }) {
   const [statusFilter, setStatusFilter] = useState('all')
   const [loading, setLoading] = useState(true)
   const [editingParticipant, setEditingParticipant] = useState(null)
+  const [vaccinationDates, setVaccinationDates] = useState([])
   async function load() {
     setLoading(true)
     if (hasSupabase) {
