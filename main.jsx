@@ -374,10 +374,34 @@ setNewDateNote('')
         
 
 {vaccinationDates.map(v => (
-  <div key={v.id} className="card" style={{marginTop:'10px'}}>
-    <strong>{v.title}</strong><br />
-    {v.date}<br />
-    {v.note}
+  <div key={v.id} className="date-card">
+    <div>
+      <strong>{v.title}</strong>
+      <br />
+      {v.date}
+      {v.note && (
+        <>
+          <br />
+          <small>{v.note}</small>
+        </>
+      )}
+    </div>
+
+    <button
+      className="small"
+      onClick={async () => {
+        if (!confirm('Impftermin wirklich löschen?')) return
+
+        await supabase
+          .from('vaccination_dates')
+          .delete()
+          .eq('id', v.id)
+
+        load()
+      }}
+    >
+      Löschen
+    </button>
   </div>
 ))}
 
