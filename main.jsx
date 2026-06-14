@@ -287,6 +287,12 @@ function AdminDashboard({ onLogout }) {
   >
     Bearbeiten
   </button>
+          <button
+  className="small"
+  onClick={() => deleteParticipant(p.id)}
+>
+  Löschen
+</button>
 </td></tr>)}</tbody></table></div>}
       </section>
       {editingParticipant && (
