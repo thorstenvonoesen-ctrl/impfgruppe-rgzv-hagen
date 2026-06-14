@@ -55,10 +55,21 @@ td:last-child {
 }
 
 td:last-child .small {
-  width: 135px;
-  margin: 4px 0;
-  display: block;
+  width: 120px;
+  height: 40px;
+  margin: 4px;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 14px;
+  display: inline-block;
   text-align: center;
+  transition: all 0.2s ease;
+}
+
+td:last-child .small:hover {
+  transform: translateY(-1px);
 }
 .date-card {
   display: flex;
