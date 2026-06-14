@@ -10,7 +10,7 @@ export default async function handler(req, res) {
   try {
     const { email, firstname, lastname } = req.body
 
-    await resend.emails.send({
+    const result = await resend.emails.send({
       from: 'RGZV Hagen <onboarding@resend.dev>',
       to: email,
       subject: 'Zahlung erfolgreich eingegangen',
@@ -22,6 +22,7 @@ export default async function handler(req, res) {
         <p>Mit freundlichen Grüßen<br>RGZV Hagen</p>
       `
     })
+    console.log('RESEND RESULT:', result)
 console.log('MAIL WIRD GESENDET AN:', email)
     return res.status(200).json({ success: true })
   } catch (error) {
