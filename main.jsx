@@ -379,7 +379,44 @@ setNewDateNote('')
 
       <section className="card">
         <div className="table-head"><div className="search"><Search size={18}/><input placeholder="Suchen..." value={q} onChange={e=>setQ(e.target.value)}/></div><select value={statusFilter} onChange={e=>setStatusFilter(e.target.value)}><option value="all">Alle Zahlungen</option><option value="paid">Bezahlt</option><option value="open">Offen</option></select><ExportButtons participants={filtered}/></div>
-        {loading ? <p>Lade...</p> : <div className="table-scroll"><table><thead><tr><th>Name</th><th>Adresse</th><th>E-Mail</th><th>TSK-Nr.</th><th>Tiere</th><th>Impfung</th><th>Zahlung</th><th></th></tr></thead><tbody>{filtered.map(p=><tr key={p.id}><td>{p.firstname} {p.lastname}</td><td>{p.street} {p.housenumber}, {p.zipcode} {p.city}</td><td>{p.email}<br/><small>{p.phone}</small></td><td>{p.tsk_number}</td><td>{p.animal_count}</td><td>{p.vaccine}</td><td><span className={p.payment_status==='bezahlt'?'paid':'open'}>{p.payment_status}</span></td><td>
+        {loading ? (
+  <p>Lade...</p>
+) : (
+  <div className="table-scroll">
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Adresse</th>
+          <th>E-Mail</th>
+          <th>TSK-Nr.</th>
+          <th>Tiere</th>
+          <th>Impfung</th>
+          <th>Impftermin</th>
+          <th>Zahlung</th>
+          <th></th>
+        </tr>
+      </thead>
+
+      <tbody>
+        {filtered.map(p => {
+          const termin = vaccinationDates.find(v => v.id === p.vaccination_date_id)
+
+          return (
+            <tr key={p.id}>
+              <td>{p.firstname} {p.lastname}</td>
+              <td>{p.street} {p.housenumber}, {p.zipcode} {p.city}</td>
+              <td>{p.email}<br /><small>{p.phone}</small></td>
+              <td>{p.tsk_number}</td>
+              <td>{p.animal_count}</td>
+              <td>{p.vaccine}</td>
+              <td>{termin ? `${termin.title} - ${termin.date}` : '-'}</td>
+              <td>
+                <span className={p.payment_status === 'bezahlt' ? 'paid' : 'open'}>
+                  {p.payment_status}
+                </span>
+              </td>
+              <td>
   <button className="small" onClick={()=>markPaid(p.id,p.payment_status!=='bezahlt')}>
     {p.payment_status==='bezahlt'?'Offen':'Bezahlt'}
   </button>
