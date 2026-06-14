@@ -295,7 +295,12 @@ function AdminDashboard({ onLogout }) {
 </button>
           <button
   className="small"
-  onClick={() => window.location.href = `mailto:${p.email}`}
+  onClick={() =>
+  window.location.href =
+    `mailto:${p.email}` +
+    `?subject=Impfgruppe RGZV Hagen` +
+    `&body=Hallo ${p.firstname} ${p.lastname},%0D%0A%0D%0Avielen Dank für Ihre Anmeldung zur Impfgruppe des RGZV Hagen.%0D%0A%0D%0AMit freundlichen Grüßen%0D%0ARGZV Hagen`
+}
 >
   E-Mail
 </button>
