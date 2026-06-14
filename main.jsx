@@ -328,6 +328,19 @@ setNewDateNote('')
   <button className="primary" onClick={addVaccinationDate}>
     Impftermin speichern
   </button>
+        <button className="primary" onClick={addVaccinationDate}>
+  Impftermin speichern
+</button>
+
+{vaccinationDates.map(v => (
+  <div key={v.id} className="card" style={{marginTop:'10px'}}>
+    <strong>{v.title}</strong><br />
+    {v.date}<br />
+    {v.note}
+  </div>
+))}
+
+</section>
 </section>
       <section className="card">
         <div className="table-head"><div className="search"><Search size={18}/><input placeholder="Suchen..." value={q} onChange={e=>setQ(e.target.value)}/></div><select value={statusFilter} onChange={e=>setStatusFilter(e.target.value)}><option value="all">Alle Zahlungen</option><option value="paid">Bezahlt</option><option value="open">Offen</option></select><ExportButtons participants={filtered}/></div>
