@@ -279,6 +279,92 @@ function AdminDashboard({ onLogout }) {
   </button>
 </td></tr>)}</tbody></table></div>}
       </section>
+      {editingParticipant && (
+  <div className="card">
+    <h2>Teilnehmer bearbeiten</h2>
+
+    <input
+      value={editingParticipant.firstname || ''}
+      onChange={e => setEditingParticipant({...editingParticipant, firstname: e.target.value})}
+      placeholder="Vorname"
+    />
+
+    <input
+      value={editingParticipant.lastname || ''}
+      onChange={e => setEditingParticipant({...editingParticipant, lastname: e.target.value})}
+      placeholder="Nachname"
+    />
+
+    <input
+      value={editingParticipant.street || ''}
+      onChange={e => setEditingParticipant({...editingParticipant, street: e.target.value})}
+      placeholder="Straße"
+    />
+
+    <input
+      value={editingParticipant.housenumber || ''}
+      onChange={e => setEditingParticipant({...editingParticipant, housenumber: e.target.value})}
+      placeholder="Hausnummer"
+    />
+
+    <input
+      value={editingParticipant.zipcode || ''}
+      onChange={e => setEditingParticipant({...editingParticipant, zipcode: e.target.value})}
+      placeholder="PLZ"
+    />
+
+    <input
+      value={editingParticipant.city || ''}
+      onChange={e => setEditingParticipant({...editingParticipant, city: e.target.value})}
+      placeholder="Ort"
+    />
+
+    <input
+      value={editingParticipant.email || ''}
+      onChange={e => setEditingParticipant({...editingParticipant, email: e.target.value})}
+      placeholder="E-Mail"
+    />
+
+    <input
+      value={editingParticipant.phone || ''}
+      onChange={e => setEditingParticipant({...editingParticipant, phone: e.target.value})}
+      placeholder="Telefon"
+    />
+
+    <input
+      value={editingParticipant.tsk_number || ''}
+      onChange={e => setEditingParticipant({...editingParticipant, tsk_number: e.target.value})}
+      placeholder="TSK-Nummer"
+    />
+
+    <input
+      type="number"
+      value={editingParticipant.animal_count || 0}
+      onChange={e => setEditingParticipant({...editingParticipant, animal_count: Number(e.target.value)})}
+      placeholder="Tieranzahl"
+    />
+
+    <select
+      value={editingParticipant.vaccine || 'Newcastle'}
+      onChange={e => setEditingParticipant({...editingParticipant, vaccine: e.target.value})}
+    >
+      <option value="Newcastle">Newcastle</option>
+      <option value="IB">IB</option>
+      <option value="ILT">ILT</option>
+      <option value="Marek">Marek</option>
+      <option value="Kokzidiose">Kokzidiose</option>
+      <option value="Salmonellen">Salmonellen</option>
+    </select>
+
+    <button onClick={() => saveParticipant(editingParticipant)}>
+      Speichern
+    </button>
+
+    <button onClick={() => setEditingParticipant(null)}>
+      Abbrechen
+    </button>
+  </div>
+)}
     </main>
   </div>
 }
