@@ -302,6 +302,33 @@ setNewDateNote('')
       <div className="admin-top"><h1>Adminbereich</h1><button className="ghost" onClick={onLogout}><LogOut size={16}/> Logout</button></div>
       <div className="stats"><Stat icon={<Users/>} label="Teilnehmer" value={stats.total}/><Stat icon={<ShieldCheck/>} label="Tiere" value={stats.animals}/><Stat icon={<Euro/>} label="Bezahlt" value={stats.paid}/><Stat icon={<Euro/>} label="Offen" value={stats.open}/></div>
       <section className="card">
+  <h2>Impftermin anlegen</h2>
+
+  <input
+    type="text"
+    placeholder="Titel des Impftermins"
+    value={newDateTitle}
+    onChange={e => setNewDateTitle(e.target.value)}
+  />
+
+  <input
+    type="date"
+    value={newDate}
+    onChange={e => setNewDate(e.target.value)}
+  />
+
+  <input
+    type="text"
+    placeholder="Hinweis (optional)"
+    value={newDateNote}
+    onChange={e => setNewDateNote(e.target.value)}
+  />
+
+  <button className="primary" onClick={addVaccinationDate}>
+    Impftermin speichern
+  </button>
+</section>
+      <section className="card">
         <div className="table-head"><div className="search"><Search size={18}/><input placeholder="Suchen..." value={q} onChange={e=>setQ(e.target.value)}/></div><select value={statusFilter} onChange={e=>setStatusFilter(e.target.value)}><option value="all">Alle Zahlungen</option><option value="paid">Bezahlt</option><option value="open">Offen</option></select><ExportButtons participants={filtered}/></div>
         {loading ? <p>Lade...</p> : <div className="table-scroll"><table><thead><tr><th>Name</th><th>Adresse</th><th>E-Mail</th><th>TSK-Nr.</th><th>Tiere</th><th>Impfung</th><th>Zahlung</th><th></th></tr></thead><tbody>{filtered.map(p=><tr key={p.id}><td>{p.firstname} {p.lastname}</td><td>{p.street} {p.housenumber}, {p.zipcode} {p.city}</td><td>{p.email}<br/><small>{p.phone}</small></td><td>{p.tsk_number}</td><td>{p.animal_count}</td><td>{p.vaccine}</td><td><span className={p.payment_status==='bezahlt'?'paid':'open'}>{p.payment_status}</span></td><td>
   <button className="small" onClick={()=>markPaid(p.id,p.payment_status!=='bezahlt')}>
