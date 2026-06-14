@@ -202,7 +202,7 @@ setVaccinationDates(dates || [])
     .from('vaccination_dates')
     .insert([
       {
-        title: `Impftermin ${newDate}`,
+        title: newDateTitle,
         date: newDate
       }
     ])
