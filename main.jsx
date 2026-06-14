@@ -122,7 +122,13 @@ useEffect(() => {
 }, [])
   async function submit(e) {
     e.preventDefault(); setMessage(''); setLoading(true)
-    const payload = { ...form, animal_count: Number(form.animal_count), payment_status: 'offen', payment_amount: 10 }
+    const payload = {
+  ...form,
+  animal_count: Number(form.animal_count),
+  vaccination_date_id: form.vaccination_date,
+  payment_status: 'offen',
+  payment_amount: 10
+}
     try {
       let participantId = null
       if (hasSupabase) {
