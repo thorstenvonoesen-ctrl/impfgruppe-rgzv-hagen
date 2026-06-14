@@ -169,6 +169,20 @@ if (result.url) {
           <div className="two"><Input label="E-Mail" name="email" type="email" value={form.email} onChange={update} required/><Input label="Telefon" name="phone" value={form.phone} onChange={update}/></div>
           <Input label="Tierseuchenkassen-Nr." name="tsk_number" value={form.tsk_number} onChange={update} required/>
           <div className="two"><Input label="Anzahl Tiere" name="animal_count" type="number" min="1" value={form.animal_count} onChange={update} required/><label>Impfstoff<select name="vaccine" value={form.vaccine} onChange={update}>{vaccines.map(v=><option key={v}>{v}</option>)}</select></label></div>
+          <select
+  name="vaccination_date"
+  value={form.vaccination_date}
+  onChange={update}
+  required
+>
+  <option value="">Bitte Impftermin wählen</option>
+
+  {vaccinationDates.map(v => (
+    <option key={v.id} value={v.id}>
+      {v.title} - {v.date}
+    </option>
+  ))}
+</select>
           <button disabled={loading} className="primary">{loading ? 'Speichern...' : 'Anmelden & bezahlen'}</button>
           {message && <p className="message">{message}</p>}
         </form>
