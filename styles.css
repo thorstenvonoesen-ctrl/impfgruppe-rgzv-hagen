@@ -115,3 +115,22 @@ td .paid {
   border-radius: 999px !important;
   font-weight: 700 !important;
 }
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 82px;
+  padding: 8px 16px;
+  border-radius: 999px;
+  font-weight: 800;
+}
+
+.status-badge.open {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.status-badge.paid {
+  background: #dcfce7;
+  color: #166534;
+}
