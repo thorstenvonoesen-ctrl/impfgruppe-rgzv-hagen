@@ -11,8 +11,21 @@ const ADMIN_PIN = import.meta.env.VITE_ADMIN_PIN || '1234'
 const PAYMENT_URL = import.meta.env.VITE_PAYMENT_URL || ''
 
 function emptyForm() {
-  return { firstname:'', lastname:'', street:'', housenumber:'', zipcode:'', city:'', email:'', phone:'', tsk_number:'', animal_count:'', vaccine:'Newcastle' }
+  return {
+  firstname:'',
+  lastname:'',
+  street:'',
+  housenumber:'',
+  zipcode:'',
+  city:'',
+  email:'',
+  phone:'',
+  tsk_number:'',
+  animal_count:'',
+  vaccine:'Newcastle',
+  vaccination_date:''
 }
+
 
 function App() {
   const [admin, setAdmin] = useState(location.hash === '#admin')
