@@ -250,6 +250,16 @@ function AdminDashboard({ onLogout }) {
     load()
   }
 }
+  async function deleteParticipant(id) {
+  if (!confirm('Teilnehmer wirklich löschen?')) return
+
+  await supabase
+    .from('participants')
+    .delete()
+    .eq('id', id)
+
+  load()
+}
   const filtered = participants.filter(p => {
   const matchesSearch = `${p.firstname} ${p.lastname} ${p.city} ${p.email}`.toLowerCase().includes(q.toLowerCase())
   const matchesStatus =
