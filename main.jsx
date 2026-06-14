@@ -298,8 +298,15 @@ function AdminDashboard({ onLogout }) {
   onClick={() =>
   window.location.href =
     `mailto:${p.email}` +
-    `?subject=Impfgruppe RGZV Hagen` +
-    `&body=Hallo ${p.firstname} ${p.lastname},%0D%0A%0D%0Avielen Dank für Ihre Anmeldung zur Impfgruppe des RGZV Hagen.%0D%0A%0D%0AMit freundlichen Grüßen%0D%0ARGZV Hagen`
+`?subject=Anmeldung zum Impftermin RGZV Hagen` +
+`&body=Hallo ${p.firstname} ${p.lastname},%0D%0A%0D%0A` +
+`vielen Dank für Ihre Anmeldung zum Impftermin des RGZV Hagen und Umgebung seit 1903 e.V.%0D%0A%0D%0A` +
+`Ihre Anmeldung wurde erfolgreich erfasst und in unsere Teilnehmerliste aufgenommen. Der benötigte Impfstoff wird anhand der eingegangenen Anmeldungen bestellt und vorbereitet.%0D%0A%0D%0A` +
+`Sollten sich Änderungen ergeben oder Sie den Termin wider Erwarten nicht wahrnehmen können, bitten wir um eine kurze Mitteilung, damit wir entsprechend planen können.%0D%0A%0D%0A` +
+`Bei Fragen stehen wir Ihnen gerne zur Verfügung.%0D%0A%0D%0A` +
+`Mit freundlichen Grüßen%0D%0A%0D%0A` +
+`Ihr Impfwart%0D%0A%0D%0A` +
+`RGZV Hagen und Umgebung seit 1903 e.V.`
 }
 >
   E-Mail
