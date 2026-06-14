@@ -197,7 +197,7 @@ setVaccinationDates(dates || [])
   }
   async function addVaccinationDate() {
   if (!newDate || !newDateTitle) return
-
+const [newDateNote, setNewDateNote] = useState('')
   await supabase
     .from('vaccination_dates')
     .insert([
