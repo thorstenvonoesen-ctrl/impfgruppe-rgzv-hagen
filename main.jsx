@@ -177,6 +177,7 @@ function AdminDashboard({ onLogout }) {
   const [q, setQ] = useState('')
   const [statusFilter, setStatusFilter] = useState('all')
   const [loading, setLoading] = useState(true)
+  const [editingParticipant, setEditingParticipant] = useState(null)
   async function load() {
     setLoading(true)
     if (hasSupabase) {
