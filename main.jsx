@@ -328,9 +328,7 @@ setNewDateNote('')
   <button className="primary" onClick={addVaccinationDate}>
     Impftermin speichern
   </button>
-        <button className="primary" onClick={addVaccinationDate}>
-  Impftermin speichern
-</button>
+        
 
 {vaccinationDates.map(v => (
   <div key={v.id} className="card" style={{marginTop:'10px'}}>
@@ -341,7 +339,7 @@ setNewDateNote('')
 ))}
 
 </section>
-</section>
+
       <section className="card">
         <div className="table-head"><div className="search"><Search size={18}/><input placeholder="Suchen..." value={q} onChange={e=>setQ(e.target.value)}/></div><select value={statusFilter} onChange={e=>setStatusFilter(e.target.value)}><option value="all">Alle Zahlungen</option><option value="paid">Bezahlt</option><option value="open">Offen</option></select><ExportButtons participants={filtered}/></div>
         {loading ? <p>Lade...</p> : <div className="table-scroll"><table><thead><tr><th>Name</th><th>Adresse</th><th>E-Mail</th><th>TSK-Nr.</th><th>Tiere</th><th>Impfung</th><th>Zahlung</th><th></th></tr></thead><tbody>{filtered.map(p=><tr key={p.id}><td>{p.firstname} {p.lastname}</td><td>{p.street} {p.housenumber}, {p.zipcode} {p.city}</td><td>{p.email}<br/><small>{p.phone}</small></td><td>{p.tsk_number}</td><td>{p.animal_count}</td><td>{p.vaccine}</td><td><span className={p.payment_status==='bezahlt'?'paid':'open'}>{p.payment_status}</span></td><td>
