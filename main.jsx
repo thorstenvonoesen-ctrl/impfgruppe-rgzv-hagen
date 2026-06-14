@@ -175,6 +175,7 @@ function Admin() {
 function AdminDashboard({ onLogout }) {
   const [participants, setParticipants] = useState([])
   const [q, setQ] = useState('')
+  const [statusFilter, setStatusFilter] = useState('all')
   const [loading, setLoading] = useState(true)
   async function load() {
     setLoading(true)
