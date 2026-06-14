@@ -39,10 +39,20 @@ function App() {
 
 function PublicSignup() {
   const [form, setForm] = useState(emptyForm())
+  const [vaccinationDates, setVaccinationDates] = useState([])
   const [loading, setLoading] = useState(false)
   const [message, setMessage] = useState('')
   const update = e => setForm({ ...form, [e.target.name]: e.target.value })
+  async function loadDates() {
+  const { data } = await supabase
+    .from('vaccination_dates')
+    .select('*')
+    .order('date', { ascending: true })
+
+  setVaccinationDates(data || [])
+}
 useEffect(() => {
+  loadDates()
   async function finishPaypalPayment() {
     const params = new URLSearchParams(window.location.search)
     const paypal = params.get('paypal')
