@@ -100,3 +100,18 @@ td:last-child .small:hover {
   border-radius: 999px;
   font-weight: 600;
 }
+td .open {
+  background: #fef3c7 !important;
+  color: #92400e !important;
+  padding: 8px 16px !important;
+  border-radius: 999px !important;
+  font-weight: 700 !important;
+}
+
+td .paid {
+  background: #dcfce7 !important;
+  color: #166534 !important;
+  padding: 8px 16px !important;
+  border-radius: 999px !important;
+  font-weight: 700 !important;
+}
