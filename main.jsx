@@ -181,6 +181,7 @@ function AdminDashboard({ onLogout }) {
   const [vaccinationDates, setVaccinationDates] = useState([])
   const [newDate, setNewDate] = useState('')
   const [newDateTitle, setNewDateTitle] = useState('')
+  const [newDateNote, setNewDateNote] = useState('')
   async function load() {
     setLoading(true)
     if (hasSupabase) {
@@ -197,7 +198,7 @@ setVaccinationDates(dates || [])
   }
   async function addVaccinationDate() {
   if (!newDate || !newDateTitle) return
-const [newDateNote, setNewDateNote] = useState('')
+
   await supabase
     .from('vaccination_dates')
     .insert([
