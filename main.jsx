@@ -365,6 +365,7 @@ function AdminDashboard({ onLogout }) {
       Abbrechen
     </button>
   </div>
+    </div>
 )}
     </main>
   </div>
