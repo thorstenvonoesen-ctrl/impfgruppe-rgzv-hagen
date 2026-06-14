@@ -194,6 +194,21 @@ setVaccinationDates(dates || [])
     } else setParticipants(JSON.parse(localStorage.getItem('participants') || '[]'))
     setLoading(false)
   }
+  async function addVaccinationDate() {
+  if (!newDate) return
+
+  await supabase
+    .from('vaccination_dates')
+    .insert([
+      {
+        title: `Impftermin ${newDate}`,
+        date: newDate
+      }
+    ])
+
+  setNewDate('')
+  load()
+}
   useEffect(()=>{ load() }, [])
   async function markPaid(id, paid) {
   if (hasSupabase) {
