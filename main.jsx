@@ -209,6 +209,8 @@ const [newDateNote, setNewDateNote] = useState('')
     ])
 
   setNewDate('')
+    setNewDateTitle('')
+setNewDateNote('')
   load()
 }
   useEffect(()=>{ load() }, [])
