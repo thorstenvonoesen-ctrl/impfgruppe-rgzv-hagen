@@ -15,11 +15,38 @@ export default async function handler(req, res) {
       to: email,
       subject: 'Zahlung erfolgreich eingegangen',
       html: `
-        <h2>Vielen Dank für Ihre Anmeldung</h2>
-        <p>Hallo ${firstname} ${lastname},</p>
-        <p>Ihre Zahlung für die Impfgruppe RGZV Hagen ist erfolgreich eingegangen.</p>
-        <p>Ihr Zahlungsstatus wurde auf bezahlt gesetzt.</p>
-        <p>Mit freundlichen Grüßen<br>RGZV Hagen</p>
+        <h2>Zahlung erfolgreich eingegangen</h2>
+
+<p>Hallo ${firstname} ${lastname},</p>
+
+<p>
+  vielen Dank für die Bezahlung Ihrer Anmeldung zum gewählten
+  Impftermin des RGZV Hagen und Umgebung seit 1903 e.V.
+  Ihre Zahlung wurde erfolgreich verbucht und Ihre Anmeldung
+  ist damit vollständig abgeschlossen.
+</p>
+
+<p>
+  Der benötigte Impfstoff wird anhand der eingegangenen
+  Anmeldungen bestellt und für den gewählten Impftermin
+  vorbereitet.
+</p>
+
+<p>
+  Sollten sich Änderungen ergeben oder Sie den Termin
+  wider Erwarten nicht wahrnehmen können, bitten wir
+  um eine kurze Mitteilung.
+</p>
+
+<p>
+  Bei Fragen stehen wir Ihnen gerne zur Verfügung.
+</p>
+
+<p>
+  Mit freundlichen Grüßen<br>
+  Ihr Impfwart<br>
+  RGZV Hagen und Umgebung seit 1903 e.V.
+</p>
       `
     })
     console.log('RESEND RESULT:', result)
