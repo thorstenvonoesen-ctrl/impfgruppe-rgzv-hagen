@@ -60,3 +60,14 @@ td:last-child .small {
   display: block;
   text-align: center;
 }
+.date-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 10px;
+  padding: 16px;
+  border: 1px solid #dbe7ea;
+  border-radius: 16px;
+  background: #fff;
+}
