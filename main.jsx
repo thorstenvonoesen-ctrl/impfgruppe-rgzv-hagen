@@ -202,9 +202,10 @@ const [newDateNote, setNewDateNote] = useState('')
     .from('vaccination_dates')
     .insert([
       {
-        title: newDateTitle,
-        date: newDate
-      }
+  title: newDateTitle,
+  date: newDate,
+  note: newDateNote
+}
     ])
 
   setNewDate('')
