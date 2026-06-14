@@ -226,7 +226,14 @@ function AdminDashboard({ onLogout }) {
 
   load()
 }
-  
+  const filtered = participants.filter(p => {
+  const matchesSearch = `${p.firstname} ${p.lastname} ${p.city} ${p.email}`.toLowerCase().includes(q.toLowerCase())
+  const matchesStatus =
+    statusFilter === 'all' ||
+    (statusFilter === 'paid' && p.payment_status === 'bezahlt') ||
+    (statusFilter === 'open' && p.payment_status !== 'bezahlt')
+
+  return matchesSearch && matchesStatus
   const stats = useMemo(()=>({ total:participants.length, animals:participants.reduce((s,p)=>s+Number(p.animal_count||0),0), paid:participants.filter(p=>p.payment_status==='bezahlt').length, open:participants.filter(p=>p.payment_status!=='bezahlt').length }),[participants])
   return <div className="page admin"><Header admin />
     <main className="admin-wrap">
