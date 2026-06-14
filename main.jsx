@@ -280,7 +280,8 @@ function AdminDashboard({ onLogout }) {
 </td></tr>)}</tbody></table></div>}
       </section>
       {editingParticipant && (
-  <div className="card">
+  <div className="modal">
+  <div className="modal-card">
     <h2>Teilnehmer bearbeiten</h2>
 
     <input
