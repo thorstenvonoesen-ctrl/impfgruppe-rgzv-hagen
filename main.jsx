@@ -450,7 +450,7 @@ setNewDateNote('')
 >
   E-Mail
 </button>
-</td></tr>)}</tbody></table></div>}
+</td></tr>))}</tbody></table></div>)}
       </section>
       {editingParticipant && (
   <div className="modal">
