@@ -25,7 +25,7 @@ function emptyForm() {
   vaccine:'Newcastle',
   vaccination_date:''
 }
-
+}
 
 function App() {
   const [admin, setAdmin] = useState(location.hash === '#admin')
