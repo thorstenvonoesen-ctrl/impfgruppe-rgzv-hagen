@@ -415,7 +415,13 @@ setNewDateNote('')
               <td>{p.tsk_number}</td>
               <td>{p.animal_count}</td>
               <td>{p.vaccine}</td>
-              <td>{p.vaccination_date || '-'}</td>
+              <td>
+  {
+    vaccinationDates.find(v => v.id === p.vaccination_date_id)
+      ? `${vaccinationDates.find(v => v.id === p.vaccination_date_id).title} - ${vaccinationDates.find(v => v.id === p.vaccination_date_id).date}`
+      : '-'
+  }
+</td>
               <td>
                 <span className={p.payment_status === 'bezahlt' ? 'paid' : 'open'}>
                   {p.payment_status}
