@@ -447,7 +447,7 @@ setNewDateNote('')
   }
 </td>
               <td>
-                <span className={p.payment_status === 'bezahlt' ? 'paid' : 'open'}>
+                <span className={`status-badge ${p.payment_status === 'bezahlt' ? 'paid' : 'open'}`}>
                   {p.payment_status}
                 </span>
               </td>
