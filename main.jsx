@@ -227,6 +227,29 @@ function AdminDashboard({ onLogout }) {
 
   load()
 }
+  async function saveParticipant(p) {
+  const { error } = await supabase
+    .from('participants')
+    .update({
+      firstname: p.firstname,
+      lastname: p.lastname,
+      street: p.street,
+      housenumber: p.housenumber,
+      zipcode: p.zipcode,
+      city: p.city,
+      email: p.email,
+      phone: p.phone,
+      tsk_number: p.tsk_number,
+      animal_count: p.animal_count,
+      vaccine: p.vaccine
+    })
+    .eq('id', p.id)
+
+  if (!error) {
+    setEditingParticipant(null)
+    load()
+  }
+}
   const filtered = participants.filter(p => {
   const matchesSearch = `${p.firstname} ${p.lastname} ${p.city} ${p.email}`.toLowerCase().includes(q.toLowerCase())
   const matchesStatus =
