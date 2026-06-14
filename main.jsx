@@ -402,7 +402,6 @@ setNewDateNote('')
         {filtered.map(p => (
           
 
-          return (
             <tr key={p.id}>
               <td>{p.firstname} {p.lastname}</td>
               <td>{p.street} {p.housenumber}, {p.zipcode} {p.city}</td>
