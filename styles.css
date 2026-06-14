@@ -50,3 +50,13 @@
 .center .card a:hover {
   text-decoration: underline;
 }
+td:last-child {
+  min-width: 150px;
+}
+
+td:last-child .small {
+  width: 135px;
+  margin: 4px 0;
+  display: block;
+  text-align: center;
+}
