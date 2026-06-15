@@ -411,7 +411,12 @@ setNewDateNote('')
         </>
       )}
     </div>
-
+<button
+  className="small"
+  onClick={() => pdfForVaccinationDate(v)}
+>
+  PDF
+</button>
     <button
       className="small"
       onClick={async () => {
