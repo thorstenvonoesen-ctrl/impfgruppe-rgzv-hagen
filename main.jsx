@@ -403,7 +403,7 @@ setNewDateNote('')
     <div>
       <strong>{v.title}</strong>
       <br />
-      {v.date}
+      {new Date(v.date).toLocaleDateString('de-DE')}
       {v.note && (
         <>
           <br />
