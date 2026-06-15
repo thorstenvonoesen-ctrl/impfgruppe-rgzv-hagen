@@ -179,7 +179,7 @@ if (result.url) {
 </div>
 
 <p className="price-note">
-  Eine Erstattung bei Nichterscheinen ist ausgeschlossen.
+  Bitte beachten Sie, dass bei Nichterscheinen keine Erstattung der Teilnahmegebühr erfolgen kann.
 </p>
       </section>
       <section className="card">
