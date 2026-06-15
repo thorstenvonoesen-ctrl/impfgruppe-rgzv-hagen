@@ -139,3 +139,14 @@ td .paid {
   font-size: 15px;
   opacity: 0.85;
 }
+.date-stat {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 0;
+  border-bottom: 1px solid #e5eef0;
+}
+
+.date-stat:last-child {
+  border-bottom: none;
+}
