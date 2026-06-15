@@ -174,7 +174,13 @@ if (result.url) {
         <div className="badge"><Syringe size={18}/> Online-Anmeldung</div>
         <h1>Anmeldung Impfgruppe RGZV Hagen</h1>
         <p>Bitte trage deine Daten ein. Nach dem Absenden wirst du zur Zahlung weitergeleitet.</p>
-        <div className="price"><Euro/> 10 € pro Teilnehmer</div>
+        <div className="price">
+  <Euro /> 10 € pro Teilnehmer
+</div>
+
+<p className="price-note">
+  Eine Erstattung bei Nichterscheinen ist ausgeschlossen.
+</p>
       </section>
       <section className="card">
         <h2>Teilnehmer anmelden</h2>
