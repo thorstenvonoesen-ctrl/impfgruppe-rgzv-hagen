@@ -201,7 +201,7 @@ value={form.vaccination_date_id}
 
   {vaccinationDates.map(v => (
     <option key={v.id} value={v.id}>
-      {v.title} - {v.date}
+      {v.title} - {new Date(v.date).toLocaleDateString('de-DE')}
     </option>
   ))}
 </select>
