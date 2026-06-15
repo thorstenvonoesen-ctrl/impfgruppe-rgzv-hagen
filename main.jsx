@@ -351,6 +351,35 @@ setNewDateNote('')
   ...v,
   count: participants.filter(p => p.vaccination_date_id === v.id).length
 }))
+  function pdfForVaccinationDate(v) {
+  const list = participants.filter(
+    p => String(p.vaccination_date_id) === String(v.id)
+  )
+
+  const doc = new jsPDF({ orientation: 'landscape' })
+
+  doc.setFontSize(18)
+  doc.text('RGZV Hagen - Teilnehmerliste Impfgruppe', 14, 16)
+
+  doc.setFontSize(10)
+  doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 24)
+
+  autoTable(doc, {
+    startY: 32,
+    head: [['Name', 'Adresse', 'E-Mail', 'TSK-Nr.', 'Tiere', 'Impfung', 'Zahlung']],
+    body: list.map(p => [
+      `${p.firstname} ${p.lastname}`,
+      `${p.street || ''} ${p.housenumber || ''}, ${p.zipcode || ''} ${p.city || ''}`,
+      p.email || '',
+      p.tsk_number || '',
+      p.animal_count || '',
+      p.vaccine || '',
+      p.payment_status || 'offen'
+    ])
+  })
+
+  doc.save(`teilnehmerliste-${v.date}.pdf`)
+}
   return <div className="page admin"><Header admin />
     <main className="admin-wrap">
       <div className="admin-top"><h1>Adminbereich</h1><button className="ghost" onClick={onLogout}><LogOut size={16}/> Logout</button></div>
