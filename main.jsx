@@ -347,6 +347,10 @@ setNewDateNote('')
   return matchesSearch && matchesStatus
     })
   const stats = useMemo(()=>({ total:participants.length, animals:participants.reduce((s,p)=>s+Number(p.animal_count||0),0), paid:participants.filter(p=>p.payment_status==='bezahlt').length, open:participants.filter(p=>p.payment_status!=='bezahlt').length }),[participants])
+  const dateStats = vaccinationDates.map(v => ({
+  ...v,
+  count: participants.filter(p => p.vaccination_date_id === v.id).length
+}))
   return <div className="page admin"><Header admin />
     <main className="admin-wrap">
       <div className="admin-top"><h1>Adminbereich</h1><button className="ghost" onClick={onLogout}><LogOut size={16}/> Logout</button></div>
