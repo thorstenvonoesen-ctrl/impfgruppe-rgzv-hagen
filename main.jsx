@@ -610,7 +610,39 @@ setNewDateNote('')
 
 function ExportButtons({ participants, vaccinationDates }) {
   function csv() { const h=['Vorname','Nachname','Adresse','PLZ','Ort','E-Mail','Telefon','TSK-Nr.','Tiere','Impfung','Zahlung']; const rows=participants.map(p=>[p.firstname,p.lastname,`${p.street||''} ${p.housenumber||''}`.trim(),p.zipcode,p.city,p.email,p.phone,p.tsk_number,p.animal_count,p.vaccine,p.payment_status]); const out=[h,...rows].map(r=>r.map(v=>`"${String(v??'').replaceAll('"','""')}"`).join(';')).join('\n'); const blob=new Blob([out],{type:'text/csv;charset=utf-8'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='teilnehmerliste-rgzv-hagen.csv'; a.click() }
-  function pdf() { const doc=new jsPDF({orientation:'landscape'}); doc.setFontSize(18); doc.text('RGZV Hagen - Teilnehmerliste Impfgruppe',14,16); doc.setFontSize(10); doc.text(`Export: ${new Date().toLocaleDateString('de-DE')}`,14,24); autoTable(doc,{startY:30,head:[['Name','Adresse','E-Mail','TSK-Nr.','Tiere','Impfung','Zahlung']],body:participants.map(p=>[`${p.firstname} ${p.lastname}`,`${p.street||''} ${p.housenumber||''}, ${p.zipcode||''} ${p.city||''}`,p.email||'',p.tsk_number||'',p.animal_count||'',p.vaccine||'',p.payment_status||'offen'])}); doc.save('teilnehmerliste-rgzv-hagen.pdf') }
+  function pdf() {
+  const groups = vaccinationDates.map(date => ({
+    date,
+    participants: participants.filter(p => p.vaccination_date_id === date.id)
+  })).filter(g => g.participants.length > 0)
+
+  groups.forEach(group => {
+    const doc = new jsPDF({ orientation: 'landscape' })
+
+    doc.setFontSize(18)
+    doc.text(`RGZV Hagen - Teilnehmerliste Impfgruppe`, 14, 16)
+
+    doc.setFontSize(10)
+    doc.text(`Impftermin: ${group.date.title} - ${group.date.date}`, 14, 24)
+    doc.text(`Export: ${new Date().toLocaleDateString('de-DE')}`, 14, 30)
+
+    autoTable(doc, {
+      startY: 36,
+      head: [['Name', 'Adresse', 'E-Mail', 'TSK-Nr.', 'Tiere', 'Impfung', 'Zahlung']],
+      body: group.participants.map(p => [
+        `${p.firstname} ${p.lastname}`,
+        `${p.street || ''} ${p.housenumber || ''}, ${p.zipcode || ''} ${p.city || ''}`,
+        p.email || '',
+        p.tsk_number || '',
+        p.animal_count || '',
+        p.vaccine || '',
+        p.payment_status || 'offen'
+      ])
+    })
+
+    doc.save(`teilnehmerliste-${group.date.date}.pdf`)
+  })
+}
   return <div className="actions"><button onClick={pdf}><Download size={16}/> PDF</button><button onClick={csv}><Download size={16}/> CSV</button></div>
 }
 function Input({ label, ...props }) { return <label>{label}<input {...props}/></label> }
