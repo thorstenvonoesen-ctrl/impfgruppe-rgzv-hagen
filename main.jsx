@@ -5,7 +5,7 @@ import jsPDF from 'jspdf'
 import autoTable from 'jspdf-autotable'
 import { supabase, hasSupabase } from './supabase.js'
 import './styles.css'
-
+import logo from './public/Logoklein.jpg'
 const vaccines = ['Newcastle', 'IB', 'ILT', 'Marek', 'Kokzidiose', 'Salmonellen']
 const ADMIN_PIN = import.meta.env.VITE_ADMIN_PIN || '1234'
 const PAYMENT_URL = import.meta.env.VITE_PAYMENT_URL || ''
