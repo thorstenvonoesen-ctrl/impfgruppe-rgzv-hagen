@@ -704,6 +704,71 @@ function ExportButtons({ participants, vaccinationDates }) {
 }
 function Input({ label, ...props }) { return <label>{label}<input {...props}/></label> }
 function Stat({ icon,label,value }) { return <div className="stat">{icon}<span>{label}</span><strong>{value}</strong></div> }
+function Datenschutz() {
+  return (
+    <div className="page">
+      <Header />
+      <main className="card">
+        <h1>Datenschutzerklärung</h1>
+
+        <p>
+          Verantwortlicher:<br />
+          RGZV Hagen und Umgebung seit 1903 e.V.<br />
+          Im Wiedenbusch 41<br />
+          58099 Hagen
+        </p>
+
+        <p>
+          E-Mail:<br />
+          kontakt@rgzv-hagen-westfalen.de
+        </p>
+
+        <p>
+          Die im Rahmen der Anmeldung erhobenen Daten werden ausschließlich zur
+          Organisation und Durchführung der Impfgruppe verarbeitet.
+        </p>
+
+        <p>
+          Erfasst werden Vorname, Nachname, Anschrift, E-Mail-Adresse,
+          Tierseuchenkassen-Nummer, Tieranzahl, Impftermin und Zahlungsstatus.
+        </p>
+
+        <a href="#">Zurück zur Anmeldung</a>
+      </main>
+    </div>
+  )
+}
+
+function Impressum() {
+  return (
+    <div className="page">
+      <Header />
+      <main className="card">
+        <h1>Impressum</h1>
+
+        <p>
+          RGZV Hagen und Umgebung seit 1903 e.V.<br />
+          Im Wiedenbusch 41<br />
+          58099 Hagen
+        </p>
+
+        <p>
+          1. Vorsitzender: Frank Sternal
+        </p>
+
+        <p>
+          1. Kassierer: Thorsten von Oesen
+        </p>
+
+        <p>
+          kontakt@rgzv-hagen-westfalen.de
+        </p>
+
+        <a href="#">Zurück zur Anmeldung</a>
+      </main>
+    </div>
+  )
+}
 function Header() { return <header><div className="logo"><Syringe/> <span>RGZV Hagen</span></div><nav><a href="#">Anmeldung</a><a href="#admin">Admin</a></nav></header> }
 function Footer() {
   return (
