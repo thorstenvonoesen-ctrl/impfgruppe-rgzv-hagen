@@ -42,6 +42,7 @@ function PublicSignup() {
   const [vaccinationDates, setVaccinationDates] = useState([])
   const [loading, setLoading] = useState(false)
   const [message, setMessage] = useState('')
+  const [privacyAccepted, setPrivacyAccepted] = useState(false)
   const update = e => setForm({ ...form, [e.target.name]: e.target.value })
   async function loadDates() {
   const { data } = await supabase
