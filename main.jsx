@@ -682,15 +682,30 @@ function ExportButtons({ participants, vaccinationDates }) {
   groups.forEach(group => {
     const doc = new jsPDF({ orientation: 'landscape' })
 
-    doc.setFontSize(18)
-    doc.text(`RGZV Hagen - Teilnehmerliste Impfgruppe`, 14, 16)
+    doc.setFontSize(20)
+doc.text('RGZV Hagen und Umgebung seit 1903 e.V.', 14, 15)
 
-    doc.setFontSize(10)
-    doc.text(`Impftermin: ${group.date.title} - ${group.date.date}`, 14, 24)
-    doc.text(`Export: ${new Date().toLocaleDateString('de-DE')}`, 14, 30)
+doc.setFontSize(10)
+doc.text('Im Wiedenbusch 41 · 58099 Hagen', 14, 22)
+
+doc.text('1. Vorsitzender: Frank Sternal', 14, 28)
+
+doc.text('1. Kassierer: Thorsten von Oesen', 14, 34)
+
+doc.text(
+  `Impftermin: ${group.date.title} - ${group.date.date}`,
+  14,
+  40
+)
+
+doc.text(
+  `Export: ${new Date().toLocaleDateString('de-DE')}`,
+  14,
+  46
+)
 
     autoTable(doc, {
-      startY: 36,
+      startY: 54,
       head: [['Name', 'Adresse', 'E-Mail', 'TSK-Nr.', 'Tiere', 'Impfung', 'Zahlung']],
       body: group.participants.map(p => [
         `${p.firstname} ${p.lastname}`,
