@@ -381,14 +381,20 @@ setNewDateNote('')
 
   const doc = new jsPDF({ orientation: 'landscape' })
 
-  doc.setFontSize(18)
-  doc.text('RGZV Hagen - Teilnehmerliste Impfgruppe', 14, 16)
+  doc.setFontSize(20)
+doc.text('RGZV Hagen und Umgebung seit 1903 e.V.', 14, 15)
 
-  doc.setFontSize(10)
-  doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 24)
+doc.setFontSize(10)
+doc.text('Im Wiedenbusch 41 · 58099 Hagen', 14, 22)
+
+doc.text('1. Vorsitzender: Frank Sternal', 14, 28)
+
+doc.text('1. Kassierer: Thorsten von Oesen', 14, 34)
+
+doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40
 
   autoTable(doc, {
-    startY: 32,
+    startY: 48,
     head: [['Name', 'Adresse', 'E-Mail', 'TSK-Nr.', 'Tiere', 'Impfung', 'Zahlung']],
     body: list.map(p => [
       `${p.firstname} ${p.lastname}`,
