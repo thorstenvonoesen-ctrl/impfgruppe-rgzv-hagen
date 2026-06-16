@@ -696,6 +696,16 @@ function ExportButtons({ participants, vaccinationDates }) {
 function Input({ label, ...props }) { return <label>{label}<input {...props}/></label> }
 function Stat({ icon,label,value }) { return <div className="stat">{icon}<span>{label}</span><strong>{value}</strong></div> }
 function Header() { return <header><div className="logo"><Syringe/> <span>RGZV Hagen</span></div><nav><a href="#">Anmeldung</a><a href="#admin">Admin</a></nav></header> }
-function Footer(){ return <footer>© RGZV Hagen · Anmeldung Impfgruppe</footer> }
+function Footer() {
+  return (
+    <footer>
+      © RGZV Hagen und Umgebung seit 1903 e.V.
+      {' | '}
+      <a href="#datenschutz">Datenschutz</a>
+      {' | '}
+      <a href="#impressum">Impressum</a>
+    </footer>
+  )
+}
 
 createRoot(document.getElementById('root')).render(<App />)
