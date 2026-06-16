@@ -28,13 +28,22 @@ function emptyForm() {
 }
 
 function App() {
-  const [admin, setAdmin] = useState(location.hash === '#admin')
+  const [page, setPage] = useState(location.hash || '#')
+
   useEffect(() => {
-    const onHash = () => setAdmin(location.hash === '#admin')
+    const onHash = () => setPage(location.hash || '#')
+
     addEventListener('hashchange', onHash)
-    return () => removeEventListener('hashchange', onHash)
+
+    return () =>
+      removeEventListener('hashchange', onHash)
   }, [])
-  return admin ? <Admin /> : <PublicSignup />
+
+  if (page === '#admin') return <Admin />
+  if (page === '#datenschutz') return <Datenschutz />
+  if (page === '#impressum') return <Impressum />
+
+  return <PublicSignup />
 }
 
 function PublicSignup() {
