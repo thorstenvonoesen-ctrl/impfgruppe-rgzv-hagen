@@ -165,3 +165,18 @@ td .paid {
   margin-top: 2px;
   flex-shrink: 0;
 }
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logo-img {
+  height: 60px;
+  width: auto;
+  border-radius: 6px;
+}
+
+.logo span {
+  font-weight: 700;
+}
