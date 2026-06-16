@@ -769,7 +769,28 @@ function Impressum() {
     </div>
   )
 }
-function Header() { return <header><div className="logo"><Syringe/> <span>RGZV Hagen</span></div><nav><a href="#">Anmeldung</a><a href="#admin">Admin</a></nav></header> }
+function Header() {
+  return (
+    <header>
+      <div className="logo">
+        <img
+          src="/Logoklein.jpg"
+          alt="RGZV Hagen"
+          className="logo-img"
+        />
+
+        <span>
+          RGZV Hagen und Umgebung seit 1903 e.V.
+        </span>
+      </div>
+
+      <nav>
+        <a href="#">Anmeldung</a>
+        <a href="#admin">Admin</a>
+      </nav>
+    </header>
+  )
+}
 function Footer() {
   return (
     <footer>
