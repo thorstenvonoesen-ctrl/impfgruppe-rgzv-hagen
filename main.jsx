@@ -123,6 +123,11 @@ useEffect(() => {
 }, [])
   async function submit(e) {
     e.preventDefault(); setMessage(''); setLoading(true)
+    if (!privacyAccepted) {
+  setMessage('Bitte der Datenschutzerklärung zustimmen.')
+  setLoading(false)
+  return
+}
     const payload = {
   ...form,
   animal_count: Number(form.animal_count),
