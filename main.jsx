@@ -391,7 +391,7 @@ doc.text('1. Vorsitzender: Frank Sternal', 14, 28)
 
 doc.text('1. Kassierer: Thorsten von Oesen', 14, 34)
 
-doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40
+doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
 
   autoTable(doc, {
     startY: 48,
