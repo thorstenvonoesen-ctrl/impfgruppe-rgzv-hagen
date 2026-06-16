@@ -46,7 +46,7 @@ export default async function handler(req, res) {
             description: 'Impfgruppe RGZV Hagen',
             amount: {
               currency_code: 'EUR',
-              value: '1,00'
+              value: '0.01'
             }
           }
         ],
