@@ -380,7 +380,7 @@ setNewDateNote('')
   )
 
   const doc = new jsPDF({ orientation: 'landscape' })
-    doc.addImage(logo, 'JPEG', 14, 10, 50, 20)
+    
 
   doc.setFontSize(20)
 doc.text('RGZV Hagen und Umgebung seit 1903 e.V.', 14, 15)
@@ -682,7 +682,7 @@ function ExportButtons({ participants, vaccinationDates }) {
 
   groups.forEach(group => {
     const doc = new jsPDF({ orientation: 'landscape' })
-doc.addImage(logo, 'JPEG', 14, 10, 50, 20)
+
     doc.setFontSize(20)
 doc.text('RGZV Hagen und Umgebung seit 1903 e.V.', 14, 15)
 
