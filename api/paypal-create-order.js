@@ -54,7 +54,7 @@ export default async function handler(req, res) {
           brand_name: 'RGZV Hagen',
           landing_page: 'LOGIN',
           user_action: 'PAY_NOW',
-          return_url: `https://${req.headers.host}/?paypal=success`,
+          return_url: `https://${req.headers.host}/?paypal=success&participant=${participantId}`,
           cancel_url: `https://${req.headers.host}/?paypal=cancel`
         }
       })
