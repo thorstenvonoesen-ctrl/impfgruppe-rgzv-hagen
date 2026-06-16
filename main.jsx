@@ -211,6 +211,14 @@ value={form.vaccination_date_id}
     </option>
   ))}
 </select>
+          <label className="privacy-check">
+  <input
+    type="checkbox"
+    checked={privacyAccepted}
+    onChange={e => setPrivacyAccepted(e.target.checked)}
+  />
+  Ich habe die Datenschutzerklärung gelesen und stimme der Verarbeitung meiner Daten zu.
+</label>
           <button disabled={loading} className="primary">{loading ? 'Speichern...' : 'Anmelden & bezahlen'}</button>
           {message && <p className="message">{message}</p>}
         </form>
