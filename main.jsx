@@ -113,7 +113,15 @@ if (stripe === 'success') {
       payment_id: 'stripe_checkout'
     })
     .eq('id', participantId)
-
+if (participant?.email) {
+  await fetch('/api/send-payment-email', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      participant
+    })
+  })
+}
   setMessage('Stripe-Zahlung erfolgreich bestätigt.')
   setLoading(false)
   return
