@@ -77,7 +77,47 @@ if (!participantId) return
 
     setMessage('PayPal-Zahlung wird bestätigt...')
     setLoading(true)
+if (stripe === 'success') {
+  const { data: participant } = await supabase
+    .from('participants')
+    .select('*')
+    .eq('id', participantId)
+    .single()
 
+  await supabase
+    .from('participants')
+    .update({
+      payment_status: 'bezahlt',
+      payment_method: 'stripe',
+      payment_date: new Date().toISOString(),
+      payment_id: 'stripe_checkout'
+    })
+    .eq('id', participantId)
+
+  setMessage('Stripe-Zahlung erfolgreich bestätigt.')
+  setLoading(false)
+  return
+}if (stripe === 'success') {
+  const { data: participant } = await supabase
+    .from('participants')
+    .select('*')
+    .eq('id', participantId)
+    .single()
+
+  await supabase
+    .from('participants')
+    .update({
+      payment_status: 'bezahlt',
+      payment_method: 'stripe',
+      payment_date: new Date().toISOString(),
+      payment_id: 'stripe_checkout'
+    })
+    .eq('id', participantId)
+
+  setMessage('Stripe-Zahlung erfolgreich bestätigt.')
+  setLoading(false)
+  return
+}
     try {
       const response = await fetch('/api/paypal-capture-order', {
         method: 'POST',
