@@ -21,8 +21,9 @@ function emptyForm() {
   email:'',
   phone:'',
   tsk_number:'',
-  animal_count:'',
-  vaccine:'Newcastle',
+animal_type:'',
+animal_count:'',
+vaccine:'Newcastle',
   vaccination_date_id:''
 }
 }
