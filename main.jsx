@@ -726,7 +726,7 @@ doc.text(
 
     autoTable(doc, {
       startY: 54,
-      head: [['Name', 'Adresse', 'E-Mail', 'TSK-Nr.', 'Tiere', 'Impfung', 'Zahlung']],
+      head: [['Name', 'Adresse', 'E-Mail', 'TSK Betriebsnummer.', 'Tiere', 'Impfung', 'Zahlung']],
       body: group.participants.map(p => [
         `${p.firstname} ${p.lastname}`,
         `${p.street || ''} ${p.housenumber || ''}, ${p.zipcode || ''} ${p.city || ''}`,
@@ -780,7 +780,7 @@ autoTable(doc, {
   head: [[
     'Name',
     'Adresse',
-    'TSK-Nr.',
+    'TSK Betriebsnummer.',
     'Tierart',
     'Anzahl'
   ]],
