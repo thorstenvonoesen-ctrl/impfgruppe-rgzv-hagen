@@ -263,6 +263,35 @@ value={form.vaccination_date_id}
   />
   Ich habe die Datenschutzerklärung gelesen und stimme der Verarbeitung meiner Daten zu.
 </label>
+          <div style={{ marginTop: '15px', marginBottom: '15px' }}>
+  <strong>Zahlungsart:</strong>
+
+  <div>
+    <label>
+      <input
+        type="radio"
+        name="paymentMethod"
+        value="paypal"
+        checked={paymentMethod === 'paypal'}
+        onChange={(e) => setPaymentMethod(e.target.value)}
+      />
+      PayPal
+    </label>
+  </div>
+
+  <div>
+    <label>
+      <input
+        type="radio"
+        name="paymentMethod"
+        value="stripe"
+        checked={paymentMethod === 'stripe'}
+        onChange={(e) => setPaymentMethod(e.target.value)}
+      />
+      Kreditkarte / Apple Pay / Google Pay
+    </label>
+  </div>
+</div>
           <button disabled={loading} className="primary">{loading ? 'Speichern...' : 'Anmelden & bezahlen'}</button>
           {message && <p className="message">{message}</p>}
         </form>
