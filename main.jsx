@@ -113,6 +113,8 @@ if (stripe === 'success') {
       payment_id: 'stripe_checkout'
     })
     .eq('id', participantId)
+  console.log('PARTICIPANT', participant)
+console.log('EMAIL', participant?.email)
 if (participant?.email) {
   await fetch('/api/send-payment-email', {
     method: 'POST',
