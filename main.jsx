@@ -849,14 +849,36 @@ function Datenschutz() {
         </p>
 
         <p>
-          Die im Rahmen der Anmeldung erhobenen Daten werden ausschließlich zur
-          Organisation und Durchführung der Impfgruppe verarbeitet.
-        </p>
+  Die im Rahmen des Anmeldeformulars erhobenen personenbezogenen Daten
+  werden ausschließlich zur Organisation und Durchführung der Impfgruppe
+  verarbeitet.
+</p>
 
-        <p>
-          Erfasst werden Vorname, Nachname, Anschrift, E-Mail-Adresse,
-          Tierseuchenkassen-Nummer, Tieranzahl, Impftermin und Zahlungsstatus.
-        </p>
+<p>
+  Erfasst werden Vorname, Nachname, Anschrift, E-Mail-Adresse,
+  Telefonnummer, TSK Betriebsnummer, Tierart, Tieranzahl,
+  ausgewählter Impftermin sowie Zahlungsinformationen.
+</p>
+
+<p>
+  Bei Auswahl der Online-Zahlung werden die zur Zahlungsabwicklung
+  erforderlichen Daten an den Zahlungsdienstleister PayPal
+  übermittelt. Die Verarbeitung erfolgt ausschließlich zur
+  Durchführung der Zahlung.
+</p>
+
+<p>
+  Die vollständige Datenschutzerklärung des RGZV Hagen und Umgebung
+  seit 1903 e.V. finden Sie unter:
+  <br />
+  <a
+    href="https://rgzv-hagen-westfalen.com/Datenschutz/"
+    target="_blank"
+    rel="noopener noreferrer"
+  >
+    Vollständige Datenschutzerklärung öffnen
+  </a>
+</p>
 
         <a href="#">Zurück zur Anmeldung</a>
       </main>
