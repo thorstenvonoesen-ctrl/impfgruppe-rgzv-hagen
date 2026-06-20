@@ -195,7 +195,6 @@ if (result.url) {
     (result.error || JSON.stringify(result))
   )
 }
-}
     } catch (err) { setMessage('Fehler: ' + err.message) }
     finally { setLoading(false) }
   }
