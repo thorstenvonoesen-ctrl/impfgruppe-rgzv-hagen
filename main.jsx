@@ -750,21 +750,27 @@ doc.text('Sammelimpfbescheinigung', 14, 15)
 doc.setFontSize(10)
 
 doc.text(
-  'Hiermit wird bescheinigt, dass der Geflügelbestand der nachstehend',
+  'Hiermit wird bescheinigt, dass die nachstehend aufgeführten',
   14,
-  25
+  28
 )
 
 doc.text(
-  'näher bezeichneten Geflügelzüchter gegen die Newcastle-Krankheit',
+  'Geflügelbestände gegen die Newcastle-Krankheit',
   14,
-  31
+  35
 )
 
 doc.text(
-  '(atypische Geflügelpest) schutzgeimpft wurde.',
+  '(atypische Geflügelpest) gemäß den geltenden',
   14,
-  37
+  42
+)
+
+doc.text(
+  'tierseuchenrechtlichen Vorschriften schutzgeimpft wurden.',
+  14,
+  49
 )
 
 doc.setFontSize(11)
