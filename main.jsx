@@ -1166,7 +1166,7 @@ function Header() {
 function Footer() {
   return (
     <footer>
-      © RGZV Hagen und Umgebung seit 1903 e.V.
+      © 2026 Thorsten von Oesen – Entwickelt für den RGZV Hagen und Umgebung seit 1903 e.V.
       {' | '}
       <a href="#datenschutz">Datenschutz</a>
       {' | '}
