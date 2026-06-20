@@ -1119,22 +1119,36 @@ function Impressum() {
         <h1>Impressum</h1>
 
         <p>
-          RGZV Hagen und Umgebung seit 1903 e.V.<br />
-          Im Wiedenbusch 41<br />
-          58099 Hagen
-        </p>
+  Rassegeflügelzuchtverein Hagen und Umgebung seit 1903 e.V.
+  <br />
+  Vertretungsberechtigter 1. Vorsitzender
+  <br />
+  Frank Sternal
+  <br />
+  Im Wiedenbusch 41
+  <br />
+  58099 Hagen
+  <br />
+  Tel: 02331/631841
+  <br />
+  Email: kontakt@rgzv-hagen-westfalen.de
+  <br />
+  Internet: www.rgzv-hagen-westfalen.de
+</p>
 
-        <p>
-          1. Vorsitzender: Frank Sternal
-        </p>
+<p>
+  Verantwortlich für den Inhalt nach § 55 Abs. 2 RStV:
+  <br />
+  Frank Sternal
+  <br />
+  Email: webmaster@rgzv-hagen-westfalen.de
+</p>
 
-        <p>
-          1. Kassierer: Thorsten von Oesen
-        </p>
-
-        <p>
-          kontakt@rgzv-hagen-westfalen.de
-        </p>
+<p>
+  Registergericht: Hagen
+  <br />
+  Registernummer: VR 3271
+</p>
 
         <a href="#">Zurück zur Anmeldung</a>
       </main>
