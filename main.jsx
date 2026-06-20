@@ -72,6 +72,9 @@ useEffect(() => {
     const token = params.get('token')
     const participantId = params.get('participant')
 const stripe = params.get('stripe')
+    console.log('PAYPAL=', paypal)
+console.log('STRIPE=', stripe)
+console.log('PARTICIPANT=', participantId)
     if (paypal !== 'success' && stripe !== 'success') return
 if (!participantId) return
 
