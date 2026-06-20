@@ -1092,12 +1092,7 @@ function Datenschutz() {
 </p>
 
 <p>
-  Stand Juni 2026
-</p>
-
-<p>
-  Die vollständige Datenschutzerklärung des RGZV Hagen und Umgebung seit
-  1903 e.V. finden Sie unter:
+  Die vollständige Datenschutzerklärung des RGZV Hagen und Umgebung seit 1903 e.V. finden Sie unter:
   <br />
   <a
     href="https://rgzv-hagen-westfalen.com/Datenschutz/"
@@ -1106,6 +1101,10 @@ function Datenschutz() {
   >
     Datenschutzerklärung auf der Vereinswebsite öffnen
   </a>
+</p>
+
+<p>
+  Stand Juni 2026
 </p>
 
         <a href="#">Zurück zur Anmeldung</a>
