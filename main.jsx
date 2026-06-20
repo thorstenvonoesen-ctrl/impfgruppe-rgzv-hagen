@@ -848,88 +848,220 @@ function Datenschutz() {
           kontakt@rgzv-hagen-westfalen.de
         </p>
 
-        <p>
-  Datenschutzerklärung für das Anmeldeformular 
-Nach Arkel 13 der DSGVO werden Sie im Folgenden über die Verarbeitung Ihrer im 
-Anmeldeformular angegebenen personenbezogenen Daten informiert. 
-Kontaktdaten des Formularanbieters 
-Rassegeflügelzuchtverein Hagen und Umgebung seit 1903 e.V. (kurz RGZV) 
-Vertreten durch seinen 1. Vorsitzenden Frank Sternal 
-Im Wiedenbusch 41 
-58099 Hagen 
-kontakt@rgzv-hagen-wes7alen.de 
-Verarbeitete Daten 
-Neben den in der Datenschutzerklärung des RGZV beschrieben Daten, werden folgende Daten im 
-Anmeldeformular erfasst: 
-• Vorname, Nachname 
-• Anschri; 
-• E-Mail 
-• Telefon 
-• Betriebsnummer/Registrierungsnummer der Tierseuchenkasse (kurz TSK) 
-• Die Bestägung der Einwilligungserklärung 
-• Auswahl Imp;ermin 
-● Zahlstatus 
-Zweck der Datenverarbeitung 
-Die Daten aus dem Anmeldeformular werden ausschließlich zum Zweck der Anmeldung zum 
-ausgewählten Imp;ermin verwendet. 
-Rechtsgrundlage 
-Die Daten werden auf Basis einer Einwilligung der betreffenden Person gemäß 
-Art. 6 Abs.1 lit. a DSGVO erhoben. 
-Empfänger der personenbezogenen Daten 
-Die mit diesem Anmeldeformular erhobenen personenbezogenen Daten sind ausschließlich 
-Impfgruppenkoordinaon und dem zuständigen Tierarzt zugänglich und werden nicht an DriFe 
-weitergegeben. 
-Dauer der Speicherung 
-Die im Rahmen dieses Anmeldeformulars erhobenen personenbezogenen Daten werden 
-grundsätzlich gelöscht, sobald sie nicht mehr für den Zweck Ihrer Erhebung benögt werden. 
-Widerspruchs- und Beseigungsmöglichkeit 
-Der Nutzende hat jederzeit die Möglichkeit, seine Einwilligung zur Verarbeitung der 
-personenbezogenen Daten zu widerrufen. Alle personenbezogenen Daten, die in dem 
-Anmeldeformular erhoben und gespeichert wurden, werden in diesem Fall gelöscht. Im Einzelnen 
-können Sie Ihre Rechte der Datenschutzerklärung des RGZV entnehmen. 
-Nutzung von personenbezogenen Daten bei Zahlungsvorgängen 
-Wenn Sie über unsere Website Zahlungen tägen möchten, ist es erforderlich, dass Sie Ihre 
-persönlichen Daten angeben, die wir für die Abwicklung der Zahlung benögen. Alle Felder im 
-Zahlungsformular sind Pflich7elder und eine Angabe somit zwingend erforderlich. Die von Ihnen 
-angegebenen Daten verarbeiten wir zur Abwicklung der Zahlung. Dazu können wir Ihre 
-Zahlungsdaten an unsere Hausbank weitergeben. 
-Rechtsgrundlage hierfür ist Art. 6 Abs. 1 Buchstabe b DSGVO. 
-Bezahlung mit PayPal 
-Sollten Sie sich für eine Bezahlung mit dem Online-Zahlungsdienstleister PayPal entscheiden, werden 
-Ihre Kontaktdaten an PayPal übermiFelt. PayPal ist ein Angebot der PayPal (Europe) S.à.r.l. & Cie. 
-S.C.A., 22-24 Boulevard Royal, L-2449 Luxembourg. 
-Bei den an PayPal übermiFelten personenbezogenen Daten handelt es sich zumeist um Vorname, 
-Nachname, IP-Adresse, E-Mail-Adresse, oder andere Daten, die zur Zahlungsabwicklung erforderlich 
-sind. 
-Diese ÜbermiFlung ist zur Abwicklung Ihrer Zahlung mit der von Ihnen ausgewählten Zahlungsart 
-notwendig, insbesondere zur Bestägung Ihrer Identät und zur Administraon Ihrer Zahlung. 
-Rechtsgrundlage ist Art. 6 Abs. 1 Buchstabe b DSGVO. 
-BiFe beachten Sie jedoch: Personenbezogenen Daten können seitens PayPal auch an 
-Leistungserbringer, an Subunternehmer oder andere verbundene Unternehmen weitergegeben 
-werden, soweit dies zur Erfüllung der vertraglichen Verpflichtungen aus Ihrem Zahlungsau;rag 
-erforderlich ist oder die personenbezogenen Daten im Au;rag verarbeitet werden sollen. 
-Abhängig von der über PayPal ausgewählten Zahlungsart, z.B. Rechnung oder Lastschri;, werden die 
-an PayPal übermiFelten personenbezogenen Daten von PayPal an Wirtscha;sauskun;eien 
-übermiFelt. Diese ÜbermiFlung dient der Identäts- und Bonitätsprüfung in Bezug auf den von Ihnen 
-getägten Zahlungsau;rag. Um welche Auskun;eien es sich hierbei handelt und welche Daten von 
-PayPal allgemein erhoben, verarbeitet, gespeichert und weitergegeben werden, entnehmen Sie der 
-Datenschutzerklärung von PayPal unter hFps://www.paypal.com/de/webapps/mpp/ua/privacy-full. 
-Bezahlung mit Kreditkarte 
-Wenn Sie eine Zahlung per Kreditkarte wählen (z.B. Visa oder Mastercard), benögen wir Ihre 
-Kreditkartendaten. Wir geben diese Daten soweit zur Abwicklung der Zahlung erforderlich, an 
-unseren externen Dienstleister Telecash weiter, der diese Daten bis zur vollständigen Abwicklung der 
-Zahlung speichert. Nähere Informaonen zum Umgang mit Ihren Daten durch Telecash können Sie 
-der Datenschutzerklärung des Dienstleisters entnehmen: hFps://www.telecash.de/datenschutz. 
-1 Stand Juni 2026
-  Die vollständige Datenschutzerklärung des RGZV Hagen und Umgebung
-  seit 1903 e.V. finden Sie unter:
+ <h2>Datenschutzerklärung für das Anmeldeformular</h2>
+
+<p>
+  Nach Artikel 13 der DSGVO werden Sie im Folgenden über die Verarbeitung
+  Ihrer im Anmeldeformular angegebenen personenbezogenen Daten informiert.
+</p>
+
+<h3>Kontaktdaten des Formularanbieters</h3>
+
+<p>
+  Rassegeflügelzuchtverein Hagen und Umgebung seit 1903 e.V. (kurz RGZV)
+  <br />
+  Vertreten durch seinen 1. Vorsitzenden Frank Sternal
+  <br />
+  Im Wiedenbusch 41
+  <br />
+  58099 Hagen
+  <br />
+  kontakt@rgzv-hagen-westfalen.de
+</p>
+
+<h3>Verarbeitete Daten</h3>
+
+<p>
+  Neben den in der Datenschutzerklärung des RGZV beschriebenen Daten,
+  werden folgende Daten im Anmeldeformular erfasst:
+</p>
+
+<ul>
+  <li>Vorname, Nachname</li>
+  <li>Anschrift</li>
+  <li>E-Mail</li>
+  <li>Telefon</li>
+  <li>Betriebsnummer/Registrierungsnummer der Tierseuchenkasse (kurz TSK)</li>
+  <li>Die Bestätigung der Einwilligungserklärung</li>
+  <li>Auswahl Impftermin</li>
+  <li>Zahlstatus</li>
+</ul>
+
+<h3>Zweck der Datenverarbeitung</h3>
+
+<p>
+  Die Daten aus dem Anmeldeformular werden ausschließlich zum Zweck der
+  Anmeldung zum ausgewählten Impftermin verwendet.
+</p>
+
+<h3>Rechtsgrundlage</h3>
+
+<p>
+  Die Daten werden auf Basis einer Einwilligung der betreffenden Person
+  gemäß Art. 6 Abs. 1 lit. a DSGVO erhoben.
+</p>
+
+<h3>Empfänger der personenbezogenen Daten</h3>
+
+<p>
+  Die mit diesem Anmeldeformular erhobenen personenbezogenen Daten sind
+  ausschließlich Impfgruppenkoordination und dem zuständigen Tierarzt
+  zugänglich und werden nicht an Dritte weitergegeben.
+</p>
+
+<h3>Dauer der Speicherung</h3>
+
+<p>
+  Die im Rahmen dieses Anmeldeformulars erhobenen personenbezogenen Daten
+  werden grundsätzlich gelöscht, sobald sie nicht mehr für den Zweck ihrer
+  Erhebung benötigt werden.
+</p>
+
+<h3>Widerspruchs- und Beseitigungsmöglichkeit</h3>
+
+<p>
+  Der Nutzende hat jederzeit die Möglichkeit, seine Einwilligung zur
+  Verarbeitung der personenbezogenen Daten zu widerrufen.
+</p>
+
+<p>
+  Alle personenbezogenen Daten, die in dem Anmeldeformular erhoben und
+  gespeichert wurden, werden in diesem Fall gelöscht.
+</p>
+
+<p>
+  Im Einzelnen können Sie Ihre Rechte der Datenschutzerklärung des RGZV
+  entnehmen.
+</p>
+
+<h3>Nutzung von personenbezogenen Daten bei Zahlungsvorgängen</h3>
+
+<p>
+  Wenn Sie über unsere Website Zahlungen tätigen möchten, ist es
+  erforderlich, dass Sie Ihre persönlichen Daten angeben, die wir für die
+  Abwicklung der Zahlung benötigen.
+</p>
+
+<p>
+  Alle Felder im Zahlungsformular sind Pflichtfelder und eine Angabe somit
+  zwingend erforderlich.
+</p>
+
+<p>
+  Die von Ihnen angegebenen Daten verarbeiten wir zur Abwicklung der
+  Zahlung. Dazu können wir Ihre Zahlungsdaten an unsere Hausbank
+  weitergeben.
+</p>
+
+<p>
+  Rechtsgrundlage hierfür ist Art. 6 Abs. 1 Buchstabe b DSGVO.
+</p>
+
+<h3>Bezahlung mit PayPal</h3>
+
+<p>
+  Sollten Sie sich für eine Bezahlung mit dem Online-Zahlungsdienstleister
+  PayPal entscheiden, werden Ihre Kontaktdaten an PayPal übermittelt.
+</p>
+
+<p>
+  PayPal ist ein Angebot der PayPal (Europe) S.à.r.l. & Cie. S.C.A.,
+  22-24 Boulevard Royal, L-2449 Luxembourg.
+</p>
+
+<p>
+  Bei den an PayPal übermittelten personenbezogenen Daten handelt es sich
+  zumeist um Vorname, Nachname, IP-Adresse, E-Mail-Adresse oder andere
+  Daten, die zur Zahlungsabwicklung erforderlich sind.
+</p>
+
+<p>
+  Diese Übermittlung ist zur Abwicklung Ihrer Zahlung mit der von Ihnen
+  ausgewählten Zahlungsart notwendig, insbesondere zur Bestätigung Ihrer
+  Identität und zur Administration Ihrer Zahlung.
+</p>
+
+<p>
+  Rechtsgrundlage ist Art. 6 Abs. 1 Buchstabe b DSGVO.
+</p>
+
+<p>
+  Bitte beachten Sie jedoch: Personenbezogene Daten können seitens PayPal
+  auch an Leistungserbringer, an Subunternehmer oder andere verbundene
+  Unternehmen weitergegeben werden, soweit dies zur Erfüllung der
+  vertraglichen Verpflichtungen aus Ihrem Zahlungsauftrag erforderlich ist
+  oder die personenbezogenen Daten im Auftrag verarbeitet werden sollen.
+</p>
+
+<p>
+  Abhängig von der über PayPal ausgewählten Zahlungsart, z.B. Rechnung oder
+  Lastschrift, werden die an PayPal übermittelten personenbezogenen Daten
+  von PayPal an Wirtschaftsauskunfteien übermittelt.
+</p>
+
+<p>
+  Diese Übermittlung dient der Identitäts- und Bonitätsprüfung in Bezug auf
+  den von Ihnen getätigten Zahlungsauftrag.
+</p>
+
+<p>
+  Um welche Auskunfteien es sich hierbei handelt und welche Daten von
+  PayPal allgemein erhoben, verarbeitet, gespeichert und weitergegeben
+  werden, entnehmen Sie der Datenschutzerklärung von PayPal unter:
+</p>
+
+<p>
+  <a
+    href="https://www.paypal.com/de/webapps/mpp/ua/privacy-full"
+    target="_blank"
+    rel="noopener noreferrer"
+  >
+    https://www.paypal.com/de/webapps/mpp/ua/privacy-full
+  </a>
+</p>
+
+<h3>Bezahlung mit Kreditkarte</h3>
+
+<p>
+  Wenn Sie eine Zahlung per Kreditkarte wählen (z.B. Visa oder Mastercard),
+  benötigen wir Ihre Kreditkartendaten.
+</p>
+
+<p>
+  Wir geben diese Daten soweit zur Abwicklung der Zahlung erforderlich, an
+  unseren externen Dienstleister Telecash weiter, der diese Daten bis zur
+  vollständigen Abwicklung der Zahlung speichert.
+</p>
+
+<p>
+  Nähere Informationen zum Umgang mit Ihren Daten durch Telecash können Sie
+  der Datenschutzerklärung des Dienstleisters entnehmen:
+</p>
+
+<p>
+  <a
+    href="https://www.telecash.de/datenschutz"
+    target="_blank"
+    rel="noopener noreferrer"
+  >
+    https://www.telecash.de/datenschutz
+  </a>
+</p>
+
+<p>
+  Stand Juni 2026
+</p>
+
+<p>
+  Die vollständige Datenschutzerklärung des RGZV Hagen und Umgebung seit
+  1903 e.V. finden Sie unter:
   <br />
   <a
     href="https://rgzv-hagen-westfalen.com/Datenschutz/"
     target="_blank"
     rel="noopener noreferrer"
   >
-    Vollständige Datenschutzerklärung öffnen
+    Datenschutzerklärung auf der Vereinswebsite öffnen
   </a>
 </p>
 
