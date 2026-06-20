@@ -1019,7 +1019,44 @@ function Datenschutz() {
     https://www.paypal.com/de/webapps/mpp/ua/privacy-full
   </a>
 </p>
+<h3>Bezahlung mit Stripe</h3>
 
+<p>
+  Sofern Sie eine Zahlung über Stripe durchführen, werden die für die
+  Zahlungsabwicklung erforderlichen personenbezogenen Daten an Stripe
+  übermittelt.
+</p>
+
+<p>
+  Stripe ist ein Zahlungsdienst der Stripe Payments Europe Ltd.,
+  1 Grand Canal Street Lower, Grand Canal Dock, Dublin, Irland.
+</p>
+
+<p>
+  Zu den übermittelten Daten können insbesondere Name,
+  E-Mail-Adresse, Zahlungsbetrag, Transaktionsdaten sowie weitere für
+  die Zahlungsabwicklung erforderliche Informationen gehören.
+</p>
+
+<p>
+  Die Übermittlung dieser Daten erfolgt ausschließlich zum Zweck der
+  Zahlungsabwicklung und auf Grundlage von Art. 6 Abs. 1 lit. b DSGVO.
+</p>
+
+<p>
+  Weitere Informationen zur Datenverarbeitung durch Stripe finden Sie
+  in der Datenschutzerklärung von Stripe unter:
+</p>
+
+<p>
+  <a
+    href="https://stripe.com/de/privacy"
+    target="_blank"
+    rel="noopener noreferrer"
+  >
+    https://stripe.com/de/privacy
+  </a>
+</p>
 <h3>Bezahlung mit Kreditkarte</h3>
 
 <p>
