@@ -12,7 +12,13 @@ export default async function handler(req, res) {
 
   try {
     const { participantId } = req.body || {}
+const { data: participant } = await supabase
+  .from('participants')
+  .select('payment_amount')
+  .eq('id', participantId)
+  .single()
 
+const amount = participant?.payment_amount || 10
     const auth = Buffer.from(
       `${process.env.PAYPAL_CLIENT_ID}:${process.env.PAYPAL_SECRET}`
     ).toString('base64')
@@ -46,7 +52,7 @@ export default async function handler(req, res) {
             description: 'Impfgruppe RGZV Hagen',
             amount: {
               currency_code: 'EUR',
-              value: '10.00'
+              value: amount.toFixed(2)
             }
           }
         ],
