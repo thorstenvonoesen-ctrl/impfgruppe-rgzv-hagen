@@ -199,7 +199,7 @@ if (result.url) {
         <p>Bitte trage deine Daten ein. Nach dem Absenden wirst du zur Zahlung weitergeleitet.</p>
         <div className="price">
   <div>
-  <Euro /> 10 € für Gäste
+  10 € für Gäste
   <br />
   5 € für Vereinsmitglieder mit Mitgliedercode
 </div>
