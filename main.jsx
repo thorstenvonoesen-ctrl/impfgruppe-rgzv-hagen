@@ -757,7 +757,11 @@ doc.text(
 
   doc.save('sammelimpfbescheinigung.pdf')
 }
-  return <div className="actions"><button onClick={pdf}><Download size={16}/> PDF</button><button onClick={csv}><Download size={16}/> CSV</button></div>
+  return <div className="actions">
+  <button onClick={pdf}><Download size={16}/> PDF</button>
+  <button onClick={csv}><Download size={16}/> CSV</button>
+  <button onClick={vaccinationCertificate}>Sammelbescheinigung</button>
+</div>
 }
 function Input({ label, ...props }) { return <label>{label}<input {...props}/></label> }
 function Stat({ icon,label,value }) { return <div className="stat">{icon}<span>{label}</span><strong>{value}</strong></div> }
