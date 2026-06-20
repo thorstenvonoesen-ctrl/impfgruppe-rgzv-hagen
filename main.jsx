@@ -169,12 +169,20 @@ is_member: isMember
       }
       setMessage('Anmeldung gespeichert. Du wirst jetzt zur Bezahlung weitergeleitet.')
       setForm(emptyForm())
-      const response = await fetch('/api/paypal-create-order', {
+      const endpoint =
+  paymentMethod === 'stripe'
+    ? '/api/stripe-create-checkout'
+    : '/api/paypal-create-order'
+
+const response = await fetch(endpoint, {
   method: 'POST',
   headers: {
     'Content-Type': 'application/json'
   },
-  body: JSON.stringify({ participantId })
+  body: JSON.stringify({
+    participantId,
+    amount: paymentAmount
+  })
 })
 
 const result = await response.json()
@@ -183,9 +191,10 @@ if (result.url) {
   window.location.href = result.url
 } else {
   setMessage(
-    'Fehler bei PayPal: ' +
-    (result.paypal?.message || result.paypal?.name || result.error || JSON.stringify(result))
+    'Fehler bei der Zahlung: ' +
+    (result.error || JSON.stringify(result))
   )
+}
 }
     } catch (err) { setMessage('Fehler: ' + err.message) }
     finally { setLoading(false) }
