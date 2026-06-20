@@ -11,9 +11,7 @@ export default async function handler(req, res) {
     const { participantId, amount } = req.body
 
     const session = await stripe.checkout.sessions.create({
-      automatic_payment_methods: {
-  enabled: true,
-},
+      payment_method_types: ['card', 'sepa_debit'],
       mode: 'payment',
 
       line_items: [
