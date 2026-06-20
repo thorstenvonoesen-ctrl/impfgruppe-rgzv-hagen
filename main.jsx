@@ -71,8 +71,9 @@ useEffect(() => {
     const paypal = params.get('paypal')
     const token = params.get('token')
     const participantId = params.get('participant')
-
-    if (paypal !== 'success' || !token || !participantId) return
+const stripe = params.get('stripe')
+    if (paypal !== 'success' && stripe !== 'success') return
+if (!participantId) return
 
     setMessage('PayPal-Zahlung wird bestätigt...')
     setLoading(true)
