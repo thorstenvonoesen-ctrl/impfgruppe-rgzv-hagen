@@ -781,9 +781,20 @@ doc.text('Charge: ______________________', 14, 75)
 doc.text('Verwendbar bis: ______________', 14, 85)
 
   doc.text('Vom Tierarzt auszufüllen', 14, 95)
-    doc.text('Liste der geimpften Geflügelbestände:', 14, 105)
+    doc.text(
+  `Impftermin: ${vaccinationDates?.[0]?.title || ''}`,
+  14,
+  100
+)
+
+doc.text(
+  `Datum: ${vaccinationDates?.[0]?.date || ''}`,
+  14,
+  105
+)
+    doc.text('Liste der geimpften Geflügelbestände:', 14, 115)
 autoTable(doc, {
-  startY: 115,
+  startY: 125,
   head: [[
     'Name',
     'Adresse',
