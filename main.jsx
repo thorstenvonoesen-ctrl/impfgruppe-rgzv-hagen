@@ -120,15 +120,18 @@ if (stripe === 'success') {
   console.log('PARTICIPANT', participant)
 console.log('EMAIL', participant?.email)
 if (participant?.email) {
-  await fetch('/api/send-payment-email', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-  email: participant.email,
-  firstname: participant.firstname,
-  lastname: participant.lastname
-})
+  const mailResponse = await fetch('/api/send-payment-email', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({
+    email: participant.email,
+    firstname: participant.firstname,
+    lastname: participant.lastname
   })
+})
+
+const mailResult = await mailResponse.json()
+console.log('MAIL RESULT:', mailResult)
 }
   setMessage('Stripe-Zahlung erfolgreich bestätigt.')
   setLoading(false)
