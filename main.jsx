@@ -745,10 +745,30 @@ doc.text(
   const doc = new jsPDF()
 
   doc.setFontSize(16)
-  doc.text('Sammelimpfbescheinigung', 14, 15)
+doc.text('Sammelimpfbescheinigung', 14, 15)
 
-  doc.setFontSize(11)
-  doc.text('Impfstoff: Nobilis ND Clone 30', 14, 30)
+doc.setFontSize(10)
+
+doc.text(
+  'Hiermit wird bescheinigt, dass der Geflügelbestand der nachstehend',
+  14,
+  25
+)
+
+doc.text(
+  'näher bezeichneten Geflügelzüchter gegen die Newcastle-Krankheit',
+  14,
+  31
+)
+
+doc.text(
+  '(atypische Geflügelpest) schutzgeimpft wurde.',
+  14,
+  37
+)
+
+doc.setFontSize(11)
+doc.text('Impfstoff: Nobilis ND Clone 30', 14, 50)
 
   doc.text('Charge: ______________________', 14, 40)
   doc.text('Verwendbar bis: ______________', 14, 50)
