@@ -99,7 +99,22 @@ console.log('PARTICIPANT:', participant)
   .eq('id', participantId)
 
 console.log('UPDATE RESULT=', updateResult)
+console.log('EMAIL=', participant.email)
 
+const mailResponse = await fetch('/api/send-payment-email', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({
+    email: participant.email,
+    firstname: participant.firstname,
+    lastname: participant.lastname
+  })
+})
+
+console.log('MAIL STATUS=', mailResponse.status)
+
+const mailText = await mailResponse.text()
+console.log('MAIL RESPONSE=', mailText)
   setMessage('Stripe-Zahlung erfolgreich bestätigt.')
   setLoading(false)
   return
