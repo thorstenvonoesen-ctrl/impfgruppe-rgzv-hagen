@@ -768,14 +768,15 @@ doc.text(
 )
 
 doc.setFontSize(11)
-doc.text('Impfstoff: Nobilis ND Clone 30', 14, 50)
+doc.text('Impfstoff: Nobilis ND Clone 30', 14, 58)
 
-  doc.text('Charge: ______________________', 14, 40)
-  doc.text('Verwendbar bis: ______________', 14, 50)
+doc.text('Charge: ______________________', 14, 68)
 
-  doc.text('Vom Tierarzt auszufüllen', 14, 60)
+doc.text('Verwendbar bis: ______________', 14, 78)
+
+  doc.text('Vom Tierarzt auszufüllen', 14, 90)
 autoTable(doc, {
-  startY: 75,
+  startY: 105,
   head: [[
     'Name',
     'Adresse',
