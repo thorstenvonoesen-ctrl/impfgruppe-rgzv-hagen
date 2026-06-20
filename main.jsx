@@ -754,7 +754,23 @@ doc.text(
   doc.text('Verwendbar bis: ______________', 14, 50)
 
   doc.text('Vom Tierarzt auszufüllen', 14, 60)
-
+autoTable(doc, {
+  startY: 75,
+  head: [[
+    'Name',
+    'Adresse',
+    'TSK-Nr.',
+    'Tierart',
+    'Anzahl'
+  ]],
+  body: participants.map(p => [
+    `${p.firstname} ${p.lastname}`,
+    `${p.street || ''} ${p.housenumber || ''}, ${p.zipcode || ''} ${p.city || ''}`,
+    p.tsk_number || '',
+    p.animal_type || '',
+    p.animal_count || ''
+  ])
+})
   doc.save('sammelimpfbescheinigung.pdf')
 }
   return <div className="actions">
