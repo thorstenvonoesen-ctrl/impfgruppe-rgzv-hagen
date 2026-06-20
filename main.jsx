@@ -263,10 +263,10 @@ value={form.vaccination_date_id}
   />
   Ich habe die Datenschutzerklärung gelesen und stimme der Verarbeitung meiner Daten zu.
 </label>
-       <div style={{ marginTop: '15px', marginBottom: '15px' }}>
+   <div style={{ marginTop: '15px', marginBottom: '15px' }}>
   <strong>Zahlungsart:</strong>
 
-  <label style={{ display: 'flex', alignItems: 'center', gap: '10px', marginTop: '10px' }}>
+  <div style={{ marginTop: '10px' }}>
     <input
       type="radio"
       name="paymentMethod"
@@ -274,10 +274,10 @@ value={form.vaccination_date_id}
       checked={paymentMethod === 'paypal'}
       onChange={(e) => setPaymentMethod(e.target.value)}
     />
-    PayPal
-  </label>
+    <span style={{ marginLeft: '8px' }}>PayPal</span>
+  </div>
 
-  <label style={{ display: 'flex', alignItems: 'center', gap: '10px', marginTop: '10px' }}>
+  <div style={{ marginTop: '10px' }}>
     <input
       type="radio"
       name="paymentMethod"
@@ -285,8 +285,10 @@ value={form.vaccination_date_id}
       checked={paymentMethod === 'stripe'}
       onChange={(e) => setPaymentMethod(e.target.value)}
     />
-    Kreditkarte / Apple Pay / Google Pay
-  </label>
+    <span style={{ marginLeft: '8px' }}>
+      Kreditkarte / Apple Pay / Google Pay
+    </span>
+  </div>
 </div>
           <button disabled={loading} className="primary">{loading ? 'Speichern...' : 'Anmelden & bezahlen'}</button>
           {message && <p className="message">{message}</p>}
