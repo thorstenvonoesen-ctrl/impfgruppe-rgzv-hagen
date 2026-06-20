@@ -21,7 +21,7 @@ export default async function handler(req, res) {
             product_data: {
               name: 'Impfgruppe RGZV Hagen'
             },
-            unit_amount: amount * 5
+            unit_amount: amount * 100
           },
           quantity: 1
         }
