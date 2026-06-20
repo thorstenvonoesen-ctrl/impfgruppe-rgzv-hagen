@@ -415,7 +415,7 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
 
   autoTable(doc, {
     startY: 48,
-    head: [['Name', 'Adresse', 'E-Mail', 'TSK-Nr.', 'Tiere', 'Impfung', 'Zahlung']],
+    head: [['Name', 'Adresse', 'E-Mail', 'TSK Betriebsnummer.', 'Tiere', 'Impfung', 'Zahlung']],
     body: list.map(p => [
       `${p.firstname} ${p.lastname}`,
       `${p.street || ''} ${p.housenumber || ''}, ${p.zipcode || ''} ${p.city || ''}`,
@@ -530,7 +530,7 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
           <th>Name</th>
           <th>Adresse</th>
           <th>E-Mail</th>
-          <th>TSK-Nr.</th>
+          <th>TSK Betriebsnummer.</th>
           <th>Tiere</th>
           <th>Impfung</th>
           <th>Impftermin</th>
@@ -655,7 +655,7 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
     <input
       value={editingParticipant.tsk_number || ''}
       onChange={e => setEditingParticipant({...editingParticipant, tsk_number: e.target.value})}
-      placeholder="TSK-Nummer"
+      placeholder="TSK Betriebsnummer"
     />
 
     <input
@@ -692,7 +692,7 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
 }
 
 function ExportButtons({ participants, vaccinationDates }) {
-  function csv() { const h=['Vorname','Nachname','Adresse','PLZ','Ort','E-Mail','Telefon','TSK-Nr.','Tiere','Impfung','Zahlung']; const rows=participants.map(p=>[p.firstname,p.lastname,`${p.street||''} ${p.housenumber||''}`.trim(),p.zipcode,p.city,p.email,p.phone,p.tsk_number,p.animal_count,p.vaccine,p.payment_status]); const out=[h,...rows].map(r=>r.map(v=>`"${String(v??'').replaceAll('"','""')}"`).join(';')).join('\n'); const blob=new Blob([out],{type:'text/csv;charset=utf-8'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='teilnehmerliste-rgzv-hagen.csv'; a.click() }
+  function csv() { const h=['Vorname','Nachname','Adresse','PLZ','Ort','E-Mail','Telefon','TSK Betriebsnummer.','Tiere','Impfung','Zahlung']; const rows=participants.map(p=>[p.firstname,p.lastname,`${p.street||''} ${p.housenumber||''}`.trim(),p.zipcode,p.city,p.email,p.phone,p.tsk_number,p.animal_count,p.vaccine,p.payment_status]); const out=[h,...rows].map(r=>r.map(v=>`"${String(v??'').replaceAll('"','""')}"`).join(';')).join('\n'); const blob=new Blob([out],{type:'text/csv;charset=utf-8'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='teilnehmerliste-rgzv-hagen.csv'; a.click() }
   function pdf() {
   const groups = vaccinationDates.map(date => ({
     date,
