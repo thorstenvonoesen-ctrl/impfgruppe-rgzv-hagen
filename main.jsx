@@ -741,6 +741,22 @@ doc.text(
     doc.save(`teilnehmerliste-${group.date.date}.pdf`)
   })
 }
+  function vaccinationCertificate() {
+  const doc = new jsPDF()
+
+  doc.setFontSize(16)
+  doc.text('Sammelimpfbescheinigung', 14, 15)
+
+  doc.setFontSize(11)
+  doc.text('Impfstoff: Nobilis ND Clone 30', 14, 30)
+
+  doc.text('Charge: ______________________', 14, 40)
+  doc.text('Verwendbar bis: ______________', 14, 50)
+
+  doc.text('Vom Tierarzt auszufüllen', 14, 60)
+
+  doc.save('sammelimpfbescheinigung.pdf')
+}
   return <div className="actions"><button onClick={pdf}><Download size={16}/> PDF</button><button onClick={csv}><Download size={16}/> CSV</button></div>
 }
 function Input({ label, ...props }) { return <label>{label}<input {...props}/></label> }
