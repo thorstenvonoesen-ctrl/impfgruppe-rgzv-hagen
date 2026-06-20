@@ -139,6 +139,10 @@ useEffect(() => {
   setLoading(false)
   return
 }
+    const isMember =
+  form.member_code?.trim() === MEMBER_CODE
+
+const paymentAmount = isMember ? 5 : 10
     const payload = {
   ...form,
   animal_count: Number(form.animal_count),
