@@ -143,8 +143,9 @@ useEffect(() => {
   form.member_code?.trim() === MEMBER_CODE
 
 const paymentAmount = isMember ? 5 : 10
+    const { member_code, ...formData } = form
     const payload = {
-  ...form,
+  ...formData,
   animal_count: Number(form.animal_count),
   vaccination_date_id: form.vaccination_date_id,
   payment_status: 'offen',
