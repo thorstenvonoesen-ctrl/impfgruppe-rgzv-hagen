@@ -544,6 +544,7 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
           <th>Adresse</th>
           <th>E-Mail</th>
           <th>TSK Betriebsnummer.</th>
+          <th>Mitglied</th>
           <th>Tiere</th>
           <th>Impfung</th>
           <th>Impftermin</th>
@@ -561,6 +562,7 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
               <td>{p.street} {p.housenumber}, {p.zipcode} {p.city}</td>
               <td>{p.email}<br /><small>{p.phone}</small></td>
               <td>{p.tsk_number}</td>
+              <td>{p.is_member ? 'Ja' : 'Nein'}</td>
               <td>{p.animal_count}</td>
               <td>{p.vaccine}</td>
               <td>
