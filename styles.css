@@ -30,7 +30,7 @@
   text-align: center;
 }
 
-.center .card input {
+.center .card input:not([type="radio"]):not([type="checkbox"]) {
   width: 100%;
   margin-bottom: 18px;
 }
