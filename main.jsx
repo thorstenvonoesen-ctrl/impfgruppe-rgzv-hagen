@@ -849,19 +849,7 @@ function Datenschutz() {
     <div className="page">
       <Header />
       <main className="card">
-        <h1>Datenschutzerklärung</h1>
-
-        <p>
-          Verantwortlicher:<br />
-          RGZV Hagen und Umgebung seit 1903 e.V.<br />
-          Im Wiedenbusch 41<br />
-          58099 Hagen
-        </p>
-
-        <p>
-          E-Mail:<br />
-          kontakt@rgzv-hagen-westfalen.de
-        </p>
+        
 
  <h2>Datenschutzerklärung für das Anmeldeformular</h2>
 
