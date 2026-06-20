@@ -72,9 +72,7 @@ useEffect(() => {
     const token = params.get('token')
     const participantId = params.get('participant')
 const stripe = params.get('stripe')
-    console.log('PAYPAL=', paypal)
-console.log('STRIPE=', stripe)
-console.log('PARTICIPANT=', participantId)
+    
     if (paypal !== 'success' && stripe !== 'success') return
 if (!participantId) return
 
@@ -98,9 +96,6 @@ console.log('PARTICIPANT:', participant)
   })
   .eq('id', participantId)
 
-console.log('UPDATE RESULT=', updateResult)
-console.log('EMAIL=', participant.email)
-
 const mailResponse = await fetch('/api/send-payment-email', {
   method: 'POST',
   headers: { 'Content-Type': 'application/json' },
@@ -111,10 +106,7 @@ const mailResponse = await fetch('/api/send-payment-email', {
   })
 })
 
-console.log('MAIL STATUS=', mailResponse.status)
-
 const mailText = await mailResponse.text()
-console.log('MAIL RESPONSE=', mailText)
   setMessage('Stripe-Zahlung erfolgreich bestätigt.')
   setLoading(false)
   return
