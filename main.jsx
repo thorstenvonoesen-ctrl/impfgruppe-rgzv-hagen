@@ -358,6 +358,7 @@ setNewDateNote('')
       email: p.email,
       phone: p.phone,
       tsk_number: p.tsk_number,
+      animal_type: p.animal_type,
       animal_count: p.animal_count,
       vaccine: p.vaccine
     })
