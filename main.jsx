@@ -101,11 +101,11 @@ if (!participantId) return
   await supabase
     .from('participants')
     .update({
-      payment_status: 'bezahlt',
-      payment_method: 'paypal',
-      payment_date: new Date().toISOString(),
-      payment_id: token
-    })
+  payment_status: 'bezahlt',
+  payment_method: stripe === 'success' ? 'stripe' : 'paypal',
+  payment_date: new Date().toISOString(),
+  payment_id: stripe === 'success' ? 'stripe_checkout' : token
+})
     .eq('id', participantId)
 
   if (participant?.email) {
