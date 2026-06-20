@@ -88,15 +88,17 @@ if (stripe === 'success') {
     .eq('id', participantId)
     .single()
 console.log('PARTICIPANT:', participant)
-  await supabase
-    .from('participants')
-    .update({
-      payment_status: 'bezahlt',
-      payment_method: 'stripe',
-      payment_date: new Date().toISOString(),
-      payment_id: 'stripe_checkout'
-    })
-    .eq('id', participantId)
+  const updateResult = await supabase
+  .from('participants')
+  .update({
+    payment_status: 'bezahlt',
+    payment_method: 'stripe',
+    payment_date: new Date().toISOString(),
+    payment_id: 'stripe_checkout'
+  })
+  .eq('id', participantId)
+
+console.log('UPDATE RESULT=', updateResult)
 
   setMessage('Stripe-Zahlung erfolgreich bestätigt.')
   setLoading(false)
