@@ -203,7 +203,7 @@ if (result.url) {
   <br />
   5 € für Vereinsmitglieder mit Mitgliedercode
 </div>
-
+</div>
 <p className="price-note">
   Bitte beachtet, dass bei Nichterscheinen keine Erstattung der Teilnahmegebühr erfolgen kann.
 </p>
