@@ -136,9 +136,7 @@ if (participant?.email) {
   console.log('EMAIL RESPONSE:', await emailResult.text())
 }
 
-const mailResult = await mailResponse.json()
-console.log('MAIL RESULT:', mailResult)
-}
+
   setMessage('Stripe-Zahlung erfolgreich bestätigt.')
   setLoading(false)
   return
