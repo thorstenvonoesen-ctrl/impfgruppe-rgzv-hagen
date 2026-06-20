@@ -24,7 +24,8 @@ function emptyForm() {
 animal_type:'',
 animal_count:'',
 vaccine:'Newcastle',
-  vaccination_date_id:''
+  vaccination_date_id:'',
+member_code:''
 }
 }
 
