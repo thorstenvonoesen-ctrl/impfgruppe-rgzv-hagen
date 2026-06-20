@@ -774,15 +774,16 @@ doc.text(
 )
 
 doc.setFontSize(11)
-doc.text('Impfstoff: Nobilis ND Clone 30', 14, 58)
+doc.text('Impfstoff: Nobilis ND Clone 30', 14, 65)
 
-doc.text('Charge: ______________________', 14, 68)
+doc.text('Charge: ______________________', 14, 75)
 
-doc.text('Verwendbar bis: ______________', 14, 78)
+doc.text('Verwendbar bis: ______________', 14, 85)
 
-  doc.text('Vom Tierarzt auszufüllen', 14, 90)
+  doc.text('Vom Tierarzt auszufüllen', 14, 95)
+    doc.text('Liste der geimpften Geflügelbestände:', 14, 105)
 autoTable(doc, {
-  startY: 105,
+  startY: 115,
   head: [[
     'Name',
     'Adresse',
