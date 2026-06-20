@@ -82,12 +82,12 @@ if (!participantId) return
     setLoading(true)
 if (stripe === 'success') {
   const { data: participant } = await supabase
-    console.log('PARTICIPANT:', participant)
+
     .from('participants')
     .select('*')
     .eq('id', participantId)
     .single()
-
+console.log('PARTICIPANT:', participant)
   await supabase
     .from('participants')
     .update({
