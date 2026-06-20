@@ -850,14 +850,21 @@ function Datenschutz() {
 
         <p>
   Die im Rahmen des Anmeldeformulars erhobenen personenbezogenen Daten
-  werden ausschließlich zur Organisation und Durchführung der Impfgruppe
-  verarbeitet.
+  werden ausschließlich zum Zweck der Anmeldung zum ausgewählten
+  Impftermin verwendet.
 </p>
 
 <p>
   Erfasst werden Vorname, Nachname, Anschrift, E-Mail-Adresse,
   Telefonnummer, TSK Betriebsnummer, Tierart, Tieranzahl,
-  ausgewählter Impftermin sowie Zahlungsinformationen.
+  die Bestätigung der Einwilligungserklärung, der ausgewählte
+  Impftermin sowie der Zahlungsstatus.
+</p>
+
+<p>
+  Die mit diesem Anmeldeformular erhobenen personenbezogenen Daten
+  sind ausschließlich der Impfgruppenkoordination und dem zuständigen
+  Tierarzt zugänglich.
 </p>
 
 <p>
@@ -865,6 +872,11 @@ function Datenschutz() {
   erforderlichen Daten an den Zahlungsdienstleister PayPal
   übermittelt. Die Verarbeitung erfolgt ausschließlich zur
   Durchführung der Zahlung.
+</p>
+
+<p>
+  Die personenbezogenen Daten werden gelöscht, sobald sie für den
+  Zweck ihrer Erhebung nicht mehr benötigt werden.
 </p>
 
 <p>
