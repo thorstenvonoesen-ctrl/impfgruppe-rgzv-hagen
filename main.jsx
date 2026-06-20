@@ -118,8 +118,10 @@ if (participant?.email) {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      participant
-    })
+  email: participant.email,
+  firstname: participant.firstname,
+  lastname: participant.lastname
+})
   })
 }
   setMessage('Stripe-Zahlung erfolgreich bestätigt.')
