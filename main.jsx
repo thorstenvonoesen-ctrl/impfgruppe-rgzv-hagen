@@ -148,7 +148,8 @@ const paymentAmount = isMember ? 5 : 10
   animal_count: Number(form.animal_count),
   vaccination_date_id: form.vaccination_date_id,
   payment_status: 'offen',
-  payment_amount: 10
+  payment_amount: paymentAmount,
+is_member: isMember
 }
     try {
       let participantId = null
