@@ -771,6 +771,15 @@ autoTable(doc, {
     p.animal_count || ''
   ])
 })
+    const y = doc.lastAutoTable.finalY + 20
+
+doc.text('Ort, Datum: ______________________', 14, y)
+
+doc.text(
+  'Tierarzt (Stempel / Unterschrift): ______________________',
+  14,
+  y + 15
+)
   doc.save('sammelimpfbescheinigung.pdf')
 }
   return <div className="actions">
