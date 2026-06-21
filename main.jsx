@@ -868,7 +868,7 @@ doc.text(
     doc.save(`teilnehmerliste-${group.date.date}.pdf`)
   })
 }
-  function vaccinationCertificate() {
+  async function vaccinationCertificate() {
   const doc = new jsPDF()
 
   doc.setFontSize(16)
