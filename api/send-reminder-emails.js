@@ -80,6 +80,13 @@ export default async function handler(req, res) {
             Ihr Impfwart<br>
             RGZV Hagen und Umgebung seit 1903 e.V.
           </p>
+          <hr style="margin-top:30px">
+
+<p style="font-size:12px;color:#666;">
+Diese E-Mail wurde automatisch über das Anmeldesystem des RGZV Hagen und Umgebung seit 1903 e.V. versendet.
+Antworten auf diese Nachricht werden nicht gelesen oder bearbeitet.
+Bei Fragen oder Änderungen zu Ihrer Anmeldung wenden Sie sich bitte direkt an den Verein.
+</p>
         `
       })
 
