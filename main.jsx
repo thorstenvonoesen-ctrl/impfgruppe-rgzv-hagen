@@ -946,19 +946,7 @@ doc.text(
   14,
   y + 15
 )
-  const response = await fetch('/api/send-vet-certificate', {
-  method: 'POST',
-  headers: {
-    'Content-Type': 'application/json'
-  },
-  body: JSON.stringify({
-    pdfData: doc.output('datauristring')
-  })
-})
-
-const data = await response.json()
-
-alert(data.message || data.error)
+  doc.save('sammelimpfbescheinigung.pdf')
 }
   return <div className="actions">
   <button onClick={pdf}><Download size={16}/> PDF</button>
