@@ -554,32 +554,6 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
 
   doc.save(`teilnehmerliste-${v.date}.pdf`)
 }
-
-function vetCertificateForDate(v) {
-  const list = participants.filter(
-    p => String(p.vaccination_date_id) === String(v.id)
-  )
-
-  const doc = new jsPDF()
-
-  doc.setFontSize(16)
-  doc.text('Sammelimpfbescheinigung', 14, 15)
-
-  autoTable(doc, {
-    startY: 40,
-    head: [['Name','Adresse','TSK Betriebsnummer','Tierart','Anzahl']],
-    body: list.map(p => [
-      `${p.firstname} ${p.lastname}`,
-      `${p.street || ''} ${p.housenumber || ''}, ${p.zipcode || ''} ${p.city || ''}`,
-      p.tsk_number || '',
-      p.animal_type || '',
-      p.animal_count || ''
-    ])
-  })
-
-  doc.save(`tierarztbescheinigung-${v.date}.pdf`)
-}
-
   return <div className="page admin"><Header admin />
     <main className="admin-wrap">
       <div className="admin-top"><h1>Adminbereich</h1><button className="ghost" onClick={onLogout}><LogOut size={16}/> Logout</button></div>
@@ -645,12 +619,6 @@ function vetCertificateForDate(v) {
   onClick={() => pdfForVaccinationDate(v)}
 >
   PDF
-</button>
-<button
-  className="small"
-  onClick={() => vetCertificateForDate(v)}
->
-  Tierarzt-PDF
 </button>
     <button
       className="small"
@@ -850,323 +818,66 @@ function vetCertificateForDate(v) {
   </div>
 }
 
+
 function ExportButtons({ participants, vaccinationDates }) {
-  function csv() { const h=['Vorname','Nachname','Adresse','PLZ','Ort','E-Mail','Telefon','TSK Betriebsnummer.','Tiere','Impfung','Zahlung']; const rows=participants.map(p=>[p.firstname,p.lastname,`${p.street||''} ${p.housenumber||''}`.trim(),p.zipcode,p.city,p.email,p.phone,p.tsk_number,p.animal_count,p.vaccine,p.payment_status]); const out=[h,...rows].map(r=>r.map(v=>`"${String(v??'').replaceAll('"','""')}"`).join(';')).join('\n'); const blob=new Blob([out],{type:'text/csv;charset=utf-8'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='teilnehmerliste-rgzv-hagen.csv'; a.click() }
+  function csv() {
+    const h=['Vorname','Nachname','Adresse','PLZ','Ort','E-Mail','Telefon','TSK Betriebsnummer.','Tiere','Impfung','Zahlung']
+    const rows=participants.map(p=>[p.firstname,p.lastname,`${p.street||''} ${p.housenumber||''}`.trim(),p.zipcode,p.city,p.email,p.phone,p.tsk_number,p.animal_count,p.vaccine,p.payment_status])
+    const out=[h,...rows].map(r=>r.map(v=>`"${String(v??'').replaceAll('"','""')}"`).join(';')).join('\n')
+    const blob=new Blob([out],{type:'text/csv;charset=utf-8'})
+    const a=document.createElement('a')
+    a.href=URL.createObjectURL(blob)
+    a.download='teilnehmerliste-rgzv-hagen.csv'
+    a.click()
+  }
+
   function pdf() {
-  const groups = vaccinationDates.map(date => ({
-    date,
-    participants: participants.filter(p => p.vaccination_date_id === date.id)
-  })).filter(g => g.participants.length > 0)
-
-  groups.forEach(group => {
-    const doc = new jsPDF({ orientation: 'landscape' })
-
-    doc.setFontSize(20)
-doc.text('RGZV Hagen und Umgebung seit 1903 e.V.', 14, 15)
-
-doc.setFontSize(10)
-doc.text('Im Wiedenbusch 41 · 58099 Hagen', 14, 22)
-
-doc.text('1. Vorsitzender: Frank Sternal', 14, 28)
-
-doc.text('1. Kassierer: Thorsten von Oesen', 14, 34)
-
-doc.text(
-  `Impftermin: ${group.date.title} - ${group.date.date}`,
-  14,
-  40
-)
-
-doc.text(
-  `Export: ${new Date().toLocaleDateString('de-DE')}`,
-  14,
-  46
-)
-
+    const doc = new jsPDF()
     autoTable(doc, {
-      startY: 54,
-      head: [['Name', 'Adresse', 'E-Mail', 'TSK Betriebsnummer.', 'Tiere', 'Impfung', 'Zahlung']],
-      body: group.participants.map(p => [
+      head:[['Name','Adresse','E-Mail','TSK','Tiere','Impfung','Zahlung']],
+      body: participants.map(p => [
         `${p.firstname} ${p.lastname}`,
-        `${p.street || ''} ${p.housenumber || ''}, ${p.zipcode || ''} ${p.city || ''}`,
+        `${p.street||''} ${p.housenumber||''}, ${p.zipcode||''} ${p.city||''}`,
         p.email || '',
         p.tsk_number || '',
         p.animal_count || '',
         p.vaccine || '',
-        p.payment_status || 'offen'
+        p.payment_status || ''
+      ])
+    })
+    doc.save('teilnehmerliste.pdf')
+  }
+
+  async function vaccinationCertificate() {
+    const doc = new jsPDF()
+
+    doc.setFontSize(16)
+    doc.text('Sammelimpfbescheinigung', 14, 15)
+
+    autoTable(doc, {
+      startY: 30,
+      head:[['Name','Adresse','TSK Betriebsnummer','Tierart','Anzahl']],
+      body: participants.map(p => [
+        `${p.firstname} ${p.lastname}`,
+        `${p.street||''} ${p.housenumber||''}, ${p.zipcode||''} ${p.city||''}`,
+        p.tsk_number || '',
+        p.animal_type || '',
+        p.animal_count || ''
       ])
     })
 
-    doc.save(`teilnehmerliste-${group.date.date}.pdf`)
-  })
+    doc.save('sammelimpfbescheinigung.pdf')
+  }
+
+  return (
+    <div className="actions">
+      <button onClick={pdf}><Download size={16}/> PDF</button>
+      <button onClick={csv}><Download size={16}/> CSV</button>
+      <button onClick={vaccinationCertificate}>Sammelbescheinigung</button>
+    </div>
+  )
 }
-  async function vaccinationCertificate() {
-  const doc = new jsPDF()
 
-  doc.setFontSize(16)
-doc.text('Sammelimpfbescheinigung', 14, 15)
-
-doc.setFontSize(10)
-
-doc.text(
-  'Hiermit wird bescheinigt, dass die nachstehend aufgeführten',
-  14,
-  28
-)
-
-doc.text(
-  'Geflügelbestände gegen die Newcastle-Krankheit',
-  14,
-  35
-)
-
-doc.text(
-  '(atypische Geflügelpest) gemäß den geltenden',
-  14,
-  42
-)
-
-doc.text(
-  'tierseuchenrechtlichen Vorschriften schutzgeimpft wurden.',
-  14,
-  49
-)
-
-doc.setFontSize(11)
-doc.text('Impfstoff: Nobilis ND Clone 30', 14, 65)
-
-doc.text('Charge: ______________________', 14, 75)
-
-doc.text('Verwendbar bis: ______________', 14, 85)
-
-  doc.text('Vom Tierarzt auszufüllen', 14, 95)
-    doc.text(
-  `Impftermin: ${vaccinationDates?.[0]?.title || ''}`,
-  14,
-  100
-)
-
-doc.text(
-  `Datum: ${vaccinationDates?.[0]?.date || ''}`,
-  14,
-  105
-)
-    doc.text('Liste der geimpften Geflügelbestände:', 14, 115)
-autoTable(doc, {
-  startY: 125,
-  head: [[
-    'Name',
-    'Adresse',
-    'TSK Betriebsnummer.',
-    'Tierart',
-    'Anzahl'
-  ]],
-  body: participants.map(p => [
-    `${p.firstname} ${p.lastname}`,
-    `${p.street || ''} ${p.housenumber || ''}, ${p.zipcode || ''} ${p.city || ''}`,
-    p.tsk_number || '',
-    p.animal_type || '',
-    p.animal_count || ''
-  ])
-})
-    const y = doc.lastAutoTable.finalY + 20
-
-doc.text('Ort, Datum: ______________________', 14, y)
-
-doc.text(
-  'Tierarzt (Stempel / Unterschrift): ______________________',
-  14,
-  y + 15
-)
-    
-  
-  
-
-  doc.save('sammelimpfbescheinigung.pdf')
-}
-  
-  async function vaccinationCertificate() {
-  const doc = new jsPDF()
-
-  doc.setFontSize(16)
-doc.text('Sammelimpfbescheinigung', 14, 15)
-
-doc.setFontSize(10)
-
-doc.text(
-  'Hiermit wird bescheinigt, dass die nachstehend aufgeführten',
-  14,
-  28
-)
-
-doc.text(
-  'Geflügelbestände gegen die Newcastle-Krankheit',
-  14,
-  35
-)
-
-doc.text(
-  '(atypische Geflügelpest) gemäß den geltenden',
-  14,
-  42
-)
-
-doc.text(
-  'tierseuchenrechtlichen Vorschriften schutzgeimpft wurden.',
-  14,
-  49
-)
-
-doc.setFontSize(11)
-doc.text('Impfstoff: Nobilis ND Clone 30', 14, 65)
-
-doc.text('Charge: ______________________', 14, 75)
-
-doc.text('Verwendbar bis: ______________', 14, 85)
-
-  doc.text('Vom Tierarzt auszufüllen', 14, 95)
-    doc.text(
-  `Impftermin: ${vaccinationDates?.[0]?.title || ''}`,
-  14,
-  100
-)
-
-doc.text(
-  `Datum: ${vaccinationDates?.[0]?.date || ''}`,
-  14,
-  105
-)
-    doc.text('Liste der geimpften Geflügelbestände:', 14, 115)
-autoTable(doc, {
-  startY: 125,
-  head: [[
-    'Name',
-    'Adresse',
-    'TSK Betriebsnummer.',
-    'Tierart',
-    'Anzahl'
-  ]],
-  body: participants.map(p => [
-    `${p.firstname} ${p.lastname}`,
-    `${p.street || ''} ${p.housenumber || ''}, ${p.zipcode || ''} ${p.city || ''}`,
-    p.tsk_number || '',
-    p.animal_type || '',
-    p.animal_count || ''
-  ])
-})
-    const y = doc.lastAutoTable.finalY + 20
-
-doc.text('Ort, Datum: ______________________', 14, y)
-
-doc.text(
-  'Tierarzt (Stempel / Unterschrift): ______________________',
-  14,
-  y + 15
-)
-doc.save('sammelimpfbescheinigung.pdf')
-}
-  
-  async function vaccinationCertificate() {
-  const doc = new jsPDF()
-
-  doc.setFontSize(16)
-doc.text('Sammelimpfbescheinigung', 14, 15)
-
-doc.setFontSize(10)
-
-doc.text(
-  'Hiermit wird bescheinigt, dass die nachstehend aufgeführten',
-  14,
-  28
-)
-
-doc.text(
-  'Geflügelbestände gegen die Newcastle-Krankheit',
-  14,
-  35
-)
-
-doc.text(
-  '(atypische Geflügelpest) gemäß den geltenden',
-  14,
-  42
-)
-
-doc.text(
-  'tierseuchenrechtlichen Vorschriften schutzgeimpft wurden.',
-  14,
-  49
-)
-
-doc.setFontSize(11)
-doc.text('Impfstoff: Nobilis ND Clone 30', 14, 65)
-
-doc.text('Charge: ______________________', 14, 75)
-
-doc.text('Verwendbar bis: ______________', 14, 85)
-
-  doc.text('Vom Tierarzt auszufüllen', 14, 95)
-    doc.text(
-  `Impftermin: ${vaccinationDates?.[0]?.title || ''}`,
-  14,
-  100
-)
-
-doc.text(
-  `Datum: ${vaccinationDates?.[0]?.date || ''}`,
-  14,
-  105
-)
-    doc.text('Liste der geimpften Geflügelbestände:', 14, 115)
-autoTable(doc, {
-  startY: 125,
-  head: [[
-    'Name',
-    'Adresse',
-    'TSK Betriebsnummer.',
-    'Tierart',
-    'Anzahl'
-  ]],
-  body: participants.map(p => [
-    `${p.firstname} ${p.lastname}`,
-    `${p.street || ''} ${p.housenumber || ''}, ${p.zipcode || ''} ${p.city || ''}`,
-    p.tsk_number || '',
-    p.animal_type || '',
-    p.animal_count || ''
-  ])
-})
-    const y = doc.lastAutoTable.finalY + 20
-
-doc.text('Ort, Datum: ______________________', 14, y)
-
-doc.text(
-  'Tierarzt (Stempel / Unterschrift): ______________________',
-  14,
-  y + 15
-)
-
-
-  const response = await fetch('/api/send-vet-certificate', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      pdfData: doc.output('datauristring')
-    })
-  })
-
-  const data = await response.json()
-
-  alert(data.message || data.error)
-}
-  return <div className="actions">
-  <button onClick={pdf}><Download size={16}/> PDF</button>
-  <button onClick={csv}><Download size={16}/> CSV</button>
-  <button onClick={vaccinationCertificate}>Sammelbescheinigung</button>
-  
-</div>
-}
 function Input({ label, ...props }) { return <label>{label}<input {...props}/></label> }
 function Stat({ icon,label,value }) { return <div className="stat">{icon}<span>{label}</span><strong>{value}</strong></div> }
 function Datenschutz() {
