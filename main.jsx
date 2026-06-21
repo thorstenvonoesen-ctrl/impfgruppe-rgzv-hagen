@@ -655,6 +655,7 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
           <th>Name</th>
           <th>Adresse</th>
           <th>E-Mail</th>
+          <th>Telefon</th>
           <th>TSK Betriebsnummer.</th>
           <th>Mitglied</th>
           <th>Tiere</th>
