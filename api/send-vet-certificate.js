@@ -1,6 +1,14 @@
-import { Resend } from 'resend'
+import nodemailer from 'nodemailer'
 
-const resend = new Resend(process.env.RESEND_API_KEY)
+const transporter = nodemailer.createTransport({
+  host: process.env.SMTP_HOST,
+  port: Number(process.env.SMTP_PORT),
+  secure: true,
+  auth: {
+    user: process.env.SMTP_USER,
+    pass: process.env.SMTP_PASS
+  }
+})
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -8,8 +16,8 @@ export default async function handler(req, res) {
   }
 
   try {
-    const result = await resend.emails.send({
-      from: 'RGZV Hagen <onboarding@resend.dev>',
+    await transporter.sendMail({
+      from: process.env.SMTP_USER,
       to: 't.von-oesen@rgzv-hagen-westfalen.de',
       subject: 'Test Sammelimpfbescheinigung',
       html: `
@@ -19,11 +27,10 @@ export default async function handler(req, res) {
 
         <p style="font-size:12px;color:#666;">
         Diese E-Mail wurde automatisch über das Anmeldesystem des RGZV Hagen und Umgebung seit 1903 e.V. versendet.
-        Antworten auf diese Nachricht werden nicht gelesen oder bearbeitet.
         </p>
       `
     })
-console.log('RESEND RESULT:', result)
+
     return res.status(200).json({
       success: true,
       message: 'E-Mail versendet'
