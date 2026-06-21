@@ -969,7 +969,7 @@ doc.text(
     alert(data.message || data.error)
   }}
 >
-  Tierarzt Mail Test
+  Bescheinigung per E-Mail senden
 </button>
 </div>
 }
