@@ -960,7 +960,7 @@ doc.text(
     'Content-Type': 'application/json'
   },
   body: JSON.stringify({
-    pdfData: doc.output('datauristring')
+    pdfData: 'ECHTE_PDF'
   })
 })
 
