@@ -952,25 +952,7 @@ doc.text(
   <button onClick={pdf}><Download size={16}/> PDF</button>
   <button onClick={csv}><Download size={16}/> CSV</button>
   <button onClick={vaccinationCertificate}>Sammelbescheinigung</button>
-    <button
-  onClick={async () => {
-    const response = await fetch('/api/send-vet-certificate', {
-  method: 'POST',
-  headers: {
-    'Content-Type': 'application/json'
-  },
-  body: JSON.stringify({
-    pdfData: doc.output('datauristring')
-  })
-})
-
-    const data = await response.json()
-
-    alert(data.message || data.error)
-  }}
->
-  Bescheinigung per E-Mail senden
-</button>
+  
 </div>
 }
 function Input({ label, ...props }) { return <label>{label}<input {...props}/></label> }
