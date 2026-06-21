@@ -1031,7 +1031,8 @@ doc.text(
   14,
   y + 15
 )
-
+doc.save('sammelimpfbescheinigung.pdf')
+}
   return <div className="actions">
   <button onClick={pdf}><Download size={16}/> PDF</button>
   <button onClick={csv}><Download size={16}/> CSV</button>
