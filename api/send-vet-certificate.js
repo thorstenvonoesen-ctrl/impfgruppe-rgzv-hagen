@@ -17,7 +17,7 @@ export default async function handler(req, res) {
 
   try {
     await transporter.sendMail({
-      from: `"RGZV Hagen" <${process.env.SMTP_USER}>`,
+      from: `"RGZV Hagen und Umgebung seit 1903 e.V." <${process.env.SMTP_USER}>`,
       to: 't.von-oesen@rgzv-hagen-westfalen.de',
       subject: 'Sammelimpfbescheinigung zur Prüfung und Unterschrift',
       html: `
