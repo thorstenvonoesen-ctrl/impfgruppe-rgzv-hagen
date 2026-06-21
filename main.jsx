@@ -946,47 +946,10 @@ doc.text(
   14,
   y + 15
 )
-    await fetch('/api/send-vet-certificate', {
-  method: 'POST',
-    async function sendVetCertificate() {
-  const doc = new jsPDF()
+    
+  
+  
 
-  doc.setFontSize(16)
-  doc.text('Sammelimpfbescheinigung', 14, 15)
-
-  doc.setFontSize(10)
-  doc.text('Hiermit wird bescheinigt, dass die nachstehend aufgeführten', 14, 28)
-  doc.text('Geflügelbestände gegen die Newcastle-Krankheit', 14, 35)
-  doc.text('(atypische Geflügelpest) gemäß den geltenden', 14, 42)
-  doc.text('tierseuchenrechtlichen Vorschriften schutzgeimpft wurden.', 14, 49)
-
-  doc.setFontSize(11)
-  doc.text('Impfstoff: Nobilis ND Clone 30', 14, 65)
-  doc.text('Charge: __________________', 14, 75)
-  doc.text('Verwendbar bis: __________________', 14, 85)
-
-  await fetch('/api/send-vet-certificate', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      pdfData: doc.output('datauristring')
-    })
-  })
-
-  alert('Bescheinigung per E-Mail versendet')
-}
-  headers: {
-    'Content-Type': 'application/json'
-  },
-  body: JSON.stringify({
-    <button onClick={sendVetCertificate}>
-  An Tierarzt senden
-</button>
-    pdfData: doc.output('datauristring')
-  })
-})
   doc.save('sammelimpfbescheinigung.pdf')
 }
   return <div className="actions">
