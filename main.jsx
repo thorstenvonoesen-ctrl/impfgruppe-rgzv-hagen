@@ -955,8 +955,14 @@ doc.text(
     <button
   onClick={async () => {
     const response = await fetch('/api/send-vet-certificate', {
-      method: 'POST'
-    })
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({
+    pdfData: 'TEST'
+  })
+})
 
     const data = await response.json()
 
