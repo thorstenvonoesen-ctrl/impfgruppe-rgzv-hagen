@@ -886,8 +886,9 @@ function ExportButtons({ participants, vaccinationDates }) {
       method: 'POST',
       headers: {'Content-Type':'application/json'},
       body: JSON.stringify({
-        pdfData: doc.output('datauristring')
-      })
+  pdfData: doc.output('datauristring'),
+  datum: vaccinationDates?.[0]?.date || ''
+})
     })
 
     alert('Bescheinigung an Tierarzt versendet')
