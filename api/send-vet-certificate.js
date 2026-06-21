@@ -29,6 +29,8 @@ if (pdfData && pdfData !== 'TEST') {
 }
 
 console.log('PDF DATA:', pdfData)
+console.log('PDF LENGTH:', pdfData?.length)
+console.log('ATTACHMENTS:', attachments.length)
     await transporter.sendMail({
       from: `"RGZV Hagen und Umgebung seit 1903 e.V." <${process.env.SMTP_USER}>`,
       to: 't.von-oesen@rgzv-hagen-westfalen.de',
