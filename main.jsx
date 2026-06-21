@@ -1033,9 +1033,7 @@ doc.text(
 )
 doc.save('sammelimpfbescheinigung.pdf')
 }
-  async function sendVetCertificate() {
-  const doc = new jsPDF()
-
+  
   async function vaccinationCertificate() {
   const doc = new jsPDF()
 
