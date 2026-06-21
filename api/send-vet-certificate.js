@@ -16,6 +16,9 @@ export default async function handler(req, res) {
   }
 
   try {
+    const { pdfData } = req.body || {}
+
+console.log('PDF DATA:', pdfData)
     await transporter.sendMail({
       from: `"RGZV Hagen und Umgebung seit 1903 e.V." <${process.env.SMTP_USER}>`,
       to: 't.von-oesen@rgzv-hagen-westfalen.de',
