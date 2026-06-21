@@ -952,6 +952,19 @@ doc.text(
   <button onClick={pdf}><Download size={16}/> PDF</button>
   <button onClick={csv}><Download size={16}/> CSV</button>
   <button onClick={vaccinationCertificate}>Sammelbescheinigung</button>
+    <button
+  onClick={async () => {
+    const response = await fetch('/api/send-vet-certificate', {
+      method: 'POST'
+    })
+
+    const data = await response.json()
+
+    alert(data.message || data.error)
+  }}
+>
+  Tierarzt Mail Test
+</button>
 </div>
 }
 function Input({ label, ...props }) { return <label>{label}<input {...props}/></label> }
