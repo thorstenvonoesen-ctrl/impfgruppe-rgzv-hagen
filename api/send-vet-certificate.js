@@ -23,7 +23,7 @@ const attachments = []
 if (pdfData && pdfData !== 'TEST') {
   attachments.push({
     filename: 'sammelimpfbescheinigung.pdf',
-    content: Buffer.from(pdfData.split(',')[1], 'base64'),
+    content: pdfData,
     
   })
 }
