@@ -931,15 +931,7 @@ function ExportButtons({ participants, vaccinationDates }) {
 
     doc.save('sammelimpfbescheinigung.pdf')
 
-    try {
-      await fetch('/api/send-vet-certificate', {
-        method: 'POST',
-        headers: {'Content-Type':'application/json'},
-        body: JSON.stringify({
-          pdfData: doc.output('datauristring')
-        })
-      })
-    } catch(e) {}
+    
   }
 
   return (
