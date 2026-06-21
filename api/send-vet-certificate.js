@@ -18,6 +18,16 @@ export default async function handler(req, res) {
   try {
     const { pdfData } = req.body || {}
 
+const attachments = []
+
+if (pdfData && pdfData !== 'TEST') {
+  attachments.push({
+    filename: 'sammelimpfbescheinigung.pdf',
+    content: pdfData.split(',')[1],
+    encoding: 'base64'
+  })
+}
+
 console.log('PDF DATA:', pdfData)
     await transporter.sendMail({
       from: `"RGZV Hagen und Umgebung seit 1903 e.V." <${process.env.SMTP_USER}>`,
