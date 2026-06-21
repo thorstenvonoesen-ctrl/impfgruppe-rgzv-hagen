@@ -16,7 +16,7 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { pdfData } = req.body || {}
+    const { pdfData, datum } = req.body || {}
 
 const attachments = []
 
@@ -41,7 +41,7 @@ attachments,
         <p>Sehr geehrte Damen und Herren,</p>
 
         <p>
-          anbei übersenden wir Ihnen die Sammelimpfbescheinigung für den Impftermin vom <strong>[DATUM]</strong>
+          anbei übersenden wir Ihnen die Sammelimpfbescheinigung für den Impftermin vom <strong>${datum}</strong>
           mit der freundlichen Bitte um Prüfung und Unterzeichnung.
         </p>
 
