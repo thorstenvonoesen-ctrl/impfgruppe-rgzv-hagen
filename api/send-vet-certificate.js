@@ -8,7 +8,7 @@ export default async function handler(req, res) {
   }
 
   try {
-    await resend.emails.send({
+    const result = await resend.emails.send({
       from: 'RGZV Hagen <onboarding@resend.dev>',
       to: 't.von-oesen@rgzv-hagen-westfalen.de',
       subject: 'Test Sammelimpfbescheinigung',
@@ -23,7 +23,7 @@ export default async function handler(req, res) {
         </p>
       `
     })
-
+console.log('RESEND RESULT:', result)
     return res.status(200).json({
       success: true,
       message: 'E-Mail versendet'
