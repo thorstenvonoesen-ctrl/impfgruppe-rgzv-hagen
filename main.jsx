@@ -1132,9 +1132,7 @@ doc.text(
   <button onClick={pdf}><Download size={16}/> PDF</button>
   <button onClick={csv}><Download size={16}/> CSV</button>
   <button onClick={vaccinationCertificate}>Sammelbescheinigung</button>
-  <button onClick={sendVetCertificate}>
-  An Tierarzt senden
-</button>
+  
 </div>
 }
 function Input({ label, ...props }) { return <label>{label}<input {...props}/></label> }
