@@ -554,50 +554,6 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
 
   doc.save(`teilnehmerliste-${v.date}.pdf`)
 }
-
-function vetCertificateForDate(v) {
-  const list = participants.filter(
-    p => String(p.vaccination_date_id) === String(v.id)
-  )
-
-  const doc = new jsPDF()
-
-  doc.setFontSize(16)
-  doc.text('Sammelimpfbescheinigung', 14, 15)
-
-  doc.setFontSize(10)
-  doc.text('Hiermit wird bescheinigt, dass die nachstehend aufgeführten',14,28)
-  doc.text('Geflügelbestände gegen die Newcastle-Krankheit',14,35)
-  doc.text('(atypische Geflügelpest) gemäß den geltenden',14,42)
-  doc.text('tierseuchenrechtlichen Vorschriften schutzgeimpft wurden.',14,49)
-
-  doc.setFontSize(11)
-  doc.text('Impfstoff: Nobilis ND Clone 30',14,65)
-  doc.text('Charge: ______________________',14,75)
-  doc.text('Verwendbar bis: ______________',14,85)
-
-  doc.text(`Impftermin: ${v.title}`,14,100)
-  doc.text(`Datum: ${v.date}`,14,108)
-
-  autoTable(doc, {
-    startY: 120,
-    head: [['Name','Adresse','TSK Betriebsnummer.','Tierart','Anzahl']],
-    body: list.map(p => [
-      `${p.firstname} ${p.lastname}`,
-      `${p.street || ''} ${p.housenumber || ''}, ${p.zipcode || ''} ${p.city || ''}`,
-      p.tsk_number || '',
-      p.animal_type || '',
-      p.animal_count || ''
-    ])
-  })
-
-  const y = doc.lastAutoTable.finalY + 20
-  doc.text('Ort, Datum: ______________________',14,y)
-  doc.text('Tierarzt (Stempel / Unterschrift): ______________________',14,y+15)
-
-  doc.save(`tierarztbescheinigung-${v.date}.pdf`)
-}
-
   return <div className="page admin"><Header admin />
     <main className="admin-wrap">
       <div className="admin-top"><h1>Adminbereich</h1><button className="ghost" onClick={onLogout}><LogOut size={16}/> Logout</button></div>
@@ -663,12 +619,6 @@ function vetCertificateForDate(v) {
   onClick={() => pdfForVaccinationDate(v)}
 >
   PDF
-</button>
-<button
-  className="small"
-  onClick={() => vetCertificateForDate(v)}
->
-  Tierarzt-PDF
 </button>
     <button
       className="small"
@@ -869,6 +819,7 @@ function vetCertificateForDate(v) {
 }
 
 
+
 function ExportButtons({ participants, vaccinationDates }) {
   function csv() {
     const h=['Vorname','Nachname','Adresse','PLZ','Ort','E-Mail','Telefon','TSK Betriebsnummer.','Tiere','Impfung','Zahlung']
@@ -904,8 +855,22 @@ function ExportButtons({ participants, vaccinationDates }) {
     doc.setFontSize(16)
     doc.text('Sammelimpfbescheinigung', 14, 15)
 
+    doc.setFontSize(10)
+    doc.text('Hiermit wird bescheinigt, dass die nachstehend aufgeführten',14,28)
+    doc.text('Geflügelbestände gegen die Newcastle-Krankheit',14,35)
+    doc.text('(atypische Geflügelpest) gemäß den geltenden',14,42)
+    doc.text('tierseuchenrechtlichen Vorschriften schutzgeimpft wurden.',14,49)
+
+    doc.setFontSize(11)
+    doc.text('Impfstoff: Nobilis ND Clone 30',14,65)
+    doc.text('Charge: ______________________',14,75)
+    doc.text('Verwendbar bis: ______________',14,85)
+
+    doc.text(`Impftermin: ${vaccinationDates?.[0]?.title || ""}`,14,100)
+    doc.text(`Datum: ${vaccinationDates?.[0]?.date || ""}`,14,108)
+
     autoTable(doc, {
-      startY: 30,
+      startY: 120,
       head:[['Name','Adresse','TSK Betriebsnummer','Tierart','Anzahl']],
       body: participants.map(p => [
         `${p.firstname} ${p.lastname}`,
@@ -916,17 +881,32 @@ function ExportButtons({ participants, vaccinationDates }) {
       ])
     })
 
+    const y = doc.lastAutoTable.finalY + 20
+    doc.text('Ort, Datum: ______________________',14,y)
+    doc.text('Tierarzt (Stempel / Unterschrift): ______________________',14,y+15)
+
     doc.save('sammelimpfbescheinigung.pdf')
+
+    try {
+      await fetch('/api/send-vet-certificate', {
+        method: 'POST',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({
+          pdfData: doc.output('datauristring')
+        })
+      })
+    } catch(e) {}
   }
 
   return (
     <div className="actions">
       <button onClick={pdf}><Download size={16}/> PDF</button>
       <button onClick={csv}><Download size={16}/> CSV</button>
-      <button onClick={vaccinationCertificate}>Sammelbescheinigung</button>
+      <button onClick={vaccinationCertificate}>Tierarztbutton</button>
     </div>
   )
 }
+
 
 function Input({ label, ...props }) { return <label>{label}<input {...props}/></label> }
 function Stat({ icon,label,value }) { return <div className="stat">{icon}<span>{label}</span><strong>{value}</strong></div> }
