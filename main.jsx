@@ -673,8 +673,9 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
             <tr key={p.id}>
               <td>{p.firstname} {p.lastname}</td>
               <td>{p.street} {p.housenumber}, {p.zipcode} {p.city}</td>
-              <td>{p.email}<br /><small>{p.phone}</small></td>
-              <td>{p.tsk_number}</td>
+              <td>{p.email}</td>
+<td>{p.phone}</td>
+<td>{p.tsk_number}</td>
               <td>{p.is_member ? 'Ja' : 'Nein'}</td>
               <td>{p.animal_count}</td>
               <td>{p.vaccine}</td>
