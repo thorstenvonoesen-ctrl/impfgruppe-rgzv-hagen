@@ -17,16 +17,65 @@ export default async function handler(req, res) {
 
   try {
     await transporter.sendMail({
-      from: process.env.SMTP_USER,
+      from: `"RGZV Hagen" <${process.env.SMTP_USER}>`,
       to: 't.von-oesen@rgzv-hagen-westfalen.de',
-      subject: 'Test Sammelimpfbescheinigung',
+      subject: 'Sammelimpfbescheinigung zur Prüfung und Unterschrift',
       html: `
-        <p>Dies ist ein Testversand für die spätere Tierarzt-Funktion.</p>
+        <p>Sehr geehrte Damen und Herren,</p>
 
-        <hr style="margin-top:30px">
+        <p>
+          anbei übersenden wir Ihnen die Sammelimpfbescheinigung für den Impftermin vom <strong>[DATUM]</strong>
+          mit der freundlichen Bitte um Prüfung und Unterzeichnung.
+        </p>
+
+        <p>
+          Die Bescheinigung wurde auf Grundlage der für diesen Impftermin eingegangenen Anmeldungen erstellt
+          und enthält die gemeldeten Teilnehmerdaten einschließlich der relevanten Angaben für die Durchführung
+          der Impfung.
+        </p>
+
+        <p>
+          Das Dokument wird dieser E-Mail als PDF-Datei beigefügt.
+        </p>
+
+        <p>
+          Wir bitten Sie, die Bescheinigung nach Prüfung zu unterschreiben und uns anschließend wieder zur
+          Verfügung zu stellen. Sofern aus Ihrer Sicht Korrekturen, Ergänzungen oder sonstige Anpassungen
+          erforderlich sein sollten, bitten wir um eine kurze Mitteilung.
+        </p>
+
+        <p>
+          Mit Ihrer Unterstützung leisten Sie einen wichtigen Beitrag zur ordnungsgemäßen Durchführung der
+          Sammelimpfung sowie zur vollständigen Dokumentation gegenüber den teilnehmenden Geflügelhaltern
+          und den zuständigen Stellen.
+        </p>
+
+        <p>
+          Für die stets angenehme Zusammenarbeit und Ihre Unterstützung bedanken wir uns bereits im Voraus.
+          Bei Rückfragen oder weiteren Informationen stehen wir selbstverständlich jederzeit gerne zur Verfügung.
+        </p>
+
+        <p>
+          Mit freundlichen Grüßen
+        </p>
+
+        <p>
+          <strong>Rainer Koplin</strong><br>
+          Impfwart<br>
+          RGZV Hagen und Umgebung seit 1903 e.V.
+        </p>
+
+        <p>
+          Kontakt:<br>
+          Thorsten von Oesen<br>
+          E-Mail: t.von-oesen@rgzv-hagen-westfalen.de
+        </p>
+
+        <hr>
 
         <p style="font-size:12px;color:#666;">
-        Diese E-Mail wurde automatisch über das Anmeldesystem des RGZV Hagen und Umgebung seit 1903 e.V. versendet.
+          Diese E-Mail wurde automatisch über das Anmeldesystem des
+          RGZV Hagen und Umgebung seit 1903 e.V. erstellt.
         </p>
       `
     })
