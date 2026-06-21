@@ -554,6 +554,32 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
 
   doc.save(`teilnehmerliste-${v.date}.pdf`)
 }
+
+function vetCertificateForDate(v) {
+  const list = participants.filter(
+    p => String(p.vaccination_date_id) === String(v.id)
+  )
+
+  const doc = new jsPDF()
+
+  doc.setFontSize(16)
+  doc.text('Sammelimpfbescheinigung', 14, 15)
+
+  autoTable(doc, {
+    startY: 40,
+    head: [['Name','Adresse','TSK Betriebsnummer','Tierart','Anzahl']],
+    body: list.map(p => [
+      `${p.firstname} ${p.lastname}`,
+      `${p.street || ''} ${p.housenumber || ''}, ${p.zipcode || ''} ${p.city || ''}`,
+      p.tsk_number || '',
+      p.animal_type || '',
+      p.animal_count || ''
+    ])
+  })
+
+  doc.save(`tierarztbescheinigung-${v.date}.pdf`)
+}
+
   return <div className="page admin"><Header admin />
     <main className="admin-wrap">
       <div className="admin-top"><h1>Adminbereich</h1><button className="ghost" onClick={onLogout}><LogOut size={16}/> Logout</button></div>
@@ -619,6 +645,12 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
   onClick={() => pdfForVaccinationDate(v)}
 >
   PDF
+</button>
+<button
+  className="small"
+  onClick={() => vetCertificateForDate(v)}
+>
+  Tierarzt-PDF
 </button>
     <button
       className="small"
