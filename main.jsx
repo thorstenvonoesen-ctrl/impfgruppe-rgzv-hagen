@@ -952,7 +952,7 @@ doc.text(
 
   doc.save('sammelimpfbescheinigung.pdf')
 }
-  async function sendVetCertificate() {
+  
   async function sendVetCertificate() {
   const doc = new jsPDF()
 
