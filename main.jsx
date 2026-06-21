@@ -946,6 +946,15 @@ doc.text(
   14,
   y + 15
 )
+    await fetch('/api/send-vet-certificate', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({
+    pdfData: doc.output('datauristring')
+  })
+})
   doc.save('sammelimpfbescheinigung.pdf')
 }
   return <div className="actions">
