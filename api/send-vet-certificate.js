@@ -23,8 +23,8 @@ const attachments = []
 if (pdfData && pdfData !== 'TEST') {
   attachments.push({
     filename: 'sammelimpfbescheinigung.pdf',
-    content: pdfData,
-    
+    content: pdfData.replace(/^data:application\/pdf;filename=generated\.pdf;base64,/, ''),
+    encoding: 'base64'
   })
 }
 
