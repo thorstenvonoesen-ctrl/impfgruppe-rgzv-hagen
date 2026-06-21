@@ -183,20 +183,4 @@ td .paid {
 .logo span {
   font-weight: 700;
 }
-.actions{
-display:flex;
-gap:12px;
-flex-wrap:wrap;
-align-items:center;
-}
 
-.actions button{
-min-height:56px;
-padding:0 20px;
-white-space:nowrap;
-}
-
-.actions button:nth-child(3),
-.actions button:nth-child(4){
-min-width:240px;
-}
