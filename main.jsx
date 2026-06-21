@@ -953,36 +953,85 @@ doc.text(
   doc.save('sammelimpfbescheinigung.pdf')
 }
   
-  async function sendVetCertificate() {
+  async function vaccinationCertificate() {
   const doc = new jsPDF()
 
   doc.setFontSize(16)
-  doc.text('Sammelimpfbescheinigung', 14, 15)
+doc.text('Sammelimpfbescheinigung', 14, 15)
 
-  doc.setFontSize(10)
-  doc.text('Hiermit wird bescheinigt, dass die nachstehend aufgeführten', 14, 28)
-  doc.text('Geflügelbestände gegen die Newcastle-Krankheit', 14, 35)
-  doc.text('(atypische Geflügelpest) gemäß den geltenden', 14, 42)
-  doc.text('tierseuchenrechtlichen Vorschriften schutzgeimpft wurden.', 14, 49)
+doc.setFontSize(10)
 
-  doc.setFontSize(11)
-  doc.text('Impfstoff: Nobilis ND Clone 30', 14, 65)
-  doc.text('Charge: __________________', 14, 75)
-  doc.text('Verwendbar bis: __________________', 14, 85)
+doc.text(
+  'Hiermit wird bescheinigt, dass die nachstehend aufgeführten',
+  14,
+  28
+)
 
-  const response = await fetch('/api/send-vet-certificate', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      pdfData: doc.output('datauristring')
-    })
-  })
+doc.text(
+  'Geflügelbestände gegen die Newcastle-Krankheit',
+  14,
+  35
+)
 
-  const data = await response.json()
-  alert(data.message || data.error)
-}
+doc.text(
+  '(atypische Geflügelpest) gemäß den geltenden',
+  14,
+  42
+)
+
+doc.text(
+  'tierseuchenrechtlichen Vorschriften schutzgeimpft wurden.',
+  14,
+  49
+)
+
+doc.setFontSize(11)
+doc.text('Impfstoff: Nobilis ND Clone 30', 14, 65)
+
+doc.text('Charge: ______________________', 14, 75)
+
+doc.text('Verwendbar bis: ______________', 14, 85)
+
+  doc.text('Vom Tierarzt auszufüllen', 14, 95)
+    doc.text(
+  `Impftermin: ${vaccinationDates?.[0]?.title || ''}`,
+  14,
+  100
+)
+
+doc.text(
+  `Datum: ${vaccinationDates?.[0]?.date || ''}`,
+  14,
+  105
+)
+    doc.text('Liste der geimpften Geflügelbestände:', 14, 115)
+autoTable(doc, {
+  startY: 125,
+  head: [[
+    'Name',
+    'Adresse',
+    'TSK Betriebsnummer.',
+    'Tierart',
+    'Anzahl'
+  ]],
+  body: participants.map(p => [
+    `${p.firstname} ${p.lastname}`,
+    `${p.street || ''} ${p.housenumber || ''}, ${p.zipcode || ''} ${p.city || ''}`,
+    p.tsk_number || '',
+    p.animal_type || '',
+    p.animal_count || ''
+  ])
+})
+    const y = doc.lastAutoTable.finalY + 20
+
+doc.text('Ort, Datum: ______________________', 14, y)
+
+doc.text(
+  'Tierarzt (Stempel / Unterschrift): ______________________',
+  14,
+  y + 15
+)
+
   return <div className="actions">
   <button onClick={pdf}><Download size={16}/> PDF</button>
   <button onClick={csv}><Download size={16}/> CSV</button>
