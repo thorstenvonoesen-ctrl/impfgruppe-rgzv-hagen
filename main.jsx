@@ -1033,6 +1033,26 @@ doc.text(
 )
 doc.save('sammelimpfbescheinigung.pdf')
 }
+  async function sendVetCertificate() {
+  const doc = new jsPDF()
+
+  doc.setFontSize(16)
+  doc.text('Sammelimpfbescheinigung', 14, 15)
+
+  const response = await fetch('/api/send-vet-certificate', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      pdfData: doc.output('datauristring')
+    })
+  })
+
+  const data = await response.json()
+
+  alert(data.message || data.error)
+}
   return <div className="actions">
   <button onClick={pdf}><Download size={16}/> PDF</button>
   <button onClick={csv}><Download size={16}/> CSV</button>
