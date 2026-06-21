@@ -193,3 +193,6 @@ td .paid {
   flex:0 0 auto;
   white-space:nowrap;
 }
+.actions button{
+  width:220px;
+}
