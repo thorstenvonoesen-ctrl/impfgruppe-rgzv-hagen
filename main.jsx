@@ -77,7 +77,7 @@ const stripe = params.get('stripe')
     if (paypal !== 'success' && stripe !== 'success') return
 if (!participantId) return
 
-    ssetMessage('PayPal-Zahlung wird bestätigt...')
+    setMessage('PayPal-Zahlung wird bestätigt...')
 setLoading(true)
 
 if (stripe === 'success') {
