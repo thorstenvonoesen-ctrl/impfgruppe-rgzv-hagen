@@ -399,59 +399,7 @@ if (!showForm) {
           Bezahlung und Organisation erfolgen bequem online.
         </p>
 
-        <div className="info-cards">
-
-  <div className="info-card">
-    <h3>📅 Nächster Impftermin</h3>
-
-    <strong>
-      {vaccinationDates?.[0]
-        ? new Date(vaccinationDates[0].date).toLocaleDateString('de-DE')
-        : 'Noch nicht festgelegt'}
-    </strong>
-  </div>
-
-  <div className="info-card">
-    <h3>💶 Teilnahmegebühr</h3>
-
-    <p>10 € für Gäste</p>
-
-    <p>5 € für Vereinsmitglieder</p>
-  </div>
-
-  <div className="info-card">
-    <h3>📋 Ablauf</h3>
-
-    <p>1. Anmelden</p>
-
-    <p>2. Bezahlen</p>
-
-    <p>3. Bestätigung erhalten</p>
-
-    <p>4. Teilnehmen</p>
-  </div>
-
-</div>
-
-        <h2>Wichtige Hinweise</h2>
-
-        <p>
-          Bitte Tierart und Tieranzahl vollständig angeben.
-          Die Anmeldung erfolgt verbindlich.
-          Bei Nichterscheinen kann keine Erstattung der Teilnahmegebühr
-          erfolgen.
-        </p>
-
-        <button
-          className="primary"
-          onClick={() => setShowForm(true)}
-        >
-          Jetzt zur Anmeldung
-        </button>
-      </main>
-    </div>
-  )
-}
+        
   return <div className="page">
     <Header />
     <main className="hero-grid">
