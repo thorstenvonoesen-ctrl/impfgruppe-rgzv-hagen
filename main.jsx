@@ -389,6 +389,7 @@ function Admin() {
 
 function AdminDashboard({ onLogout }) {
   const [participants, setParticipants] = useState([])
+  const [isVaccinationDay, setIsVaccinationDay] = useState(false)
   const [q, setQ] = useState('')
   const [statusFilter, setStatusFilter] = useState('all')
   const [loading, setLoading] = useState(true)
