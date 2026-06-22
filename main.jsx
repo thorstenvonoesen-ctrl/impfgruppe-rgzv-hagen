@@ -347,7 +347,7 @@ if (!showForm) {
   bieten wir Geflügelhaltern eine einfache und kostengünstige
   Möglichkeit, dieser Verpflichtung nachzukommen. Die Anmeldung,
   Bezahlung und Organisation erfolgen bequem online.
-<p>
+</p>
 
   <button
     onClick={() => setShowForm(true)}
