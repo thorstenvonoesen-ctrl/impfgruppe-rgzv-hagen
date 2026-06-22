@@ -395,7 +395,6 @@ function AdminDashboard({ onLogout }) {
   const [loading, setLoading] = useState(true)
   const [editingParticipant, setEditingParticipant] = useState(null)
   const [vaccinationDates, setVaccinationDates] = useState([])
-  const [isVaccinationDay, setIsVaccinationDay] = useState(false)
   const [newDate, setNewDate] = useState('')
   const [newDateTitle, setNewDateTitle] = useState('')
   const [newDateNote, setNewDateNote] = useState('')
