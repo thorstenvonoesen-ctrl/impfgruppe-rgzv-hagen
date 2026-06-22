@@ -241,136 +241,24 @@ if (result.url) {
     } catch (err) { setMessage('Fehler: ' + err.message) }
     finally { setLoading(false) }
   }
+
 if (!showForm) {
   return (
     <div className="page">
       <Header />
+      <main className="card">
+        <h1>Sammelimpfung gegen die Newcastle-Krankheit</h1>
 
-      <main
-        className="card"
-        style={{
-          maxWidth: '900px',
-          margin: '40px auto'
-        }}
-      >
-        <div
-  style={{
-    background:'#1f2937',
-    color:'white',
-    padding:'40px',
-    borderRadius:'20px',
-    marginBottom:'40px'
-  }}
->
-  <div
-    style={{
-      color:'#ff7a00',
-      fontWeight:'700',
-      marginBottom:'10px'
-    }}
-  >
-    RGZV Hagen und Umgebung seit 1903 e.V.
-  </div>
-
-  <h1
-    style={{
-      color:'white',
-      margin:'0 0 20px 0'
-    }}
-  >
-    Sammelimpfung gegen die Newcastle-Krankheit
-  </h1>
-
-  <p
-    style={{
-      color:'#d1d5db',
-      fontSize:'18px',
-      marginBottom:'25px'
-    }}
-  >
-    Einfache Online-Anmeldung zur gesetzlichen Newcastle-Impfung für Geflügelhalter.
-  </p>
-
-  <div
-    style={{
-      display:'flex',
-      gap:'20px',
-      flexWrap:'wrap'
-    }}
-  >
-
-    <div
-      style={{
-        background:'#374151',
-        padding:'16px 20px',
-        borderRadius:'12px'
-      }}
-    >
-      <div>Nächster Impftermin</div>
-
-      <strong style={{fontSize:'24px'}}>
-        {vaccinationDates?.[0]
-          ? new Date(vaccinationDates[0].date).toLocaleDateString('de-DE')
-          : 'Noch nicht festgelegt'}
-      </strong>
+        <button
+          onClick={() => setShowForm(true)}
+          className="primary"
+        >
+          Jetzt zur Anmeldung
+        </button>
+      </main>
     </div>
-
-    <div
-      style={{
-        background:'#374151',
-        padding:'16px 20px',
-        borderRadius:'12px'
-      }}
-    >
-      <div>Teilnahmegebühr</div>
-      <strong>10 € / 5 €</strong>
-    </div>
-
-  </div>
-</div>
-
-        <h2>Warum wird geimpft?</h2>
-<button
-  onClick={() => setShowForm(true)}
-  style={{
-    marginTop:'30px',
-    background:'#ff7a00',
-    color:'white',
-    border:'none',
-    padding:'16px 32px',
-    borderRadius:'12px',
-    fontSize:'18px',
-    fontWeight:'700',
-    cursor:'pointer'
-  }}
->
-  Jetzt zur Anmeldung →
-</button>
-        <p>
-          Die Newcastle-Krankheit (Atypische Geflügelpest) ist eine
-          hochansteckende und anzeigepflichtige Viruserkrankung des
-          Geflügels. Zum Schutz der Tierbestände schreibt der Gesetzgeber
-          eine regelmäßige Impfung von Geflügel vor.
-        </p>
-
-        <p>
-          Die Impfpflicht gilt bereits ab dem ersten gehaltenen Tier.
-          Unabhängig davon, ob nur wenige Hühner im Garten gehalten werden
-          oder ein größerer Bestand vorhanden ist, müssen die Tiere
-          entsprechend den geltenden Vorschriften gegen die
-          Newcastle-Krankheit geimpft werden.
-        </p>
-
-        <p>
-          Mit der Sammelimpfung des RGZV Hagen und Umgebung seit 1903 e.V.
-          bieten wir Geflügelhaltern eine einfache und kostengünstige
-          Möglichkeit, dieser Verpflichtung nachzukommen. Die Anmeldung,
-          Bezahlung und Organisation erfolgen bequem online.
-        </p>
-</main>
-    )
-  }
-
+  )
+}
   return <div className="page">
     <Header />
     <main className="hero-grid">
@@ -498,6 +386,13 @@ value={form.vaccination_date_id}
         </form>
       </section>
           </main>
+    <button
+  type="button"
+  className="ghost"
+  onClick={() => setShowForm(false)}
+>
+  ← Zurück
+</button>
     <Footer />
   </div>
 )
