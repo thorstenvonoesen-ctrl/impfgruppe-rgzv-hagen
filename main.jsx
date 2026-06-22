@@ -399,8 +399,10 @@ if (!showForm) {
           Bezahlung und Organisation erfolgen bequem online.
         </p>
 
-        
-  return <div className="page">
+)
+}
+
+return <div className="page">
     <Header />
     <main className="hero-grid">
       <section className="card intro">
