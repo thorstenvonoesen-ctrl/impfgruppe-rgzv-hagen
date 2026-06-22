@@ -79,38 +79,7 @@ if (!participantId) return
 
     setMessage('PayPal-Zahlung wird bestätigt...')
     setLoading(true)
-if (stripe === 'success') {
-  const { data: participant } = await supabase
 
-    .from('participants')
-    .select('*')
-    .eq('id', participantId)
-    .single()
-console.log('PARTICIPANT:', participant)
-  const updateResult = await supabase
-  .from('participants')
-  .update({
-    payment_status: 'bezahlt',
-    payment_method: 'stripe',
-    payment_date: new Date().toISOString(),
-    payment_id: 'stripe_checkout'
-  })
-  .eq('id', participantId)
-
-const mailResponse = await fetch('/api/send-payment-email', {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({
-    email: participant.email,
-    firstname: participant.firstname,
-    lastname: participant.lastname
-  })
-})
-
-const mailText = await mailResponse.text()
-  setMessage('Stripe-Zahlung erfolgreich bestätigt.')
-  setLoading(false)
-  return
 }if (stripe === 'success') {
   const { data: participant } = await supabase
     .from('participants')
