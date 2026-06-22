@@ -17,7 +17,7 @@ export default async function handler(req, res) {
 
   try {
     const { pdfData, datum } = req.body || {}
-
+const deutschesDatum = new Date(datum).toLocaleDateString('de-DE')
 const attachments = []
 
 if (pdfData && pdfData !== 'TEST') {
