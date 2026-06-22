@@ -392,10 +392,12 @@ if (!showForm) {
       <section className="card">
         <h2>Teilnehmer anmelden</h2>
         <div className="section-title">
-          <div className="form-section">
   Persönliche Daten
 </div>
-        <form onSubmit={submit} className="form">
+
+<div className="form-section">
+
+<form onSubmit={submit} className="form">
           <div className="two"><Input label="Vorname" name="firstname" value={form.firstname} onChange={update} required/><Input label="Nachname" name="lastname" value={form.lastname} onChange={update} required/></div>
           <div className="two"><Input label="Straße" name="street" value={form.street} onChange={update}/><Input label="Hausnummer" name="housenumber" value={form.housenumber} onChange={update}/></div>
           <div className="two"><Input label="PLZ" name="zipcode" value={form.zipcode} onChange={update}/><Input label="Ort" name="city" value={form.city} onChange={update}/></div>
