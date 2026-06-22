@@ -409,6 +409,13 @@ function AdminDashboard({ onLogout }) {
   .order('date', { ascending: true })
 
 setVaccinationDates(dates || [])
+      const nextDate = dates?.[0]?.date
+
+const today = new Date().toISOString().slice(0, 10)
+
+setIsVaccinationDay(
+  nextDate === today
+)
     } else setParticipants(JSON.parse(localStorage.getItem('participants') || '[]'))
     setLoading(false)
   }
