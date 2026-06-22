@@ -832,7 +832,7 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
 
 function ExportButtons({ participants, vaccinationDates }) {
   const nextDate = vaccinationDates?.[0]?.date
-  new Date().toLocaleDateString('de-DE')
+  const today = new Date().toISOString().slice(0, 10)
   const isVaccinationDay = nextDate === today
   function csv() {
     const h=['Vorname','Nachname','Adresse','PLZ','Ort','E-Mail','Telefon','TSK Betriebsnummer.','Tiere','Impfung','Zahlung']
