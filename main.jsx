@@ -400,7 +400,6 @@ if (!showForm) {
         </p>
 
 )
-}
 
 return <div className="page">
     <Header />
