@@ -35,7 +35,7 @@ console.log('ATTACHMENTS:', attachments.length)
     console.log('VOR SENDMAIL')
     const info = await transporter.sendMail({
       from: `"RGZV Hagen und Umgebung seit 1903 e.V." <${process.env.SMTP_USER}>`,
-      to: 't.von-oesen@rgzv-hagen-westfalen.de',
+      to: 'thorsten-von-oesen@t-online.de',
       subject: 'Sammelimpfbescheinigung zur Prüfung und Unterschrift',
 // attachments,
       html: `
