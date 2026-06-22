@@ -29,7 +29,7 @@ export default async function handler(req, res) {
 </p>
 
 <p>
-  Bitte bewahren Sie diese E-Mail als Bestätigung auf.
+  Bitte bewahre diese E-Mail als Bestätigung auf.
 </p>
 
 <p>
