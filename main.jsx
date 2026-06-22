@@ -69,7 +69,9 @@ function PublicSignup() {
 }
 useEffect(() => {
   loadDates()
-  useEffect(() => {
+}, [])
+
+useEffect(() => {
   if (!vaccinationDates?.[0]) return
 
   const timer = setInterval(() => {
