@@ -251,3 +251,10 @@ td .paid {
   margin:24px 0 16px;
   border-left:4px solid #e67e22;
 }
+.form-section{
+  background:#ffffff;
+  border:1px solid #e5e7eb;
+  border-radius:12px;
+  padding:20px;
+  margin-bottom:24px;
+}
