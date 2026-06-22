@@ -31,7 +31,7 @@ member_code:''
 
 function App() {
   const [page, setPage] = useState(location.hash || '#')
-
+const [showForm, setShowForm] = useState(false)
   useEffect(() => {
     const onHash = () => setPage(location.hash || '#')
 
