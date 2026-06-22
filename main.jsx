@@ -392,6 +392,7 @@ if (!showForm) {
       <section className="card">
         <h2>Teilnehmer anmelden</h2>
         <div className="section-title">
+          <div className="form-section">
   Persönliche Daten
 </div>
         <form onSubmit={submit} className="form">
@@ -399,6 +400,7 @@ if (!showForm) {
           <div className="two"><Input label="Straße" name="street" value={form.street} onChange={update}/><Input label="Hausnummer" name="housenumber" value={form.housenumber} onChange={update}/></div>
           <div className="two"><Input label="PLZ" name="zipcode" value={form.zipcode} onChange={update}/><Input label="Ort" name="city" value={form.city} onChange={update}/></div>
           <div className="two"><Input label="E-Mail" name="email" type="email" value={form.email} onChange={update} required/><Input label="Telefon" name="phone" value={form.phone} onChange={update}/></div>
+          </div>
           <div className="section-title">
   Tierhalterdaten
 </div>
