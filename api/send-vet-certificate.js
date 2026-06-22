@@ -39,7 +39,8 @@ console.log('ATTACHMENTS:', attachments.length)
       subject: 'Sammelimpfbescheinigung zur Prüfung und Unterschrift',
 attachments,
       html: `
-        <p>Sehr geehrte Damen und Herren,</p>
+        <p>Sehr geehrte Frau Dinger,<br>
+sehr geehrte Damen und Herren,</p>
 
         <p>
           anbei übersenden wir Ihnen die Sammelimpfbescheinigung für den Impftermin vom <strong>${datum}</strong>
@@ -57,10 +58,15 @@ attachments,
         </p>
 
         <p>
-          Wir bitten Sie, die Bescheinigung nach Prüfung zu unterschreiben und uns anschließend wieder zur
-          Verfügung zu stellen. Sofern aus Ihrer Sicht Korrekturen, Ergänzungen oder sonstige Anpassungen
-          erforderlich sein sollten, bitten wir um eine kurze Mitteilung.
-        </p>
+  Wir bitten Sie, die Bescheinigung nach Prüfung zu unterschreiben und uns anschließend wieder zur
+  Verfügung zu stellen. Sofern aus Ihrer Sicht Korrekturen, Ergänzungen oder sonstige Anpassungen
+  erforderlich sein sollten, bitten wir um eine kurze Mitteilung.
+</p>
+
+<p>
+  Gleichzeitig bitten wir darum, uns mit der Rücksendung der unterschriebenen Bescheinigung auch
+  die entsprechende Rechnung für die durchgeführte Impfung zu übersenden.
+</p>
 
         <p>
           Mit Ihrer Unterstützung leisten Sie einen wichtigen Beitrag zur ordnungsgemäßen Durchführung der
