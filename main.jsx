@@ -531,7 +531,7 @@ value={form.vaccination_date_id}
     <Footer />
   </div>
         )
-}
+
 
 function Admin() {
   const [logged, setLogged] = useState(sessionStorage.getItem('admin') === '1')
