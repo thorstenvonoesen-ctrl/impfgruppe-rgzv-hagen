@@ -203,7 +203,7 @@ if (participant?.email) {
       setLoading(false)
     }
   }
-
+useEffect(() => {
   finishPaypalPayment()
 }, [])
   async function submit(e) {
