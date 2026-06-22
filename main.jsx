@@ -398,8 +398,7 @@ if (!showForm) {
           Möglichkeit, dieser Verpflichtung nachzukommen. Die Anmeldung,
           Bezahlung und Organisation erfolgen bequem online.
         </p>
-
-      </div>
+</main>
     )
   }
 
