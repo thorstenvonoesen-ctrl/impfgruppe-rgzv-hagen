@@ -259,7 +259,8 @@ if (!showForm) {
     </div>
   )
 }
-  return <div className="page">
+  return (
+  <div className="page">
     <Header />
     <main className="hero-grid">
       <section className="card intro">
