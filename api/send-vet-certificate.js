@@ -43,7 +43,7 @@ attachments,
 sehr geehrte Damen und Herren,</p>
 
         <p>
-          anbei übersenden wir Ihnen die Sammelimpfbescheinigung für den Impftermin vom <strong>${datum}</strong>
+          anbei übersenden wir Ihnen die Sammelimpfbescheinigung für den Impftermin vom <strong>${deutschesDatum}</strong>
           mit der freundlichen Bitte um Prüfung und Unterzeichnung.
         </p>
 
