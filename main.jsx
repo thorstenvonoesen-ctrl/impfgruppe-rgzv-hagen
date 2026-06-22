@@ -323,6 +323,16 @@ if (!showForm) {
     >
       <div>Teilnahmegebühr</div>
       <strong>10 € / 5 €</strong>
+      <p
+  style={{
+    marginTop:'10px',
+    fontSize:'14px',
+    color:'#6b7280'
+  }}
+>
+  10 € für Gäste<br />
+  5 € für Vereinsmitglieder mit gültigem Mitgliedercode
+</p>
     </div>
   </div>
 
