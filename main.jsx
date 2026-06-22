@@ -315,33 +315,39 @@ if (!showForm) {
           Bezahlung und Organisation erfolgen bequem online.
         </p>
 
-        <h2>Nächster Impftermin</h2>
+        <div className="info-cards">
 
-        <p>
-          {vaccinationDates?.[0]
-            ? new Date(vaccinationDates[0].date).toLocaleDateString('de-DE')
-            : 'Noch nicht festgelegt'}
-        </p>
+  <div className="info-card">
+    <h3>📅 Nächster Impftermin</h3>
 
-        <h2>Teilnahmegebühr</h2>
+    <strong>
+      {vaccinationDates?.[0]
+        ? new Date(vaccinationDates[0].date).toLocaleDateString('de-DE')
+        : 'Noch nicht festgelegt'}
+    </strong>
+  </div>
 
-        <p>
-          10 € für Gäste
-          <br />
-          5 € für Vereinsmitglieder mit Mitgliedercode
-        </p>
+  <div className="info-card">
+    <h3>💶 Teilnahmegebühr</h3>
 
-        <h2>Ablauf</h2>
+    <p>10 € für Gäste</p>
 
-        <p>
-          1. Online anmelden
-          <br />
-          2. Teilnahmegebühr bezahlen
-          <br />
-          3. Zahlungsbestätigung erhalten
-          <br />
-          4. Am Impftermin teilnehmen
-        </p>
+    <p>5 € für Vereinsmitglieder</p>
+  </div>
+
+  <div className="info-card">
+    <h3>📋 Ablauf</h3>
+
+    <p>1. Anmelden</p>
+
+    <p>2. Bezahlen</p>
+
+    <p>3. Bestätigung erhalten</p>
+
+    <p>4. Teilnehmen</p>
+  </div>
+
+</div>
 
         <h2>Wichtige Hinweise</h2>
 
