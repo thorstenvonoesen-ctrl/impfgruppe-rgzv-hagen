@@ -786,58 +786,45 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
 
 </section>
 
-      <section className="card">
-        <div
-  className="table-head"
-  style={{
-    display: 'flex',
-    alignItems: 'center',
-    gap: '12px',
-    flexWrap: 'wrap',
-    marginBottom: '20px'
-  }}
->
-  <div className="search" style={{ flex: '1' }}>
-    <Search size={18} />
-    <input
-      placeholder="Suchen..."
-      value={q}
-      onChange={e => setQ(e.target.value)}
+    <section className="card">
+  <div
+    className="table-head"
+    style={{
+      display: 'flex',
+      alignItems: 'center',
+      gap: '12px',
+      flexWrap: 'wrap',
+      marginBottom: '20px'
+    }}
+  >
+    <div className="search" style={{ flex: '1' }}>
+      <Search size={18} />
+      <input
+        placeholder="Suchen..."
+        value={q}
+        onChange={e => setQ(e.target.value)}
+      />
+    </div>
+
+    <select
+      value={statusFilter}
+      onChange={e => setStatusFilter(e.target.value)}
+    >
+      <option value="all">Alle Zahlungen</option>
+      <option value="paid">Bezahlt</option>
+      <option value="open">Offen</option>
+    </select>
+
+    <ExportButtons
+      participants={filtered}
+      vaccinationDates={vaccinationDates}
     />
   </div>
 
-  <select
-    value={statusFilter}
-    onChange={e => setStatusFilter(e.target.value)}
-  >
-    <option value="all">Alle Zahlungen</option>
-    <option value="paid">Bezahlt</option>
-    <option value="open">Offen</option>
-  </select>
-
-  <ExportButtons
-    participants={filtered}
-    vaccinationDates={vaccinationDates}
-  />
-</div>
-
-  <select
-    value={statusFilter}
-    onChange={e => setStatusFilter(e.target.value)}
-  >
-    <option value="all">Alle Zahlungen</option>
-    <option value="paid">Bezahlt</option>
-    <option value="open">Offen</option>
-  </select>
-
-  <ExportButtons
-  participants={filtered}
-  vaccinationDates={vaccinationDates}
-/></div>
-        {loading ? (
-  <p>Lade...</p>
-) : (
-  <div className="table-scroll">
+  {loading ? (
+    <p>Lade...</p>
+  ) : (
+    <div className="table-scroll">
     <table>
       <thead>
         <tr>
