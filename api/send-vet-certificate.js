@@ -33,7 +33,7 @@ console.log('PDF LENGTH:', pdfData?.length)
 console.log('ATTACHMENTS:', attachments.length)
     console.log(pdfData?.substring(0, 100))
     console.log('VOR SENDMAIL')
-    await transporter.sendMail({
+    const info = await transporter.sendMail({
       from: `"RGZV Hagen und Umgebung seit 1903 e.V." <${process.env.SMTP_USER}>`,
       to: 't.von-oesen@rgzv-hagen-westfalen.de',
       subject: 'Sammelimpfbescheinigung zur Prüfung und Unterschrift',
@@ -97,6 +97,10 @@ console.log('ATTACHMENTS:', attachments.length)
         </p>
       `
     })
+    console.log('MESSAGE ID:', info.messageId)
+console.log('RESPONSE:', info.response)
+console.log('ACCEPTED:', info.accepted)
+console.log('REJECTED:', info.rejected)
 console.log('NACH SENDMAIL')
     return res.status(200).json({
       success: true,
