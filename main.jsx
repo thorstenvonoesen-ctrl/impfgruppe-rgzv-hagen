@@ -277,7 +277,10 @@ if (result.url) {
     <main className="hero-grid">
       <section className="card intro">
         <div className="badge"><Syringe size={18}/> Online-Anmeldung</div>
-        <h1>Anmeldung Impfgruppe RGZV Hagen</h1>
+        <h1>
+  Anmeldung<br />
+  Impfgruppe RGZV Hagen
+</h1>
         <p>Bitte trage deine Daten ein. Nach dem Absenden wirst du zur Zahlung weitergeleitet.</p>
         <div className="price">
   📅 Nächster Impftermin
