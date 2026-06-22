@@ -77,10 +77,10 @@ const stripe = params.get('stripe')
     if (paypal !== 'success' && stripe !== 'success') return
 if (!participantId) return
 
-    setMessage('PayPal-Zahlung wird bestätigt...')
-    setLoading(true)
+    ssetMessage('PayPal-Zahlung wird bestätigt...')
+setLoading(true)
 
-}if (stripe === 'success') {
+if (stripe === 'success') {
   const { data: participant } = await supabase
     .from('participants')
     .select('*')
