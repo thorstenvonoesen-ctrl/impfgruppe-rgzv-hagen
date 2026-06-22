@@ -339,6 +339,16 @@ if (!showForm) {
           ? new Date(vaccinationDates[0].date).toLocaleDateString('de-DE')
           : 'Noch nicht festgelegt'}
       </strong>
+      <div
+  style={{
+    marginTop: '8px',
+    color: '#16a34a',
+    fontWeight: '700',
+    fontSize: '14px'
+  }}
+>
+  ⏳ {countdown}
+</div>
     </div>
 
     <div
