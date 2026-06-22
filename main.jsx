@@ -284,12 +284,81 @@ if (!showForm) {
           margin: '40px auto'
         }}
       >
-        <h1>Anmeldung zur Sammelimpfung gegen die Newcastle-Krankheit</h1>
+        <div
+  style={{
+    background:'#1f2937',
+    color:'white',
+    padding:'40px',
+    borderRadius:'20px',
+    marginBottom:'40px'
+  }}
+>
+  <div
+    style={{
+      color:'#ff7a00',
+      fontWeight:'700',
+      marginBottom:'10px'
+    }}
+  >
+    RGZV Hagen und Umgebung seit 1903 e.V.
+  </div>
 
-        <p>
-          Der RGZV Hagen und Umgebung seit 1903 e.V. organisiert regelmäßig
-          Sammelimpfungen für Geflügelhalter.
-        </p>
+  <h1
+    style={{
+      color:'white',
+      margin:'0 0 20px 0'
+    }}
+  >
+    Sammelimpfung gegen die Newcastle-Krankheit
+  </h1>
+
+  <p
+    style={{
+      color:'#d1d5db',
+      fontSize:'18px',
+      marginBottom:'25px'
+    }}
+  >
+    Einfache Online-Anmeldung zur gesetzlichen Newcastle-Impfung für Geflügelhalter.
+  </p>
+
+  <div
+    style={{
+      display:'flex',
+      gap:'20px',
+      flexWrap:'wrap'
+    }}
+  >
+
+    <div
+      style={{
+        background:'#374151',
+        padding:'16px 20px',
+        borderRadius:'12px'
+      }}
+    >
+      <div>Nächster Impftermin</div>
+
+      <strong style={{fontSize:'24px'}}>
+        {vaccinationDates?.[0]
+          ? new Date(vaccinationDates[0].date).toLocaleDateString('de-DE')
+          : 'Noch nicht festgelegt'}
+      </strong>
+    </div>
+
+    <div
+      style={{
+        background:'#374151',
+        padding:'16px 20px',
+        borderRadius:'12px'
+      }}
+    >
+      <div>Teilnahmegebühr</div>
+      <strong>10 € / 5 €</strong>
+    </div>
+
+  </div>
+</div>
 
         <h2>Warum wird geimpft?</h2>
 
