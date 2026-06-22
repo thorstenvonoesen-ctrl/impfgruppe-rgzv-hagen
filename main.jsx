@@ -951,9 +951,13 @@ function ExportButtons({ participants, vaccinationDates }) {
       <button onClick={csv}><Download size={16}/> CSV</button>
       <button onClick={vaccinationCertificate}>Bescheinigung</button>
       <button
+  <button
   onClick={sendVetCertificate}
-  disabled
-  style={{ opacity: 0.4, cursor: 'not-allowed' }}
+  disabled={!isVaccinationDay}
+  style={{
+    opacity: isVaccinationDay ? 1 : 0.4,
+    cursor: isVaccinationDay ? 'pointer' : 'not-allowed'
+  }}
 >
   Tierarzt
 </button>
