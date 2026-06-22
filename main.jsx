@@ -326,9 +326,49 @@ if (!showForm) {
     </div>
   </div>
 
-  <p>
-    Die Newcastle-Krankheit ist eine anzeigepflichtige und hochansteckende Viruserkrankung des Geflügels. Die Impfung ist gesetzlich vorgeschrieben.
-  </p>
+  <h2>Warum ist die Newcastle-Impfung wichtig?</h2>
+
+<p>
+  Die Newcastle-Krankheit (Atypische Geflügelpest) ist eine
+  hochansteckende und anzeigepflichtige Viruserkrankung des Geflügels.
+  Zum Schutz der Tierbestände schreibt der Gesetzgeber eine regelmäßige
+  Impfung von Geflügel vor.
+</p>
+
+<p>
+  Die Impfpflicht gilt bereits ab dem ersten gehaltenen Tier.
+  Unabhängig davon, ob nur wenige Hühner im Garten gehalten werden oder
+  ein größerer Bestand vorhanden ist, müssen die Tiere entsprechend den
+  geltenden Vorschriften gegen die Newcastle-Krankheit geimpft werden.
+</p>
+
+<p>
+  Mit der Sammelimpfung des RGZV Hagen und Umgebung seit 1903 e.V.
+  bieten wir Geflügelhaltern eine einfache und kostengünstige
+  Möglichkeit, dieser Verpflichtung nachzukommen. Die Anmeldung,
+  Bezahlung und Organisation erfolgen bequem online.
+</p><h2>Warum ist die Newcastle-Impfung wichtig?</h2>
+
+<p>
+  Die Newcastle-Krankheit (Atypische Geflügelpest) ist eine
+  hochansteckende und anzeigepflichtige Viruserkrankung des Geflügels.
+  Zum Schutz der Tierbestände schreibt der Gesetzgeber eine regelmäßige
+  Impfung von Geflügel vor.
+</p>
+
+<p>
+  Die Impfpflicht gilt bereits ab dem ersten gehaltenen Tier.
+  Unabhängig davon, ob nur wenige Hühner im Garten gehalten werden oder
+  ein größerer Bestand vorhanden ist, müssen die Tiere entsprechend den
+  geltenden Vorschriften gegen die Newcastle-Krankheit geimpft werden.
+</p>
+
+<p>
+  Mit der Sammelimpfung des RGZV Hagen und Umgebung seit 1903 e.V.
+  bieten wir Geflügelhaltern eine einfache und kostengünstige
+  Möglichkeit, dieser Verpflichtung nachzukommen. Die Anmeldung,
+  Bezahlung und Organisation erfolgen bequem online.
+</p>
 
   <button
     onClick={() => setShowForm(true)}
