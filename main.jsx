@@ -411,7 +411,7 @@ function AdminDashboard({ onLogout }) {
 setVaccinationDates(dates || [])
       const nextDate = dates?.[0]?.date
 
-const today = new Date().toISOString().slice(0, 10)
+new Date().toLocaleDateString('de-DE')
 
 setIsVaccinationDay(
   nextDate === today
@@ -832,7 +832,7 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
 
 function ExportButtons({ participants, vaccinationDates }) {
   const nextDate = vaccinationDates?.[0]?.date
-  const today = new Date().toISOString().slice(0, 10)
+  new Date().toLocaleDateString('de-DE')
   const isVaccinationDay = nextDate === today
   function csv() {
     const h=['Vorname','Nachname','Adresse','PLZ','Ort','E-Mail','Telefon','TSK Betriebsnummer.','Tiere','Impfung','Zahlung']
