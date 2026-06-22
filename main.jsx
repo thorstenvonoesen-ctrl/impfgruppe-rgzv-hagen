@@ -32,6 +32,7 @@ member_code:''
 function App() {
   const [page, setPage] = useState(location.hash || '#')
 const [showForm, setShowForm] = useState(false)
+  const [countdown, setCountdown] = useState('')
   useEffect(() => {
     const onHash = () => setPage(location.hash || '#')
 
@@ -67,6 +68,32 @@ function PublicSignup() {
 }
 useEffect(() => {
   loadDates()
+  useEffect(() => {
+  if (!vaccinationDates?.[0]) return
+
+  const timer = setInterval(() => {
+    const target = new Date(vaccinationDates[0].date).getTime()
+    const now = Date.now()
+
+    const diff = target - now
+
+    if (diff <= 0) {
+      setCountdown('Impftermin läuft heute')
+      return
+    }
+
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24))
+    const hours = Math.floor((diff / (1000 * 60 * 60)) % 24)
+    const minutes = Math.floor((diff / (1000 * 60)) % 60)
+    const seconds = Math.floor((diff / 1000) % 60)
+
+    setCountdown(
+      `${days}T ${hours}Std ${minutes}Min ${seconds}Sek`
+    )
+  }, 1000)
+
+  return () => clearInterval(timer)
+}, [vaccinationDates])
   async function finishPaypalPayment() {
     const params = new URLSearchParams(window.location.search)
     const paypal = params.get('paypal')
