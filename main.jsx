@@ -549,7 +549,7 @@ function AdminDashboard({ onLogout }) {
 setVaccinationDates(dates || [])
       const nextDate = dates?.[0]?.date
 
-new Date().toLocaleDateString('de-DE')
+const today = new Date().toISOString().split('T')[0]
 
 setIsVaccinationDay(
   nextDate === today
