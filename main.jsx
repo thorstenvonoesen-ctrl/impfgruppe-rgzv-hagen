@@ -423,11 +423,13 @@ if (!showForm) {
       </section>
       <section className="card">
         <h2>Teilnehmer anmelden</h2>
+        <h3 style={{ marginTop:'20px' }}>Persönliche Daten</h3>
         <form onSubmit={submit} className="form">
           <div className="two"><Input label="Vorname" name="firstname" value={form.firstname} onChange={update} required/><Input label="Nachname" name="lastname" value={form.lastname} onChange={update} required/></div>
           <div className="two"><Input label="Straße" name="street" value={form.street} onChange={update}/><Input label="Hausnummer" name="housenumber" value={form.housenumber} onChange={update}/></div>
           <div className="two"><Input label="PLZ" name="zipcode" value={form.zipcode} onChange={update}/><Input label="Ort" name="city" value={form.city} onChange={update}/></div>
           <div className="two"><Input label="E-Mail" name="email" type="email" value={form.email} onChange={update} required/><Input label="Telefon" name="phone" value={form.phone} onChange={update}/></div>
+          <h3 style={{ marginTop:'30px' }}>Tierhalterdaten</h3>
           <Input label="TSK Betriebsnummer." name="tsk_number" value={form.tsk_number} onChange={update} required/>
           <Input
   label="Mitgliedercode (optional)"
@@ -453,6 +455,7 @@ if (!showForm) {
   </select>
 </label>
           <div className="two"><Input label="Anzahl Tiere" name="animal_count" type="number" min="1" value={form.animal_count} onChange={update} required/><label>Impfstoff<select name="vaccine" value={form.vaccine} onChange={update}>{vaccines.map(v=><option key={v}>{v}</option>)}</select></label></div>
+          <h3 style={{ marginTop:'30px' }}>Impfung</h3>
           <select
   name="vaccination_date_id"
 value={form.vaccination_date_id}
