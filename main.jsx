@@ -246,16 +246,98 @@ if (!showForm) {
   return (
     <div className="page">
       <Header />
-      <main className="card">
-        <h1>Sammelimpfung gegen die Newcastle-Krankheit</h1>
+      <main
+  className="card"
+  style={{
+    maxWidth: '900px',
+    margin: '40px auto'
+  }}
+>
+  <div
+    style={{
+      background:'#1f2937',
+      color:'white',
+      padding:'40px',
+      borderRadius:'20px',
+      marginBottom:'30px'
+    }}
+  >
+    <div
+      style={{
+        color:'#ff7a00',
+        fontWeight:'700',
+        marginBottom:'10px'
+      }}
+    >
+      RGZV Hagen und Umgebung seit 1903 e.V.
+    </div>
 
-        <button
-          onClick={() => setShowForm(true)}
-          className="primary"
-        >
-          Jetzt zur Anmeldung
-        </button>
-      </main>
+    <h1
+      style={{
+        color:'white',
+        margin:'0 0 20px 0'
+      }}
+    >
+      Sammelimpfung gegen die Newcastle-Krankheit
+    </h1>
+
+    <p
+      style={{
+        color:'#d1d5db',
+        fontSize:'18px'
+      }}
+    >
+      Einfache Online-Anmeldung zur gesetzlichen Newcastle-Impfung für Geflügelhalter.
+    </p>
+  </div>
+
+  <div
+    style={{
+      display:'flex',
+      gap:'20px',
+      flexWrap:'wrap',
+      marginBottom:'30px'
+    }}
+  >
+    <div
+      style={{
+        background:'#f3f4f6',
+        padding:'20px',
+        borderRadius:'12px'
+      }}
+    >
+      <div>Nächster Impftermin</div>
+      <strong>
+        {vaccinationDates?.[0]
+          ? new Date(vaccinationDates[0].date).toLocaleDateString('de-DE')
+          : 'Noch nicht festgelegt'}
+      </strong>
+    </div>
+
+    <div
+      style={{
+        background:'#f3f4f6',
+        padding:'20px',
+        borderRadius:'12px'
+      }}
+    >
+      <div>Teilnahmegebühr</div>
+      <strong>10 € / 5 €</strong>
+    </div>
+  </div>
+
+  <p>
+    Die Newcastle-Krankheit ist eine anzeigepflichtige und hochansteckende Viruserkrankung des Geflügels. Die Impfung ist gesetzlich vorgeschrieben.
+  </p>
+
+  <button
+    onClick={() => setShowForm(true)}
+    className="primary"
+    style={{ marginTop:'20px' }}
+  >
+    Jetzt zur Anmeldung
+  </button>
+</main>
     </div>
   )
 }
