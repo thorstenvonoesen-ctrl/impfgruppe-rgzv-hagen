@@ -32,6 +32,7 @@ console.log('PDF DATA:', pdfData)
 console.log('PDF LENGTH:', pdfData?.length)
 console.log('ATTACHMENTS:', attachments.length)
     console.log(pdfData?.substring(0, 100))
+    console.log('VOR SENDMAIL')
     await transporter.sendMail({
       from: `"RGZV Hagen und Umgebung seit 1903 e.V." <${process.env.SMTP_USER}>`,
       to: 't.von-oesen@rgzv-hagen-westfalen.de',
@@ -96,7 +97,7 @@ attachments,
         </p>
       `
     })
-
+console.log('NACH SENDMAIL')
     return res.status(200).json({
       success: true,
       message: 'E-Mail versendet'
