@@ -526,6 +526,7 @@ value={form.vaccination_date_id}
           {message && <p className="message">{message}</p>}
         </form>
       </section>
+      </section>
     </main>
     <Footer />
   </div>
