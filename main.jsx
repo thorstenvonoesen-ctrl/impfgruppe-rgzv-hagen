@@ -280,14 +280,34 @@ if (result.url) {
         <h1>Anmeldung Impfgruppe RGZV Hagen</h1>
         <p>Bitte trage deine Daten ein. Nach dem Absenden wirst du zur Zahlung weitergeleitet.</p>
         <div className="price">
-  <div>
+  📅 Nächster Impftermin
+  <br />
+  {vaccinationDates?.[0]
+    ? new Date(vaccinationDates[0].date).toLocaleDateString('de-DE')
+    : 'Noch nicht festgelegt'}
+</div>
+
+<div className="price" style={{ marginTop: '20px' }}>
+  💶 Teilnahmegebühr
+  <br />
   10 € für Gäste
   <br />
   5 € für Vereinsmitglieder mit Mitgliedercode
 </div>
-</div>
+
 <p className="price-note">
-  Bitte beachtet, dass bei Nichterscheinen keine Erstattung der Teilnahmegebühr erfolgen kann.
+  ✔ Online anmelden
+  <br />
+  ✔ Online bezahlen
+  <br />
+  ✔ Automatische Bestätigung
+  <br />
+  ✔ Offizielle Sammelimpfbescheinigung
+</p>
+
+<p className="price-note">
+  Bitte beachtet, dass bei Nichterscheinen keine Erstattung der
+  Teilnahmegebühr erfolgen kann.
 </p>
       </section>
       <section className="card">
