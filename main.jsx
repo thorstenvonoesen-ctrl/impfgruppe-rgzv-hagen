@@ -470,6 +470,7 @@ value={form.vaccination_date_id}
     </option>
   ))}
 </select>
+          <h3 style={{ marginTop:'30px' }}>Zahlung & Datenschutz</h3>
           <label className="privacy-check">
   <input
     type="checkbox"
