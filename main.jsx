@@ -32,7 +32,7 @@ member_code:''
 function App() {
   const [page, setPage] = useState(location.hash || '#')
 const [showForm, setShowForm] = useState(false)
-  const [countdown, setCountdown] = useState('')
+  
   useEffect(() => {
     const onHash = () => setPage(location.hash || '#')
 
@@ -57,6 +57,7 @@ function PublicSignup() {
   const [privacyAccepted, setPrivacyAccepted] = useState(false)
   const [paymentMethod, setPaymentMethod] = useState('paypal')
   const [showForm, setShowForm] = useState(false)
+  const [countdown, setCountdown] = useState('')
   const update = e => setForm({ ...form, [e.target.name]: e.target.value })
   async function loadDates() {
   const { data } = await supabase
