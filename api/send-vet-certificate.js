@@ -37,7 +37,7 @@ console.log('ATTACHMENTS:', attachments.length)
       from: `"RGZV Hagen und Umgebung seit 1903 e.V." <${process.env.SMTP_USER}>`,
       to: 'thorsten-von-oesen@t-online.de',
       subject: 'Sammelimpfbescheinigung zur Prüfung und Unterschrift',
-// attachments,
+attachments,
       html: `
         <p>Sehr geehrte Damen und Herren,</p>
 
