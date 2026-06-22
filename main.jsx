@@ -350,7 +350,39 @@ if (!showForm) {
     fontSize: '14px'
   }}
 >
-  ⏳ {countdown}
+  <div
+  style={{
+    display: 'grid',
+    gridTemplateColumns: 'repeat(4, 1fr)',
+    gap: '8px',
+    marginTop: '20px'
+  }}
+>
+  {countdown.split(' ').map((item, i) => (
+    <div
+      key={i}
+      style={{
+        background: '#fff',
+        borderRadius: '10px',
+        padding: '10px',
+        textAlign: 'center'
+      }}
+    >
+      <strong style={{ display: 'block', fontSize: '18px' }}>
+        {item.replace(/[A-Za-z]+/g, '')}
+      </strong>
+      <small>
+        {item.includes('T')
+          ? 'Tage'
+          : item.includes('Std')
+          ? 'Stunden'
+          : item.includes('Min')
+          ? 'Minuten'
+          : 'Sekunden'}
+      </small>
+    </div>
+  ))}
+</div>
 </div>
     </div>
 
