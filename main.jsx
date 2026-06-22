@@ -399,7 +399,6 @@ if (!showForm) {
           Bezahlung und Organisation erfolgen bequem online.
         </p>
 
-)
 
 return <div className="page">
     <Header />
