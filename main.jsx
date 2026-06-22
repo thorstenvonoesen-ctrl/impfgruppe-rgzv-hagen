@@ -369,15 +369,19 @@ if (!showForm) {
   </p>
 </div>
   <button
-    onClick={() => setShowForm(true)}
-    className="primary"
-    style={{ marginTop:'20px' }}
-  >
-    Jetzt zur Anmeldung
-  </button>
+  onClick={() => setShowForm(true)}
+  className="primary"
+  style={{ marginTop:'20px' }}
+>
+  Jetzt zur Anmeldung
+</button>
+
 </main>
-    </div>
-  )
+
+<Footer />
+
+</div>
+)
 }
   return (
   <div className="page">
