@@ -951,7 +951,6 @@ function ExportButtons({ participants, vaccinationDates }) {
       <button onClick={csv}><Download size={16}/> CSV</button>
       <button onClick={vaccinationCertificate}>Bescheinigung</button>
       <button
-  <button
   onClick={sendVetCertificate}
   disabled={!isVaccinationDay}
   style={{
