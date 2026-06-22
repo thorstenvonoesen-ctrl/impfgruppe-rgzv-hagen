@@ -20,39 +20,35 @@ export default async function handler(req, res) {
 <p>Hallo ${firstname} ${lastname},</p>
 
 <p>
-  vielen Dank für die Bezahlung Ihrer Anmeldung zum gewählten
-  Impftermin des RGZV Hagen und Umgebung seit 1903 e.V.
-  Ihre Zahlung wurde erfolgreich verbucht und Ihre Anmeldung
-  ist damit vollständig abgeschlossen.
+  vielen Dank für Ihre Anmeldung zur Newcastle-Impfung beim RGZV Hagen.
 </p>
 
 <p>
-  Der benötigte Impfstoff wird anhand der eingegangenen
-  Anmeldungen bestellt und für den gewählten Impftermin
-  vorbereitet.
+  Ihre Anmeldung wurde erfolgreich erfasst und Ihre Zahlung ist
+  erfolgreich eingegangen.
 </p>
 
 <p>
-  Sollten sich Änderungen ergeben oder Sie den Termin
-  wider Erwarten nicht wahrnehmen können, bitten wir
-  um eine kurze Mitteilung.
+  Bitte bewahren Sie diese E-Mail als Bestätigung auf.
 </p>
 
 <p>
-  Bei Fragen stehen wir Ihnen gerne zur Verfügung.
+  Bei Fragen können Sie sich jederzeit an den RGZV Hagen wenden.
 </p>
 
 <p>
-  Mit freundlichen Grüßen<br>
-  Ihr Impfwart<br>
-  RGZV Hagen und Umgebung seit 1903 e.V.
+  Mit freundlichen Grüßen
 </p>
+
+<p>
+  Rainer Koplin<br>
+  Impfwart RGZV Hagen
+</p>
+
 <hr style="margin-top:30px">
 
 <p style="font-size:12px;color:#666;">
-Diese E-Mail wurde automatisch über das Anmeldesystem des RGZV Hagen und Umgebung seit 1903 e.V. erstellt.
-Antworten auf diese Nachricht werden nicht gelesen oder bearbeitet.
-Bei Fragen oder Änderungswünschen wenden Sie sich bitte direkt an den Verein.
+Diese E-Mail wurde automatisch über das Anmeldesystem des RGZV Hagen erstellt.
 </p>
       `
     })
