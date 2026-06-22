@@ -942,7 +942,9 @@ function ExportButtons({ participants, vaccinationDates }) {
       <button onClick={pdf}><Download size={16}/> PDF</button>
       <button onClick={csv}><Download size={16}/> CSV</button>
       <button onClick={vaccinationCertificate}>Bescheinigung</button>
-      <button onClick={sendVetCertificate}>Tierarzt</button>
+      <button onClick={sendVetCertificate} disabled>
+  Tierarzt
+</button>
     </div>
   )
 }
