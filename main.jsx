@@ -952,11 +952,8 @@ function ExportButtons({ participants, vaccinationDates }) {
       <button onClick={vaccinationCertificate}>Bescheinigung</button>
       <button
   onClick={sendVetCertificate}
-  disabled={!isVaccinationDay}
-  style={{
-    opacity: isVaccinationDay ? 1 : 0.4,
-    cursor: isVaccinationDay ? 'pointer' : 'not-allowed'
-  }}
+  disabled
+  style={{ opacity: 0.4, cursor: 'not-allowed' }}
 >
   Tierarzt
 </button>
