@@ -272,7 +272,42 @@ if (result.url) {
     } catch (err) { setMessage('Fehler: ' + err.message) }
     finally { setLoading(false) }
   }
+if (!showForm) {
+  return (
+    <div className="page">
+      <Header />
 
+      <main className="card" style={{ maxWidth: '900px', margin: '40px auto' }}>
+        <h1>Anmeldung Impfgruppe RGZV Hagen</h1>
+
+        <h2>Nächster Impftermin</h2>
+        <p>
+          {vaccinationDates?.[0]
+            ? new Date(vaccinationDates[0].date).toLocaleDateString('de-DE')
+            : 'Noch nicht festgelegt'}
+        </p>
+
+        <h2>Teilnahmegebühr</h2>
+        <p>
+          10 € für Gäste<br />
+          5 € für Vereinsmitglieder mit Mitgliedercode
+        </p>
+
+        <h2>Ablauf</h2>
+        <p>
+          1. Anmeldung ausfüllen<br />
+          2. Online bezahlen<br />
+          3. Zahlungsbestätigung erhalten<br />
+          4. Am Impftermin teilnehmen
+        </p>
+
+        <button onClick={() => setShowForm(true)}>
+          Jetzt anmelden
+        </button>
+      </main>
+    </div>
+  )
+}
   return <div className="page">
     <Header />
     <main className="hero-grid">
