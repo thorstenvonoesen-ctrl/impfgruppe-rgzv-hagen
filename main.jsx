@@ -277,10 +277,46 @@ if (!showForm) {
     <div className="page">
       <Header />
 
-      <main className="card" style={{ maxWidth: '900px', margin: '40px auto' }}>
-        <h1>Anmeldung Impfgruppe RGZV Hagen</h1>
+      <main
+        className="card"
+        style={{
+          maxWidth: '900px',
+          margin: '40px auto'
+        }}
+      >
+        <h1>Anmeldung zur Sammelimpfung gegen die Newcastle-Krankheit</h1>
+
+        <p>
+          Der RGZV Hagen und Umgebung seit 1903 e.V. organisiert regelmäßig
+          Sammelimpfungen für Geflügelhalter.
+        </p>
+
+        <h2>Warum wird geimpft?</h2>
+
+        <p>
+          Die Newcastle-Krankheit (Atypische Geflügelpest) ist eine
+          hochansteckende und anzeigepflichtige Viruserkrankung des
+          Geflügels. Zum Schutz der Tierbestände schreibt der Gesetzgeber
+          eine regelmäßige Impfung von Geflügel vor.
+        </p>
+
+        <p>
+          Die Impfpflicht gilt bereits ab dem ersten gehaltenen Tier.
+          Unabhängig davon, ob nur wenige Hühner im Garten gehalten werden
+          oder ein größerer Bestand vorhanden ist, müssen die Tiere
+          entsprechend den geltenden Vorschriften gegen die
+          Newcastle-Krankheit geimpft werden.
+        </p>
+
+        <p>
+          Mit der Sammelimpfung des RGZV Hagen und Umgebung seit 1903 e.V.
+          bieten wir Geflügelhaltern eine einfache und kostengünstige
+          Möglichkeit, dieser Verpflichtung nachzukommen. Die Anmeldung,
+          Bezahlung und Organisation erfolgen bequem online.
+        </p>
 
         <h2>Nächster Impftermin</h2>
+
         <p>
           {vaccinationDates?.[0]
             ? new Date(vaccinationDates[0].date).toLocaleDateString('de-DE')
@@ -288,21 +324,39 @@ if (!showForm) {
         </p>
 
         <h2>Teilnahmegebühr</h2>
+
         <p>
-          10 € für Gäste<br />
+          10 € für Gäste
+          <br />
           5 € für Vereinsmitglieder mit Mitgliedercode
         </p>
 
         <h2>Ablauf</h2>
+
         <p>
-          1. Anmeldung ausfüllen<br />
-          2. Online bezahlen<br />
-          3. Zahlungsbestätigung erhalten<br />
+          1. Online anmelden
+          <br />
+          2. Teilnahmegebühr bezahlen
+          <br />
+          3. Zahlungsbestätigung erhalten
+          <br />
           4. Am Impftermin teilnehmen
         </p>
 
-        <button onClick={() => setShowForm(true)}>
-          Jetzt anmelden
+        <h2>Wichtige Hinweise</h2>
+
+        <p>
+          Bitte Tierart und Tieranzahl vollständig angeben.
+          Die Anmeldung erfolgt verbindlich.
+          Bei Nichterscheinen kann keine Erstattung der Teilnahmegebühr
+          erfolgen.
+        </p>
+
+        <button
+          className="primary"
+          onClick={() => setShowForm(true)}
+        >
+          Jetzt zur Anmeldung
         </button>
       </main>
     </div>
