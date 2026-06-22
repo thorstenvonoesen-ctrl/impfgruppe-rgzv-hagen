@@ -831,6 +831,9 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
 
 
 function ExportButtons({ participants, vaccinationDates }) {
+  const nextDate = vaccinationDates?.[0]?.date
+  const today = new Date().toISOString().slice(0, 10)
+  const isVaccinationDay = nextDate === today
   function csv() {
     const h=['Vorname','Nachname','Adresse','PLZ','Ort','E-Mail','Telefon','TSK Betriebsnummer.','Tiere','Impfung','Zahlung']
     const rows=participants.map(p=>[p.firstname,p.lastname,`${p.street||''} ${p.housenumber||''}`.trim(),p.zipcode,p.city,p.email,p.phone,p.tsk_number,p.animal_count,p.vaccine,p.payment_status])
