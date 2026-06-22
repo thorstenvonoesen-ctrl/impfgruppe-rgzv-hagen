@@ -348,7 +348,26 @@ if (!showForm) {
   Möglichkeit, dieser Verpflichtung nachzukommen. Die Anmeldung,
   Bezahlung und Organisation erfolgen bequem online.
 </p>
+<div
+  style={{
+    background:'#f9fafb',
+    padding:'20px',
+    borderRadius:'12px',
+    marginTop:'25px',
+    marginBottom:'25px'
+  }}
+>
+  <h3>Ihre Vorteile</h3>
 
+  <p>✔ Online anmelden</p>
+  <p>✔ Online bezahlen</p>
+  <p>✔ Automatische Bestätigung per E-Mail</p>
+  <p>✔ Offizielle Sammelimpfbescheinigung</p>
+
+  <p style={{ marginTop:'15px', fontWeight:'600' }}>
+    Bei Nichterscheinen kann die Teilnahmegebühr nicht erstattet werden.
+  </p>
+</div>
   <button
     onClick={() => setShowForm(true)}
     className="primary"
