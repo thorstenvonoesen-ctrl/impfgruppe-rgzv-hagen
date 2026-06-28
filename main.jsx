@@ -615,12 +615,37 @@ const [selectedDate, setSelectedDate] = useState(null)
   const [newDateNote, setNewDateNote] = useState('')
   async function sendReminderMail() {
   if (!selectedDate) return
-setMailDialogOpen(false)
 
-  console.log(selectedDate)
-  console.log(mailType)
-  console.log(newTime)
-  console.log(newMeetingPoint)
+  try {
+    const response = await fetch('/api/send-reminder-mail', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        vaccinationDateId: selectedDate.id,
+        type: mailType,
+        newTime,
+        newMeetingPoint,
+      }),
+    })
+
+    const result = await response.json()
+
+    if (!response.ok) {
+      alert(result.error || 'Fehler beim Versenden der E-Mail.')
+      return
+    }
+
+    alert('Erinnerungs-E-Mails wurden erfolgreich versendet.')
+    setMailDialogOpen(false)
+    setMailType('')
+    setNewTime('')
+    setNewMeetingPoint('')
+  } catch (err) {
+    console.error(err)
+    alert('Serverfehler beim Versenden der E-Mails.')
+  }
 }
   async function load() {
     setLoading(true)
