@@ -108,6 +108,7 @@ const [contact, setContact] = useState('')
     />
   </div>
 )
+  }
 function PublicSignup() {
   const [form, setForm] = useState(emptyForm())
   const [vaccinationDates, setVaccinationDates] = useState([])
