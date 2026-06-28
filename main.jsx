@@ -768,6 +768,7 @@ setNewDateNote('')
   load()
 }
   async function saveParticipant(p) {
+   const clubId = await getDefaultClubId()                                  
   const { error } = await supabase
     .from('participants')
     .update({
