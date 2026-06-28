@@ -617,7 +617,7 @@ const [selectedDate, setSelectedDate] = useState(null)
   if (!selectedDate) return
 
   try {
-    const response = await fetch('/api/send-reminder-mail', {
+    const response = await fetch('/api/send-reminder-emails', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
