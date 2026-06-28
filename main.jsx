@@ -74,7 +74,12 @@ const [email, setEmail] = useState('')
 const [phone, setPhone] = useState('')
 const [contact, setContact] = useState('')
   async function registerClub() {
-  alert('Nächster Schritt')
+  const slug = name
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '')
+
+  alert(slug)
 }
   return (
   <div style={{ maxWidth: 500, margin: '40px auto', padding: 20 }}>
