@@ -1652,7 +1652,7 @@ function Header() {
     <header>
       <div className="logo">
         <img
-          src="/Logoklein.jpg"
+          src="/Logoklein.png"
           alt="Impfgruppenmanager"
           className="logo-img"
         />
