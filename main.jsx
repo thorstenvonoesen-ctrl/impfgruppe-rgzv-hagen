@@ -787,7 +787,7 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
   doc.save(`teilnehmerliste-${v.date}.pdf`)
 }
 
-)}
+
 
 {mailType === 'location' && (
   <input
