@@ -73,6 +73,9 @@ function ClubRegistration() {
 const [email, setEmail] = useState('')
 const [phone, setPhone] = useState('')
 const [contact, setContact] = useState('')
+  async function registerClub() {
+  alert('Nächster Schritt')
+}
   return (
   <div style={{ maxWidth: 500, margin: '40px auto', padding: 20 }}>
     <h1>Verein registrieren</h1>
