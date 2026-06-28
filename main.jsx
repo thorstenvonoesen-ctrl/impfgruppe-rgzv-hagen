@@ -70,39 +70,81 @@ if (page === '#register') return <ClubRegistration />
 }
 function ClubRegistration() {
   const [name, setName] = useState('')
-const [email, setEmail] = useState('')
-const [phone, setPhone] = useState('')
-const [contact, setContact] = useState('')
+  const [email, setEmail] = useState('')
+  const [phone, setPhone] = useState('')
+  const [contact, setContact] = useState('')
+
   async function registerClub() {
+    const slug = name
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-|-$/g, '')
 
-  const slug = name
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-|-$/g, '')
+    const memberCode = Math.random().toString(36).substring(2, 8).toUpperCase()
 
-  const memberCode = Math.random().toString(36).substring(2, 8).toUpperCase()
+    const { error } = await supabase
+      .from('clubs')
+      .insert([
+        {
+          name,
+          slug,
+          email,
+          phone,
+          contact,
+          member_code: memberCode
+        }
+      ])
 
-  const { error } = await supabase
-    .from('clubs')
-    .insert([
-      {
-        name,
-        slug,
-        email,
-        phone,
-        member_code: memberCode
-      }
-    ])
+    if (error) {
+      alert(error.message)
+      return
+    }
 
-  if (error) {
-    alert(error.message)
-    return
+    alert(`Verein erfolgreich registriert!\n\nMitgliedscode: ${memberCode}`)
   }
 
-  alert(`Verein erfolgreich registriert!\n\nMitgliedscode: ${memberCode}`)
+  return (
+    <div style={{ maxWidth: 500, margin: '40px auto', padding: 20 }}>
+      <h1>Verein registrieren</h1>
 
-  
-  }
+      <input
+        placeholder="Vereinsname"
+        value={name}
+        onChange={e => setName(e.target.value)}
+      />
+
+      <br /><br />
+
+      <input
+        placeholder="Ansprechpartner"
+        value={contact}
+        onChange={e => setContact(e.target.value)}
+      />
+
+      <br /><br />
+
+      <input
+        placeholder="E-Mail"
+        value={email}
+        onChange={e => setEmail(e.target.value)}
+      />
+
+      <br /><br />
+
+      <input
+        placeholder="Telefon"
+        value={phone}
+        onChange={e => setPhone(e.target.value)}
+      />
+
+      <br /><br />
+
+      <button onClick={registerClub}>
+        Verein registrieren
+      </button>
+    </div>
+  )
+}
 function PublicSignup() {
   const [form, setForm] = useState(emptyForm())
   const [vaccinationDates, setVaccinationDates] = useState([])
