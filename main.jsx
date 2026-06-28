@@ -817,6 +817,15 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
   />
 )}
       <button
+  className="primary"
+  disabled={
+    (mailType === 'time' && !newTime) ||
+    (mailType === 'location' && !newMeetingPoint)
+  }
+>
+  E-Mail senden
+</button>
+      <button
         className="ghost"
         onClick={() => setMailDialogOpen(false)}
       >
