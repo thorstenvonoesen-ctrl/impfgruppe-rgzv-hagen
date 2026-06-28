@@ -838,7 +838,6 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
 >
   PDF
 </button>
-    <button
       <button
   className="small"
   onClick={() => {
