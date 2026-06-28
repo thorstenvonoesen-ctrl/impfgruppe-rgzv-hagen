@@ -613,6 +613,9 @@ const [selectedDate, setSelectedDate] = useState(null)
   const [newDate, setNewDate] = useState('')
   const [newDateTitle, setNewDateTitle] = useState('')
   const [newDateNote, setNewDateNote] = useState('')
+  async function sendReminderMail() {
+
+}
   async function load() {
     setLoading(true)
     if (hasSupabase) {
