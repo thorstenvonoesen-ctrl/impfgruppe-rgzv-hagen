@@ -102,11 +102,18 @@ const [contact, setContact] = useState('')
     <br /><br />
 
     <input
-      placeholder="Telefon"
-      value={phone}
-      onChange={e => setPhone(e.target.value)}
-    />
-  </div>
+  placeholder="Telefon"
+  value={phone}
+  onChange={e => setPhone(e.target.value)}
+/>
+
+<br /><br />
+
+<button>
+  Verein registrieren
+</button>
+
+</div>
 )
   }
 function PublicSignup() {
