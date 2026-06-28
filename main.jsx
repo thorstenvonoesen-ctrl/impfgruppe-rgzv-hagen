@@ -820,7 +820,15 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
         
 
 {vaccinationDates.map(v => (
-  <div key={v.id} className="date-card">
+  <div
+  key={v.id}
+  className="date-card"
+  style={{
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center'
+  }}
+>
     <div>
       <strong>{v.title}</strong>
       <br />
