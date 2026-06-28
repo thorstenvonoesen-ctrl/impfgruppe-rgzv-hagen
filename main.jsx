@@ -69,6 +69,10 @@ if (page === '#register') return <ClubRegistration />
   return <PublicSignup />
 }
 function ClubRegistration() {
+  const [name, setName] = useState('')
+const [email, setEmail] = useState('')
+const [phone, setPhone] = useState('')
+const [contact, setContact] = useState('')
   return (
     <div style={{ padding: 40 }}>
       <h1>Verein registrieren</h1>
