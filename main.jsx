@@ -77,7 +77,6 @@ function PublicSignup() {
   const [showForm, setShowForm] = useState(false)
   const [countdown, setCountdown] = useState('')
   const update = e => setForm({ ...form, [e.target.name]: e.target.value })
-  async function loadDates() {
  
   async function loadDates() {
   const clubId = await getDefaultClubId()
