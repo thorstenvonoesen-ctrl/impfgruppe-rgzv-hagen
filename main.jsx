@@ -74,6 +74,37 @@ const [email, setEmail] = useState('')
 const [phone, setPhone] = useState('')
 const [contact, setContact] = useState('')
   async function registerClub() {
+    async function registerClub() {
+
+  const slug = name
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '')
+
+  const memberCode = Math.random().toString(36).substring(2, 8).toUpperCase()
+
+  const { error } = await supabase
+    .from('clubs')
+    .insert([
+      {
+        name,
+        slug,
+        email,
+        phone,
+        member_code: memberCode
+      }
+    ])
+
+  if (error) {
+    alert(error.message)
+    return
+  }
+
+  alert(`Verein erfolgreich registriert!
+
+Mitgliedscode: ${memberCode}`)
+
+  return (
   return (
   <div style={{ maxWidth: 500, margin: '40px auto', padding: 20 }}>
     <h1>Verein registrieren</h1>
