@@ -11,14 +11,16 @@ async function getDefaultClubId() {
     .from('clubs')
     .select('id')
     .eq('slug', APP.slug)
-    .single()
+    .maybeSingle()
 
   if (error) {
-    console.error('Club konnte nicht geladen werden:', error)
-    return null
-  }
+  console.error('Club konnte nicht geladen werden:', error)
+  return null
+}
 
-  return data.id
+console.log('Club-Datensatz:', data)
+
+return data?.id ?? null
 }
 import './styles.css'
 import logo from './public/Logoklein.jpg'
