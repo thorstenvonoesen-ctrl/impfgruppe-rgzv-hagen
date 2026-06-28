@@ -65,7 +65,7 @@ const [showForm, setShowForm] = useState(false)
   if (page === '#admin') return <Admin />
   if (page === '#datenschutz') return <Datenschutz />
   if (page === '#impressum') return <Impressum />
-
+if (page === '#register') return <ClubRegistration />
   return <PublicSignup />
 }
 
