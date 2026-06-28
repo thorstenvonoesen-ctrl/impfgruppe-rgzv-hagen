@@ -783,7 +783,7 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
       <button
         className="primary"
         onClick={() => {
-  // folgt im nächsten Schritt
+  setMailType('time')
 }}
       >
         Uhrzeit geändert
@@ -792,7 +792,7 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
       <button
         className="primary"
         onClick={() => {
-  // folgt im nächsten Schritt
+  setMailType('location')
 }}
       >
         Treffpunkt geändert
