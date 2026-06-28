@@ -879,6 +879,7 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
     Löschen
   </button>
 </div>
+    </div>
 ))}
 
 </section>
