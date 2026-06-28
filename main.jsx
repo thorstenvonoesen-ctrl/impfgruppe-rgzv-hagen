@@ -786,7 +786,7 @@ setNewDateNote('')
       vaccine: p.vaccine
     })
     .eq('id', p.id)
-
+.eq('club_id', clubId)
   if (!error) {
     setEditingParticipant(null)
     load()
