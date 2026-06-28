@@ -78,7 +78,7 @@ function PublicSignup() {
   const [countdown, setCountdown] = useState('')
   const update = e => setForm({ ...form, [e.target.name]: e.target.value })
   async function loadDates() {
-  async function loadDates() {
+ 
   const clubId = await getDefaultClubId()
 
   const { data } = await supabase
