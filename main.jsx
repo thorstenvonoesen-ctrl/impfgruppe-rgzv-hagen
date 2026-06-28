@@ -112,7 +112,7 @@ const [contact, setContact] = useState('')
 
 <br /><br />
 
-<button onClick={() => alert('Kommt im nächsten Schritt')}>
+<button onClick={registerClub}>
   Verein registrieren
 </button>
 
