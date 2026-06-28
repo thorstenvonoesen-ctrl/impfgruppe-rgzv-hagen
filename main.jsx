@@ -614,7 +614,12 @@ const [selectedDate, setSelectedDate] = useState(null)
   const [newDateTitle, setNewDateTitle] = useState('')
   const [newDateNote, setNewDateNote] = useState('')
   async function sendReminderMail() {
+  if (!selectedDate) return
 
+  console.log(selectedDate)
+  console.log(mailType)
+  console.log(newTime)
+  console.log(newMeetingPoint)
 }
   async function load() {
     setLoading(true)
