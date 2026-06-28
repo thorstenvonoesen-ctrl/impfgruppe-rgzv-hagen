@@ -74,7 +74,6 @@ const [email, setEmail] = useState('')
 const [phone, setPhone] = useState('')
 const [contact, setContact] = useState('')
   async function registerClub() {
-    async function registerClub() {
 
   const slug = name
     .toLowerCase()
