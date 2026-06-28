@@ -682,11 +682,18 @@ if (result.sent === 0) {
   async function load() {
     setLoading(true)
     if (hasSupabase) {
-      const { data, error } = await supabase.from('participants').select('*').order('created_at', { ascending:false })
+      const clubId = await getDefaultClubId()
+
+const { data, error } = await supabase
+  .from('participants')
+  .select('*')
+  .eq('club_id', clubId)
+  .order('created_at', { ascending: false })
       if (!error) setParticipants(data || [])
       const { data: dates } = await supabase
   .from('vaccination_dates')
   .select('*')
+  .eq('club_id', clubId)
   .order('date', { ascending: true })
 
 setVaccinationDates(dates || [])
