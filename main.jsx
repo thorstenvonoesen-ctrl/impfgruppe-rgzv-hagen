@@ -99,11 +99,8 @@ const [contact, setContact] = useState('')
     return
   }
 
-  alert(`Verein erfolgreich registriert!
+  alert(`Verein erfolgreich registriert!\n\nMitgliedscode: ${memberCode}`)
 
-Mitgliedscode: ${memberCode}`)
-
-  return (
   return (
   <div style={{ maxWidth: 500, margin: '40px auto', padding: 20 }}>
     <h1>Verein registrieren</h1>
