@@ -827,6 +827,7 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
 )}
       <button
   className="primary"
+        onClick={sendReminderMail}
   disabled={
     (mailType === 'time' && !newTime) ||
     (mailType === 'location' && !newMeetingPoint)
