@@ -695,12 +695,13 @@ setIsVaccinationDay(
   await supabase
     .from('vaccination_dates')
     .insert([
-      {
-  title: newDateTitle,
-  date: newDate,
-  note: newDateNote
-}
-    ])
+  {
+    club_id: await getDefaultClubId(),
+    title: newDateTitle,
+    date: newDate,
+    note: newDateNote
+  }
+])
 
   setNewDate('')
     setNewDateTitle('')
