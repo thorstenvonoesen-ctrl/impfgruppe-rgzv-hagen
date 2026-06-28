@@ -1657,9 +1657,7 @@ function Header() {
           className="logo-img"
         />
 
-        <span>
-          Impfgruppenmanager
-        </span>
+        
       </div>
 
       <nav>
