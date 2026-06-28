@@ -615,7 +615,8 @@ const [selectedDate, setSelectedDate] = useState(null)
   const [newDateNote, setNewDateNote] = useState('')
   async function sendReminderMail() {
   if (!selectedDate) return
-
+setMailDialogOpen(false)
+alert('Funktion wird jetzt angebunden.')
   console.log(selectedDate)
   console.log(mailType)
   console.log(newTime)
