@@ -840,37 +840,45 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
         </>
       )}
     </div>
-<button
-  className="small"
-  onClick={() => pdfForVaccinationDate(v)}
->
-  PDF
-</button>
-      <button
-  className="small"
-  onClick={() => {
-    // folgt im nächsten Schritt
+<div
+  style={{
+    display: 'flex',
+    gap: '10px',
+    alignItems: 'center'
   }}
 >
-  E-Mail
-</button>
+  <button
+    className="small"
+    onClick={() => pdfForVaccinationDate(v)}
+  >
+    PDF
+  </button>
 
-<button
-  className="small"
-  onClick={async () => {
-        if (!confirm('Impftermin wirklich löschen?')) return
+  <button
+    className="small"
+    onClick={() => {
+      // folgt im nächsten Schritt
+    }}
+  >
+    E-Mail
+  </button>
 
-        await supabase
-          .from('vaccination_dates')
-          .delete()
-          .eq('id', v.id)
+  <button
+    className="small"
+    onClick={async () => {
+      if (!confirm('Impftermin wirklich löschen?')) return
 
-        load()
-      }}
-    >
-      Löschen
-    </button>
-  </div>
+      await supabase
+        .from('vaccination_dates')
+        .delete()
+        .eq('id', v.id)
+
+      load()
+    }}
+  >
+    Löschen
+  </button>
+</div>
 ))}
 
 </section>
