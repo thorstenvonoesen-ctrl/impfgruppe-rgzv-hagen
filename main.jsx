@@ -68,7 +68,14 @@ const [showForm, setShowForm] = useState(false)
 if (page === '#register') return <ClubRegistration />
   return <PublicSignup />
 }
-
+function ClubRegistration() {
+  return (
+    <div style={{ padding: 40 }}>
+      <h1>Verein registrieren</h1>
+      <p>Diese Funktion wird als Nächstes erstellt.</p>
+    </div>
+  )
+}
 function PublicSignup() {
   const [form, setForm] = useState(emptyForm())
   const [vaccinationDates, setVaccinationDates] = useState([])
