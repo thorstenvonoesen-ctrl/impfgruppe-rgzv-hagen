@@ -1653,12 +1653,12 @@ function Header() {
       <div className="logo">
         <img
           src="/Logoklein.jpg"
-          alt="RGZV Hagen"
+          alt="Impfgruppenmanager"
           className="logo-img"
         />
 
         <span>
-          RGZV Hagen und Umgebung seit 1903 e.V.
+          Impfgruppenmanager
         </span>
       </div>
 
@@ -1672,7 +1672,7 @@ function Header() {
 function Footer() {
   return (
     <footer>
-      © 2026 Thorsten von Oesen – Entwickelt für den RGZV Hagen und Umgebung seit 1903 e.V.
+      © 2026 Thorsten von Oesen – Impfgruppenmanager
       {' | '}
       <a href="#datenschutz">Datenschutz</a>
       {' | '}
