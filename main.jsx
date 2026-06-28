@@ -793,12 +793,12 @@ setNewDateNote('')
 }
   async function deleteParticipant(id) {
   if (!confirm('Teilnehmer wirklich löschen?')) return
-
+const clubId = await getDefaultClubId()
   await supabase
     .from('participants')
     .delete()
     .eq('id', id)
-
+.eq('club_id', clubId)
   load()
 }
   const filtered = participants.filter(p => {
