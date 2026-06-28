@@ -636,8 +636,11 @@ const [selectedDate, setSelectedDate] = useState(null)
       alert(result.error || 'Fehler beim Versenden der E-Mail.')
       return
     }
-
-    alert('Erinnerungs-E-Mails wurden erfolgreich versendet.')
+if (result.sent === 0) {
+  alert('Für diesen Impftermin wurden keine bezahlten Teilnehmer gefunden.')
+  return
+}
+    alert(`${result.sent} Erinnerungs-E-Mail(s) erfolgreich versendet.`)
     setMailDialogOpen(false)
     setMailType('')
     setNewTime('')
