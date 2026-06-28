@@ -774,6 +774,34 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
 
   doc.save(`teilnehmerliste-${v.date}.pdf`)
 }
+  {mailDialogOpen && (
+  <div className="modal">
+    <div className="card">
+      <h2>E-Mail versenden</h2>
+
+      <button
+        className="primary"
+        onClick={() => alert('Uhrzeit geändert')}
+      >
+        Uhrzeit geändert
+      </button>
+
+      <button
+        className="primary"
+        onClick={() => alert('Treffpunkt geändert')}
+      >
+        Treffpunkt geändert
+      </button>
+
+      <button
+        className="ghost"
+        onClick={() => setMailDialogOpen(false)}
+      >
+        Abbrechen
+      </button>
+    </div>
+  </div>
+)}
   return <div className="page admin"><Header admin />
     <main className="admin-wrap">
       <div className="admin-top"><h1>Adminbereich</h1><button className="ghost" onClick={onLogout}><LogOut size={16}/> Logout</button></div>
