@@ -238,11 +238,12 @@ const paymentAmount = isMember ? 5 : 10
     const { member_code, ...formData } = form
     const payload = {
   ...formData,
+  club_id: await getDefaultClubId(),
   animal_count: Number(form.animal_count),
   vaccination_date_id: form.vaccination_date_id,
   payment_status: 'offen',
   payment_amount: paymentAmount,
-is_member: isMember
+  is_member: isMember
 }
     try {
       let participantId = null
