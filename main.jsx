@@ -74,12 +74,40 @@ const [email, setEmail] = useState('')
 const [phone, setPhone] = useState('')
 const [contact, setContact] = useState('')
   return (
-    <div style={{ padding: 40 }}>
-      <h1>Verein registrieren</h1>
-      <p>Diese Funktion wird als Nächstes erstellt.</p>
-    </div>
-  )
-}
+  <div style={{ maxWidth: 500, margin: '40px auto', padding: 20 }}>
+    <h1>Verein registrieren</h1>
+
+    <input
+      placeholder="Vereinsname"
+      value={name}
+      onChange={e => setName(e.target.value)}
+    />
+
+    <br /><br />
+
+    <input
+      placeholder="Ansprechpartner"
+      value={contact}
+      onChange={e => setContact(e.target.value)}
+    />
+
+    <br /><br />
+
+    <input
+      placeholder="E-Mail"
+      value={email}
+      onChange={e => setEmail(e.target.value)}
+    />
+
+    <br /><br />
+
+    <input
+      placeholder="Telefon"
+      value={phone}
+      onChange={e => setPhone(e.target.value)}
+    />
+  </div>
+)
 function PublicSignup() {
   const [form, setForm] = useState(emptyForm())
   const [vaccinationDates, setVaccinationDates] = useState([])
