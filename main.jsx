@@ -846,8 +846,10 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
 >
   E-Mail
 </button>
-      className="small"
-      onClick={async () => {
+
+<button
+  className="small"
+  onClick={async () => {
         if (!confirm('Impftermin wirklich löschen?')) return
 
         await supabase
