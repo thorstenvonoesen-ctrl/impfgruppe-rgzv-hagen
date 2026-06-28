@@ -90,7 +90,7 @@ function ClubRegistration() {
           slug,
           email,
           phone,
-          contact,
+        
           member_code: memberCode
         }
       ])
