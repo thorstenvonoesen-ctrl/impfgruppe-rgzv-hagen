@@ -604,6 +604,7 @@ function AdminDashboard({ onLogout }) {
   const [statusFilter, setStatusFilter] = useState('all')
   const [loading, setLoading] = useState(true)
   const [mailDialogOpen, setMailDialogOpen] = useState(false)
+  const [mailType, setMailType] = useState('')
 const [selectedDate, setSelectedDate] = useState(null)
   const [editingParticipant, setEditingParticipant] = useState(null)
   const [vaccinationDates, setVaccinationDates] = useState([])
