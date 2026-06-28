@@ -4,6 +4,22 @@ import { Syringe, ShieldCheck, Users, Euro, Download, Search, Lock, LogOut } fro
 import jsPDF from 'jspdf'
 import autoTable from 'jspdf-autotable'
 import { supabase, hasSupabase } from './supabase.js'
+async function getDefaultClubId() {
+  if (!hasSupabase) return null
+
+  const { data, error } = await supabase
+    .from('clubs')
+    .select('id')
+    .eq('slug', APP.slug)
+    .single()
+
+  if (error) {
+    console.error('Club konnte nicht geladen werden:', error)
+    return null
+  }
+
+  return data.id
+}
 import './styles.css'
 import logo from './public/Logoklein.jpg'
 import { APP } from './config'
