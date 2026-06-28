@@ -839,6 +839,14 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
   PDF
 </button>
     <button
+      <button
+  className="small"
+  onClick={() => {
+    // folgt im nächsten Schritt
+  }}
+>
+  E-Mail
+</button>
       className="small"
       onClick={async () => {
         if (!confirm('Impftermin wirklich löschen?')) return
