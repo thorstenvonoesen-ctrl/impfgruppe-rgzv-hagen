@@ -101,48 +101,7 @@ const [contact, setContact] = useState('')
 
   alert(`Verein erfolgreich registriert!\n\nMitgliedscode: ${memberCode}`)
 
-  return (
-  <div style={{ maxWidth: 500, margin: '40px auto', padding: 20 }}>
-    <h1>Verein registrieren</h1>
-
-    <input
-      placeholder="Vereinsname"
-      value={name}
-      onChange={e => setName(e.target.value)}
-    />
-
-    <br /><br />
-
-    <input
-      placeholder="Ansprechpartner"
-      value={contact}
-      onChange={e => setContact(e.target.value)}
-    />
-
-    <br /><br />
-
-    <input
-      placeholder="E-Mail"
-      value={email}
-      onChange={e => setEmail(e.target.value)}
-    />
-
-    <br /><br />
-
-    <input
-  placeholder="Telefon"
-  value={phone}
-  onChange={e => setPhone(e.target.value)}
-/>
-
-<br /><br />
-
-<button onClick={registerClub}>
-  Verein registrieren
-</button>
-
-</div>
-)
+  
   }
 function PublicSignup() {
   const [form, setForm] = useState(emptyForm())
