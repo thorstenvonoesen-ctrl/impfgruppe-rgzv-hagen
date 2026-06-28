@@ -79,7 +79,9 @@ const [contact, setContact] = useState('')
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-|-$/g, '')
 
-  alert(slug)
+  const memberCode = Math.random().toString(36).substring(2, 8).toUpperCase()
+
+  alert(memberCode)
 }
   return (
   <div style={{ maxWidth: 500, margin: '40px auto', padding: 20 }}>
