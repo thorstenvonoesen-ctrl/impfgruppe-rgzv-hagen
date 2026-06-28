@@ -79,13 +79,18 @@ function PublicSignup() {
   const update = e => setForm({ ...form, [e.target.name]: e.target.value })
   async function loadDates() {
  
+  async function loadDates() {
   const clubId = await getDefaultClubId()
+  console.log("clubId =", clubId)
 
-  const { data } = await supabase
+  const { data, error } = await supabase
     .from('vaccination_dates')
     .select('*')
     .eq('club_id', clubId)
     .order('date', { ascending: true })
+
+  console.log("error =", error)
+  console.log("data =", data)
 
   setVaccinationDates(data || [])
 }
