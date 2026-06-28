@@ -789,34 +789,60 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
 
 
 
-{mailType === 'location' && (
-  <input
-    type="text"
-    placeholder="Neuer Treffpunkt"
-    value={newMeetingPoint}
-    onChange={e => setNewMeetingPoint(e.target.value)}
-/>
-)}
-      <button
-  className="primary"
-        onClick={sendReminderMail}
-  disabled={
-    (mailType === 'time' && !newTime) ||
-    (mailType === 'location' && !newMeetingPoint)
-  }
->
-  E-Mail senden
-</button>
-      <button
-        className="ghost"
-        onClick={() => setMailDialogOpen(false)}
-      >
-        Abbrechen
-      </button>
-    </div>
-  </div>
-)}
+
   return <div className="page admin"><Header admin />
+
+  {mailDialogOpen && (
+    <div className="modal">
+      <div className="card">
+        <h2>E-Mail versenden</h2>
+
+        <button className="primary" onClick={() => setMailType('time')}>
+          Uhrzeit geändert
+        </button>
+
+        <button className="primary" onClick={() => setMailType('location')}>
+          Treffpunkt geändert
+        </button>
+
+        {mailType === 'time' && (
+          <input
+            type="text"
+            placeholder="Neue Uhrzeit"
+            value={newTime}
+            onChange={e => setNewTime(e.target.value)}
+          />
+        )}
+
+        {mailType === 'location' && (
+          <input
+            type="text"
+            placeholder="Neuer Treffpunkt"
+            value={newMeetingPoint}
+            onChange={e => setNewMeetingPoint(e.target.value)}
+          />
+        )}
+
+        <button
+          className="primary"
+          onClick={sendReminderMail}
+          disabled={
+            (mailType === 'time' && !newTime) ||
+            (mailType === 'location' && !newMeetingPoint)
+          }
+        >
+          E-Mail senden
+        </button>
+
+        <button
+          className="ghost"
+          onClick={() => setMailDialogOpen(false)}
+        >
+          Abbrechen
+        </button>
+      </div>
+    </div>
+  )}
 
   {mailDialogOpen && (
   <div className="modal">
