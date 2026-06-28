@@ -201,9 +201,9 @@ td .paid {
 }
 
 .logo-img {
-  height: 60px;
-  width: auto;
-  border-radius: 6px;
+    height: 40px;
+    width: auto;
+    border-radius: 6px;
 }
 
 .logo span {
