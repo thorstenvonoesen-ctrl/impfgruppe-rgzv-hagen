@@ -781,14 +781,18 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
 
       <button
         className="primary"
-        onClick={() => alert('Uhrzeit geändert')}
+        onClick={() => {
+  // folgt im nächsten Schritt
+}}
       >
         Uhrzeit geändert
       </button>
 
       <button
         className="primary"
-        onClick={() => alert('Treffpunkt geändert')}
+        onClick={() => {
+  // folgt im nächsten Schritt
+}}
       >
         Treffpunkt geändert
       </button>
