@@ -796,7 +796,7 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
     value={newMeetingPoint}
     onChange={e => setNewMeetingPoint(e.target.value)}
 />
-
+)}
       <button
   className="primary"
         onClick={sendReminderMail}
