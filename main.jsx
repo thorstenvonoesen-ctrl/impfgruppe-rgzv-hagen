@@ -564,8 +564,7 @@ if (!showForm) {
 <p>
   Mit der Sammelimpfung des {club?.name || 'RGZV Hagen und Umgebung seit 1903 e.V.'}
   bieten wir Geflügelhaltern eine einfache und kostengünstige
-  Möglichkeit, dieser Verpflichtung nachzukommen. Die Anmeldung,
-  Bezahlung und Organisation erfolgen bequem online.
+  Möglichkeit, dieser Verpflichtung nachzukommen. Die Anmeldung, Bezahlung und Organisation erfolgen bequem online über die Impfgruppen-App des Vereins.
 </p>
 <div
   style={{
