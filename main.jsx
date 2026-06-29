@@ -452,7 +452,9 @@ if (!showForm) {
         fontSize:'18px'
       }}
     >
-      Einfache Online-Anmeldung zur gesetzlichen Newcastle-Impfung für Geflügelhalter.
+      {club
+  ? `Einfache Online-Anmeldung zur gesetzlichen Newcastle-Impfung des ${club.name}.`
+  : 'Einfache Online-Anmeldung zur gesetzlichen Newcastle-Impfung für Geflügelhalter.'}
     </p>
   </div>
 
