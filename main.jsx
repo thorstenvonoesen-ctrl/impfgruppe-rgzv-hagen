@@ -105,13 +105,13 @@ const [paypalClientId, setPaypalClientId] = useState('')
       .from('clubs')
       .insert([
         {
-          name,
-          slug,
-          email,
-          phone,
-        
-          member_code: memberCode
-        }
+  name,
+  slug,
+  email,
+  phone,
+  paypal_client_id: paypalClientId,
+  member_code: memberCode
+}
       ])
 
     if (error) {
