@@ -10,7 +10,7 @@ async function getDefaultClubId() {
   const { data, error } = await supabase
     .from('clubs')
     .select('id')
-    .eq('slug', APP.slug)
+    .eq('slug', getCurrentSlug())
     .maybeSingle()
 
   if (error) {
