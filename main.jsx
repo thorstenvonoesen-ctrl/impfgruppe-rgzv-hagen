@@ -30,6 +30,17 @@ function getCurrentSlug() {
 
   return APP.slug
 }
+async function getMemberCode() {
+  if (!hasSupabase) return null
+
+  const { data } = await supabase
+    .from('clubs')
+    .select('member_code')
+    .eq('slug', getCurrentSlug())
+    .maybeSingle()
+
+  return data?.member_code ?? null
+}
 import './styles.css'
 import logo from './public/Logoklein.jpg'
 import { APP } from './config'
@@ -37,7 +48,7 @@ const vaccines = ['Newcastle', 'IB', 'ILT', 'Marek', 'Kokzidiose', 'Salmonellen'
 const ADMIN_PIN = import.meta.env.VITE_ADMIN_PIN || '1234'
 const PAYMENT_URL = import.meta.env.VITE_PAYMENT_URL || ''
 const MEMBER_CODE = 'RGZV2026'
-
+let MEMBER_CODE = null
 function emptyForm() {
   return {
   firstname:'',
