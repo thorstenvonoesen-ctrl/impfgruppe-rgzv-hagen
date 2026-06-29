@@ -24,6 +24,11 @@ const amount = participant?.payment_amount || 10
   .select('paypal_client_id, paypal_secret')
   .eq('id', participant.club_id)
   .single()
+    if (!club?.paypal_client_id || !club?.paypal_secret) {
+  return res.status(400).json({
+    error: 'Für diesen Verein sind keine PayPal-Zugangsdaten hinterlegt.'
+  })
+}
     const auth = Buffer.from(
   `${club.paypal_client_id}:${club.paypal_secret}`
 ).toString('base64')
