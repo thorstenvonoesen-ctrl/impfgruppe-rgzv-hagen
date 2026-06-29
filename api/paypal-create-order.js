@@ -25,8 +25,8 @@ const amount = participant?.payment_amount || 10
   .eq('id', participant.club_id)
   .single()
     const auth = Buffer.from(
-      `${process.env.PAYPAL_CLIENT_ID}:${process.env.PAYPAL_SECRET}`
-    ).toString('base64')
+  `${club.paypal_client_id}:${club.paypal_secret}`
+).toString('base64')
 
     const tokenRes = await fetch('https://api-m.paypal.com/v1/oauth2/token', {
       method: 'POST',
