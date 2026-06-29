@@ -109,6 +109,8 @@ function ClubRegistration() {
     }
 
     alert(`Verein erfolgreich registriert!\n\nMitgliedscode: ${memberCode}`)
+
+window.location.href = `/${slug}`
   }
 
   return (
