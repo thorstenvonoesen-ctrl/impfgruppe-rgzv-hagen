@@ -22,6 +22,14 @@ console.log('Club-Datensatz:', data)
 
 return data?.id ?? null
 }
+function getCurrentSlug() {
+  const path = window.location.pathname
+    .replace(/^\/+|\/+$/g, '')
+
+  if (path) return path
+
+  return APP.slug
+}
 import './styles.css'
 import logo from './public/Logoklein.jpg'
 import { APP } from './config'
