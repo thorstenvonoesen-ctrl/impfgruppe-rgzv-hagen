@@ -572,7 +572,19 @@ if (!showForm) {
 >
   Jetzt zur Anmeldung
 </button>
-
+<p style={{ marginTop: '30px', textAlign: 'center' }}>
+  Sie möchten Ihren Verein registrieren?{' '}
+  <a
+    href="#register"
+    style={{
+      color: '#2563eb',
+      fontWeight: 'bold',
+      textDecoration: 'none'
+    }}
+  >
+    Hier klicken
+  </a>
+</p>
 </main>
 
 <Footer />
