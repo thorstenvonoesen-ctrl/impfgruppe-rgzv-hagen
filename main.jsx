@@ -428,14 +428,14 @@ if (!showForm) {
     }}
   >
     <div
-      style={{
-        color:'#ff7a00',
-        fontWeight:'700',
-        marginBottom:'10px'
-      }}
-    >
-      RGZV Hagen und Umgebung seit 1903 e.V.
-    </div>
+  style={{
+    color:'#ff7a00',
+    fontWeight:'700',
+    marginBottom:'10px'
+  }}
+>
+  {club?.name || 'RGZV Hagen und Umgebung seit 1903 e.V.'}
+</div>
 
     <h1
       style={{
