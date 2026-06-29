@@ -14,7 +14,7 @@ export default async function handler(req, res) {
     const { participantId } = req.body || {}
 const { data: participant } = await supabase
   .from('participants')
-  .select('payment_amount')
+  .select('payment_amount, club_id')
   .eq('id', participantId)
   .single()
 
