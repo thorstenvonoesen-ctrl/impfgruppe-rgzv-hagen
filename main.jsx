@@ -338,8 +338,9 @@ useEffect(() => {
   setLoading(false)
   return
 }
+    const currentMemberCode = await getMemberCode()
     const isMember =
-  form.member_code?.trim() === MEMBER_CODE
+  form.member_code?.trim() === currentMemberCode
 
 const paymentAmount = isMember ? 5 : 10
     const { member_code, ...formData } = form
