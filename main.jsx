@@ -540,7 +540,7 @@ if (!showForm) {
   }}
 >
   10 € für Gäste<br />
-  5 € für Vereinsmitglieder mit gültigem Mitgliedercode
+  5 € für Mitglieder des {club?.name || 'Vereins'} mit gültigem Mitgliedscode
 </p>
     </div>
   </div>
