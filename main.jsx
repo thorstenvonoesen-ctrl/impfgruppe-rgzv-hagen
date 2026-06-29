@@ -169,6 +169,7 @@ window.location.href = `/${slug}`
 function PublicSignup() {
   const [form, setForm] = useState(emptyForm())
   const [vaccinationDates, setVaccinationDates] = useState([])
+  const [club, setClub] = useState(null)
   const [loading, setLoading] = useState(false)
   const [message, setMessage] = useState('')
   const [privacyAccepted, setPrivacyAccepted] = useState(false)
