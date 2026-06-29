@@ -443,7 +443,7 @@ if (!showForm) {
         margin:'0 0 20px 0'
       }}
     >
-      Sammelimpfung gegen die Newcastle-Krankheit
+      Sammelimpfung {club ? `- ${club.name}` : 'gegen die Newcastle-Krankheit'}
     </h1>
 
     <p
