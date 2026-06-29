@@ -92,7 +92,7 @@ function ClubRegistration() {
   const [email, setEmail] = useState('')
   const [phone, setPhone] = useState('')
   const [contact, setContact] = useState('')
-
+const [paypalClientId, setPaypalClientId] = useState('')
   async function registerClub() {
     const slug = name
       .toLowerCase()
@@ -159,7 +159,13 @@ window.location.href = `/${slug}`
       />
 
       <br /><br />
+<input
+  placeholder="PayPal Client ID"
+  value={paypalClientId}
+  onChange={e => setPaypalClientId(e.target.value)}
+/>
 
+<br /><br />
       <button onClick={registerClub}>
         Verein registrieren
       </button>
