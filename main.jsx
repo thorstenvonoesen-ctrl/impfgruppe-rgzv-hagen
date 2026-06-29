@@ -180,6 +180,13 @@ function PublicSignup() {
  
   async function loadDates() {
   const clubId = await getDefaultClubId()
+    const { data: clubData } = await supabase
+  .from('clubs')
+  .select('*')
+  .eq('id', clubId)
+  .single()
+
+setClub(clubData)
   console.log("clubId =", clubId)
 
   const { data, error } = await supabase
