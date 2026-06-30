@@ -264,7 +264,7 @@ function ClubSelect() {
         <button
           className="ghost"
           style={{ marginTop: '30px' }}
-          onClick={() => setShowForm(false)}
+          onClick={() => (window.location.hash = '#')}
         >
           ← Zurück
         </button>
