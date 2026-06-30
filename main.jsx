@@ -160,9 +160,8 @@ function ClubSelect() {
     padding: '20px'
   }}
   onClick={() => {
-    window.location.pathname = '/'
-    window.location.hash = '#'
-  }}
+  window.location.hash = '#';
+}}
 >
   <h3>RGZV Hagen und Umgebung seit 1903 e.V.</h3>
 
