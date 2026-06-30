@@ -583,15 +583,7 @@ if (!showForm) {
 </div>
     </div>
 
-    <div
-      style={{
-        background:'#f3f4f6',
-        padding:'20px',
-        borderRadius:'12px'
-      }}
-    >
-      
-
+    
   <h2>Warum ist die Newcastle-Impfung wichtig?</h2>
 
 <p>
