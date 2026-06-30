@@ -821,7 +821,7 @@ setLogged(true)
   setLoginLoading(true)
 
   try {
-
+alert('Vor Supabase')
   } catch (err) {
     setLoginError('Anmeldung fehlgeschlagen.')
   } finally {
