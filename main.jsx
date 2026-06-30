@@ -1111,7 +1111,10 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
 
   
     <main className="admin-wrap">
-      <div className="admin-top"><h1>Adminbereich</h1><button className="ghost" onClick={onLogout}><LogOut size={16}/> Logout</button></div>
+      <div className="admin-top"><h1>Adminbereich</h1><button className="ghost" onClick={() => {
+  sessionStorage.removeItem('admin_type')
+  onLogout()
+}}><LogOut size={16}/> Logout</button></div>
       {isSuperAdmin && (
 <div style={{ margin: '15px 0' }}>
   <label>
