@@ -720,18 +720,18 @@ value={form.vaccination_date_id}
 </div>
           <button disabled={loading} className="primary">{loading ? 'Speichern...' : 'Anmelden & bezahlen'}</button>
           {message && <p className="message">{message}</p>}
-        </form>
-  </div>
-      </section>
-          </main>
-    <button
-  type="button"
-  className="ghost"
-  onClick={() => setShowForm(false)}
->
-  ← Zurück
-</button>
-    <Footer />
+        723 </form>
+724 </div>
+725 </section>
+
+727 <button
+728 type="button"
+...
+733 </button>
+
+726 </main>
+
+734 <Footer />
   </div>
 )
 }
