@@ -87,6 +87,7 @@ const [showForm, setShowForm] = useState(false)
 if (page === '#register') return <ClubRegistration />
   if (page === '#club-login') return <ClubLogin />
   if (page === '#club-dashboard') return <ClubDashboard />
+  if (page === '#club-select') return <ClubSelect />
   return <PublicSignup />
 }
 
@@ -129,6 +130,22 @@ function ClubDashboard() {
     <div className="container">
       <h2>Vereins-Dashboard</h2>
       <p>Dieser Bereich wird Schritt für Schritt aufgebaut.</p>
+    </div>
+  )
+}
+function ClubSelect() {
+  return (
+    <div className="container">
+      <h2>Verein auswählen</h2>
+
+      <p>
+        Hier erscheint im nächsten Schritt die Liste aller registrierten
+        Vereine.
+      </p>
+
+      <button onClick={() => (window.location.hash = '#')}>
+        Zurück
+      </button>
     </div>
   )
 }
