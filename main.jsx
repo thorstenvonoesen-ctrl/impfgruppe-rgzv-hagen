@@ -92,7 +92,7 @@ function ClubRegistration() {
   function ClubLogin() {
   const [email, setEmail] = useState('')
 const [password, setPassword] = useState('')
-
+const navigate = hash => (window.location.hash = hash)
 return (
   <div className="container">
     <h2>Vereins-Login</h2>
