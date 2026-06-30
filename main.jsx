@@ -161,13 +161,7 @@ window.location.href = `/${slug}`
 
       <br /><br />
 
-      <input
-  placeholder="PayPal Secret"
-  value={paypalSecret}
-  onChange={e => setPaypalSecret(e.target.value)}
-/>
-
-<br /><br />
+      
       <button onClick={registerClub}>
         Verein registrieren
       </button>
