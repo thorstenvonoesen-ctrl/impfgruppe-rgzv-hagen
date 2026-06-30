@@ -728,7 +728,7 @@ if (!showForm) {
       }}
     >
       <div>Teilnahmegebühr</div>
-      <strong>10 € / 5 €</strong>
+      <strong>{club?.guest_price ?? 10} € / {club?.member_price ?? 5} €</strong>
       <p
   style={{
     marginTop:'10px',
