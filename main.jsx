@@ -151,7 +151,14 @@ function ClubSelect() {
   return (
     <div className="page">
       <Header />
-
+<div
+  style={{
+    maxWidth: '1240px',
+    margin: '40px auto',
+    padding: '0 20px'
+  }}
+>
+</div>
       <main
   style={{
     maxWidth: '900px',
