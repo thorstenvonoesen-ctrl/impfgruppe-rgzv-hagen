@@ -618,7 +618,6 @@ if (!showForm) {
 
 </div>
 )
-}
   
       
       <section className="card">
