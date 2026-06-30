@@ -18,6 +18,10 @@ if (!data) {
   setLoginError('Verein nicht gefunden.')
   return
 }
+  if (data.password !== loginPassword) {
+  setLoginError('Passwort falsch.')
+  return
+}
   if (error) {
   console.error('Club konnte nicht geladen werden:', error)
   return null
