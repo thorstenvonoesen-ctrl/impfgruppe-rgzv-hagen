@@ -263,13 +263,7 @@ function ClubSelect() {
   
         </div>
 
-        <button
-          className="ghost"
-          style={{ marginTop: '30px' }}
-          onClick={() => (window.location.hash = '#')}
-        >
-          ← Zurück
-        </button>
+        
       </main>
 
       <Footer />
