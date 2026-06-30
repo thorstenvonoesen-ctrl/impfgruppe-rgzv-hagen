@@ -123,9 +123,9 @@ return (
 
     <br /><br />
 
-    <button>
-      Anmelden
-    </button>
+    <button onClick={() => navigate('#club-dashboard')}>
+  Anmelden
+</button>
   </div>
 )
 }
