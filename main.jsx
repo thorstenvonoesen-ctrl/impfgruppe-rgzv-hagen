@@ -195,12 +195,7 @@ function ClubSelect() {
     Bitte wählen Sie Ihren Verein aus, um zur Anmeldung zu gelangen.
   </p>
 </div>
-        <h1>Verein auswählen</h1>
-
-        <p style={{ fontSize: '18px', color: '#555', marginBottom: '30px' }}>
-  Wählen Sie Ihren Verein aus, um mit der Online-Anmeldung zur
-  gesetzlichen Impfpflicht zu beginnen.
-</p>
+        
 
         <div
           style={{
@@ -209,17 +204,7 @@ function ClubSelect() {
             marginTop: '30px'
           }}
         >
-          {clubs.length > 0 && (
-  <div style={{ marginBottom: '20px' }}>
-    <strong>Geladene Vereine:</strong>
-
-    {clubs.map(club => (
-      <div key={club.id}>
-        • {club.name}
-      </div>
-    ))}
-  </div>
-)}
+          
           <div
   className="card"
   onClick={() => {
