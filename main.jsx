@@ -820,6 +820,7 @@ const [rememberClub, setRememberClub] = useState(false)
       setLogged(false)
     }}
   />
+)
 }
 
 function AdminDashboard({ onLogout }) {
