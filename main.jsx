@@ -88,6 +88,14 @@ if (page === '#register') return <ClubRegistration />
   return <PublicSignup />
 }
 function ClubRegistration() {
+  function ClubLogin() {
+  return (
+    <div className="container">
+      <h2>Vereins-Login</h2>
+      <p>Dieser Bereich wird gerade eingerichtet.</p>
+    </div>
+  )
+}
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [phone, setPhone] = useState('')
