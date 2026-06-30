@@ -368,6 +368,9 @@ function PublicSignup() {
   const [paymentMethod, setPaymentMethod] = useState('paypal')
   const [showForm, setShowForm] = useState(false)
   const [countdown, setCountdown] = useState('')
+  if (showForm) {
+  return <ClubSelect />
+}
   const update = e => setForm({ ...form, [e.target.name]: e.target.value })
  
   async function loadDates() {
