@@ -90,12 +90,35 @@ if (page === '#register') return <ClubRegistration />
 }
 function ClubRegistration() {
   function ClubLogin() {
-  return (
-    <div className="container">
-      <h2>Vereins-Login</h2>
-      <p>Dieser Bereich wird gerade eingerichtet.</p>
-    </div>
-  )
+  const [email, setEmail] = useState('')
+const [password, setPassword] = useState('')
+
+return (
+  <div className="container">
+    <h2>Vereins-Login</h2>
+
+    <input
+      placeholder="E-Mail"
+      value={email}
+      onChange={e => setEmail(e.target.value)}
+    />
+
+    <br /><br />
+
+    <input
+      type="password"
+      placeholder="Passwort"
+      value={password}
+      onChange={e => setPassword(e.target.value)}
+    />
+
+    <br /><br />
+
+    <button>
+      Anmelden
+    </button>
+  </div>
+)
 }
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
