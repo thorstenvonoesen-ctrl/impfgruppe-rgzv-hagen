@@ -807,6 +807,8 @@ const [selectedDate, setSelectedDate] = useState(null)
   const [newDate, setNewDate] = useState('')
   const [newDateTitle, setNewDateTitle] = useState('')
   const [newDateNote, setNewDateNote] = useState('')
+  const [clubs, setClubs] = useState([])
+const [selectedClub, setSelectedClub] = useState(null)
   async function sendReminderMail() {
   if (!selectedDate) return
 
