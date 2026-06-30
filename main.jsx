@@ -583,7 +583,7 @@ if (!showForm) {
 </div>
     </div>
 
-    
+   </div> 
   <h2>Warum ist die Newcastle-Impfung wichtig?</h2>
 
 <p>
