@@ -727,7 +727,7 @@ value={form.vaccination_date_id}
 
 </main>
 
-<Footer />
+
   </div>
 )
 }
