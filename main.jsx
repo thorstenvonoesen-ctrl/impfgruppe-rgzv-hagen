@@ -132,36 +132,7 @@ function ClubDashboard() {
     </div>
   )
 }
-  const [email, setEmail] = useState('')
-const [password, setPassword] = useState('')
-const navigate = hash => (window.location.hash = hash)
-return (
-  <div className="container">
-    <h2>Vereins-Login</h2>
-
-    <input
-      placeholder="E-Mail"
-      value={email}
-      onChange={e => setEmail(e.target.value)}
-    />
-
-    <br /><br />
-
-    <input
-      type="password"
-      placeholder="Passwort"
-      value={password}
-      onChange={e => setPassword(e.target.value)}
-    />
-
-    <br /><br />
-
-    <button onClick={() => navigate('#club-dashboard')}>
-  Anmelden
-</button>
-  </div>
-)
-}
+  function ClubRegistration() {
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [phone, setPhone] = useState('')
