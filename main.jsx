@@ -791,6 +791,16 @@ function Admin() {
   sessionStorage.getItem('admin_type') === 'clubadmin'
 )
   const [pin, setPin] = useState('')
+  async function loginAsSuperAdmin() {
+  if (pin !== ADMIN_PIN) {
+    alert('Falsche PIN')
+    return
+  }
+
+  sessionStorage.setItem('admin', '1')
+  sessionStorage.setItem('admin_type', 'superadmin')
+  setLogged(true)
+}
   const [clubLogin, setClubLogin] = useState(false)
   const [loginClubCode, setLoginClubCode] = useState('')
   const [loginEmail, setLoginEmail] = useState('')
