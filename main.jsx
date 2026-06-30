@@ -88,7 +88,7 @@ if (page === '#register') return <ClubRegistration />
   if (page === '#club-login') return <ClubLogin />
   if (page === '#club-dashboard') return <ClubDashboard />
   if (page === '#club-select') return <ClubSelect />
-  return <PublicSignup />
+  return <ClubSelect />
 }
 
 function ClubLogin() {
