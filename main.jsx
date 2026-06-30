@@ -222,10 +222,41 @@ function ClubSelect() {
 )}
           <div
   className="card"
+  onClick={() => {
+    window.location.hash = '#'
+  }}
   style={{
     cursor: 'pointer',
-    padding: '20px'
+    padding: '25px',
+    border: '2px solid #e5e7eb',
+    borderRadius: '16px',
+    transition: '0.2s',
+    background: '#ffffff'
   }}
+>
+  <h2 style={{ margin: 0 }}>
+    RGZV Hagen und Umgebung seit 1903 e.V.
+  </h2>
+
+  <p
+    style={{
+      marginTop: '12px',
+      color: '#6b7280'
+    }}
+  >
+    Online-Anmeldung zur Sammelimpfung
+  </p>
+
+  <div
+    style={{
+      marginTop: '20px',
+      color: '#ff7a00',
+      fontWeight: '700'
+    }}
+  >
+    Verein auswählen →
+  </div>
+</div>
   onClick={() => {
   window.location.hash = '#';
 }}
