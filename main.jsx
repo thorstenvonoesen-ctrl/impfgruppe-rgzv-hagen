@@ -152,7 +152,49 @@ function ClubSelect() {
     <div className="page">
       <Header />
 
-      <main className="card" style={{ maxWidth: '900px', margin: '40px auto' }}>
+      <main
+  style={{
+    maxWidth: '900px',
+    margin: '40px auto'
+  }}
+>
+        <div
+  style={{
+    background: '#1f2937',
+    color: 'white',
+    padding: '40px',
+    borderRadius: '20px',
+    marginBottom: '30px'
+  }}
+>
+  <div
+    style={{
+      color: '#ff7a00',
+      fontWeight: '700',
+      marginBottom: '10px'
+    }}
+  >
+    Impfgruppenmanager
+  </div>
+
+  <h1
+    style={{
+      color: 'white',
+      margin: '0 0 20px 0'
+    }}
+  >
+    Verein auswählen
+  </h1>
+
+  <p
+    style={{
+      color: '#d1d5db',
+      fontSize: '18px'
+    }}
+  >
+    Bitte wählen Sie Ihren Verein aus, um zur Anmeldung zu gelangen.
+  </p>
+</div>
         <h1>Verein auswählen</h1>
 
         <p style={{ fontSize: '18px', color: '#555', marginBottom: '30px' }}>
