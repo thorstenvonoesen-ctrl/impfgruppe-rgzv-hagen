@@ -1098,7 +1098,9 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
     value={clubFilter}
     onChange={e => setClubFilter(e.target.value)}
   >
-    <option value="all">Alle Vereine</option>
+    <option value="all">
+  Alle Vereine ({clubs.length})
+</option>
 
     {clubs.map(club => (
       <option key={club.id} value={club.id}>
