@@ -885,6 +885,7 @@ const { data, error } = await query
 
 setVaccinationDates(dates || [])
       setSelectedClub(clubId)
+      setClubFilter(clubId)
       const nextDate = dates?.[0]?.date
 
 const today = new Date().toISOString().split('T')[0]
