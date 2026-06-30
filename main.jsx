@@ -167,6 +167,9 @@ function ClubSelect() {
             marginTop: '30px'
           }}
         >
+          <p style={{ marginBottom: '10px' }}>
+  Gefundene Vereine: {clubs.length}
+</p>
           <div
   className="card"
   style={{
