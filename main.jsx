@@ -216,7 +216,7 @@ function ClubSelect() {
     border: '2px solid #e5e7eb',
     borderRadius: '16px',
     transition: '0.2s',
-    background: '#ffffff'
+    background: '#fffaf5'
   }}
 >
   <h2
