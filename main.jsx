@@ -613,12 +613,6 @@ if (!showForm) {
 </div>
 
 </main>
-
-<Footer />
-
-</div>
-)
-  
       
       <section className="card">
         <h2>Teilnehmer anmelden</h2>
