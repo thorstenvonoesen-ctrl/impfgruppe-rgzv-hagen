@@ -86,6 +86,7 @@ const [showForm, setShowForm] = useState(false)
   if (page === '#impressum') return <Impressum />
 if (page === '#register') return <ClubRegistration />
   if (page === '#club-login') return <ClubLogin />
+  if (page === '#club-dashboard') return <ClubDashboard />
   return <PublicSignup />
 }
 function ClubRegistration() {
