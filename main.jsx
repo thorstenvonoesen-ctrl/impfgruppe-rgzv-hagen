@@ -812,7 +812,14 @@ setLogged(true)
 const [loginMode, setLoginMode] = useState('superadmin')
 const [rememberClub, setRememberClub] = useState(false)
   if (!logged) return <div className="page center"><section className="card login"><Lock/><h1>Adminbereich</h1><input placeholder="Admin-PIN" value={pin} onChange={e=>setPin(e.target.value)} type="password"/><button className="primary" onClick={loginAsSuperAdmin}>Einloggen</button><a href="#">Zur Anmeldung</a></section></div>
-  return <AdminDashboard onLogout={()=>{sessionStorage.removeItem('admin');setLogged(false)}} />
+  return (
+  <AdminDashboard
+    onLogout={() => {
+      sessionStorage.removeItem('admin')
+      sessionStorage.removeItem('admin_type')
+      setLogged(false)
+    }}
+  />
 }
 
 function AdminDashboard({ onLogout }) {
