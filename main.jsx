@@ -213,6 +213,8 @@ function ClubSelect() {
   style={{
     cursor: 'pointer',
     padding: '25px',
+    maxWidth: '760px',
+margin: '0 auto',
     border: '2px solid #e5e7eb',
     borderRadius: '16px',
     transition: '0.2s',
