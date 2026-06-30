@@ -614,6 +614,11 @@ if (!showForm) {
 
 </main>
       
+  return (
+    <div className="page">
+      <Header />
+      <main className="card" style={{ maxWidth:'900px', margin:'40px auto' }}>
+
       <section className="card">
         <h2>Teilnehmer anmelden</h2>
         <div className="section-title">
@@ -727,6 +732,7 @@ value={form.vaccination_date_id}
 
 </main>
 
+<Footer />
 
   </div>
 )
