@@ -134,6 +134,20 @@ function ClubDashboard() {
   )
 }
 function ClubSelect() {
+  const [clubs, setClubs] = useState([])
+  useEffect(() => {
+  loadClubs()
+}, [])
+  async function loadClubs() {
+  if (!hasSupabase) return
+
+  const { data } = await supabase
+    .from('clubs')
+    .select('*')
+    .order('name')
+
+  setClubs(data || [])
+}
   return (
     <div className="page">
       <Header />
