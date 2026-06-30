@@ -860,7 +860,7 @@ setClubs(clubData || [])
   selectedClub === 'all'
     ? await getDefaultClubId()
     : selectedClub
-
+console.log('Aktiver Verein:', clubId)
 let query = supabase
   .from('participants')
   .select('*')
