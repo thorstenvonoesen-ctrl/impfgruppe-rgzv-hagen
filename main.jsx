@@ -811,6 +811,7 @@ const [selectedDate, setSelectedDate] = useState(null)
 const [selectedClub, setSelectedClub] = useState('all')
   const isSuperAdmin =
   sessionStorage.getItem('admin_type') === 'superadmin'
+  const isClubAdmin = !isSuperAdmin
   const [clubFilter, setClubFilter] = useState('all')
   async function sendReminderMail() {
   if (!selectedDate) return
