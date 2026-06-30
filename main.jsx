@@ -172,6 +172,11 @@ window.location.href = `/${slug}`
       <button onClick={registerClub}>
         Verein registrieren
       </button>
+      <br /><br />
+
+<button onClick={() => window.location.hash = '#club-login'}>
+  Bereits registriert? Zum Vereins-Login
+</button>
     </div>
   )
 }
