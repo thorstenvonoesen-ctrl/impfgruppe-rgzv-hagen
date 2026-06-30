@@ -239,13 +239,15 @@ function ClubSelect() {
   </h2>
 
   <p
-    style={{
-      marginTop: '12px',
-      color: '#6b7280'
-    }}
-  >
-    Online-Anmeldung zur Sammelimpfung
-  </p>
+  style={{
+    marginTop: '12px',
+    color: '#6b7280'
+  }}
+>
+  {clubs.length > 0
+    ? `Online-Anmeldung zur Sammelimpfung des ${clubs[0].name}.`
+    : 'Online-Anmeldung zur Sammelimpfung'}
+</p>
 
   <div
     style={{
