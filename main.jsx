@@ -1111,9 +1111,12 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
   <label>Verein auswählen:&nbsp;</label>
 
   <select
-    value={clubFilter}
-    onChange={e => setClubFilter(e.target.value)}
-  >
+  value={clubFilter}
+  onChange={e => {
+    setClubFilter(e.target.value)
+    setSelectedClub(e.target.value)
+  }}
+>
     <option value="all">
   Alle Vereine ({clubs.length})
 </option>
