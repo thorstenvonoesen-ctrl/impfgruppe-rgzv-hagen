@@ -1087,6 +1087,22 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
   
     <main className="admin-wrap">
       <div className="admin-top"><h1>Adminbereich</h1><button className="ghost" onClick={onLogout}><LogOut size={16}/> Logout</button></div>
+      <div style={{ margin: '15px 0' }}>
+  <label>Verein auswählen:&nbsp;</label>
+
+  <select
+    value={clubFilter}
+    onChange={e => setClubFilter(e.target.value)}
+  >
+    <option value="all">Alle Vereine</option>
+
+    {clubs.map(club => (
+      <option key={club.id} value={club.id}>
+        {club.name}
+      </option>
+    ))}
+  </select>
+</div>
       <div className="stats"><Stat icon={<Users/>} label="Teilnehmer" value={stats.total}/><Stat icon={<ShieldCheck/>} label="Tiere" value={stats.animals}/><Stat icon={<Euro/>} label="Bezahlt" value={stats.paid}/><Stat icon={<Euro/>} label="Offen" value={stats.open}/></div>
       <section className="card">
   
