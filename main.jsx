@@ -12,21 +12,7 @@ async function getDefaultClubId() {
     .select('id')
     .eq('slug', getCurrentSlug())
     .maybeSingle()
-if (error) throw error
 
-if (!data) {
-  setLoginError('Verein nicht gefunden.')
-  return
-}
-  if (data.password !== loginPassword) {
-  setLoginError('Passwort falsch.')
-  return
-}
-  setLoginClub(data)
-
-localStorage.setItem('admin', JSON.stringify(data))
-localStorage.setItem('admin_type', 'club')
-  setClubLogin(false)
   if (error) {
   console.error('Club konnte nicht geladen werden:', error)
   return null
@@ -471,24 +457,226 @@ if (!showForm) {
   return (
     <div className="page">
       <Header />
-      <main className="card" style={{maxWidth:'900px',margin:'40px auto'}}>
-        <h1>Impfgruppenmanager</h1>
-        <p>Bitte wählen Sie Ihren Verein und klicken Sie auf „Jetzt zur Anmeldung“.</p>
-        <button className="primary" onClick={() => setShowForm(true)}>
-          Jetzt zur Anmeldung
-        </button>
-      </main>
-      <Footer />
-    </div>
-  )
-}
+      <main
+  className="card"
+  style={{
+    maxWidth: '900px',
+    margin: '40px auto'
+  }}
+>
+  <div
+    style={{
+      background:'#1f2937',
+      color:'white',
+      padding:'40px',
+      borderRadius:'20px',
+      marginBottom:'30px'
+    }}
+  >
+    <div
+  style={{
+    color:'#ff7a00',
+    fontWeight:'700',
+    marginBottom:'10px'
+  }}
+>
+  {club?.name || 'RGZV Hagen und Umgebung seit 1903 e.V.'}
+</div>
 
-return (
+    <h1
+      style={{
+        color:'white',
+        margin:'0 0 20px 0'
+      }}
+    >
+      Sammelimpfung {club ? `- ${club.name}` : 'gegen die Newcastle-Krankheit'}
+    </h1>
+
+    <p
+      style={{
+        color:'#d1d5db',
+        fontSize:'18px'
+      }}
+    >
+      {club
+  ? `Einfache Online-Anmeldung zur gesetzlichen Newcastle-Impfung des ${club.name}.`
+  : 'Einfache Online-Anmeldung zur gesetzlichen Newcastle-Impfung für Geflügelhalter.'}
+    </p>
+  </div>
+
+  <div
+    style={{
+      display:'flex',
+      gap:'20px',
+      flexWrap:'wrap',
+      marginBottom:'30px'
+    }}
+  >
+    <div
+      style={{
+        background:'#f3f4f6',
+        padding:'20px',
+        borderRadius:'12px'
+      }}
+    >
+      <div>Nächster Impftermin</div>
+      <strong>
+        {vaccinationDates?.[0]
+          ? new Date(vaccinationDates[0].date).toLocaleDateString('de-DE')
+          : 'Noch nicht festgelegt'}
+      </strong>
+      <div
+  style={{
+    marginTop: '8px',
+    color: '#16a34a',
+    fontWeight: '700',
+    fontSize: '14px'
+  }}
+>
+  <div
+  style={{
+    display: 'grid',
+    gridTemplateColumns: 'repeat(4, 1fr)',
+    gap: '8px',
+    marginTop: '20px'
+  }}
+>
+  {countdown.split(' ').map((item, i) => (
+    <div
+      key={i}
+      style={{
+        background: '#fff',
+        borderRadius: '10px',
+        padding: '10px',
+        textAlign: 'center'
+      }}
+    >
+      <strong style={{ display: 'block', fontSize: '18px' }}>
+        {item.replace(/[A-Za-z]+/g, '')}
+      </strong>
+      <small>
+        {item.includes('T')
+          ? 'Tage'
+          : item.includes('Std')
+          ? 'Stunden'
+          : item.includes('Min')
+          ? 'Minuten'
+          : 'Sekunden'}
+      </small>
+    </div>
+  ))}
+</div>
+</div>
+    </div>
+
+    <div
+      style={{
+        background:'#f3f4f6',
+        padding:'20px',
+        borderRadius:'12px'
+      }}
+    >
+      <div>Teilnahmegebühr</div>
+      <strong>10 € / 5 €</strong>
+      <p
+  style={{
+    marginTop:'10px',
+    fontSize:'14px',
+    color:'#6b7280'
+  }}
+>
+  10 € für Gäste<br />
+  5 € für Mitglieder des {club?.name || 'Vereins'} mit gültigem Mitgliedscode
+</p>
+    </div>
+  </div>
+
+  <h2>Warum ist die Newcastle-Impfung wichtig?</h2>
+
+<p>
+  Die Newcastle-Krankheit (Atypische Geflügelpest) ist eine
+  hochansteckende und anzeigepflichtige Viruserkrankung des Geflügels.
+  Zum Schutz der Tierbestände schreibt der Gesetzgeber eine regelmäßige
+  Impfung von Geflügel vor.
+</p>
+
+<p>
+  Die Impfpflicht gilt bereits ab dem ersten gehaltenen Tier.
+  Unabhängig davon, ob nur wenige Hühner im Garten gehalten werden oder
+  ein größerer Bestand vorhanden ist, müssen die Tiere entsprechend den
+  geltenden Vorschriften gegen die Newcastle-Krankheit geimpft werden.
+</p>
+
+<p>
+  Mit der Sammelimpfung des {club?.name || 'RGZV Hagen und Umgebung seit 1903 e.V.'}
+  bieten wir Geflügelhaltern eine einfache und kostengünstige
+  Möglichkeit, dieser Verpflichtung nachzukommen. Die Anmeldung, Bezahlung und Organisation erfolgen bequem online über die Impfgruppen-App des Vereins.
+</p>
+<div
+  style={{
+    background:'#f9fafb',
+    padding:'20px',
+    borderRadius:'12px',
+    marginTop:'25px',
+    marginBottom:'25px'
+  }}
+>
+  <h3>Ihre Vorteile</h3>
+
+  <p>✔ Online anmelden</p>
+  <p>✔ Online bezahlen</p>
+  <p>✔ Automatische Bestätigung per E-Mail</p>
+  <p>✔ Offizielle Sammelimpfbescheinigung</p>
+
+  <p style={{ marginTop:'15px', fontWeight:'600' }}>
+    Bei Nichterscheinen kann die Teilnahmegebühr nicht erstattet werden.
+  </p>
+</div>
+  <button
+  onClick={() => setShowForm(true)}
+  className="primary"
+  style={{ marginTop:'20px' }}
+>
+  Jetzt zur Anmeldung
+</button>
+<p style={{ marginTop: '30px', textAlign: 'center' }}>
+  Sie möchten Ihren Verein registrieren?{' '}
+  <a
+    href="#register"
+    style={{
+      color: '#2563eb',
+      fontWeight: 'bold',
+      textDecoration: 'none'
+    }}
+  >
+    Hier klicken
+  </a>
+</p>
+</main>
+
+<Footer />
+
+</div>
+)
+}
+  return (
   <div className="page">
     <Header />
-    <main className="card">
+    <main
+  style={{
+    maxWidth: '900px',
+    margin: '40px auto'
+  }}
+>
+      
       <section className="card">
         <h2>Teilnehmer anmelden</h2>
+        <div className="section-title">
+  Persönliche Daten
+</div>
+
+<div className="form-section">
+
 <form onSubmit={submit} className="form">
           <div className="two"><Input label="Vorname" name="firstname" value={form.firstname} onChange={update} required/><Input label="Nachname" name="lastname" value={form.lastname} onChange={update} required/></div>
           <div className="two"><Input label="Straße" name="street" value={form.street} onChange={update}/><Input label="Hausnummer" name="housenumber" value={form.housenumber} onChange={update}/></div>
@@ -580,178 +768,27 @@ value={form.vaccination_date_id}
 </div>
           <button disabled={loading} className="primary">{loading ? 'Speichern...' : 'Anmelden & bezahlen'}</button>
           {message && <p className="message">{message}</p>}
-</form>
-</div>
-</section>
-
-<button
+        </form>
+  </div>
+      </section>
+          </main>
+    <button
   type="button"
   className="ghost"
   onClick={() => setShowForm(false)}
 >
   ← Zurück
 </button>
-
-</main>
-
-
+    <Footer />
   </div>
 )
-}
-
-</main>
-      <Footer />
-    </div>
-  )
 }
 
 function Admin() {
-  const [logged, setLogged] = useState(
-  sessionStorage.getItem('admin') === '1' ||
-  sessionStorage.getItem('admin_type') === 'superadmin' ||
-  sessionStorage.getItem('admin_type') === 'clubadmin'
-)
+  const [logged, setLogged] = useState(sessionStorage.getItem('admin') === '1')
   const [pin, setPin] = useState('')
-  async function loginAsSuperAdmin() {
-    setLoginError('')
-  if (pin !== ADMIN_PIN) {
-    alert('Falsche PIN')
-    return
-  }
-
-  sessionStorage.setItem('admin', '1')
-sessionStorage.setItem('admin_type', 'superadmin')
-setLogged(true)
-}
-  async function loginAsClub() {
-  setLoginError('')
-  setLoginLoading(true)
-
-  try {
-    const { data, error } = await supabase
-      .from('clubs')
-      .select('*')
-      .eq(
-        loginMode === 'clubcode' ? 'slug' : 'email',
-        loginMode === 'clubcode' ? loginClubCode : loginEmail
-      )
-      .maybeSingle()
-
-    if (error) throw error
-
-    if (!data) {
-      setLoginError('Verein nicht gefunden.')
-      return
-    }
-
-    if (data.password !== loginPassword) {
-      setLoginError('Passwort falsch.')
-      return
-    }
-
-    setLoginClub(data)
-
-    localStorage.setItem('admin', JSON.stringify(data))
-    localStorage.setItem('admin_type', 'club')
-
-    setLogged(true)
-  } catch (err) {
-    console.error(err)
-alert(err.message)
-    setLoginError('Anmeldung fehlgeschlagen.')
-  } finally {
-    setLoginLoading(false)
-  }
-}
-  const [clubLogin, setClubLogin] = useState(false)
-  const [loginClubCode, setLoginClubCode] = useState('')
-  const [loginEmail, setLoginEmail] = useState('')
-  const [loginPassword, setLoginPassword] = useState('')
-  const [loginError, setLoginError] = useState('')
-  const [loginLoading, setLoginLoading] = useState(false)
-  const [loginClub, setLoginClub] = useState(null)
-const [loginMode, setLoginMode] = useState('superadmin')
-const [rememberClub, setRememberClub] = useState(false)
-  if (!logged) return (
-  <div className="page center">
-    <section className="card login">
-      <Lock />
-      <h1>Adminbereich</h1>
-
-      <div style={{ display: 'flex', gap: 8, marginBottom: 16 }}>
-        <button
-          className={loginMode === 'superadmin' ? 'primary' : 'ghost'}
-          onClick={() => setLoginMode('superadmin')}
-        >
-          Superadmin
-        </button>
-
-        <button
-          className={loginMode === 'clubcode' ? 'primary' : 'ghost'}
-          onClick={() => setLoginMode('clubcode')}
-        >
-          Verein
-        </button>
-      </div>
-
-      {loginMode === 'superadmin' ? (
-        <>
-          <input
-            placeholder="Admin-PIN"
-            value={pin}
-            onChange={e => setPin(e.target.value)}
-            type="password"
-          />
-
-          <button className="primary" onClick={loginAsSuperAdmin}>
-            Einloggen
-          </button>
-        </>
-      ) : (
-        <>
-          <input
-            placeholder="Vereinscode"
-            value={loginClubCode}
-            onChange={e => setLoginClubCode(e.target.value)}
-          />
-
-          <input
-            placeholder="Passwort"
-            type="password"
-            value={loginPassword}
-            onChange={e => setLoginPassword(e.target.value)}
-          />
-
-          <button
-            className="primary"
-            onClick={() => {
-  
-  loginAsClub()
-}}
-            disabled={loginLoading}
-          >
-            {loginLoading ? 'Anmeldung...' : 'Anmelden'}
-          </button>
-
-          {loginError && (
-            <p style={{ color: 'red' }}>{loginError}</p>
-          )}
-        </>
-      )}
-
-      <a href="#">Zur Anmeldung</a>
-    </section>
-  </div>
-)
-  return (
-  <AdminDashboard
-    onLogout={() => {
-      sessionStorage.removeItem('admin')
-      sessionStorage.removeItem('admin_type')
-      setLogged(false)
-    }}
-  />
-)
+  if (!logged) return <div className="page center"><section className="card login"><Lock/><h1>Adminbereich</h1><input placeholder="Admin-PIN" value={pin} onChange={e=>setPin(e.target.value)} type="password"/><button className="primary" onClick={()=>{ if(pin===ADMIN_PIN){sessionStorage.setItem('admin','1');setLogged(true)} }}>Einloggen</button><a href="#">Zur Anmeldung</a></section></div>
+  return <AdminDashboard onLogout={()=>{sessionStorage.removeItem('admin');setLogged(false)}} />
 }
 
 function AdminDashboard({ onLogout }) {
@@ -771,11 +808,7 @@ const [selectedDate, setSelectedDate] = useState(null)
   const [newDateTitle, setNewDateTitle] = useState('')
   const [newDateNote, setNewDateNote] = useState('')
   const [clubs, setClubs] = useState([])
-const [selectedClub, setSelectedClub] = useState('all')
-  const isSuperAdmin =
-  sessionStorage.getItem('admin_type') === 'superadmin'
-  const isClubAdmin = !isSuperAdmin
-  const [clubFilter, setClubFilter] = useState('all')
+const [selectedClub, setSelectedClub] = useState(null)
   async function sendReminderMail() {
   if (!selectedDate) return
 
@@ -822,27 +855,14 @@ if (result.sent === 0) {
 
 setClubs(clubData || [])
     if (hasSupabase) {
-      const clubId =
-  selectedClub === 'all'
-    ? await getDefaultClubId()
-    : selectedClub
-console.log('Aktiver Verein:', clubId)
-let query = supabase
+      const clubId = await getDefaultClubId()
+
+const { data, error } = await supabase
   .from('participants')
   .select('*')
-
-if (clubFilter !== 'all') {
-  query = query.eq('club_id', clubFilter)
-} else {
-  query = query.eq('club_id', clubId)
-}
-
-const { data, error } = await query
+  .eq('club_id', clubId)
   .order('created_at', { ascending: false })
- if (error) {
-  console.error(error)
-}
-      setParticipants(data || [])
+      if (!error) setParticipants(data || [])
       const { data: dates } = await supabase
   .from('vaccination_dates')
   .select('*')
@@ -850,9 +870,6 @@ const { data, error } = await query
   .order('date', { ascending: true })
 
 setVaccinationDates(dates || [])
-      setSelectedClub(clubId)
-      setClubFilter(clubId)
-      setSelectedDate(null)
       const nextDate = dates?.[0]?.date
 
 const today = new Date().toISOString().split('T')[0]
@@ -882,9 +899,7 @@ setIsVaccinationDay(
 setNewDateNote('')
   load()
 }
-  useEffect(() => {
-  load()
-}, [selectedClub])
+  useEffect(()=>{ load() }, [])
   async function markPaid(id, paid) {
   if (hasSupabase) {
     const { data: participant } = await supabase
@@ -967,11 +982,7 @@ const clubId = await getDefaultClubId()
     (statusFilter === 'paid' && p.payment_status === 'bezahlt') ||
     (statusFilter === 'open' && p.payment_status !== 'bezahlt')
 
-  return (
-  matchesSearch &&
-  matchesStatus &&
-  (clubFilter === 'all' || String(p.club_id) === clubFilter)
-)
+  return matchesSearch && matchesStatus
     })
   const stats = useMemo(()=>({ total:participants.length, animals:participants.reduce((s,p)=>s+Number(p.animal_count||0),0), paid:participants.filter(p=>p.payment_status==='bezahlt').length, open:participants.filter(p=>p.payment_status!=='bezahlt').length }),[participants])
   const dateStats = vaccinationDates.map(v => ({
@@ -1074,38 +1085,10 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
 
   
     <main className="admin-wrap">
-      <div className="admin-top"><h1>Adminbereich</h1><button className="ghost" onClick={() => {
-  sessionStorage.removeItem('admin_type')
-  onLogout()
-}}><LogOut size={16}/> Logout</button></div>
-      {isSuperAdmin && (
-<div style={{ margin: '15px 0' }}>
-  <label>
-  Verein auswählen ({clubs.length} Vereine):
-</label>
-
-  <select
-  value={clubFilter}
-  onChange={e => {
-    setClubFilter(e.target.value)
-    setSelectedClub(e.target.value)
-  }}
->
-    <option value="all">
-  Alle Vereine ({clubs.length})
-</option>
-
-    {clubs.map(club => (
-      <option key={club.id} value={club.id}>
-        {club.name}
-      </option>
-    ))}
-  </select>
-</div>
-    )}
+      <div className="admin-top"><h1>Adminbereich</h1><button className="ghost" onClick={onLogout}><LogOut size={16}/> Logout</button></div>
       <div className="stats"><Stat icon={<Users/>} label="Teilnehmer" value={stats.total}/><Stat icon={<ShieldCheck/>} label="Tiere" value={stats.animals}/><Stat icon={<Euro/>} label="Bezahlt" value={stats.paid}/><Stat icon={<Euro/>} label="Offen" value={stats.open}/></div>
       <section className="card">
-  
+  <h2>Anmeldungen pro Impftermin</h2>
 
   {dateStats.map(d => (
     <div key={d.id} className="date-stat">
