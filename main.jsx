@@ -135,17 +135,45 @@ function ClubDashboard() {
 }
 function ClubSelect() {
   return (
-    <div className="container">
-      <h2>Verein auswählen</h2>
+    <div className="page">
+      <Header />
 
-      <p>
-        Hier erscheint im nächsten Schritt die Liste aller registrierten
-        Vereine.
-      </p>
+      <main className="card" style={{ maxWidth: '900px', margin: '40px auto' }}>
+        <h1>Verein auswählen</h1>
 
-      <button onClick={() => (window.location.hash = '#')}>
-        Zurück
-      </button>
+        <p>
+          Bitte wählen Sie den Verein aus, bei dem Sie sich zur
+          Sammelimpfung anmelden möchten.
+        </p>
+
+        <div
+          style={{
+            display: 'grid',
+            gap: '20px',
+            marginTop: '30px'
+          }}
+        >
+          <button
+            className="primary"
+            onClick={() => {
+              window.location.pathname = '/';
+              window.location.hash = '#';
+            }}
+          >
+            RGZV Hagen und Umgebung seit 1903 e.V.
+          </button>
+        </div>
+
+        <button
+          className="ghost"
+          style={{ marginTop: '30px' }}
+          onClick={() => (window.location.hash = '#')}
+        >
+          ← Zurück
+        </button>
+      </main>
+
+      <Footer />
     </div>
   )
 }
