@@ -257,16 +257,8 @@ function ClubSelect() {
     Verein auswählen →
   </div>
 </div>
-  onClick={() => {
-  window.location.hash = '#';
-}}
->
-  <h3>RGZV Hagen und Umgebung seit 1903 e.V.</h3>
-
-  <p>
-    Anmeldung zur nächsten Sammelimpfung öffnen
-  </p>
-</div>
+  
+  
         </div>
 
         <button
