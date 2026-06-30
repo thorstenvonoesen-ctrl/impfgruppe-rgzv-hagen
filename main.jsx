@@ -91,6 +91,14 @@ if (page === '#register') return <ClubRegistration />
 }
 function ClubRegistration() {
   function ClubLogin() {
+    function ClubDashboard() {
+  return (
+    <div className="container">
+      <h2>Vereins-Dashboard</h2>
+      <p>Dieser Bereich wird Schritt für Schritt aufgebaut.</p>
+    </div>
+  )
+}
   const [email, setEmail] = useState('')
 const [password, setPassword] = useState('')
 const navigate = hash => (window.location.hash = hash)
