@@ -90,8 +90,49 @@ if (page === '#register') return <ClubRegistration />
   return <PublicSignup />
 }
 function ClubRegistration() {
-  function ClubLogin() {
-    function ClubDashboard() {
+  
+  return (
+    <div className="container">
+      <h2>Vereins-Dashboard</h2>
+      <p>Dieser Bereich wird Schritt für Schritt aufgebaut.</p>
+    </div>
+  )
+}
+function ClubLogin() {
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+
+  const navigate = hash => (window.location.hash = hash)
+
+  return (
+    <div className="container">
+      <h2>Vereins-Login</h2>
+
+      <input
+        placeholder="E-Mail"
+        value={email}
+        onChange={e => setEmail(e.target.value)}
+      />
+
+      <br /><br />
+
+      <input
+        type="password"
+        placeholder="Passwort"
+        value={password}
+        onChange={e => setPassword(e.target.value)}
+      />
+
+      <br /><br />
+
+      <button onClick={() => navigate('#club-dashboard')}>
+        Anmelden
+      </button>
+    </div>
+  )
+}
+
+function ClubDashboard() {
   return (
     <div className="container">
       <h2>Vereins-Dashboard</h2>
