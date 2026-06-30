@@ -825,7 +825,7 @@ setLogged(true)
       .from('clubs')
       .select('*')
       .eq(
-        loginMode === 'clubcode' ? 'club_code' : 'email',
+        loginMode === 'clubcode' ? 'slug' : 'email',
         loginMode === 'clubcode' ? loginClubCode : loginEmail
       )
       .maybeSingle()
