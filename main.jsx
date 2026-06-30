@@ -1088,7 +1088,28 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
       <div className="admin-top"><h1>Adminbereich</h1><button className="ghost" onClick={onLogout}><LogOut size={16}/> Logout</button></div>
       <div className="stats"><Stat icon={<Users/>} label="Teilnehmer" value={stats.total}/><Stat icon={<ShieldCheck/>} label="Tiere" value={stats.animals}/><Stat icon={<Euro/>} label="Bezahlt" value={stats.paid}/><Stat icon={<Euro/>} label="Offen" value={stats.open}/></div>
       <section className="card">
-  <h2>Anmeldungen pro Impftermin</h2>
+  <h2>Registrierte Vereine</h2>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Verein</th>
+        <th>E-Mail</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      {clubs.map(club => (
+        <tr key={club.id}>
+          <td>{club.name}</td>
+          <td>{club.email}</td>
+          <td>{club.is_approved ? 'Freigegeben' : 'Wartet'}</td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+</section>
 
   {dateStats.map(d => (
     <div key={d.id} className="date-stat">
