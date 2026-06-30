@@ -849,6 +849,8 @@ setLogged(true)
 
     setLogged(true)
   } catch (err) {
+    console.error(err)
+alert(err.message)
     setLoginError('Anmeldung fehlgeschlagen.')
   } finally {
     setLoginLoading(false)
