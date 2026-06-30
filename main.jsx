@@ -916,7 +916,9 @@ setIsVaccinationDay(
 setNewDateNote('')
   load()
 }
-  useEffect(()=>{ load() }, [])
+  useEffect(() => {
+  load()
+}, [selectedClub])
   async function markPaid(id, paid) {
   if (hasSupabase) {
     const { data: participant } = await supabase
