@@ -160,13 +160,7 @@ window.location.href = `/${slug}`
       />
 
       <br /><br />
-<input
-  placeholder="PayPal Client ID"
-  value={paypalClientId}
-  onChange={e => setPaypalClientId(e.target.value)}
-/>
 
-<br /><br />
       <input
   placeholder="PayPal Secret"
   value={paypalSecret}
