@@ -167,9 +167,17 @@ function ClubSelect() {
             marginTop: '30px'
           }}
         >
-          <p style={{ marginBottom: '10px' }}>
-  Gefundene Vereine: {clubs.length}
-</p>
+          {clubs.length > 0 && (
+  <div style={{ marginBottom: '20px' }}>
+    <strong>Geladene Vereine:</strong>
+
+    {clubs.map(club => (
+      <div key={club.id}>
+        • {club.name}
+      </div>
+    ))}
+  </div>
+)}
           <div
   className="card"
   style={{
