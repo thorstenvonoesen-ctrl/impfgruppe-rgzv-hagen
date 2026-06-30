@@ -1877,7 +1877,9 @@ function Header() {
 
       <nav>
         <a href="#">Anmeldung</a>
-        <a href="#admin">Admin</a>
+<a href="#register">Verein registrieren</a>
+<a href="#club-login">Vereins-Login</a>
+<a href="#admin">Admin</a>
       </nav>
     </header>
   )
