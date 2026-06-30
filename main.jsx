@@ -803,7 +803,16 @@ sessionStorage.setItem('admin_type', 'superadmin')
 setLogged(true)
 }
   async function loginAsClub() {
+  setLoginError('')
+  setLoginLoading(true)
 
+  try {
+
+  } catch (err) {
+    setLoginError('Anmeldung fehlgeschlagen.')
+  } finally {
+    setLoginLoading(false)
+  }
 }
   const [clubLogin, setClubLogin] = useState(false)
   const [loginClubCode, setLoginClubCode] = useState('')
