@@ -1110,7 +1110,9 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
     <main className="admin-wrap">
       <div className="admin-top"><h1>Adminbereich</h1><button className="ghost" onClick={onLogout}><LogOut size={16}/> Logout</button></div>
       <div style={{ margin: '15px 0' }}>
-  <label>Verein auswählen:&nbsp;</label>
+  <label>
+  Verein auswählen ({clubs.length} Vereine):
+</label>
 
   <select
   value={clubFilter}
