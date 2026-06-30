@@ -792,6 +792,7 @@ function Admin() {
 )
   const [pin, setPin] = useState('')
   async function loginAsSuperAdmin() {
+    setLoginError('')
   if (pin !== ADMIN_PIN) {
     alert('Falsche PIN')
     return
