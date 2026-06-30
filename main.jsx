@@ -89,15 +89,7 @@ if (page === '#register') return <ClubRegistration />
   if (page === '#club-dashboard') return <ClubDashboard />
   return <PublicSignup />
 }
-function ClubRegistration() {
-  
-  return (
-    <div className="container">
-      <h2>Vereins-Dashboard</h2>
-      <p>Dieser Bereich wird Schritt für Schritt aufgebaut.</p>
-    </div>
-  )
-}
+
 function ClubLogin() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
