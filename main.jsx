@@ -821,7 +821,33 @@ setLogged(true)
   setLoginLoading(true)
 
   try {
-alert('Vor Supabase')
+    const { data, error } = await supabase
+      .from('clubs')
+      .select('*')
+      .eq(
+        loginMode === 'clubcode' ? 'club_code' : 'email',
+        loginMode === 'clubcode' ? loginClubCode : loginEmail
+      )
+      .maybeSingle()
+
+    if (error) throw error
+
+    if (!data) {
+      setLoginError('Verein nicht gefunden.')
+      return
+    }
+
+    if (data.password !== loginPassword) {
+      setLoginError('Passwort falsch.')
+      return
+    }
+
+    setLoginClub(data)
+
+    localStorage.setItem('admin', JSON.stringify(data))
+    localStorage.setItem('admin_type', 'club')
+
+    setLogged(true)
   } catch (err) {
     setLoginError('Anmeldung fehlgeschlagen.')
   } finally {
