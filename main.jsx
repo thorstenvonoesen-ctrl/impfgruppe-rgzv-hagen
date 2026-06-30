@@ -799,8 +799,8 @@ function Admin() {
   }
 
   sessionStorage.setItem('admin', '1')
-  sessionStorage.setItem('admin_type', 'superadmin')
-  setLogged(true)
+sessionStorage.setItem('admin_type', 'superadmin')
+setLogged(true)
 }
   const [clubLogin, setClubLogin] = useState(false)
   const [loginClubCode, setLoginClubCode] = useState('')
