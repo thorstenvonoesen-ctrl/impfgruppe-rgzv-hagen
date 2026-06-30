@@ -533,57 +533,20 @@ if (!showForm) {
         borderRadius:'12px'
       }}
     >
-      <div>Nächster Impftermin</div>
-      <strong>
-        {vaccinationDates?.[0]
-          ? new Date(vaccinationDates[0].date).toLocaleDateString('de-DE')
-          : 'Noch nicht festgelegt'}
-      </strong>
-      <div
-  style={{
-    marginTop: '8px',
-    color: '#16a34a',
-    fontWeight: '700',
-    fontSize: '14px'
-  }}
->
-  <div
-  style={{
-    display: 'grid',
-    gridTemplateColumns: 'repeat(4, 1fr)',
-    gap: '8px',
-    marginTop: '20px'
-  }}
->
-  {countdown.split(' ').map((item, i) => (
-    <div
-      key={i}
-      style={{
-        background: '#fff',
-        borderRadius: '10px',
-        padding: '10px',
-        textAlign: 'center'
-      }}
-    >
-      <strong style={{ display: 'block', fontSize: '18px' }}>
-        {item.replace(/[A-Za-z]+/g, '')}
-      </strong>
-      <small>
-        {item.includes('T')
-          ? 'Tage'
-          : item.includes('Std')
-          ? 'Stunden'
-          : item.includes('Min')
-          ? 'Minuten'
-          : 'Sekunden'}
-      </small>
-    </div>
-  ))}
+      <div style={{ fontWeight: '700', fontSize: '18px' }}>
+  Willkommen
 </div>
-</div>
-    </div>
 
-   </div> 
+<p
+  style={{
+    marginTop: '12px',
+    color: '#4b5563',
+    lineHeight: '1.6'
+  }}
+>
+  Wählen Sie oben Ihren Verein aus und melden Sie sich anschließend
+  bequem online zur nächsten Sammelimpfung an.
+</p>
   <h2>Warum ist die Newcastle-Impfung wichtig?</h2>
 
 <p>
