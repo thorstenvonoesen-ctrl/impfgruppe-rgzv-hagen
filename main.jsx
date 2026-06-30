@@ -837,7 +837,74 @@ setLogged(true)
   const [loginClub, setLoginClub] = useState(null)
 const [loginMode, setLoginMode] = useState('superadmin')
 const [rememberClub, setRememberClub] = useState(false)
-  if (!logged) return <div className="page center"><section className="card login"><Lock/><h1>Adminbereich</h1><input placeholder="Admin-PIN" value={pin} onChange={e=>setPin(e.target.value)} type="password"/><button className="primary" onClick={loginAsSuperAdmin}>Einloggen</button><a href="#">Zur Anmeldung</a></section></div>
+  if (!logged) return (
+  <div className="page center">
+    <section className="card login">
+      <Lock />
+      <h1>Adminbereich</h1>
+
+      <div style={{ display: 'flex', gap: 8, marginBottom: 16 }}>
+        <button
+          className={loginMode === 'superadmin' ? 'primary' : 'ghost'}
+          onClick={() => setLoginMode('superadmin')}
+        >
+          Superadmin
+        </button>
+
+        <button
+          className={loginMode === 'clubcode' ? 'primary' : 'ghost'}
+          onClick={() => setLoginMode('clubcode')}
+        >
+          Verein
+        </button>
+      </div>
+
+      {loginMode === 'superadmin' ? (
+        <>
+          <input
+            placeholder="Admin-PIN"
+            value={pin}
+            onChange={e => setPin(e.target.value)}
+            type="password"
+          />
+
+          <button className="primary" onClick={loginAsSuperAdmin}>
+            Einloggen
+          </button>
+        </>
+      ) : (
+        <>
+          <input
+            placeholder="Vereinscode"
+            value={loginClubCode}
+            onChange={e => setLoginClubCode(e.target.value)}
+          />
+
+          <input
+            placeholder="Passwort"
+            type="password"
+            value={loginPassword}
+            onChange={e => setLoginPassword(e.target.value)}
+          />
+
+          <button
+            className="primary"
+            onClick={loginAsClub}
+            disabled={loginLoading}
+          >
+            {loginLoading ? 'Anmeldung...' : 'Anmelden'}
+          </button>
+
+          {loginError && (
+            <p style={{ color: 'red' }}>{loginError}</p>
+          )}
+        </>
+      )}
+
+      <a href="#">Zur Anmeldung</a>
+    </section>
+  </div>
+)
   return (
   <AdminDashboard
     onLogout={() => {
