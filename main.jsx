@@ -215,7 +215,8 @@ function ClubSelect() {
     padding: '25px',
     maxWidth: '760px',
 margin: '0 auto',
-    border: '2px solid #e5e7eb',
+    border: '1px solid #f3e5d7',
+boxShadow: '0 10px 30px rgba(0,0,0,0.08)',
     borderRadius: '16px',
     transition: '0.2s',
     background: '#fffaf5'
