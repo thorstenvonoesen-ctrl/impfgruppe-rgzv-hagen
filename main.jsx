@@ -12,7 +12,12 @@ async function getDefaultClubId() {
     .select('id')
     .eq('slug', getCurrentSlug())
     .maybeSingle()
+if (error) throw error
 
+if (!data) {
+  setLoginError('Verein nicht gefunden.')
+  return
+}
   if (error) {
   console.error('Club konnte nicht geladen werden:', error)
   return null
