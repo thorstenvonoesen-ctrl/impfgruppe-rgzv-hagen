@@ -22,6 +22,10 @@ if (!data) {
   setLoginError('Passwort falsch.')
   return
 }
+  setLoginClub(data)
+
+localStorage.setItem('admin', JSON.stringify(data))
+localStorage.setItem('admin_type', 'club')
   if (error) {
   console.error('Club konnte nicht geladen werden:', error)
   return null
