@@ -219,7 +219,14 @@ function ClubSelect() {
     background: '#ffffff'
   }}
 >
-  <h2 style={{ margin: 0 }}>
+  <h2
+  style={{
+    margin: 0,
+    fontSize: '30px',
+    fontWeight: '700',
+    color: '#ff7a00'
+  }}
+>
     {clubs.length > 0 ? clubs[0].name : 'RGZV Hagen und Umgebung seit 1903 e.V.'}
   </h2>
 
