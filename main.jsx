@@ -785,7 +785,11 @@ value={form.vaccination_date_id}
 }
 
 function Admin() {
-  const [logged, setLogged] = useState(sessionStorage.getItem('admin') === '1')
+  const [logged, setLogged] = useState(
+  sessionStorage.getItem('admin') === '1' ||
+  sessionStorage.getItem('admin_type') === 'superadmin' ||
+  sessionStorage.getItem('admin_type') === 'clubadmin'
+)
   const [pin, setPin] = useState('')
   if (!logged) return <div className="page center"><section className="card login"><Lock/><h1>Adminbereich</h1><input placeholder="Admin-PIN" value={pin} onChange={e=>setPin(e.target.value)} type="password"/><button className="primary" onClick={()=>{ if(pin===ADMIN_PIN){sessionStorage.setItem('admin','1');setLogged(true)} }}>Einloggen</button><a href="#">Zur Anmeldung</a></section></div>
   return <AdminDashboard onLogout={()=>{sessionStorage.removeItem('admin');setLogged(false)}} />
