@@ -615,15 +615,7 @@ if (!showForm) {
 </div>
 )
 }
-  return (
-  <div className="page">
-    <Header />
-    <main
-  style={{
-    maxWidth: '900px',
-    margin: '40px auto'
-  }}
->
+  
       
       <section className="card">
         <h2>Teilnehmer anmelden</h2>
