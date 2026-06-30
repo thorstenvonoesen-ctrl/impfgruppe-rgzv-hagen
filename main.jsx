@@ -983,7 +983,11 @@ const clubId = await getDefaultClubId()
     (statusFilter === 'paid' && p.payment_status === 'bezahlt') ||
     (statusFilter === 'open' && p.payment_status !== 'bezahlt')
 
-  return matchesSearch && matchesStatus
+  return (
+  matchesSearch &&
+  matchesStatus &&
+  (clubFilter === 'all' || String(p.club_id) === clubFilter)
+)
     })
   const stats = useMemo(()=>({ total:participants.length, animals:participants.reduce((s,p)=>s+Number(p.animal_count||0),0), paid:participants.filter(p=>p.payment_status==='bezahlt').length, open:participants.filter(p=>p.payment_status!=='bezahlt').length }),[participants])
   const dateStats = vaccinationDates.map(v => ({
