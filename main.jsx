@@ -889,7 +889,10 @@ const [rememberClub, setRememberClub] = useState(false)
 
           <button
             className="primary"
-            onClick={loginAsClub}
+            onClick={() => {
+  alert('Button funktioniert')
+  loginAsClub()
+}}
             disabled={loginLoading}
           >
             {loginLoading ? 'Anmeldung...' : 'Anmelden'}
