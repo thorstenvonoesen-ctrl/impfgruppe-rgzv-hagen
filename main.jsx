@@ -725,8 +725,11 @@ value={form.vaccination_date_id}
 </section>
 
 <button
-type="button"
-...
+  type="button"
+  className="ghost"
+  onClick={() => setShowForm(false)}
+>
+  ← Zurück
 </button>
 
 </main>
