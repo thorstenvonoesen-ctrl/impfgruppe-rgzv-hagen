@@ -736,7 +736,37 @@ if (!showForm) {
 </p>
     </div>
   </div>
+<section
+  style={{
+    marginTop: '40px',
+    marginBottom: '40px'
+  }}
+>
+  <h2>Verein auswählen</h2>
 
+  <p style={{ color: '#6b7280', marginBottom: '20px' }}>
+    Wählen Sie den Verein aus, bei dem Sie sich anmelden möchten.
+  </p>
+
+  <div
+    className="card"
+    style={{
+      cursor: 'pointer',
+      padding: '25px',
+      border: '2px solid #e5e7eb',
+      borderRadius: '16px'
+    }}
+    onClick={() => (window.location.hash = '#club-select')}
+  >
+    <h3 style={{ margin: 0 }}>
+      {club?.name || 'RGZV Hagen und Umgebung seit 1903 e.V.'}
+    </h3>
+
+    <p style={{ marginTop: '10px' }}>
+      Zur Vereinsauswahl →
+    </p>
+  </div>
+</section>
   <h2>Warum ist die Newcastle-Impfung wichtig?</h2>
 
 <p>
