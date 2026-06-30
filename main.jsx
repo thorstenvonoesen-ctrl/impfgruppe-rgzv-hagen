@@ -848,6 +848,12 @@ if (result.sent === 0) {
 }
   async function load() {
     setLoading(true)
+    const { data: clubData } = await supabase
+  .from('clubs')
+  .select('*')
+  .order('name')
+
+setClubs(clubData || [])
     if (hasSupabase) {
       const clubId = await getDefaultClubId()
 
