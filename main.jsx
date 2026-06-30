@@ -155,10 +155,10 @@ function ClubSelect() {
       <main className="card" style={{ maxWidth: '900px', margin: '40px auto' }}>
         <h1>Verein auswählen</h1>
 
-        <p>
-          Bitte wählen Sie den Verein aus, bei dem Sie sich zur
-          Sammelimpfung anmelden möchten.
-        </p>
+        <p style={{ fontSize: '18px', color: '#555', marginBottom: '30px' }}>
+  Wählen Sie Ihren Verein aus, um mit der Online-Anmeldung zur
+  gesetzlichen Impfpflicht zu beginnen.
+</p>
 
         <div
           style={{
