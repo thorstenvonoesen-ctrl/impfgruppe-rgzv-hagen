@@ -1110,7 +1110,8 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
   
     <main className="admin-wrap">
       <div className="admin-top"><h1>Adminbereich</h1><button className="ghost" onClick={onLogout}><LogOut size={16}/> Logout</button></div>
-      <div style={{ margin: '15px 0' }}>
+      {isSuperAdmin && (
+<div style={{ margin: '15px 0' }}>
   <label>
   Verein auswählen ({clubs.length} Vereine):
 </label>
@@ -1133,6 +1134,7 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
     ))}
   </select>
 </div>
+    )}
       <div className="stats"><Stat icon={<Users/>} label="Teilnehmer" value={stats.total}/><Stat icon={<ShieldCheck/>} label="Tiere" value={stats.animals}/><Stat icon={<Euro/>} label="Bezahlt" value={stats.paid}/><Stat icon={<Euro/>} label="Offen" value={stats.open}/></div>
       <section className="card">
   
