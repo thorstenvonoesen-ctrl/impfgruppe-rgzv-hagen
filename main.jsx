@@ -802,6 +802,9 @@ function Admin() {
 sessionStorage.setItem('admin_type', 'superadmin')
 setLogged(true)
 }
+  async function loginAsClub() {
+
+}
   const [clubLogin, setClubLogin] = useState(false)
   const [loginClubCode, setLoginClubCode] = useState('')
   const [loginEmail, setLoginEmail] = useState('')
