@@ -235,7 +235,7 @@ function ClubSelect() {
   }}
 >
   <h2 style={{ margin: 0 }}>
-    RGZV Hagen und Umgebung seit 1903 e.V.
+    {clubs.length > 0 ? clubs[0].name : 'RGZV Hagen und Umgebung seit 1903 e.V.'}
   </h2>
 
   <p
