@@ -26,6 +26,7 @@ if (!data) {
 
 localStorage.setItem('admin', JSON.stringify(data))
 localStorage.setItem('admin_type', 'club')
+  setClubLogin(false)
   if (error) {
   console.error('Club konnte nicht geladen werden:', error)
   return null
