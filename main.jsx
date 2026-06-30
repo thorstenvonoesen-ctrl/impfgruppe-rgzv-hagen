@@ -808,7 +808,7 @@ const [selectedDate, setSelectedDate] = useState(null)
   const [newDateTitle, setNewDateTitle] = useState('')
   const [newDateNote, setNewDateNote] = useState('')
   const [clubs, setClubs] = useState([])
-const [selectedClub, setSelectedClub] = useState(null)
+const [selectedClub, setSelectedClub] = useState('all')
   const [clubFilter, setClubFilter] = useState('all')
   async function sendReminderMail() {
   if (!selectedDate) return
@@ -856,12 +856,22 @@ if (result.sent === 0) {
 
 setClubs(clubData || [])
     if (hasSupabase) {
-      const clubId = await getDefaultClubId()
+      const clubId =
+  selectedClub === 'all'
+    ? await getDefaultClubId()
+    : selectedClub
 
-const { data, error } = await supabase
+let query = supabase
   .from('participants')
   .select('*')
-  .eq('club_id', clubId)
+
+if (clubFilter !== 'all') {
+  query = query.eq('club_id', clubFilter)
+} else {
+  query = query.eq('club_id', clubId)
+}
+
+const { data, error } = await query
   .order('created_at', { ascending: false })
       if (!error) setParticipants(data || [])
       const { data: dates } = await supabase
