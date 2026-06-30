@@ -471,164 +471,24 @@ if (!showForm) {
   return (
     <div className="page">
       <Header />
-      <main
-  className="card"
-  style={{
-    maxWidth: '900px',
-    margin: '40px auto'
-  }}
->
-  <div
-    style={{
-      background:'#1f2937',
-      color:'white',
-      padding:'40px',
-      borderRadius:'20px',
-      marginBottom:'30px'
-    }}
-  >
-    <div
-  style={{
-    color:'#ff7a00',
-    fontWeight:'700',
-    marginBottom:'10px'
-  }}
->
-  {club?.name || 'RGZV Hagen und Umgebung seit 1903 e.V.'}
-</div>
-
-    <h1
-      style={{
-        color:'white',
-        margin:'0 0 20px 0'
-      }}
-    >
-      Sammelimpfung {club ? `- ${club.name}` : 'gegen die Newcastle-Krankheit'}
-    </h1>
-
-    <p
-      style={{
-        color:'#d1d5db',
-        fontSize:'18px'
-      }}
-    >
-      {club
-  ? `Einfache Online-Anmeldung zur gesetzlichen Newcastle-Impfung des ${club.name}.`
-  : 'Einfache Online-Anmeldung zur gesetzlichen Newcastle-Impfung für Geflügelhalter.'}
-    </p>
-  </div>
-
-  <div
-    style={{
-      display:'flex',
-      gap:'20px',
-      flexWrap:'wrap',
-      marginBottom:'30px'
-    }}
-  >
-    <div
-      style={{
-        background:'#f3f4f6',
-        padding:'20px',
-        borderRadius:'12px'
-      }}
-    >
-      <div style={{ fontWeight: '700', fontSize: '18px' }}>
-  Willkommen
-</div>
-
-<p
-  style={{
-    marginTop: '12px',
-    color: '#4b5563',
-    lineHeight: '1.6'
-  }}
->
-  Wählen Sie oben Ihren Verein aus und melden Sie sich anschließend
-  bequem online zur nächsten Sammelimpfung an.
-</p>
-  <h2>Warum ist die Newcastle-Impfung wichtig?</h2>
-
-<p>
-  Die Newcastle-Krankheit (Atypische Geflügelpest) ist eine
-  hochansteckende und anzeigepflichtige Viruserkrankung des Geflügels.
-  Zum Schutz der Tierbestände schreibt der Gesetzgeber eine regelmäßige
-  Impfung von Geflügel vor.
-</p>
-
-<p>
-  Die Impfpflicht gilt bereits ab dem ersten gehaltenen Tier.
-  Unabhängig davon, ob nur wenige Hühner im Garten gehalten werden oder
-  ein größerer Bestand vorhanden ist, müssen die Tiere entsprechend den
-  geltenden Vorschriften gegen die Newcastle-Krankheit geimpft werden.
-</p>
-
-<p>
-  Mit der Sammelimpfung des {club?.name || 'RGZV Hagen und Umgebung seit 1903 e.V.'}
-  bieten wir Geflügelhaltern eine einfache und kostengünstige
-  Möglichkeit, dieser Verpflichtung nachzukommen. Die Anmeldung, Bezahlung und Organisation erfolgen bequem online über die Impfgruppen-App des Vereins.
-</p>
-<div
-  style={{
-    background:'#f9fafb',
-    padding:'20px',
-    borderRadius:'12px',
-    marginTop:'25px',
-    marginBottom:'25px'
-  }}
->
-  <h3>Ihre Vorteile</h3>
-
-  <p>✔ Online anmelden</p>
-  <p>✔ Online bezahlen</p>
-  <p>✔ Automatische Bestätigung per E-Mail</p>
-  <p>✔ Offizielle Sammelimpfbescheinigung</p>
-
-  <p style={{ marginTop:'15px', fontWeight:'600' }}>
-    Bei Nichterscheinen kann die Teilnahmegebühr nicht erstattet werden.
-  </p>
-</div>
-  <button
-  onClick={() => setShowForm(true)}
-  className="primary"
-  style={{ marginTop:'20px' }}
->
-  Jetzt zur Anmeldung
-</button>
-<p style={{ marginTop: '30px', textAlign: 'center' }}>
-  Sie möchten Ihren Verein registrieren?{' '}
-  <a
-    href="#register"
-    style={{
-      color: '#2563eb',
-      fontWeight: 'bold',
-      textDecoration: 'none'
-    }}
-  >
-    Hier klicken
-  </a>
-</p>
-
-</div>
-</div>
-
-</main>
-
+      <main className="card" style={{maxWidth:'900px',margin:'40px auto'}}>
+        <h1>Impfgruppenmanager</h1>
+        <p>Bitte wählen Sie Ihren Verein und klicken Sie auf „Jetzt zur Anmeldung“.</p>
+        <button className="primary" onClick={() => setShowForm(true)}>
+          Jetzt zur Anmeldung
+        </button>
+      </main>
+      <Footer />
+    </div>
   )
+}
 
-  return (
-    <div className="page">
-      <Header />
-      <main className="card">
-
+return (
+  <div className="page">
+    <Header />
+    <main className="card">
       <section className="card">
         <h2>Teilnehmer anmelden</h2>
-        <div className="section-title">
-  Persönliche Daten
-</div>
-
-<div className="form-section">
-
 <form onSubmit={submit} className="form">
           <div className="two"><Input label="Vorname" name="firstname" value={form.firstname} onChange={update} required/><Input label="Nachname" name="lastname" value={form.lastname} onChange={update} required/></div>
           <div className="two"><Input label="Straße" name="street" value={form.street} onChange={update}/><Input label="Hausnummer" name="housenumber" value={form.housenumber} onChange={update}/></div>
@@ -734,6 +594,12 @@ value={form.vaccination_date_id}
 
 </main>
 
+
+  </div>
+)
+}
+
+</main>
       <Footer />
     </div>
   )
