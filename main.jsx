@@ -109,8 +109,6 @@ function ClubRegistration() {
   slug,
   email,
   phone,
-  paypal_client_id: paypalClientId,
-  paypal_secret: paypalSecret,
   member_code: memberCode
 }
       ])
