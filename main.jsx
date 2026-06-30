@@ -90,6 +90,8 @@ if (page === '#register') return <ClubRegistration />
   return <PublicSignup />
 }
 function ClubRegistration() {
+  function ClubLogin() {
+    function ClubDashboard() {
   return (
     <div className="container">
       <h2>Vereins-Dashboard</h2>
