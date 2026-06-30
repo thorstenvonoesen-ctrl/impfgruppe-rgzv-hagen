@@ -654,7 +654,7 @@ if (!showForm) {
   </p>
 </div>
   <button
-  onClick={() => setShowForm(true)}
+  onClick={() => (window.location.hash = '#club-select')}
   className="primary"
   style={{ marginTop:'20px' }}
 >
