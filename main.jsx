@@ -92,8 +92,7 @@ function ClubRegistration() {
   const [email, setEmail] = useState('')
   const [phone, setPhone] = useState('')
   const [contact, setContact] = useState('')
-const [paypalClientId, setPaypalClientId] = useState('')
-  const [paypalSecret, setPaypalSecret] = useState('')
+
   async function registerClub() {
     const slug = name
       .toLowerCase()
