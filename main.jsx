@@ -590,20 +590,7 @@ if (!showForm) {
         borderRadius:'12px'
       }}
     >
-      <div>Teilnahmegebühr</div>
-      <strong>10 € / 5 €</strong>
-      <p
-  style={{
-    marginTop:'10px',
-    fontSize:'14px',
-    color:'#6b7280'
-  }}
->
-  10 € für Gäste<br />
-  5 € für Mitglieder des {club?.name || 'Vereins'} mit gültigem Mitgliedscode
-</p>
-    </div>
-  </div>
+      
 
   <h2>Warum ist die Newcastle-Impfung wichtig?</h2>
 
