@@ -873,12 +873,7 @@ if (clubFilter !== 'all') {
 
 const { data, error } = await query
   .order('created_at', { ascending: false })
-      const { data: clubData } = await supabase
-  .from('clubs')
-  .select('id,name')
-  .order('name')
-
-setClubs(clubData || [])
+     
       const { data: dates } = await supabase
   .from('vaccination_dates')
   .select('*')
