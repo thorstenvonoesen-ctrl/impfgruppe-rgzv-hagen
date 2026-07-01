@@ -160,12 +160,15 @@ function ClubSelect() {
 >
         <div
   style={{
-    background: '#1f2937',
-    color: 'white',
-    padding: '60px',
-    borderRadius: '28px',
-    marginBottom: '50px'
-  }}
+  background: '#1f2937',
+  color: 'white',
+  padding: '60px',
+  borderRadius: '28px',
+  marginBottom: '50px',
+  display: 'grid',
+  gridTemplateColumns: '220px 1fr 260px',
+  gap: '40px'
+}}
 >
   
 
