@@ -200,7 +200,9 @@ gesetzlichen Impfpflicht
       fontSize: '18px'
     }}
   >
-    Bitte wählen Sie Ihren Verein aus, um zur Anmeldung zu gelangen.
+    Impfgruppenmanager – die einfache Lösung für Geflügelhalter.
+
+Wählen Sie Ihren Verein aus und melden Sie sich schnell und bequem online an.
   </p>
 </div>
         
