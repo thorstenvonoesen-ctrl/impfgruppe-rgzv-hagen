@@ -190,7 +190,7 @@ function ClubSelect() {
       color: '#e5e7eb',
       fontSize: '17px',
       lineHeight: '1.8',
-      maxWidth: '520px'
+      maxWidth: '700px'
     }}
   >
     Impfgruppenmanager – die einfache Lösung für Geflügelhalter.
