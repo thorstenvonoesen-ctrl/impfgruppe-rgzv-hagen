@@ -167,15 +167,7 @@ function ClubSelect() {
     marginBottom: '50px'
   }}
 >
-  <div
-    style={{
-      color: '#ff7a00',
-      fontWeight: '700',
-      marginBottom: '10px'
-    }}
-  >
-    
-  </div>
+  
 
   <h1
     style={{
