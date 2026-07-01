@@ -154,7 +154,7 @@ function ClubSelect() {
 
       <main
   style={{
-    maxWidth: '900px',
+    maxWidth: '1240px',
     margin: '40px auto'
   }}
 >
