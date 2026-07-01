@@ -233,7 +233,120 @@ function ClubSelect() {
             <div style={{width:'64px',height:'4px',background:'#f28c28',borderRadius:'999px'}} />
           </div>
         </div>
+<div
+  style={{
+    maxWidth: '1240px',
+    margin: '40px auto 0',
+    padding: '0 20px'
+  }}
+>
 
+  <div
+    style={{
+      display: 'grid',
+      gridTemplateColumns: 'repeat(3,1fr)',
+      gap: '28px'
+    }}
+  >
+
+    <div
+      onClick={() => window.location.hash = '#signup'}
+      style={{
+        background: '#fff',
+        borderRadius: '22px',
+        padding: '34px',
+        cursor: 'pointer',
+        boxShadow: '0 10px 30px rgba(0,0,0,.08)'
+      }}
+    >
+      <div style={{fontSize:'46px'}}>👥</div>
+
+      <h3 style={{margin:'18px 0 14px',fontSize:'28px'}}>
+        Für Geflügelhalter
+      </h3>
+
+      <p style={{color:'#6b7280',lineHeight:'1.7'}}>
+        Schnelle und einfache Anmeldung zur
+        Newcastle-Impfung für Ihre Tiere.
+      </p>
+    </div>
+
+    <div
+      onClick={()=>alert('Ihre Daten werden sicher verarbeitet.')}
+      style={{
+        background:'#fff',
+        borderRadius:'22px',
+        padding:'34px',
+        boxShadow:'0 10px 30px rgba(0,0,0,.08)',
+        cursor:'pointer'
+      }}
+    >
+      <div style={{fontSize:'46px'}}>🔒</div>
+
+      <h3 style={{margin:'18px 0 14px',fontSize:'28px'}}>
+        Sicher & bequem
+      </h3>
+
+      <p style={{color:'#6b7280',lineHeight:'1.7'}}>
+        Ihre Daten werden sicher verarbeitet.
+        Die Anmeldung erfolgt online und ohne Papierkram.
+      </p>
+    </div>
+
+    <div
+      onClick={()=>window.location.hash='#club-register'}
+      style={{
+        background:'#fff',
+        borderRadius:'22px',
+        padding:'34px',
+        boxShadow:'0 10px 30px rgba(0,0,0,.08)',
+        cursor:'pointer'
+      }}
+    >
+      <div style={{fontSize:'46px'}}>📅</div>
+
+      <h3 style={{margin:'18px 0 14px',fontSize:'28px'}}>
+        Vereine verwalten
+      </h3>
+
+      <p style={{color:'#6b7280',lineHeight:'1.7'}}>
+        Vereine organisieren Impftermine und Teilnehmer zentral und übersichtlich.
+      </p>
+    </div>
+
+  </div>
+
+  <div style={{textAlign:'center',marginTop:'38px'}}>
+
+    <button
+      onClick={()=>window.location.hash='#signup'}
+      style={{
+        background:'#e38a2d',
+        color:'#fff',
+        border:'none',
+        borderRadius:'12px',
+        padding:'18px 70px',
+        fontSize:'24px',
+        fontWeight:'700',
+        cursor:'pointer'
+      }}
+    >
+      Jetzt zur Anmeldung
+    </button>
+
+    <p
+      style={{
+        marginTop:'26px',
+        color:'#6b7280',
+        fontSize:'20px'
+      }}
+    >
+      Wählen Sie Ihren Verein, um mit der Anmeldung zu starten.
+    </p>
+
+  </div>
+
+</div>
      
       </main>
       <Footer />
