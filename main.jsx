@@ -135,215 +135,59 @@ function ClubDashboard() {
 }
 function ClubSelect() {
   const [clubs, setClubs] = useState([])
+
   useEffect(() => {
-  loadClubs()
-}, [])
+    loadClubs()
+  }, [])
+
   async function loadClubs() {
-  if (!hasSupabase) return
+    if (!hasSupabase) return
+    const { data } = await supabase.from('clubs').select('*').order('name')
+    setClubs(data || [])
+  }
 
-  const { data } = await supabase
-    .from('clubs')
-    .select('*')
-    .order('name')
-
-  setClubs(data || [])
-}
   return (
     <div className="page">
       <Header />
-
-      <main
-  style={{
-    maxWidth: '1240px',
-    margin: '40px auto 80px'
-  }}
->
-        <div
-  style={{
-    display: 'grid',
-    gridTemplateColumns: '150px 1fr 190px',
-    alignItems: 'center',
-    gap: '20px',
-    background: '#1f2937',
-    color: 'white',
-    padding: '36px 48px',
-    borderRadius: '28px',
-    marginBottom: '50px'
-  }}
->
-  <div
-    style={{
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center'
-    }}
-  >
-    <img
-      src="/shield-orange.png"
-      alt=""
-      style={{
-        width: '110px',
-height: '110px'
-      }}
-    />
-  </div>
-
-  <div>
-    <h1
-      style={{
-        margin: 0,
-        color: '#fff',
-        fontSize: '46px',
-        lineHeight: '1.08',
-        fontWeight: '800'
-      }}
-    >
-      Online-Anmeldung zur
-      <br />
-      gesetzlichen Impfpflicht
-    </h1>
-
-    <p
-      style={{
-        marginTop: '18px',
-        color: '#e5e7eb',
-        fontSize: '17px',
-        lineHeight: '1.8'
-      }}
-    >
-      Impfgruppenmanager – die einfache Lösung für Geflügelhalter.
-      <br />
-      Wählen Sie Ihren Verein aus und melden Sie sich schnell und bequem online an.
-    </p>
-
-    <div
-      style={{
-        width: '110px',
-        height: '5px',
-        background: '#f97316',
-        borderRadius: '999px',
-        marginTop: '34px'
-      }}
-    />
-  </div>
-
-  <div
-    style={{
-      textAlign: 'left',
-      marginLeft: '40px',
-      alignSelf: 'center'
-    }}
-  >
-    <div
-  style={{
-    fontSize: '22px',
-    marginBottom: '34px',
-    color: '#ffffff'
-  }}
->
-  © 2026
-</div>
-
-<div
-  style={{
-    color: '#f28c28',
-    fontSize: '22px',
-    fontFamily: 'cursive',
-    marginBottom: '18px'
-  }}
->
-  Thorsten von Oesen
-</div>
-
-<div
-  style={{
-    color: '#ffffff',
-    fontSize: '16px',
-    marginBottom: '18px'
-  }}
->
-  Inhaber & Entwickler
-</div>
-
-<div
-  style={{
-    width: '58px',
-    height: '4px',
-    background: '#f28c28',
-    borderRadius: '999px'
-  }}
-/>
-
-  </div>
-
-        <div
-          style={{
-            display: 'grid',
-            gap: '20px',
-            marginTop: '30px'
-          }}
-        >
-          
-          <div
-  className="card"
-  onClick={() => {
-  window.location.hash = '#signup'
-}}
-  style={{
-    cursor: 'pointer',
-    padding: '40px',
-    maxWidth: '760px',
-margin: '0 auto',
-    border: '1px solid #f3e5d7',
-boxShadow: '0 10px 30px rgba(0,0,0,0.08)',
-    borderRadius: '16px',
-    transition: '0.2s',
-    background: '#fffaf5'
-  }}
->
-  <h2
-  style={{
-    margin: 0,
-    fontSize: '30px',
-    fontWeight: '700',
-    color: '#ff7a00'
-  }}
->
-    {clubs.length > 0 ? clubs[0].name : 'RGZV Hagen und Umgebung seit 1903 e.V.'}
-  </h2>
-
-  <p
-  style={{
-    marginTop: '12px',
-    color: '#6b7280'
-  }}
->
-  {clubs.length > 0
-    ? `Online-Anmeldung zur Sammelimpfung des ${clubs[0].name}.`
-    : 'Online-Anmeldung zur Sammelimpfung'}
-</p>
-
-  <div
-    style={{
-      marginTop: '20px',
-      color: '#ff7a00',
-      fontWeight: '700'
-    }}
-  >
-    Verein auswählen →
-  </div>
-</div>
-  
-  
+      <main style={{ maxWidth:'1240px', margin:'40px auto 80px' }}>
+        <div style={{display:'grid',gridTemplateColumns:'150px 1fr 190px',alignItems:'center',gap:'20px',background:'#1f2937',color:'white',padding:'36px 48px',borderRadius:'28px',marginBottom:'50px'}}>
+          <div style={{display:'flex',justifyContent:'center',alignItems:'center'}}>
+            <img src="/shield-orange.png" alt="" style={{width:'110px',height:'110px'}} />
+          </div>
+          <div>
+            <h1 style={{margin:0,color:'#fff',fontSize:'46px',lineHeight:'1.08',fontWeight:'800'}}>Online-Anmeldung zur<br/>gesetzlichen Impfpflicht</h1>
+            <p style={{marginTop:'18px',color:'#e5e7eb',fontSize:'17px',lineHeight:'1.8'}}>
+              Impfgruppenmanager – die einfache Lösung für Geflügelhalter.<br/>
+              Wählen Sie Ihren Verein aus und melden Sie sich schnell und bequem online an.
+            </p>
+            <div style={{width:'110px',height:'5px',background:'#f97316',borderRadius:'999px',marginTop:'34px'}} />
+          </div>
+          <div style={{textAlign:'left',marginLeft:'40px',alignSelf:'center'}}>
+            <div style={{fontSize:'22px',marginBottom:'34px',color:'#fff'}}>© 2026</div>
+            <div style={{color:'#f28c28',fontSize:'22px',fontFamily:'cursive',marginBottom:'18px'}}>Thorsten von Oesen</div>
+            <div style={{color:'#fff',fontSize:'16px',marginBottom:'18px'}}>Inhaber & Entwickler</div>
+            <div style={{width:'58px',height:'4px',background:'#f28c28',borderRadius:'999px'}} />
+          </div>
         </div>
 
+        <div style={{display:'grid',gap:'20px',marginTop:'30px'}}>
+          <div className="card" onClick={()=>{window.location.hash='#signup'}} style={{cursor:'pointer',padding:'40px',maxWidth:'760px',margin:'0 auto',border:'1px solid #f3e5d7',boxShadow:'0 10px 30px rgba(0,0,0,0.08)',borderRadius:'16px',background:'#fffaf5'}}>
+            <h2 style={{margin:0,fontSize:'30px',fontWeight:'700',color:'#ff7a00'}}>
+              {clubs.length>0 ? clubs[0].name : 'RGZV Hagen und Umgebung seit 1903 e.V.'}
+            </h2>
+            <p style={{marginTop:'12px',color:'#6b7280'}}>
+              {clubs.length>0 ? `Online-Anmeldung zur Sammelimpfung des ${clubs[0].name}.` : 'Online-Anmeldung zur Sammelimpfung'}
+            </p>
+            <div style={{marginTop:'20px',color:'#ff7a00',fontWeight:'700'}}>Verein auswählen →</div>
+          </div>
+        </div>
       </main>
-
       <Footer />
     </div>
   )
 }
-  function ClubRegistration() {
+
+function ClubRegistration() {
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [phone, setPhone] = useState('')
