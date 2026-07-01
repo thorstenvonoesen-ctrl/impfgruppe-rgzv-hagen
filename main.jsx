@@ -200,9 +200,12 @@ gesetzlichen Impfpflicht
 
   <p
     style={{
-      color: '#d1d5db',
-      fontSize: '18px'
-    }}
+  color: '#e5e7eb',
+  fontSize: '24px',
+  lineHeight: '1.7',
+  maxWidth: '720px',
+  margin: 0
+}}
   >
     Impfgruppenmanager – die einfache Lösung für Geflügelhalter.
 
