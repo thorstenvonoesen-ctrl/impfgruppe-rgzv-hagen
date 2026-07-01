@@ -180,7 +180,7 @@ function ClubSelect() {
   <h1
     style={{
   color: 'white',
-  fontSize: '64px',
+  fontSize: '72px',
   lineHeight: '1.1',
   fontWeight: '800',
   margin: '0 0 24px 0',
