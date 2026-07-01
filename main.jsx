@@ -217,7 +217,13 @@ function ClubSelect() {
   }}
 >
             <div style={{fontSize:'18px',marginBottom:'22px',fontWeight:'500',color:'#fff'}}>© 2026</div>
-            <div style={{color:'#f28c28',fontSize:'20px',fontFamily:'Yellowtail',lineHeight:'1.2',marginBottom:'14px'}}>Thorsten von Oesen</div>
+            <div sstyle={{
+  color:'#f28c28',
+  fontFamily:'Allura',
+  fontSize:'24px',
+  fontWeight:'400',
+  lineHeight:'1',
+  marginBottom:'12px'}}>Thorsten von Oesen</div>
             <div style={{color:'#fff',fontSize:'14px',lineHeight:'1.4',marginBottom:'16px'}}>Inhaber & Entwickler</div>
             <div style={{width:'64px',height:'4px',background:'#f28c28',borderRadius:'999px'}} />
           </div>
