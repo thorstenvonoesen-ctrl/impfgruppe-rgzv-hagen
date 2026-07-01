@@ -163,7 +163,7 @@ function ClubSelect() {
     background: '#1f2937',
     color: 'white',
     padding: '60px',
-    borderRadius: '20px',
+    borderRadius: '28px',
     marginBottom: '30px'
   }}
 >
