@@ -217,7 +217,7 @@ function ClubSelect() {
   }}
 >
             <div style={{fontSize:'18px',marginBottom:'22px',fontWeight:'500',color:'#fff'}}>© 2026</div>
-            <div sstyle={{
+            <div style={{
   color:'#f28c28',
   fontFamily: "'Allura', cursive"
   fontSize:'24px',
