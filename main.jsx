@@ -234,58 +234,6 @@ function ClubSelect() {
           </div>
         </div>
 
-        <div style={{display:'grid',gap:'20px',marginTop:'30px'}}>
-          <div className="card" onClick={()=>{window.location.hash='#signup'}} style={{cursor:'pointer',padding:'40px',maxWidth:'760px',margin:'0 auto',border:'1px solid #f3e5d7',boxShadow:'0 10px 30px rgba(0,0,0,0.08)',borderRadius:'16px',background:'#fffaf5'}}>
-            <h2 style={{margin:0,fontSize:'30px',fontWeight:'700',color:'#ff7a00'}}>
-              {clubs.length>0 ? clubs[0].name : 'RGZV Hagen und Umgebung seit 1903 e.V.'}
-            </h2>
-            <p style={{marginTop:'12px',color:'#6b7280'}}>
-              {clubs.length>0 ? `Online-Anmeldung zur Sammelimpfung des ${clubs[0].name}.` : 'Online-Anmeldung zur Sammelimpfung'}
-            </p>
-            <div style={{marginTop:'20px',color:'#ff7a00',fontWeight:'700'}}>Verein auswählen →</div>
-          </div>
-          <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'20px',marginTop:'20px'}}>
-
-  <div
-    className="card"
-    onClick={()=>alert('Ihre Daten werden sicher verarbeitet.\n\nDie Anmeldung erfolgt online und ohne Papierkram.')}
-    style={{
-      cursor:'pointer',
-      padding:'36px',
-      border:'1px solid #f3e5d7',
-      borderRadius:'20px',
-      background:'#fff',
-      boxShadow:'0 10px 30px rgba(0,0,0,.06)'
-    }}
-  >
-    <h3>Sicher & bequem</h3>
-
-    <p style={{color:'#6b7280'}}>
-      Ihre Daten werden sicher verarbeitet.
-      Die Anmeldung erfolgt online und ohne Papierkram.
-    </p>
-  </div>
-
-  <div
-    className="card"
-    onClick={()=>window.location.hash='#club-register'}
-    style={{
-      cursor:'pointer',
-      padding:'36px',
-      border:'1px solid #f3e5d7',
-      borderRadius:'20px',
-      background:'#fff',
-      boxShadow:'0 10px 30px rgba(0,0,0,.06)'
-    }}
-  >
-    <h3>Vereine verwalten</h3>
-
-    <p style={{color:'#6b7280'}}>
-      Vereine organisieren Impftermine und Teilnehmer zentral und übersichtlich.
-    </p>
-  </div>
-
-</div>
         </div>
       </main>
       <Footer />
