@@ -161,33 +161,41 @@ function ClubSelect() {
         <div
   style={{
     display: 'grid',
-    gridTemplateColumns: '180px 1fr 240px',
-    gap: '40px',
+    gridTemplateColumns: '220px 1fr 260px',
     alignItems: 'center',
+    gap: '50px',
     background: '#1f2937',
     color: 'white',
-    padding: '60px',
+    padding: '70px',
     borderRadius: '28px',
     marginBottom: '50px'
   }}
 >
   <div
     style={{
-      fontSize: '120px',
-      textAlign: 'center'
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center'
     }}
   >
-    🛡️
+    <img
+      src="/shield-orange.png"
+      alt=""
+      style={{
+        width: '140px',
+        height: '140px'
+      }}
+    />
   </div>
 
   <div>
     <h1
       style={{
-        color: 'white',
-        fontSize: '72px',
-        lineHeight: '1.1',
-        fontWeight: '800',
-        margin: '0 0 24px 0'
+        margin: 0,
+        color: '#fff',
+        fontSize: '66px',
+        lineHeight: '1.08',
+        fontWeight: '800'
       }}
     >
       Online-Anmeldung zur
@@ -197,29 +205,62 @@ function ClubSelect() {
 
     <p
       style={{
+        marginTop: '28px',
         color: '#e5e7eb',
-        fontSize: '24px',
-        lineHeight: '1.7',
-        margin: 0
+        fontSize: '18px',
+        lineHeight: '1.8'
       }}
     >
       Impfgruppenmanager – die einfache Lösung für Geflügelhalter.
       <br />
       Wählen Sie Ihren Verein aus und melden Sie sich schnell und bequem online an.
     </p>
+
+    <div
+      style={{
+        width: '110px',
+        height: '5px',
+        background: '#f97316',
+        borderRadius: '999px',
+        marginTop: '34px'
+      }}
+    />
   </div>
 
   <div
     style={{
-      textAlign: 'right',
-      color: '#d1d5db'
+      textAlign: 'left',
+      alignSelf: 'center'
     }}
   >
-    <div>© 2026</div>
-    <div style={{ marginTop: '20px', fontWeight: '700', color: 'white' }}>
+    <div
+      style={{
+        fontSize: '28px',
+        marginBottom: '24px'
+      }}
+    >
+      © 2026
+    </div>
+
+    <div
+      style={{
+        color: '#f97316',
+        fontSize: '28px',
+        fontWeight: '700',
+        marginBottom: '8px'
+      }}
+    >
       Thorsten von Oesen
     </div>
-    <div>Inhaber & Entwickler</div>
+
+    <div
+      style={{
+        color: '#ffffff',
+        fontSize: '18px'
+      }}
+    >
+      Inhaber & Entwickler
+    </div>
   </div>
 </div>
   <div
