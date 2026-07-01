@@ -212,7 +212,15 @@ gesetzlichen Impfpflicht
 Wählen Sie Ihren Verein aus und melden Sie sich schnell und bequem online an.
   </p>
 </div>
-        
+  <div
+  style={{
+    width: '120px',
+    height: '5px',
+    background: '#f97316',
+    borderRadius: '999px',
+    marginTop: '40px'
+  }}
+/>      
 
         <div
           style={{
