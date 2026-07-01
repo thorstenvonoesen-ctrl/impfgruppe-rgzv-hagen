@@ -235,44 +235,44 @@ height: '110px'
     }}
   >
     <div
-      style={{
-        fontSize: '28px',
-        marginBottom: '24px'
-      }}
-    >
-      © 2026
-    </div>
-
-    <div
-      style={{
-        color: '#f97316',
-        fontSize: '28px',
-        fontWeight: '700',
-        marginBottom: '8px'
-      }}
-    >
-      Thorsten von Oesen
-    </div>
-
-    <div
-      style={{
-        color: '#ffffff',
-        fontSize: '18px'
-      }}
-    >
-      Inhaber & Entwickler
-    </div>
-  </div>
-</div>
-  <div
   style={{
-    width: '120px',
-    height: '5px',
-    background: '#f97316',
-    borderRadius: '999px',
-    marginTop: '40px'
+    fontSize: '22px',
+    marginBottom: '34px',
+    color: '#ffffff'
   }}
-/>      
+>
+  © 2026
+</div>
+
+<div
+  style={{
+    color: '#f28c28',
+    fontSize: '22px',
+    fontFamily: 'cursive',
+    marginBottom: '18px'
+  }}
+>
+  Thorsten von Oesen
+</div>
+
+<div
+  style={{
+    color: '#ffffff',
+    fontSize: '16px',
+    marginBottom: '18px'
+  }}
+>
+  Inhaber & Entwickler
+</div>
+
+<div
+  style={{
+    width: '58px',
+    height: '4px',
+    background: '#f28c28',
+    borderRadius: '999px'
+  }}
+/>
 
         <div
           style={{
