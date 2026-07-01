@@ -273,7 +273,7 @@ height: '110px'
     borderRadius: '999px'
   }}
 />
-
+</div>
         <div
           style={{
             display: 'grid',
