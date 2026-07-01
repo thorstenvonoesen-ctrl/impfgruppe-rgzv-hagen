@@ -274,6 +274,7 @@ height: '110px'
   }}
 />
 </div>
+          </div>
         <div
           style={{
             display: 'grid',
@@ -333,7 +334,7 @@ boxShadow: '0 10px 30px rgba(0,0,0,0.08)',
 </div>
   
   
-        </div>
+  
 
         
       </main>
