@@ -989,7 +989,7 @@ value={form.vaccination_date_id}
     <button
   type="button"
   className="ghost"
-  onClick={() => setShowForm(false)}
+  onClick={() => window.location.hash = '#'}
 >
   ← Zurück
 </button>
