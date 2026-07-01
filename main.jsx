@@ -174,7 +174,7 @@ function ClubSelect() {
       marginBottom: '10px'
     }}
   >
-    Impfgruppenmanager
+    
   </div>
 
   <h1
