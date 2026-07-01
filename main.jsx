@@ -80,15 +80,15 @@ const [showForm, setShowForm] = useState(false)
     return () =>
       removeEventListener('hashchange', onHash)
   }, [])
-if (page === '#signup') return <PublicSignup />
+
   if (page === '#admin') return <Admin />
   if (page === '#datenschutz') return <Datenschutz />
   if (page === '#impressum') return <Impressum />
 if (page === '#register') return <ClubRegistration />
   if (page === '#club-login') return <ClubLogin />
   if (page === '#club-dashboard') return <ClubDashboard />
-  if (page === '#') return <ClubSelect />
-return <PublicSignup />
+  if (page === '#club-select') return <ClubSelect />
+  return <PublicSignup />
 }
 
 function ClubLogin() {
@@ -284,8 +284,8 @@ function ClubSelect() {
           <div
   className="card"
   onClick={() => {
-  window.location.hash = '#signup'
-}}
+    window.location.hash = '#'
+  }}
   style={{
     cursor: 'pointer',
     padding: '40px',
@@ -433,9 +433,11 @@ function PublicSignup() {
   const [message, setMessage] = useState('')
   const [privacyAccepted, setPrivacyAccepted] = useState(false)
   const [paymentMethod, setPaymentMethod] = useState('paypal')
-  const [showForm, setShowForm] = useState(true)
+  const [showForm, setShowForm] = useState(false)
   const [countdown, setCountdown] = useState('')
-  
+  if (showForm) {
+  return <ClubSelect />
+}
   const update = e => setForm({ ...form, [e.target.name]: e.target.value })
  
   async function loadDates() {
@@ -847,7 +849,7 @@ if (!showForm) {
   </p>
 </div>
   <button
-  onClick={() => window.location.hash = '#'}
+  onClick={() => setShowForm(true)}
   className="primary"
   style={{ marginTop:'20px' }}
 >
