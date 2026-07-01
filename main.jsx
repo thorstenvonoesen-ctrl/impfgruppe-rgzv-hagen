@@ -186,9 +186,13 @@ function ClubSelect() {
 
   <h1
     style={{
-      color: 'white',
-      margin: '0 0 20px 0'
-    }}
+  color: 'white',
+  fontSize: '64px',
+  lineHeight: '1.1',
+  fontWeight: '800',
+  margin: '0 0 24px 0',
+  maxWidth: '700px'
+}}
   >
     Online-Anmeldung zur
 gesetzlichen Impfpflicht
