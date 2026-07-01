@@ -234,7 +234,7 @@ function ClubSelect() {
           </div>
         </div>
 
-        </div>
+     
       </main>
       <Footer />
     </div>
