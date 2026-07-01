@@ -87,8 +87,8 @@ const [showForm, setShowForm] = useState(false)
 if (page === '#register') return <ClubRegistration />
   if (page === '#club-login') return <ClubLogin />
   if (page === '#club-dashboard') return <ClubDashboard />
-  if (page === '#club-select') return <ClubSelect />
-  return <PublicSignup />
+  if (page === '#') return <ClubSelect />
+return <PublicSignup />
 }
 
 function ClubLogin() {
