@@ -160,45 +160,67 @@ function ClubSelect() {
 >
         <div
   style={{
-  background: '#1f2937',
-  color: 'white',
-  padding: '60px',
-  borderRadius: '28px',
-  marginBottom: '50px',
-  display: 'grid',
-  gridTemplateColumns: '220px 1fr 260px',
-  gap: '40px'
-}}
+    display: 'grid',
+    gridTemplateColumns: '180px 1fr 240px',
+    gap: '40px',
+    alignItems: 'center',
+    background: '#1f2937',
+    color: 'white',
+    padding: '60px',
+    borderRadius: '28px',
+    marginBottom: '50px'
+  }}
 >
-  
-
-  <h1
+  <div
     style={{
-  color: 'white',
-  fontSize: '72px',
-  lineHeight: '1.1',
-  fontWeight: '800',
-  margin: '0 0 24px 0',
-  maxWidth: '620px'
-}}
+      fontSize: '120px',
+      textAlign: 'center'
+    }}
   >
-    Online-Anmeldung zur
-gesetzlichen Impfpflicht
-  </h1>
+    🛡️
+  </div>
 
-  <p
+  <div>
+    <h1
+      style={{
+        color: 'white',
+        fontSize: '72px',
+        lineHeight: '1.1',
+        fontWeight: '800',
+        margin: '0 0 24px 0'
+      }}
+    >
+      Online-Anmeldung zur
+      <br />
+      gesetzlichen Impfpflicht
+    </h1>
+
+    <p
+      style={{
+        color: '#e5e7eb',
+        fontSize: '24px',
+        lineHeight: '1.7',
+        margin: 0
+      }}
+    >
+      Impfgruppenmanager – die einfache Lösung für Geflügelhalter.
+      <br />
+      Wählen Sie Ihren Verein aus und melden Sie sich schnell und bequem online an.
+    </p>
+  </div>
+
+  <div
     style={{
-  color: '#e5e7eb',
-  fontSize: '24px',
-  lineHeight: '1.7',
-  maxWidth: '720px',
-  margin: 0
-}}
+      textAlign: 'right',
+      color: '#d1d5db'
+    }}
   >
-    Impfgruppenmanager – die einfache Lösung für Geflügelhalter.
-
-Wählen Sie Ihren Verein aus und melden Sie sich schnell und bequem online an.
-  </p>
+    <div>© 2026</div>
+    <div style={{ marginTop: '20px', fontWeight: '700', color: 'white' }}>
+      Thorsten von Oesen
+    </div>
+    <div>Inhaber & Entwickler</div>
+  </div>
 </div>
   <div
   style={{
