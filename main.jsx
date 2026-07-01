@@ -284,8 +284,8 @@ function ClubSelect() {
           <div
   className="card"
   onClick={() => {
-    window.location.hash = '#'
-  }}
+  window.location.hash = '#signup'
+}}
   style={{
     cursor: 'pointer',
     padding: '40px',
