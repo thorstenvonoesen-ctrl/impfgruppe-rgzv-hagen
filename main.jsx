@@ -173,7 +173,7 @@ function ClubSelect() {
     style={{
       margin: 0,
       color: '#ffffff',
-      fontSize: '58px',
+      fontSize: '46px',
       fontWeight: '800',
       lineHeight: '1.05',
       letterSpacing: '-1px'
@@ -186,11 +186,11 @@ function ClubSelect() {
 
   <p
     style={{
-      marginTop: '26px',
+      marginTop: '18px',
       color: '#e5e7eb',
-      fontSize: '20px',
+      fontSize: '17px',
       lineHeight: '1.8',
-      maxWidth: '650px'
+      maxWidth: '520px'
     }}
   >
     Impfgruppenmanager – die einfache Lösung für Geflügelhalter.
