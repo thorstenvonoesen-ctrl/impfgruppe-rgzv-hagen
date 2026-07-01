@@ -259,9 +259,9 @@ function ClubSelect() {
         boxShadow: '0 10px 30px rgba(0,0,0,.08)'
       }}
     >
-      <div style={{fontSize:'46px'}}>👥</div>
+      <div style={{fontSize:'34px'}}>👥</div>
 
-      <h3 style={{margin:'18px 0 14px',fontSize:'28px'}}>
+      <h3 style={{margin:'12px 0 10px',fontSize:'18px'}}>
         Für Geflügelhalter
       </h3>
 
@@ -276,14 +276,14 @@ function ClubSelect() {
       style={{
         background:'#fff',
         borderRadius:'22px',
-        padding:'34px',
+        padding:'24px',
         boxShadow:'0 10px 30px rgba(0,0,0,.08)',
         cursor:'pointer'
       }}
     >
-      <div style={{fontSize:'46px'}}>🔒</div>
+      <div style={{fontSize:'34px'}}>🔒</div>
 
-      <h3 style={{margin:'18px 0 14px',fontSize:'28px'}}>
+      <h3 style={{margin:'12px 0 10px',fontSize:'18px'}}>
         Sicher & bequem
       </h3>
 
@@ -298,14 +298,14 @@ function ClubSelect() {
       style={{
         background:'#fff',
         borderRadius:'22px',
-        padding:'34px',
+        padding:'24px',
         boxShadow:'0 10px 30px rgba(0,0,0,.08)',
         cursor:'pointer'
       }}
     >
-      <div style={{fontSize:'46px'}}>📅</div>
+      <div style={{fontSize:'34px'}}>📅</div>
 
-      <h3 style={{margin:'18px 0 14px',fontSize:'28px'}}>
+      <h3 style={{margin:'12px 0 10px',fontSize:'18px'}}>
         Vereine verwalten
       </h3>
 
