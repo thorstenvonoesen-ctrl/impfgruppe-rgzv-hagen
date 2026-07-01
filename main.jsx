@@ -182,8 +182,8 @@ function ClubSelect() {
       src="/shield-orange.png"
       alt=""
       style={{
-        width: '140px',
-        height: '140px'
+        width: '110px',
+height: '110px'
       }}
     />
   </div>
@@ -193,7 +193,7 @@ function ClubSelect() {
       style={{
         margin: 0,
         color: '#fff',
-        fontSize: '54px',
+        fontSize: '46px',
         lineHeight: '1.08',
         fontWeight: '800'
       }}
@@ -230,6 +230,7 @@ function ClubSelect() {
   <div
     style={{
       textAlign: 'left',
+      marginLeft: '40px',
       alignSelf: 'center'
     }}
   >
