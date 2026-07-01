@@ -169,13 +169,45 @@ function ClubSelect() {
   />
 </div>
           <div>
-            <h1 style={{margin:0,color:'#fff',fontSize:'42px',lineHeight:'1.15',fontWeight:'800'}}>Online-Anmeldung zur<br/>gesetzlichen Impfpflicht</h1>
-            <p style={{marginTop:'18px',color:'#e5e7eb',fontSize:'17px',lineHeight:'1.8'}}>
-              Impfgruppenmanager – die einfache Lösung für Geflügelhalter.<br/>
-              Wählen Sie Ihren Verein aus und melden Sie sich schnell und bequem online an.
-            </p>
-            <div style={{width:'110px',height:'5px',background:'#f97316',borderRadius:'999px',marginTop:'34px'}} />
-          </div>
+  <h1
+    style={{
+      margin: 0,
+      color: '#ffffff',
+      fontSize: '58px',
+      fontWeight: '800',
+      lineHeight: '1.05',
+      letterSpacing: '-1px'
+    }}
+  >
+    Online-Anmeldung zur
+    <br />
+    gesetzlichen Impfpflicht
+  </h1>
+
+  <p
+    style={{
+      marginTop: '26px',
+      color: '#e5e7eb',
+      fontSize: '20px',
+      lineHeight: '1.8',
+      maxWidth: '650px'
+    }}
+  >
+    Impfgruppenmanager – die einfache Lösung für Geflügelhalter.
+    <br />
+    Wählen Sie Ihren Verein aus und melden Sie sich schnell und bequem online an.
+  </p>
+
+  <div
+    style={{
+      width: '120px',
+      height: '5px',
+      background: '#f28c28',
+      borderRadius: '999px',
+      marginTop: '32px'
+    }}
+  />
+</div>
           <div style={{textAlign:'left',marginLeft:'70px',alignSelf:'center'}}>
             <div style={{fontSize:'22px',marginBottom:'34px',color:'#fff'}}>© 2026</div>
             <div style={{color:'#f28c28',fontSize:'22px',fontFamily:'cursive',marginBottom:'18px'}}>Thorsten von Oesen</div>
