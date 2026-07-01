@@ -190,7 +190,8 @@ function ClubSelect() {
       margin: '0 0 20px 0'
     }}
   >
-    Verein auswählen
+    Online-Anmeldung zur
+gesetzlichen Impfpflicht
   </h1>
 
   <p
