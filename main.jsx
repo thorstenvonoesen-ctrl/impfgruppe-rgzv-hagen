@@ -184,7 +184,7 @@ function ClubSelect() {
   lineHeight: '1.1',
   fontWeight: '800',
   margin: '0 0 24px 0',
-  maxWidth: '700px'
+  maxWidth: '620px'
 }}
   >
     Online-Anmeldung zur
