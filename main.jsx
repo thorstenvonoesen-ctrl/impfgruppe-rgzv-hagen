@@ -433,7 +433,7 @@ function PublicSignup() {
   const [message, setMessage] = useState('')
   const [privacyAccepted, setPrivacyAccepted] = useState(false)
   const [paymentMethod, setPaymentMethod] = useState('paypal')
-  const [showForm, setShowForm] = useState(false)
+  const [showForm, setShowForm] = useState(true)
   const [countdown, setCountdown] = useState('')
   
   const update = e => setForm({ ...form, [e.target.name]: e.target.value })
