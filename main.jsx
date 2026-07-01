@@ -162,8 +162,8 @@ function ClubSelect() {
     src="/shield-orange.png"
     alt="Impfgruppenmanager"
     style={{
-  width: '170px',
-  height: '170px',
+  width: '250px',
+  height: '250px',
   objectFit: 'contain'
 }}
   />
