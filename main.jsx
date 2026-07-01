@@ -155,7 +155,7 @@ function ClubSelect() {
       <main
   style={{
     maxWidth: '1240px',
-    margin: '40px auto'
+    margin: '40px auto 80px'
   }}
 >
         <div
