@@ -159,13 +159,13 @@ function ClubSelect() {
   }}
 >
   <img
-    src="/Logoklein.png"
+    src="/shield-orange.png"
     alt="Impfgruppenmanager"
     style={{
-      width: '145px',
-      height: '145px',
-      objectFit: 'contain'
-    }}
+  width: '170px',
+  height: '170px',
+  objectFit: 'contain'
+}}
   />
 </div>
           <div>
