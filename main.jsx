@@ -151,9 +151,23 @@ function ClubSelect() {
       <Header />
       <main style={{ maxWidth:'1240px', margin:'40px auto 80px' }}>
         <div style={{display:'grid',gridTemplateColumns:'150px 1fr 190px',alignItems:'center',gap:'20px',background:'#1f2937',color:'white',padding:'30px 36px',borderRadius:'28px',marginBottom:'50px'}}>
-          <div style={{display:'flex',justifyContent:'center',alignItems:'center'}}>
-            <img src="/Logoklein.png" alt="" style={{width:'90px',height:'90px'}} />
-          </div>
+          <div
+  style={{
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center'
+  }}
+>
+  <img
+    src="/Logoklein.png"
+    alt="Impfgruppenmanager"
+    style={{
+      width: '145px',
+      height: '145px',
+      objectFit: 'contain'
+    }}
+  />
+</div>
           <div>
             <h1 style={{margin:0,color:'#fff',fontSize:'42px',lineHeight:'1.15',fontWeight:'800'}}>Online-Anmeldung zur<br/>gesetzlichen Impfpflicht</h1>
             <p style={{marginTop:'18px',color:'#e5e7eb',fontSize:'17px',lineHeight:'1.8'}}>
