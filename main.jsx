@@ -236,7 +236,7 @@ function ClubSelect() {
 <div
   style={{
     maxWidth: '1240px',
-    margin: '40px auto 0',
+    margin: '20px auto 0',
     padding: '0 20px'
   }}
 >
@@ -254,7 +254,7 @@ function ClubSelect() {
       style={{
         background: '#fff',
         borderRadius: '22px',
-        padding: '34px',
+        padding: '24px',
         cursor: 'pointer',
         boxShadow: '0 10px 30px rgba(0,0,0,.08)'
       }}
