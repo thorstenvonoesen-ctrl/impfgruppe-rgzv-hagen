@@ -161,12 +161,12 @@ function ClubSelect() {
         <div
   style={{
     display: 'grid',
-    gridTemplateColumns: '180px 620px 220px',
+    gridTemplateColumns: '150px 1fr 190px',
     alignItems: 'center',
     gap: '20px',
     background: '#1f2937',
     color: 'white',
-    padding: '50px 60px',
+    padding: '36px 48px',
     borderRadius: '28px',
     marginBottom: '50px'
   }}
@@ -193,7 +193,7 @@ function ClubSelect() {
       style={{
         margin: 0,
         color: '#fff',
-        fontSize: '66px',
+        fontSize: '54px',
         lineHeight: '1.08',
         fontWeight: '800'
       }}
@@ -205,9 +205,9 @@ function ClubSelect() {
 
     <p
       style={{
-        marginTop: '28px',
+        marginTop: '18px',
         color: '#e5e7eb',
-        fontSize: '18px',
+        fontSize: '17px',
         lineHeight: '1.8'
       }}
     >
