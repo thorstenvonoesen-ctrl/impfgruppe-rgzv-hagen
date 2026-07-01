@@ -274,7 +274,7 @@ height: '110px'
   }}
 />
 </div>
-          </div>
+       
         <div
           style={{
             display: 'grid',
