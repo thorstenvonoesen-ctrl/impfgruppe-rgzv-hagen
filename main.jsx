@@ -292,7 +292,7 @@ function ClubSelect() {
     </div>
 
     <div
-      onClick={()=>window.location.hash='#club-register'}
+      onClick={() => window.location.hash = '#register'}
       style={{
         background:'#fff',
         borderRadius:'22px',
@@ -304,12 +304,21 @@ function ClubSelect() {
       <div style={{fontSize:'34px'}}>📅</div>
 
       <h3 style={{margin:'12px 0 10px',fontSize:'18px'}}>
-        Vereine verwalten
+        Verein registrieren
       </h3>
 
       <p style={{color:'#6b7280',lineHeight:'1.7'}}>
-        Vereine organisieren Impftermine und Teilnehmer zentral und übersichtlich.
-      </p>
+  Registrieren Sie Ihren Verein und nutzen Sie den Impfgruppenmanager für Ihre eigene Impfgruppe. Nach der Freischaltung können Sie alle Vereinsdaten selbst verwalten.
+</p>
+
+<p style={{
+  marginTop:'12px',
+  color:'#e38a2d',
+  fontWeight:'600',
+  fontSize:'14px'
+}}>
+  Nutzung nach Freischaltung kostenpflichtig.
+</p>
     </div>
 
   </div>
