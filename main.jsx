@@ -262,12 +262,11 @@ function ClubSelect() {
       <div style={{fontSize:'34px'}}>👥</div>
 
       <h3 style={{margin:'12px 0 10px',fontSize:'18px'}}>
-        Für Geflügelhalter
+        Zur Impfanmeldung
       </h3>
 
       <p style={{color:'#6b7280',lineHeight:'1.7'}}>
-        Schnelle und einfache Anmeldung zur
-        Newcastle-Impfung für Ihre Tiere.
+        Melden Sie Ihre Tiere bequem zum nächsten Impftermin Ihres Vereins an.
       </p>
     </div>
 
