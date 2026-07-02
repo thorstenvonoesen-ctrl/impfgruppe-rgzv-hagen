@@ -2073,22 +2073,11 @@ function Impressum() {
 function Header() {
   return (
     <header>
-      <div className="logo">
-        <img
-          src="/Logoklein.png"
-          alt="Impfgruppenmanager"
-          className="logo-img"
-        />
-
-        
-      </div>
+      
 
       <nav>
-        <a href="#">Anmeldung</a>
-<a href="#register">Verein registrieren</a>
-<a href="#club-login">Vereins-Login</a>
-<a href="#admin">Admin</a>
-      </nav>
+  <a href="#admin">Admin</a>
+</nav>
     </header>
   )
 }
