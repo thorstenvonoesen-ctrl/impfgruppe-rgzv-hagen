@@ -271,7 +271,7 @@ function ClubSelect() {
     </div>
 
     <div
-      onClick={()=>alert('Ihre Daten werden sicher verarbeitet.')}
+      onClick={() => window.location.hash = '#club-login'}
       style={{
         background:'#fff',
         borderRadius:'22px',
@@ -283,12 +283,11 @@ function ClubSelect() {
       <div style={{fontSize:'34px'}}>🔒</div>
 
       <h3 style={{margin:'12px 0 10px',fontSize:'18px'}}>
-        Sicher & bequem
+        Vereinslogin
       </h3>
 
       <p style={{color:'#6b7280',lineHeight:'1.7'}}>
-        Ihre Daten werden sicher verarbeitet.
-        Die Anmeldung erfolgt online und ohne Papierkram.
+        Melden Sie sich mit Ihren Zugangsdaten an und verwalten Sie Impftermine, Teilnehmer, Zahlungen und die Einstellungen Ihres Vereins.
       </p>
     </div>
 
