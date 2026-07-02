@@ -325,31 +325,9 @@ function ClubSelect() {
 
   <div style={{textAlign:'center',marginTop:'38px'}}>
 
-    <button
-      onClick={()=>window.location.hash='#signup'}
-      style={{
-        background:'#e38a2d',
-        color:'#fff',
-        border:'none',
-        borderRadius:'12px',
-        padding:'18px 70px',
-        fontSize:'24px',
-        fontWeight:'700',
-        cursor:'pointer'
-      }}
-    >
-      Jetzt zur Anmeldung
-    </button>
+    
 
-    <p
-      style={{
-        marginTop:'26px',
-        color:'#6b7280',
-        fontSize:'20px'
-      }}
-    >
-      Wählen Sie Ihren Verein, um mit der Anmeldung zu starten.
-    </p>
+    
 
   </div>
 
