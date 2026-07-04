@@ -605,6 +605,8 @@ useEffect(() => {
   return
 }
     const currentMemberCode = await getMemberCode()
+    console.log('Code aus DB:', currentMemberCode)
+console.log('Eingegeben:', form.member_code)
     const isMember =
   form.member_code?.trim() === currentMemberCode
 
