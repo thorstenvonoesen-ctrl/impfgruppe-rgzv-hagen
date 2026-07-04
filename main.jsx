@@ -91,7 +91,45 @@ if (page === '#register') return <ClubRegistration />
   if (page === '#') return <ClubSelect />
 return <PublicSignup />
 }
+function InfoPage() {
+  return (
+    <div className="min-h-screen bg-slate-100">
+      <div className="max-w-5xl mx-auto p-6">
 
+        <div className="bg-white rounded-2xl shadow-xl p-8">
+
+          <h1 className="text-4xl font-bold text-center text-slate-800 mb-6">
+            Informationen zur Newcastle-Impfung
+          </h1>
+
+          <p className="text-lg text-slate-700 text-center mb-8">
+            Hier entsteht die Informationsseite vor der eigentlichen Anmeldung.
+          </p>
+
+          <div className="flex justify-between mt-10">
+
+            <button
+              onClick={() => window.location.hash = '#'}
+              className="px-6 py-3 rounded-xl bg-gray-500 text-white hover:bg-gray-600"
+            >
+              ← Zurück
+            </button>
+
+            <button
+              onClick={() => window.location.hash = '#signup'}
+              className="px-6 py-3 rounded-xl bg-green-600 text-white hover:bg-green-700"
+            >
+              Weiter zur Anmeldung →
+            </button>
+
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  )
+}
 function ClubLogin() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
