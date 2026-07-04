@@ -1542,6 +1542,92 @@ function InfoSammelimpfung() {
               ← Zurück
             </button>
           </div>
+          <h2
+  style={{
+    color: "#ffffff",
+    fontSize: "34px",
+    marginTop: "60px",
+    marginBottom: "24px"
+  }}
+>
+  Häufig gestellte Fragen (FAQ)
+</h2>
+
+<h3 style={{ color: "#ffffff", fontSize: "28px" }}>
+Muss ich Mitglied im Verein sein?
+</h3>
+
+<p style={{ fontSize: "20px", lineHeight: "1.9" }}>
+Nein. Auch Nichtmitglieder können – sofern der Verein dies anbietet – an der
+Sammelimpfung teilnehmen. Die jeweiligen Teilnahmebedingungen und Gebühren
+legt der veranstaltende Verein fest.
+</p>
+
+<h3 style={{ color: "#ffffff", fontSize: "28px", marginTop: "35px" }}>
+Wann sollte ich mich anmelden?
+</h3>
+
+<p style={{ fontSize: "20px", lineHeight: "1.9" }}>
+Melden Sie sich möglichst frühzeitig an. Nur so kann der Verein die benötigte
+Impfstoffmenge zuverlässig planen und ausreichend Impfstoff bestellen.
+Spätere Anmeldungen können unter Umständen nicht mehr berücksichtigt werden.
+</p>
+
+<h3 style={{ color: "#ffffff", fontSize: "28px", marginTop: "35px" }}>
+Kann ich nach meiner Anmeldung noch Änderungen vornehmen?
+</h3>
+
+<p style={{ fontSize: "20px", lineHeight: "1.9" }}>
+Sollte sich die Anzahl Ihrer Tiere ändern oder Sie verhindert sein, setzen Sie
+sich bitte möglichst früh mit dem Verein in Verbindung. Dadurch kann die
+Planung angepasst und unnötig bestellter Impfstoff vermieden werden.
+</p>
+
+<h3 style={{ color: "#ffffff", fontSize: "28px", marginTop: "35px" }}>
+Warum erfolgt die Anmeldung online?
+</h3>
+
+<p style={{ fontSize: "20px", lineHeight: "1.9" }}>
+Die Online-Anmeldung erleichtert sowohl den Teilnehmern als auch dem Verein
+die gesamte Organisation. Daten müssen nicht mehrfach erfasst werden,
+Teilnehmerlisten können automatisch erstellt werden und die Planung des
+Impfstoffes wird erheblich vereinfacht. Gleichzeitig werden Wartezeiten am
+Impftag deutlich reduziert.
+</p>
+
+<div
+  style={{
+    marginTop: "50px",
+    background: "rgba(255,255,255,.08)",
+    border: "1px solid rgba(255,255,255,.18)",
+    borderRadius: "20px",
+    padding: "32px",
+    textAlign: "center"
+  }}
+>
+  <h3
+    style={{
+      marginTop: 0,
+      color: "#ffffff",
+      fontSize: "30px"
+    }}
+  >
+    Gemeinsam für gesunde Geflügelbestände
+  </h3>
+
+  <p
+    style={{
+      fontSize: "20px",
+      lineHeight: "1.9",
+      marginBottom: 0
+    }}
+  >
+    Jede rechtzeitig durchgeführte Impfung trägt dazu bei, die Ausbreitung der
+    Newcastle-Krankheit zu verhindern und den Geflügelbestand in unserer
+    Region nachhaltig zu schützen. Vielen Dank für Ihre Unterstützung und Ihre
+    verantwortungsvolle Teilnahme an der Sammelimpfung.
+  </p>
+</div>
         </div>
       </section>
     </div>
