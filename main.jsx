@@ -474,6 +474,8 @@ Erfahren Sie alles Wichtige zur gesetzlichen Impfpflicht, zum Ablauf der Impfgru
       onClick={() => {
   if (title === "Schutz Ihrer Tiere") {
     window.location.hash = "#info-newcastle"
+  } else if (title === "Gesetzliche Impfpflicht") {
+    window.location.hash = "#info-pflicht"
   }
 }}
       onMouseEnter={e => {
