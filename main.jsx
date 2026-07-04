@@ -586,6 +586,62 @@ minHeight: openCard === title ? "360px" : "170px",
     </div>
   );
 }
+function InfoNewcastle() {
+  return (
+    <div className="min-h-screen bg-slate-100">
+
+      <section
+        style={{
+          background: "linear-gradient(135deg,#0f172a,#14532d)",
+          color: "#fff",
+          padding: "90px 40px"
+        }}
+      >
+        <div style={{ maxWidth: "1100px", margin: "0 auto" }}>
+
+          <h1
+            style={{
+              fontSize: "58px",
+              margin: 0,
+              fontWeight: "900"
+            }}
+          >
+            Warum gegen Newcastle impfen?
+          </h1>
+
+          <p
+            style={{
+              marginTop: "24px",
+              fontSize: "22px",
+              lineHeight: "1.8",
+              color: "#d1d5db"
+            }}
+          >
+            Ausführliche Informationen folgen im nächsten Schritt.
+          </p>
+
+          <button
+            onClick={() => (window.location.hash = "#info")}
+            style={{
+              marginTop: "50px",
+              padding: "16px 30px",
+              border: 0,
+              borderRadius: "14px",
+              background: "#f97316",
+              color: "#fff",
+              fontWeight: "700",
+              cursor: "pointer"
+            }}
+          >
+            ← Zurück
+          </button>
+
+        </div>
+      </section>
+
+    </div>
+  )
+}
 function ClubRegistration() {
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
