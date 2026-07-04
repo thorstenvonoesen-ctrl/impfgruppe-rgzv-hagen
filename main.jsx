@@ -116,7 +116,7 @@ function InfoPage() {
             </button>
 
             <button
-              onClick={() => window.location.hash = '#signup'}
+              onClick={() => window.location.hash = '#info'}
               className="px-6 py-3 rounded-xl bg-green-600 text-white hover:bg-green-700"
             >
               Weiter zur Anmeldung →
