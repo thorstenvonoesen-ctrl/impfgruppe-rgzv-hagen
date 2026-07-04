@@ -1114,12 +1114,87 @@ function InfoSammelimpfung() {
               Diese Informationsseite wird als Nächstes aufgebaut.
             </h2>
 
-            <p style={{ fontSize: "20px", lineHeight: "1.9" }}>
-              Hier entstehen die ausführlichen Informationen zur gemeinsamen
-              Sammelimpfung, ihrem Ablauf, den Vorteilen für Geflügelhalter,
-              der Organisation durch den Verein und allen wichtigen Hinweisen
-              für Teilnehmer.
-            </p>
+            <h2
+  style={{
+    color: "#ffffff",
+    fontSize: "34px",
+    marginBottom: "24px"
+  }}
+>
+  Warum organisieren Vereine überhaupt Sammelimpfungen?
+</h2>
+
+<p
+  style={{
+    fontSize: "20px",
+    lineHeight: "1.9"
+  }}
+>
+  Die regelmäßige Impfung gegen die Newcastle-Krankheit gehört für viele
+  Geflügelhalter zum festen Bestandteil der Bestandsführung. Da zahlreiche
+  Hobbyhalter, Züchter und Vereinsmitglieder ihre Tiere im gleichen Zeitraum
+  impfen müssen, haben sich Sammelimpfungen über viele Jahrzehnte als
+  bewährte und wirtschaftliche Lösung etabliert. Anstatt dass jeder Halter
+  den Impfstoff einzeln beschafft und den gesamten Ablauf selbst organisiert,
+  übernimmt der Verein einen großen Teil der Planung und Koordination.
+</p>
+
+<p
+  style={{
+    fontSize: "20px",
+    lineHeight: "1.9"
+  }}
+>
+  Eine Sammelimpfung bedeutet dabei weit mehr als die gemeinsame Ausgabe von
+  Impfstoff. Bereits Wochen vor dem eigentlichen Impftermin beginnt die
+  Vorbereitung. Teilnehmer werden informiert, Anmeldungen entgegengenommen,
+  Tierzahlen erfasst und der benötigte Impfstoff in der passenden Menge
+  bestellt. Dadurch wird verhindert, dass zu wenig oder unnötig viel
+  Impfstoff vorhanden ist und alle Teilnehmer zuverlässig versorgt werden
+  können.
+</p>
+
+<p
+  style={{
+    fontSize: "20px",
+    lineHeight: "1.9"
+  }}
+>
+  Gleichzeitig profitieren die Mitglieder von einer deutlich einfacheren
+  Organisation. Jeder kennt den Impftermin frühzeitig, erhält alle wichtigen
+  Informationen aus einer Hand und muss sich nicht selbst um die aufwendige
+  Beschaffung des Impfstoffs kümmern. Für den Verein entsteht eine bessere
+  Übersicht über die teilnehmenden Bestände und der gesamte Ablauf kann
+  wesentlich strukturierter geplant werden.
+</p>
+
+<p
+  style={{
+    fontSize: "20px",
+    lineHeight: "1.9"
+  }}
+>
+  Auch aus Sicht des Tier- und Seuchenschutzes bieten Sammelimpfungen große
+  Vorteile. Wenn möglichst viele Geflügelhalter ihre Tiere innerhalb eines
+  vergleichbaren Zeitraums impfen, wird ein hoher Immunitätsgrad innerhalb
+  der Region erreicht. Dadurch sinkt das Risiko einer Ausbreitung der
+  Newcastle-Krankheit erheblich und sowohl private Hobbyhaltungen als auch
+  größere Bestände profitieren von einem besseren Schutz.
+</p>
+
+<p
+  style={{
+    fontSize: "20px",
+    lineHeight: "1.9"
+  }}
+>
+  Mit dieser Online-Anmeldung möchte der Verein die gesamte Organisation
+  zusätzlich vereinfachen. Teilnehmer können ihre Daten bequem von zu Hause
+  aus eingeben, Tierzahlen rechtzeitig melden und sich ihren Platz für den
+  nächsten Impftermin sichern. Gleichzeitig erhält der Verein bereits vor
+  dem Impftag einen vollständigen Überblick über alle Anmeldungen und kann
+  die Impfaktion optimal vorbereiten.
+</p>
 
             <button
               onClick={() => (window.location.hash = "#info")}
