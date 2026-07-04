@@ -98,113 +98,730 @@ function InfoPage() {
       <div className="max-w-6xl mx-auto px-6">
 
         {/* Hero */}
-        <section className="rounded-3xl bg-gradient-to-r from-emerald-700 to-green-600 text-white p-10 shadow-2xl">
-          <h1 className="text-5xl font-bold mb-4">
-            Informationen zur Newcastle-Impfung
-          </h1>
+        <section className="rounded-3xl overflow-hidden shadow-2xl">
 
-          <p className="text-xl leading-8 max-w-4xl">
-            Willkommen zur Online-Anmeldung der Sammelimpfung. Bitte lesen Sie
-            die folgenden Informationen aufmerksam durch, bevor Sie mit Ihrer
-            Anmeldung fortfahren.
-          </p>
-        </section>
+  <div className="bg-gradient-to-r from-emerald-800 via-emerald-700 to-green-600 px-12 py-14">
+
+    <div className="inline-flex items-center rounded-full bg-white/20 px-5 py-2 mb-8">
+      <span className="text-white font-semibold uppercase tracking-wider text-sm">
+        Online-Anmeldung zur Sammelimpfung
+      </span>
+    </div>
+
+    <h1 className="text-5xl md:text-6xl font-extrabold text-white leading-tight">
+      Informationen zur
+      <br />
+      Newcastle-Impfung
+    </h1>
+
+    <p className="mt-8 max-w-4xl text-xl leading-9 text-emerald-50">
+      Herzlich willkommen auf der Informationsseite unserer Impfgruppe.
+      Bevor Sie sich anmelden, möchten wir Ihnen die wichtigsten
+      Informationen rund um die Newcastle-Impfung, die gesetzlichen
+      Vorgaben und den Ablauf unserer Sammelimpfung erläutern.
+    </p>
+
+    <div className="grid md:grid-cols-3 gap-6 mt-12">
+
+      <div className="rounded-2xl bg-white/10 p-6 backdrop-blur-sm">
+        <div className="text-4xl mb-3">🛡️</div>
+
+        <h3 className="text-xl font-bold mb-2">
+          Schutz Ihrer Tiere
+        </h3>
+
+        <p className="text-emerald-50">
+          Regelmäßige Impfungen schützen Ihren Geflügelbestand zuverlässig
+          vor einer gefährlichen Viruserkrankung.
+        </p>
+      </div>
+
+      <div className="rounded-2xl bg-white/10 p-6 backdrop-blur-sm">
+        <div className="text-4xl mb-3">⚖️</div>
+
+        <h3 className="text-xl font-bold mb-2">
+          Gesetzliche Vorgaben
+        </h3>
+
+        <p className="text-emerald-50">
+          Erfüllen Sie die vorgeschriebenen Impfungen einfach und
+          nachvollziehbar.
+        </p>
+      </div>
+
+      <div className="rounded-2xl bg-white/10 p-6 backdrop-blur-sm">
+        <div className="text-4xl mb-3">👥</div>
+
+        <h3 className="text-xl font-bold mb-2">
+          Gemeinsam organisiert
+        </h3>
+
+        <p className="text-emerald-50">
+          Durch die Sammelimpfung sparen alle Teilnehmer Zeit, Aufwand und
+          Kosten.
+        </p>
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
 
         {/* Karten */}
         <div className="space-y-8 mt-8">
 
-          <section className="bg-white rounded-3xl shadow-xl p-8">
-            <h2 className="text-3xl font-bold mb-5">
-              🛡️ Herzlich willkommen
-            </h2>
+          <section className="bg-white rounded-3xl shadow-xl p-10 border border-slate-200">
 
-            {/* HIER DEIN AUSFÜHRLICHER TEXT */}
-          </section>
+  <div className="flex items-center gap-4 mb-6">
 
-          <section className="bg-white rounded-3xl shadow-xl p-8">
-            <h2 className="text-3xl font-bold mb-5">
-              💉 Warum wird gegen Newcastle geimpft?
-            </h2>
+    <div className="w-16 h-16 rounded-2xl bg-emerald-100 flex items-center justify-center text-3xl">
+      🛡️
+    </div>
 
-            {/* HIER DEIN AUSFÜHRLICHER TEXT */}
-          </section>
+    <div>
+      <h2 className="text-3xl font-bold text-slate-800">
+        Herzlich willkommen
+      </h2>
 
-          <section className="bg-white rounded-3xl shadow-xl p-8">
-            <h2 className="text-3xl font-bold mb-5">
-              ⚖️ Gesetzliche Verpflichtung
-            </h2>
+      <p className="text-slate-500">
+        Schön, dass Sie sich für unsere Sammelimpfung interessieren.
+      </p>
+    </div>
 
-            {/* HIER DEIN AUSFÜHRLICHER TEXT */}
-          </section>
+  </div>
 
-          <section className="bg-white rounded-3xl shadow-xl p-8">
-            <h2 className="text-3xl font-bold mb-5">
-              👥 Warum organisiert der Verein Sammelimpfungen?
-            </h2>
+  <div className="space-y-6 text-lg leading-9 text-slate-700">
 
-            {/* HIER DEIN AUSFÜHRLICHER TEXT */}
-          </section>
+    <p>
+      Wir freuen uns, Sie auf der Online-Anmeldeseite unserer Impfgruppe
+      begrüßen zu dürfen. Mit dieser Anwendung können Sie sich bequem,
+      sicher und rund um die Uhr für einen bevorstehenden Impftermin
+      anmelden. Unser Ziel ist es, die Organisation der Sammelimpfung für
+      alle Teilnehmer so einfach und transparent wie möglich zu gestalten.
+    </p>
 
-          <section className="bg-white rounded-3xl shadow-xl p-8">
-            <h2 className="text-3xl font-bold mb-5">
-              📝 Ablauf der Anmeldung
-            </h2>
+    <p>
+      Durch Ihre Online-Anmeldung erhalten wir bereits im Vorfeld alle
+      Informationen, die für die Vorbereitung der Impfgruppe notwendig
+      sind. Dadurch können Impfstoff, Teilnehmerlisten und Unterlagen
+      rechtzeitig vorbereitet werden. Gleichzeitig verkürzen sich die
+      Wartezeiten am Impftag erheblich.
+    </p>
 
-            <div className="grid md:grid-cols-5 gap-4">
-              <div className="rounded-2xl bg-slate-50 p-5 text-center shadow">
-                <div className="text-3xl font-bold text-emerald-700">1</div>
-                Anmeldung
-              </div>
-              <div className="rounded-2xl bg-slate-50 p-5 text-center shadow">
-                <div className="text-3xl font-bold text-emerald-700">2</div>
-                Tierdaten
-              </div>
-              <div className="rounded-2xl bg-slate-50 p-5 text-center shadow">
-                <div className="text-3xl font-bold text-emerald-700">3</div>
-                Termin
-              </div>
-              <div className="rounded-2xl bg-slate-50 p-5 text-center shadow">
-                <div className="text-3xl font-bold text-emerald-700">4</div>
-                Zahlung
-              </div>
-              <div className="rounded-2xl bg-slate-50 p-5 text-center shadow">
-                <div className="text-3xl font-bold text-emerald-700">5</div>
-                Bestätigung
-              </div>
-            </div>
-          </section>
+    <p>
+      Bitte nehmen Sie sich einige Minuten Zeit und lesen Sie die
+      nachfolgenden Informationen aufmerksam durch. Sie erfahren, warum
+      die Newcastle-Impfung durchgeführt wird, welche gesetzlichen
+      Vorgaben bestehen und wie der weitere Ablauf bis zum Impftermin
+      organisiert ist.
+    </p>
 
-          <section className="bg-amber-50 border-l-8 border-amber-500 rounded-3xl p-8 shadow">
-            <h2 className="text-3xl font-bold text-amber-800 mb-5">
-              ⚠️ Wichtige Hinweise
-            </h2>
+    <div className="rounded-2xl bg-emerald-50 border border-emerald-200 p-6">
 
-            {/* HIER DEIN AUSFÜHRLICHER TEXT */}
-          </section>
+      <p className="font-semibold text-emerald-800">
+        ✓ Ihr Vorteil
+      </p>
 
-          <section className="bg-sky-50 border-l-8 border-sky-500 rounded-3xl p-8 shadow">
-            <h2 className="text-3xl font-bold text-sky-800 mb-5">
-              🔒 Datenschutz
-            </h2>
+      <p className="mt-3">
+        Die Online-Anmeldung erleichtert nicht nur die Planung für den
+        Verein, sondern sorgt auch für einen schnellen und reibungslosen
+        Ablauf am Impftag. Dadurch profitieren alle Teilnehmer von einer
+        besseren Organisation und einer zügigen Ausgabe des Impfstoffes.
+      </p>
 
-            {/* HIER DEIN AUSFÜHRLICHER TEXT */}
-          </section>
+    </div>
+
+  </div>
+
+</section>
+
+          <section className="bg-white rounded-3xl shadow-xl p-10 border border-slate-200">
+
+  <div className="flex items-center gap-4 mb-6">
+
+    <div className="w-16 h-16 rounded-2xl bg-red-100 flex items-center justify-center text-3xl">
+      💉
+    </div>
+
+    <div>
+      <h2 className="text-3xl font-bold text-slate-800">
+        Warum wird gegen Newcastle geimpft?
+      </h2>
+
+      <p className="text-slate-500">
+        Schutz für den eigenen Bestand und alle Geflügelhalter.
+      </p>
+    </div>
+
+  </div>
+
+  <div className="space-y-6 text-lg leading-9 text-slate-700">
+
+    <p>
+      Die Newcastle-Krankheit, auch als Atypische Geflügelpest bezeichnet,
+      ist eine hochansteckende Viruserkrankung des Geflügels. Sie kann
+      Hühner, Puten, Fasane, Perlhühner sowie zahlreiche weitere
+      Geflügelarten befallen und sich innerhalb kürzester Zeit über einen
+      gesamten Bestand ausbreiten.
+    </p>
+
+    <p>
+      Die Übertragung erfolgt unter anderem durch direkten Tierkontakt,
+      Ausscheidungen, kontaminierte Gegenstände, Transportkisten,
+      Fahrzeuge, Futter oder Personen. Bereits wenige infizierte Tiere
+      können ausreichen, um einen gesamten Bestand zu gefährden.
+    </p>
+
+    <p>
+      Typische Krankheitsanzeichen sind Atemwegsprobleme, Mattigkeit,
+      Durchfall, verminderte Legeleistung, Bewegungsstörungen sowie
+      neurologische Ausfallerscheinungen. Besonders schwere Verläufe können
+      innerhalb kurzer Zeit zum Tod zahlreicher Tiere führen.
+    </p>
+
+    <p>
+      Eine regelmäßige Schutzimpfung ist die wirksamste Möglichkeit, den
+      eigenen Bestand zu schützen und gleichzeitig die Verbreitung dieser
+      Krankheit einzudämmen. Jede ordnungsgemäß durchgeführte Impfung trägt
+      dazu bei, das Risiko eines Seuchenausbruchs deutlich zu verringern.
+    </p>
+
+    <div className="rounded-2xl bg-red-50 border border-red-200 p-6">
+
+      <p className="font-semibold text-red-800">
+        Wichtig zu wissen
+      </p>
+
+      <p className="mt-3">
+        Die Newcastle-Krankheit gehört zu den anzeigepflichtigen
+        Tierseuchen. Bereits der Verdacht auf einen Ausbruch kann
+        umfangreiche behördliche Maßnahmen nach sich ziehen, die nicht nur
+        den betroffenen Bestand, sondern auch umliegende Geflügelhaltungen
+        betreffen können.
+      </p>
+
+    </div>
+
+  </div>
+
+</section>
+
+          <section className="bg-white rounded-3xl shadow-xl p-10 border border-slate-200">
+
+  <div className="flex items-center gap-4 mb-6">
+
+    <div className="w-16 h-16 rounded-2xl bg-blue-100 flex items-center justify-center text-3xl">
+      ⚖️
+    </div>
+
+    <div>
+      <h2 className="text-3xl font-bold text-slate-800">
+        Gesetzliche Verpflichtung
+      </h2>
+
+      <p className="text-slate-500">
+        Verantwortung jedes Geflügelhalters.
+      </p>
+    </div>
+
+  </div>
+
+  <div className="space-y-6 text-lg leading-9 text-slate-700">
+
+    <p>
+      Die regelmäßige Impfung gegen die Newcastle-Krankheit ist nicht nur
+      eine sinnvolle Vorsorgemaßnahme, sondern für Halter bestimmter
+      Geflügelarten auch gesetzlich vorgeschrieben. Ziel dieser Regelung
+      ist es, die Ausbreitung einer hochansteckenden Tierseuche wirksam zu
+      verhindern und den Geflügelbestand in Deutschland dauerhaft zu
+      schützen.
+    </p>
+
+    <p>
+      Jeder Tierhalter trägt Verantwortung – nicht nur für die Gesundheit
+      seiner eigenen Tiere, sondern auch für die Bestände benachbarter
+      Geflügelhalter. Bereits ein einzelner ungeimpfter Bestand kann im
+      Seuchenfall erhebliche Auswirkungen auf eine ganze Region haben.
+    </p>
+
+    <p>
+      Die Teilnahme an einer ordnungsgemäß dokumentierten Sammelimpfung
+      hilft Ihnen dabei, Ihren gesetzlichen Verpflichtungen nachzukommen
+      und gleichzeitig den erforderlichen Impfnachweis zu sichern. Durch
+      die zentrale Organisation werden alle notwendigen Schritte
+      nachvollziehbar dokumentiert.
+    </p>
+
+    <p>
+      Bitte beachten Sie, dass je nach Tierart, Haltungsform und den
+      jeweils geltenden rechtlichen Vorgaben weitere Pflichten bestehen
+      können. Informieren Sie sich im Zweifel zusätzlich bei Ihrem
+      zuständigen Veterinäramt oder Ihrem betreuenden Tierarzt.
+    </p>
+
+    <div className="rounded-2xl bg-blue-50 border border-blue-200 p-6">
+
+      <h3 className="text-xl font-bold text-blue-900 mb-3">
+        Warum ist die Dokumentation so wichtig?
+      </h3>
+
+      <p>
+        Eine vollständige Dokumentation der durchgeführten Impfung dient
+        als Nachweis gegenüber Behörden und unterstützt eine
+        nachvollziehbare Gesundheitsvorsorge Ihres Geflügelbestandes.
+        Gleichzeitig erleichtert sie die Organisation zukünftiger
+        Impfungen und schafft Transparenz für alle Beteiligten.
+      </p>
+
+    </div>
+
+  </div>
+
+</section>
+
+          <section className="bg-white rounded-3xl shadow-xl p-10 border border-slate-200">
+
+  <div className="flex items-center gap-4 mb-6">
+
+    <div className="w-16 h-16 rounded-2xl bg-green-100 flex items-center justify-center text-3xl">
+      👥
+    </div>
+
+    <div>
+      <h2 className="text-3xl font-bold text-slate-800">
+        Warum organisiert der Verein Sammelimpfungen?
+      </h2>
+
+      <p className="text-slate-500">
+        Gemeinsam einfacher, wirtschaftlicher und besser organisiert.
+      </p>
+    </div>
+
+  </div>
+
+  <div className="space-y-6 text-lg leading-9 text-slate-700">
+
+    <p>
+      Viele Geflügelhalter halten nur wenige Tiere. Die für die
+      Newcastle-Impfung benötigten Impfstoffe werden jedoch in größeren
+      Gebinden geliefert und müssen nach dem Öffnen innerhalb eines
+      begrenzten Zeitraums vollständig verbraucht werden. Für einzelne
+      Hobbyhalter wäre der Erwerb eines kompletten Impfstoffgebindes daher
+      oftmals unwirtschaftlich.
+    </p>
+
+    <p>
+      Aus diesem Grund organisiert unser Verein regelmäßig
+      Sammelimpfungen. Durch die gemeinsame Bestellung und Verteilung des
+      Impfstoffes können die Kosten auf viele Teilnehmer verteilt werden.
+      Gleichzeitig wird sichergestellt, dass ausreichend Impfstoff in der
+      benötigten Menge zur Verfügung steht und möglichst keine wertvollen
+      Impfstoffreste entsorgt werden müssen.
+    </p>
+
+    <p>
+      Die zentrale Organisation erleichtert außerdem die gesamte Planung.
+      Bereits vor dem Impftermin kann die benötigte Impfstoffmenge
+      berechnet, die Teilnehmerliste erstellt und die Ausgabe vorbereitet
+      werden. Dadurch entstehen am Impftag deutlich kürzere Wartezeiten und
+      ein reibungsloser Ablauf für alle Beteiligten.
+    </p>
+
+    <p>
+      Gleichzeitig profitieren alle Teilnehmer von einer einheitlichen und
+      nachvollziehbaren Dokumentation. Die erforderlichen Unterlagen können
+      vorbereitet und Sammelimpfbescheinigungen einfacher erstellt werden.
+      Das schafft Transparenz und erleichtert den Nachweis einer
+      ordnungsgemäß durchgeführten Impfung.
+    </p>
+
+    <div className="grid md:grid-cols-2 gap-5">
+
+      <div className="rounded-2xl bg-emerald-50 border border-emerald-200 p-6">
+
+        <h3 className="font-bold text-xl text-emerald-800 mb-3">
+          Ihre Vorteile
+        </h3>
+
+        <ul className="space-y-2 list-disc pl-5">
+          <li>Geringere Kosten durch gemeinsame Impfstoffbestellung.</li>
+          <li>Weniger organisatorischer Aufwand.</li>
+          <li>Schnellere Abwicklung am Impftag.</li>
+          <li>Vorbereitete Teilnehmerlisten.</li>
+          <li>Unterstützung durch den Verein.</li>
+        </ul>
+
+      </div>
+
+      <div className="rounded-2xl bg-slate-50 border border-slate-200 p-6">
+
+        <h3 className="font-bold text-xl text-slate-800 mb-3">
+          Unser Ziel
+        </h3>
+
+        <p>
+          Unser Ziel ist es, allen Geflügelhaltern eine einfache,
+          kostengünstige und gesetzeskonforme Möglichkeit zur Teilnahme an
+          der Newcastle-Impfung anzubieten. Durch eine gute Vorbereitung
+          können wir die Impfaktion effizient durchführen und gleichzeitig
+          eine hohe Qualität der Organisation sicherstellen.
+        </p>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+          <section className="bg-white rounded-3xl shadow-xl p-10 border border-slate-200">
+
+  <div className="flex items-center gap-4 mb-8">
+
+    <div className="w-16 h-16 rounded-2xl bg-violet-100 flex items-center justify-center text-3xl">
+      📝
+    </div>
+
+    <div>
+      <h2 className="text-3xl font-bold text-slate-800">
+        Ablauf der Anmeldung
+      </h2>
+
+      <p className="text-slate-500">
+        In wenigen Schritten zur erfolgreichen Anmeldung.
+      </p>
+    </div>
+
+  </div>
+
+  <div className="space-y-8">
+
+    <div className="flex gap-6">
+
+      <div className="flex-shrink-0 w-14 h-14 rounded-full bg-emerald-600 text-white flex items-center justify-center text-2xl font-bold">
+        1
+      </div>
+
+      <div>
+        <h3 className="text-xl font-bold mb-2">
+          Persönliche Daten eingeben
+        </h3>
+
+        <p className="text-lg leading-8 text-slate-700">
+          Tragen Sie zunächst Ihre persönlichen Kontaktdaten vollständig ein.
+          Diese Informationen benötigen wir, um Sie eindeutig zuordnen und bei
+          Rückfragen oder Terminänderungen kontaktieren zu können.
+        </p>
+      </div>
+
+    </div>
+
+    <div className="border-l-4 border-emerald-200 ml-7 h-8"></div>
+
+    <div className="flex gap-6">
+
+      <div className="flex-shrink-0 w-14 h-14 rounded-full bg-emerald-600 text-white flex items-center justify-center text-2xl font-bold">
+        2
+      </div>
+
+      <div>
+        <h3 className="text-xl font-bold mb-2">
+          Angaben zu Ihrem Geflügel
+        </h3>
+
+        <p className="text-lg leading-8 text-slate-700">
+          Wählen Sie die Tierart aus und geben Sie die Anzahl der zu impfenden
+          Tiere an. Diese Angaben dienen ausschließlich der Planung der
+          benötigten Impfstoffmenge.
+        </p>
+      </div>
+
+    </div>
+
+    <div className="border-l-4 border-emerald-200 ml-7 h-8"></div>
+
+    <div className="flex gap-6">
+
+      <div className="flex-shrink-0 w-14 h-14 rounded-full bg-emerald-600 text-white flex items-center justify-center text-2xl font-bold">
+        3
+      </div>
+
+      <div>
+        <h3 className="text-xl font-bold mb-2">
+          Impftermin auswählen
+        </h3>
+
+        <p className="text-lg leading-8 text-slate-700">
+          Wählen Sie den für Sie passenden Termin aus. Die verfügbaren
+          Impftermine werden vom Verein bereitgestellt und regelmäßig
+          aktualisiert.
+        </p>
+      </div>
+
+    </div>
+
+    <div className="border-l-4 border-emerald-200 ml-7 h-8"></div>
+
+    <div className="flex gap-6">
+
+      <div className="flex-shrink-0 w-14 h-14 rounded-full bg-emerald-600 text-white flex items-center justify-center text-2xl font-bold">
+        4
+      </div>
+
+      <div>
+        <h3 className="text-xl font-bold mb-2">
+          Teilnahmegebühr bezahlen
+        </h3>
+
+        <p className="text-lg leading-8 text-slate-700">
+          Nach Auswahl des Termins erfolgt die Bezahlung der Teilnahmegebühr
+          über die angebotene Zahlungsmethode. Erst danach gilt Ihre Anmeldung
+          als verbindlich abgeschlossen.
+        </p>
+      </div>
+
+    </div>
+
+    <div className="border-l-4 border-emerald-200 ml-7 h-8"></div>
+
+    <div className="flex gap-6">
+
+      <div className="flex-shrink-0 w-14 h-14 rounded-full bg-emerald-600 text-white flex items-center justify-center text-2xl font-bold">
+        5
+      </div>
+
+      <div>
+        <h3 className="text-xl font-bold mb-2">
+          Bestätigung erhalten
+        </h3>
+
+        <p className="text-lg leading-8 text-slate-700">
+          Nach erfolgreicher Anmeldung werden Ihre Daten gespeichert und stehen
+          der Impfgruppenleitung für die Vorbereitung des Impftermins zur
+          Verfügung. Bitte erscheinen Sie am gewählten Termin pünktlich.
+        </p>
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+          <section className="rounded-3xl border-2 border-amber-300 bg-amber-50 shadow-xl overflow-hidden">
+
+  <div className="bg-amber-500 px-8 py-5">
+
+    <h2 className="text-3xl font-bold text-white">
+      ⚠️ Wichtige Hinweise
+    </h2>
+
+  </div>
+
+  <div className="p-10 space-y-8 text-lg leading-9 text-slate-700">
+
+    <div className="flex gap-5">
+
+      <div className="text-3xl">
+        ✓
+      </div>
+
+      <div>
+
+        <h3 className="text-xl font-bold mb-2">
+          Angaben sorgfältig prüfen
+        </h3>
+
+        <p>
+          Bitte kontrollieren Sie sämtliche eingegebenen Daten vor dem
+          Absenden Ihrer Anmeldung sorgfältig. Nur vollständig und korrekt
+          ausgefüllte Anmeldungen ermöglichen eine reibungslose Vorbereitung
+          des Impftermins und verhindern unnötige Rückfragen.
+        </p>
+
+      </div>
+
+    </div>
+
+    <hr className="border-amber-200" />
+
+    <div className="flex gap-5">
+
+      <div className="text-3xl">
+        💶
+      </div>
+
+      <div>
+
+        <h3 className="text-xl font-bold mb-2">
+          Teilnahmegebühr
+        </h3>
+
+        <p>
+          Die Teilnahmegebühr wird direkt im Rahmen der Online-Anmeldung
+          entrichtet. Nach erfolgreicher Zahlung wird Ihr Platz für den
+          ausgewählten Impftermin verbindlich reserviert.
+        </p>
+
+      </div>
+
+    </div>
+
+    <hr className="border-amber-200" />
+
+    <div className="flex gap-5">
+
+      <div className="text-3xl">
+        ⏰
+      </div>
+
+      <div>
+
+        <h3 className="text-xl font-bold mb-2">
+          Pünktliches Erscheinen
+        </h3>
+
+        <p>
+          Bitte erscheinen Sie am gewählten Impftermin möglichst pünktlich.
+          Dadurch können Wartezeiten für alle Teilnehmer reduziert und die
+          Ausgabe des Impfstoffes effizient durchgeführt werden.
+        </p>
+
+      </div>
+
+    </div>
+
+    <hr className="border-amber-200" />
+
+    <div className="flex gap-5">
+
+      <div className="text-3xl">
+        ❗
+      </div>
+
+      <div>
+
+        <h3 className="text-xl font-bold mb-2">
+          Nichterscheinen
+        </h3>
+
+        <p>
+          Sollten Sie den gebuchten Termin ohne vorherige Absage nicht
+          wahrnehmen, besteht grundsätzlich kein Anspruch auf Erstattung der
+          bereits entrichteten Teilnahmegebühr. Bitte informieren Sie den
+          Veranstalter möglichst frühzeitig, falls Sie verhindert sind.
+        </p>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+          <section className="rounded-3xl border-2 border-sky-300 bg-sky-50 shadow-xl overflow-hidden">
+
+  <div className="bg-sky-600 px-8 py-5">
+
+    <h2 className="text-3xl font-bold text-white">
+      🔒 Datenschutz
+    </h2>
+
+  </div>
+
+  <div className="p-10 space-y-6 text-lg leading-9 text-slate-700">
+
+    <p>
+      Der Schutz Ihrer personenbezogenen Daten hat für uns einen hohen
+      Stellenwert. Sämtliche im Rahmen der Online-Anmeldung erhobenen Daten
+      werden ausschließlich zum Zweck der Planung, Organisation und
+      Durchführung der jeweiligen Sammelimpfung verarbeitet.
+    </p>
+
+    <p>
+      Ihre Angaben werden insbesondere benötigt, um Sie eindeutig einem
+      Impftermin zuordnen zu können, die benötigte Impfstoffmenge zu planen,
+      Teilnehmerlisten zu erstellen sowie die gesetzlich erforderliche
+      Dokumentation der Sammelimpfung vorzubereiten.
+    </p>
+
+    <p>
+      Eine Weitergabe Ihrer Daten erfolgt ausschließlich dann, wenn dies zur
+      Durchführung der Impfaktion erforderlich oder aufgrund gesetzlicher
+      Bestimmungen vorgeschrieben ist. Eine Nutzung zu Werbezwecken oder eine
+      Weitergabe an unbeteiligte Dritte findet nicht statt.
+    </p>
+
+    <p>
+      Die Verarbeitung Ihrer personenbezogenen Daten erfolgt entsprechend den
+      geltenden Datenschutzbestimmungen. Weitere Informationen zur Verarbeitung,
+      Speicherung und Ihren Rechten finden Sie in unserer ausführlichen
+      Datenschutzerklärung.
+    </p>
+
+    <div className="rounded-2xl bg-white border border-sky-200 p-6">
+
+      <h3 className="text-xl font-bold text-sky-800 mb-3">
+        Ihre Daten sind bei uns in guten Händen
+      </h3>
+
+      <p>
+        Wir verarbeiten ausschließlich die Daten, die für die Durchführung der
+        Sammelimpfung notwendig sind. Nach Ablauf gesetzlicher
+        Aufbewahrungsfristen werden diese entsprechend den geltenden
+        Datenschutzvorschriften gelöscht.
+      </p>
+
+    </div>
+
+  </div>
+
+</section>
 
         </div>
 
-        <div className="flex justify-between mt-10">
-          <button
-            onClick={() => window.location.hash = '#'}
-            className="px-8 py-4 rounded-xl bg-slate-600 text-white hover:bg-slate-700">
-            ← Zurück
-          </button>
+        <section className="mt-10 rounded-3xl overflow-hidden shadow-2xl">
 
-          <button
-            onClick={() => window.location.hash = '#signup'}
-            className="px-8 py-4 rounded-xl bg-emerald-600 text-white hover:bg-emerald-700">
-            Weiter zur Anmeldung →
-          </button>
-        </div>
+  <div className="bg-gradient-to-r from-emerald-700 via-emerald-600 to-green-600 p-10 text-center">
+
+    <h2 className="text-4xl font-bold text-white mb-5">
+      Vielen Dank für Ihr Interesse an unserer Sammelimpfung
+    </h2>
+
+    <p className="text-xl leading-9 text-emerald-50 max-w-4xl mx-auto">
+      Mit Ihrer regelmäßigen Teilnahme an der Newcastle-Impfung leisten Sie
+      einen wichtigen Beitrag zum Schutz Ihres eigenen Tierbestandes sowie
+      aller Geflügelhalter in unserer Region. Gemeinsam tragen wir dazu bei,
+      die Gesundheit unserer Tiere zu erhalten und die gesetzlichen
+      Anforderungen verantwortungsvoll umzusetzen.
+    </p>
+
+    <div className="mt-10 flex flex-col md:flex-row justify-center gap-5">
+
+      <button
+        onClick={() => window.location.hash = '#'}
+        className="px-8 py-4 rounded-2xl bg-white text-slate-700 font-semibold shadow-lg hover:scale-105 transition">
+
+        ← Zurück zur Startseite
+
+      </button>
+
+      <button
+        onClick={() => window.location.hash = '#signup'}
+        className="px-8 py-4 rounded-2xl bg-amber-400 text-slate-900 font-bold shadow-lg hover:bg-amber-300 hover:scale-105 transition">
+
+        Jetzt zur Anmeldung →
+
+      </button>
+
+    </div>
+
+  </div>
+
+</section>
 
       </div>
 
