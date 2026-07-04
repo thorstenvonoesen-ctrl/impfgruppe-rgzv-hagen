@@ -840,30 +840,130 @@ function InfoPflicht() {
             }}
           >
 
-            <h2 style={{ color: "#fff", fontSize: "34px" }}>
-              Warum gibt es überhaupt eine Impfpflicht?
-            </h2>
+            <h2
+  style={{
+    color: "#fff",
+    fontSize: "34px",
+    marginBottom: "20px"
+  }}
+>
+  Warum gibt es überhaupt eine Impfpflicht?
+</h2>
 
-            <p style={{ fontSize: "20px", lineHeight: "1.9" }}>
-              Die Newcastle-Krankheit zählt zu den bedeutendsten
-              Viruserkrankungen des Geflügels. Aufgrund ihrer hohen
-              Ansteckungsgefahr gelten in Deutschland besondere
-              tierseuchenrechtliche Vorschriften. Ziel dieser Regelungen ist
-              es, die Ausbreitung der Krankheit möglichst zu verhindern und
-              sowohl Hobbyhaltungen als auch größere Geflügelbestände zu
-              schützen.
-            </p>
+<p style={{ fontSize: "20px", lineHeight: "1.9" }}>
+  Die Newcastle-Krankheit gehört zu den gefährlichsten Viruserkrankungen des
+  Hausgeflügels. Aufgrund ihrer hohen Ansteckungsfähigkeit kann sich das Virus
+  innerhalb kürzester Zeit von einem Bestand auf viele weitere Haltungen
+  ausbreiten. Bereits ein einzelner Ausbruch kann erhebliche wirtschaftliche
+  Schäden verursachen und umfangreiche Maßnahmen der Veterinärbehörden
+  erforderlich machen.
+</p>
 
-            <p style={{ fontSize: "20px", lineHeight: "1.9" }}>
-              Die regelmäßige Schutzimpfung ist deshalb ein wesentlicher
-              Bestandteil der Seuchenbekämpfung. Sie dient nicht nur dem
-              Schutz Ihrer eigenen Tiere, sondern trägt auch dazu bei,
-              benachbarte Bestände sowie die gesamte Geflügelhaltung vor den
-              wirtschaftlichen und tierschutzrelevanten Folgen eines
-              Seuchenausbruchs zu bewahren.
-            </p>
+<p style={{ fontSize: "20px", lineHeight: "1.9" }}>
+  Aus diesem Grund schreibt der Gesetzgeber regelmäßige Schutzimpfungen für
+  bestimmte Geflügelarten vor. Ziel ist es nicht nur, einzelne Tiere zu
+  schützen, sondern die Ausbreitung der Krankheit insgesamt zu verhindern und
+  die Geflügelhaltung dauerhaft sicherer zu machen.
+</p>
 
-          </div>
+<h2
+  style={{
+    color: "#fff",
+    fontSize: "34px",
+    marginTop: "50px",
+    marginBottom: "20px"
+  }}
+>
+  Für wen gilt die Impfpflicht?
+</h2>
+
+<p style={{ fontSize: "20px", lineHeight: "1.9" }}>
+  Die Impfpflicht richtet sich nicht ausschließlich an große
+  Geflügelbetriebe. Auch private Hobbyhalter, Züchter und Vereinsmitglieder
+  tragen Verantwortung für ihre Tiere. Die Größe des Bestandes spielt dabei
+  keine entscheidende Rolle. Bereits wenige Tiere können sich infizieren und
+  das Virus weiterverbreiten.
+</p>
+
+<p style={{ fontSize: "20px", lineHeight: "1.9" }}>
+  Deshalb sollte jede Geflügelhaltung regelmäßig überprüfen, ob die
+  vorgeschriebenen Impfungen ordnungsgemäß durchgeführt wurden und die
+  erforderlichen Nachweise vorhanden sind.
+</p>
+
+<div
+  style={{
+    background: "rgba(255,255,255,.08)",
+    border: "1px solid rgba(255,255,255,.18)",
+    borderRadius: "18px",
+    padding: "28px",
+    margin: "45px 0"
+  }}
+>
+
+  <h3
+    style={{
+      color: "#fff",
+      marginTop: 0,
+      fontSize: "28px"
+    }}
+  >
+    Warum regelmäßige Impfungen?
+  </h3>
+
+  <ul
+    style={{
+      lineHeight: "2",
+      fontSize: "19px",
+      paddingLeft: "24px"
+    }}
+  >
+    <li>Schutz des eigenen Geflügelbestandes.</li>
+    <li>Verringerung des Ansteckungsrisikos für andere Halter.</li>
+    <li>Vorbeugung größerer Seuchenausbrüche.</li>
+    <li>Erfüllung gesetzlicher Vorgaben.</li>
+    <li>Nachweis einer verantwortungsvollen Tierhaltung.</li>
+  </ul>
+
+</div>
+
+<h2
+  style={{
+    color: "#fff",
+    fontSize: "34px",
+    marginBottom: "20px"
+  }}
+>
+  Häufige Fragen
+</h2>
+
+<h3 style={{ color: "#fff" }}>
+Muss ich auch nur wenige Hühner impfen?
+</h3>
+
+<p style={{ fontSize: "20px", lineHeight: "1.9" }}>
+Ja. Auch kleine Hobbyhaltungen können von der Impfpflicht betroffen sein. Das
+Virus unterscheidet nicht zwischen großen und kleinen Beständen.
+</p>
+
+<h3 style={{ color: "#fff" }}>
+Reicht eine einmalige Impfung?
+</h3>
+
+<p style={{ fontSize: "20px", lineHeight: "1.9" }}>
+Nein. Der Impfschutz muss regelmäßig aufgefrischt werden. Nur dadurch bleibt
+ein wirksamer Schutz des Bestandes dauerhaft erhalten.
+</p>
+
+<h3 style={{ color: "#fff" }}>
+Warum organisiert der Verein Sammelimpfungen?
+</h3>
+
+<p style={{ fontSize: "20px", lineHeight: "1.9" }}>
+Gemeinsame Impfaktionen erleichtern die Organisation, reduzieren Kosten und
+stellen sicher, dass möglichst viele Geflügelhalter ihre Tiere fristgerecht
+impfen lassen können.
+</p>
 
           <button
             onClick={() => (window.location.hash = "#info")}
