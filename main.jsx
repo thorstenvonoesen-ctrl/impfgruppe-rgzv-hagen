@@ -1854,6 +1854,40 @@ gesamten Sammelimpfung.
     <li>Erstellung der Impfbescheinigungen</li>
   </ul>
 </div>
+  <div
+  style={{
+    marginTop: "50px",
+    background: "rgba(249,115,22,.15)",
+    border: "1px solid rgba(249,115,22,.45)",
+    borderRadius: "18px",
+    padding: "30px"
+  }}
+>
+  <h3
+    style={{
+      marginTop: 0,
+      color: "#ffffff",
+      fontSize: "30px"
+    }}
+  >
+    Ihr Vorteil
+  </h3>
+
+  <p
+    style={{
+      fontSize: "20px",
+      lineHeight: "1.9",
+      marginBottom: 0
+    }}
+  >
+    Mit der Online-Anmeldung sparen sowohl die Teilnehmer als auch der
+    veranstaltende Verein wertvolle Zeit. Die Daten stehen sofort digital zur
+    Verfügung, der Impfstoff kann exakt geplant werden und die gesamte
+    Sammelimpfung lässt sich deutlich effizienter organisieren. Dadurch
+    profitieren alle Beteiligten von einem schnellen, sicheren und
+    unkomplizierten Ablauf.
+  </p>
+</div>
   Datenschutz und Sicherheit Ihrer Daten
 </h2>
 
