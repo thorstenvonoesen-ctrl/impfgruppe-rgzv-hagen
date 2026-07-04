@@ -477,6 +477,8 @@ Erfahren Sie alles Wichtige zur gesetzlichen Impfpflicht, zum Ablauf der Impfgru
     window.location.hash = "#info-newcastle"
   } else if (title === "Gesetzliche Impfpflicht") {
     window.location.hash = "#info-pflicht"
+  } else if (title === "Warum organisiert der Verein Sammelimpfungen?") {
+    window.location.hash = "#info-sammelimpfung"
   }
 }}
       onMouseEnter={e => {
