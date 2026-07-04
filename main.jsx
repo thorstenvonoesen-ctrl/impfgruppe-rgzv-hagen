@@ -1637,8 +1637,7 @@ Impftag deutlich reduziert.
     </div>
   )
 }
-function InfoAnmeldung() {
-  return (
+
 function ClubRegistration() {
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
