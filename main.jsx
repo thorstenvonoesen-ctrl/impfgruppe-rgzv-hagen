@@ -480,6 +480,9 @@ Erfahren Sie alles Wichtige zur gesetzlichen Impfpflicht, zum Ablauf der Impfgru
   } else if (title === "Gemeinsame Sammelimpfung") {
     window.location.hash = "#info-sammelimpfung"
   }
+        else if (title === "Online-Anmeldung") {
+  window.location.hash = "#info-anmeldung"
+}
 }}
       onMouseEnter={e => {
   e.currentTarget.style.transform = "translateY(-8px)"
