@@ -802,7 +802,7 @@ function InfoNewcastle() {
     </div>
   )
 }
-7function InfoPflicht() {
+function InfoPflicht() {
   return (
     <div className="min-h-screen bg-slate-100">
 
