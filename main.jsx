@@ -469,6 +469,9 @@ Erfahren Sie alles Wichtige zur gesetzlichen Impfpflicht, zum Ablauf der Impfgru
 ].map(([icon, title, text]) => (
     <div
       key={title}
+      onClick={() =>
+  setOpenCard(openCard === title ? null : title)
+}
       onMouseEnter={e => {
   e.currentTarget.style.transform = "translateY(-8px)"
   e.currentTarget.style.boxShadow = "0 28px 55px rgba(0,0,0,.35)"
