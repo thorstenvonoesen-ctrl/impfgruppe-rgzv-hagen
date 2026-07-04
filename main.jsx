@@ -437,7 +437,46 @@ function InfoPage() {
 
     </div>
 
-    
+   <div
+  style={{
+    display: "grid",
+    gridTemplateColumns: "repeat(2,1fr)",
+    gap: "18px"
+  }}
+>
+  {[
+    ["🛡️", "Schutz Ihrer Tiere"],
+    ["⚖️", "Gesetzliche Impfpflicht"],
+    ["👥", "Gemeinsame Sammelimpfung"],
+    ["📝", "Online-Anmeldung"]
+  ].map(([icon, title]) => (
+    <div
+      key={title}
+      style={{
+        background: "rgba(255,255,255,.08)",
+        border: "1px solid rgba(255,255,255,.15)",
+        backdropFilter: "blur(12px)",
+        borderRadius: "22px",
+        padding: "28px"
+      }}
+    >
+      <div style={{ fontSize: "42px" }}>
+        {icon}
+      </div>
+
+      <h3
+        style={{
+          color: "#fff",
+          marginTop: "18px",
+          marginBottom: 0,
+          fontSize: "22px"
+        }}
+      >
+        {title}
+      </h3>
+    </div>
+  ))}
+</div> 
 
   </div>
 
