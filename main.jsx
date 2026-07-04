@@ -1685,7 +1685,81 @@ und am Impftag müssen die Daten nicht erneut aufgenommen werden. Das spart
 Zeit, verkürzt Wartezeiten und sorgt für einen reibungslosen Ablauf der
 gesamten Sammelimpfung.
           </p>
+<h2
+  style={{
+    color: "#ffffff",
+    fontSize: "34px",
+    marginTop: "60px",
+    marginBottom: "24px"
+  }}
+>
+  Welche Angaben werden benötigt?
+</h2>
 
+<p
+  style={{
+    fontSize: "20px",
+    lineHeight: "1.9"
+  }}
+>
+  Damit die Sammelimpfung ordnungsgemäß vorbereitet werden kann, benötigt der
+  Verein verschiedene Angaben der Teilnehmer. Diese Informationen dienen
+  ausschließlich der Organisation der Impfaktion, der Planung des
+  Impfstoffbedarfes sowie der späteren Dokumentation. Je vollständiger die
+  Angaben sind, desto einfacher und schneller kann die Anmeldung bearbeitet
+  werden.
+</p>
+
+<p
+  style={{
+    fontSize: "20px",
+    lineHeight: "1.9"
+  }}
+>
+  Neben Ihrem Namen und Ihren Kontaktdaten werden unter anderem Ihre Anschrift,
+  die Tierart, die Anzahl der zu impfenden Tiere sowie – sofern vorhanden –
+  Ihre TSK-Betriebsnummer abgefragt. Zusätzlich wählen Sie den gewünschten
+  Impftermin aus und entscheiden sich für die angebotene Zahlungsart.
+</p>
+
+<div
+  style={{
+    marginTop: "35px",
+    background: "rgba(255,255,255,.08)",
+    border: "1px solid rgba(255,255,255,.18)",
+    borderRadius: "18px",
+    padding: "30px"
+  }}
+>
+  <h3
+    style={{
+      marginTop: 0,
+      color: "#ffffff",
+      fontSize: "28px"
+    }}
+  >
+    Erforderliche Angaben
+  </h3>
+
+  <ul
+    style={{
+      fontSize: "20px",
+      lineHeight: "2",
+      paddingLeft: "26px",
+      marginBottom: 0
+    }}
+  >
+    <li>Vor- und Nachname</li>
+    <li>Anschrift</li>
+    <li>E-Mail-Adresse</li>
+    <li>Telefonnummer</li>
+    <li>Tierart</li>
+    <li>Anzahl der Tiere</li>
+    <li>TSK-Betriebsnummer (falls vorhanden)</li>
+    <li>Auswahl des Impftermins</li>
+    <li>Zahlungsart</li>
+  </ul>
+</div>
           <button
             onClick={() => (window.location.hash = "#info")}
             style={{
