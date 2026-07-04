@@ -413,9 +413,9 @@ function InfoPage() {
           maxWidth: "720px"
         }}
       >
-        Melden Sie Ihre Tiere bequem online an und informieren Sie sich
-        über die gesetzliche Impfpflicht sowie den Ablauf unserer
-        Sammelimpfung.
+        Registrieren Sie Ihre Tiere schnell und unkompliziert für die nächste Newcastle-Sammelimpfung.
+
+Erfahren Sie alles Wichtige zur gesetzlichen Impfpflicht, zum Ablauf der Impfgruppe und melden Sie sich anschließend direkt online an.
       </p>
 
       <button
