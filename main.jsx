@@ -1637,7 +1637,61 @@ Impftag deutlich reduziert.
     </div>
   )
 }
+function InfoAnmeldung() {
+  return (
+    <div className="min-h-screen bg-slate-100">
+      <section
+        style={{
+          background: "linear-gradient(135deg,#0f172a,#14532d)",
+          color: "#fff",
+          padding: "90px 40px"
+        }}
+      >
+        <div style={{ maxWidth: "1100px", margin: "0 auto" }}>
 
+          <h1
+            style={{
+              fontSize: "58px",
+              fontWeight: "900",
+              margin: 0
+            }}
+          >
+            Online-Anmeldung
+          </h1>
+
+          <p
+            style={{
+              fontSize: "20px",
+              lineHeight: "1.9",
+              color: "#dbeafe",
+              maxWidth: "950px",
+              marginTop: "40px"
+            }}
+          >
+            Die Inhalte dieser Informationsseite werden im nächsten Schritt ergänzt.
+          </p>
+
+          <button
+            onClick={() => (window.location.hash = "#info")}
+            style={{
+              marginTop: "50px",
+              padding: "16px 30px",
+              border: 0,
+              borderRadius: "14px",
+              background: "#f97316",
+              color: "#fff",
+              fontWeight: "700",
+              cursor: "pointer"
+            }}
+          >
+            ← Zurück
+          </button>
+
+        </div>
+      </section>
+    </div>
+  )
+}
 function ClubRegistration() {
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
