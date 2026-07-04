@@ -340,6 +340,8 @@ function ClubSelect() {
     </div>
   )
 }
+function InfoPage() {
+  return (
 <section
   className="relative overflow-hidden"
   style={{
