@@ -1077,6 +1077,71 @@ impfen lassen können.
     </div>
   )
 }
+function InfoSammelimpfung() {
+  return (
+    <div className="min-h-screen bg-slate-100">
+      <section
+        style={{
+          background: "linear-gradient(135deg,#14532d,#166534)",
+          color: "#fff",
+          padding: "90px 40px"
+        }}
+      >
+        <div
+          style={{
+            maxWidth: "1100px",
+            margin: "0 auto"
+          }}
+        >
+          <h1
+            style={{
+              fontSize: "58px",
+              fontWeight: "900",
+              margin: 0
+            }}
+          >
+            Gemeinsame Sammelimpfung
+          </h1>
+
+          <div
+            style={{
+              marginTop: "40px",
+              maxWidth: "950px",
+              color: "#dcfce7"
+            }}
+          >
+            <h2 style={{ color: "#fff", fontSize: "34px" }}>
+              Diese Informationsseite wird als Nächstes aufgebaut.
+            </h2>
+
+            <p style={{ fontSize: "20px", lineHeight: "1.9" }}>
+              Hier entstehen die ausführlichen Informationen zur gemeinsamen
+              Sammelimpfung, ihrem Ablauf, den Vorteilen für Geflügelhalter,
+              der Organisation durch den Verein und allen wichtigen Hinweisen
+              für Teilnehmer.
+            </p>
+
+            <button
+              onClick={() => (window.location.hash = "#info")}
+              style={{
+                marginTop: "50px",
+                padding: "16px 30px",
+                border: 0,
+                borderRadius: "14px",
+                background: "#f97316",
+                color: "#fff",
+                fontWeight: "700",
+                cursor: "pointer"
+              }}
+            >
+              ← Zurück
+            </button>
+          </div>
+        </div>
+      </section>
+    </div>
+  )
+}
 function ClubRegistration() {
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
