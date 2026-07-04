@@ -445,11 +445,27 @@ Erfahren Sie alles Wichtige zur gesetzlichen Impfpflicht, zum Ablauf der Impfgru
   }}
 >
   {[
-    ["🛡️", "Schutz Ihrer Tiere"],
-    ["⚖️", "Gesetzliche Impfpflicht"],
-    ["👥", "Gemeinsame Sammelimpfung"],
-    ["📝", "Online-Anmeldung"]
-  ].map(([icon, title]) => (
+  [
+    "🛡️",
+    "Schutz Ihrer Tiere",
+    "Schützen Sie Ihren Geflügelbestand zuverlässig vor der Newcastle-Krankheit."
+  ],
+  [
+    "⚖️",
+    "Gesetzliche Impfpflicht",
+    "Erfahren Sie, warum die regelmäßige Impfung gesetzlich vorgeschrieben ist."
+  ],
+  [
+    "👥",
+    "Gemeinsame Sammelimpfung",
+    "Durch die gemeinsame Organisation sparen alle Teilnehmer Zeit und Kosten."
+  ],
+  [
+    "📝",
+    "Online-Anmeldung",
+    "In wenigen Minuten bequem online anmelden und den Impftermin sichern."
+  ]
+].map(([icon, title, text]) => (
     <div
       key={title}
       onMouseEnter={e => {
@@ -487,6 +503,17 @@ minHeight: "170px",
       >
         {title}
       </h3>
+      <p
+  style={{
+    color: "#d1d5db",
+    lineHeight: "1.7",
+    marginTop: "14px",
+    marginBottom: 0,
+    fontSize: "15px"
+  }}
+>
+  {text}
+</p>
     </div>
   ))}
 </div> 
