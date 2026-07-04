@@ -1460,6 +1460,72 @@ function InfoSammelimpfung() {
     <li>Dokumentation der gesamten Impfaktion.</li>
   </ul>
 </div>
+            <h2
+  style={{
+    color: "#ffffff",
+    fontSize: "34px",
+    marginTop: "60px",
+    marginBottom: "24px"
+  }}
+>
+  Vorteile für die Teilnehmer
+</h2>
+
+<p
+  style={{
+    fontSize: "20px",
+    lineHeight: "1.9"
+  }}
+>
+  Die Teilnahme an einer vom Verein organisierten Sammelimpfung bietet
+  zahlreiche Vorteile. Neben der gesetzeskonformen Durchführung profitieren
+  die Teilnehmer von einer zentralen Organisation, einem einheitlichen Ablauf
+  und einer deutlich einfacheren Planung.
+</p>
+
+<div
+  style={{
+    background: "rgba(255,255,255,.08)",
+    border: "1px solid rgba(255,255,255,.18)",
+    borderRadius: "18px",
+    padding: "30px",
+    marginTop: "30px"
+  }}
+>
+  <ul
+    style={{
+      fontSize: "20px",
+      lineHeight: "2",
+      paddingLeft: "26px",
+      marginBottom: 0
+    }}
+  >
+    <li>✔ einfache Online-Anmeldung rund um die Uhr</li>
+    <li>✔ keine aufwendige Einzelorganisation</li>
+    <li>✔ optimale Planung des Impfstoffbedarfs</li>
+    <li>✔ kurze Wartezeiten am Ausgabetag</li>
+    <li>✔ einheitlicher, zugelassener Impfstoff für alle Teilnehmer</li>
+    <li>✔ Unterstützung durch den Verein bei Fragen</li>
+    <li>✔ vollständige Dokumentation der Impfaktion</li>
+    <li>✔ Nachweise und Impfbescheinigungen können vorbereitet werden</li>
+    <li>✔ Zeit- und Kostenersparnis gegenüber Einzelterminen</li>
+    <li>✔ Beitrag zum Schutz aller Geflügelbestände der Region</li>
+  </ul>
+</div>
+
+<p
+  style={{
+    fontSize: "20px",
+    lineHeight: "1.9",
+    marginTop: "35px"
+  }}
+>
+  Durch die Kombination aus digitaler Anmeldung und zentral organisierter
+  Sammelimpfung profitieren sowohl die Teilnehmer als auch der Verein von
+  einem deutlich effizienteren Ablauf. Fehler werden reduziert, Wartezeiten
+  verkürzt und alle notwendigen Informationen stehen rechtzeitig zur
+  Verfügung.
+</p>
             <button
               onClick={() => (window.location.hash = "#info")}
               style={{
