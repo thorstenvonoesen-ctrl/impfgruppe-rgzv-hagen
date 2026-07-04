@@ -721,7 +721,64 @@ function InfoNewcastle() {
   </p>
 
 </div>
+<div
+  style={{
+    marginTop: "50px",
+    display: "grid",
+    gridTemplateColumns: "repeat(3,1fr)",
+    gap: "20px"
+  }}
+>
 
+  <div
+    style={{
+      background: "#ffffff",
+      color: "#0f172a",
+      borderRadius: "18px",
+      padding: "24px"
+    }}
+  >
+    <div style={{ fontSize: "42px" }}>🛡️</div>
+    <h3>Schutz</h3>
+    <p>
+      Die regelmäßige Impfung schützt Ihren Bestand und reduziert das Risiko
+      einer Virusverbreitung erheblich.
+    </p>
+  </div>
+
+  <div
+    style={{
+      background: "#ffffff",
+      color: "#0f172a",
+      borderRadius: "18px",
+      padding: "24px"
+    }}
+  >
+    <div style={{ fontSize: "42px" }}>⚠️</div>
+    <h3>Tierseuche</h3>
+    <p>
+      Newcastle gehört zu den anzeigepflichtigen Tierseuchen und wird von den
+      Veterinärbehörden streng überwacht.
+    </p>
+  </div>
+
+  <div
+    style={{
+      background: "#ffffff",
+      color: "#0f172a",
+      borderRadius: "18px",
+      padding: "24px"
+    }}
+  >
+    <div style={{ fontSize: "42px" }}>💉</div>
+    <h3>Vorbeugen</h3>
+    <p>
+      Die Impfung ist die wirksamste Maßnahme, um Ihren Bestand langfristig
+      gesund zu erhalten.
+    </p>
+  </div>
+
+</div>
           <button
             onClick={() => (window.location.hash = "#info")}
             style={{
