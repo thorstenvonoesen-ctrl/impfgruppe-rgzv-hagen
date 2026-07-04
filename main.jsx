@@ -518,6 +518,51 @@ minHeight: "170px",
 >
   {text}
 </p>
+      {openCard === title && (
+  <div
+    style={{
+      marginTop: "20px",
+      padding: "18px",
+      borderRadius: "14px",
+      background: "rgba(255,255,255,.10)",
+      color: "#ffffff",
+      lineHeight: "1.8",
+      fontSize: "15px"
+    }}
+  >
+    {title === "Schutz Ihrer Tiere" && (
+      <>
+        Die regelmäßige Newcastle-Impfung schützt Ihren Geflügelbestand
+        zuverlässig vor einer hochansteckenden Viruserkrankung und trägt
+        gleichzeitig zum Schutz aller Geflügelhalter bei.
+      </>
+    )}
+
+    {title === "Gesetzliche Impfpflicht" && (
+      <>
+        Die Newcastle-Impfung ist für bestimmte Geflügelarten gesetzlich
+        vorgeschrieben. Mit der Teilnahme an der Sammelimpfung erfüllen Sie
+        diese Verpflichtung einfach und nachvollziehbar.
+      </>
+    )}
+
+    {title === "Gemeinsame Sammelimpfung" && (
+      <>
+        Durch die gemeinsame Bestellung und Organisation des Impfstoffes
+        werden Kosten reduziert, Wartezeiten verkürzt und die Ausgabe
+        effizient vorbereitet.
+      </>
+    )}
+
+    {title === "Online-Anmeldung" && (
+      <>
+        Nach den Informationen gelangen Sie direkt zur Anmeldung. Dort
+        erfassen Sie Ihre Daten, wählen den Impftermin und schließen die
+        Anmeldung bequem online ab.
+      </>
+    )}
+  </div>
+)}
       <div
   style={{
     marginTop: "22px",
