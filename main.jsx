@@ -1376,6 +1376,90 @@ function InfoSammelimpfung() {
   Nachweise gegenüber Behörden und hilft dem Verein, zukünftige
   Sammelimpfungen noch besser zu planen.
 </p>
+            <h2
+  style={{
+    color: "#ffffff",
+    fontSize: "34px",
+    marginTop: "60px",
+    marginBottom: "24px"
+  }}
+>
+  Welche Aufgaben übernimmt der Verein?
+</h2>
+
+<p
+  style={{
+    fontSize: "20px",
+    lineHeight: "1.9"
+  }}
+>
+  Eine Sammelimpfung funktioniert nur, wenn viele organisatorische Aufgaben
+  zuverlässig erledigt werden. Der Verein übernimmt dabei einen Großteil der
+  Planung und sorgt dafür, dass alle Teilnehmer rechtzeitig informiert werden
+  und der Impftag ohne unnötige Wartezeiten durchgeführt werden kann.
+</p>
+
+<p
+  style={{
+    fontSize: "20px",
+    lineHeight: "1.9"
+  }}
+>
+  Bereits Wochen vor dem Impftermin werden Anmeldungen entgegengenommen,
+  Teilnehmerlisten erstellt und die gemeldeten Tierzahlen ausgewertet. Auf
+  dieser Grundlage kann die benötigte Impfstoffmenge bestellt und die gesamte
+  Ausgabe vorbereitet werden.
+</p>
+
+<p
+  style={{
+    fontSize: "20px",
+    lineHeight: "1.9"
+  }}
+>
+  Während der Impfaktion koordiniert der Verein den Ablauf, beantwortet Fragen
+  der Teilnehmer und sorgt dafür, dass alle notwendigen Unterlagen vollständig
+  vorhanden sind. Nach Abschluss der Sammelimpfung werden die Daten
+  dokumentiert und die erforderlichen Impfbescheinigungen vorbereitet oder
+  vervollständigt.
+</p>
+
+<div
+  style={{
+    marginTop: "35px",
+    background: "rgba(255,255,255,.08)",
+    border: "1px solid rgba(255,255,255,.18)",
+    borderRadius: "18px",
+    padding: "28px"
+  }}
+>
+  <h3
+    style={{
+      marginTop: 0,
+      color: "#ffffff",
+      fontSize: "28px"
+    }}
+  >
+    Aufgaben des Vereins auf einen Blick
+  </h3>
+
+  <ul
+    style={{
+      fontSize: "19px",
+      lineHeight: "2",
+      paddingLeft: "24px",
+      marginBottom: 0
+    }}
+  >
+    <li>Information der Mitglieder über Impftermine.</li>
+    <li>Entgegennahme und Verwaltung aller Anmeldungen.</li>
+    <li>Ermittlung der benötigten Impfstoffmenge.</li>
+    <li>Organisation der Ausgabe des Impfstoffes.</li>
+    <li>Koordination mit Tierarzt und Verantwortlichen.</li>
+    <li>Erstellung und Verwaltung der Impfunterlagen.</li>
+    <li>Dokumentation der gesamten Impfaktion.</li>
+  </ul>
+</div>
             <button
               onClick={() => (window.location.hash = "#info")}
               style={{
