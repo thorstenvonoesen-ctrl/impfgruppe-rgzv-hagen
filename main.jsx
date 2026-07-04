@@ -94,104 +94,124 @@ return <PublicSignup />
 function InfoPage() {
   return (
     <div className="min-h-screen bg-slate-100 py-10">
+
       <div className="max-w-6xl mx-auto px-6">
 
-        <div className="bg-gradient-to-r from-emerald-700 to-emerald-600 text-white rounded-3xl p-10 shadow-xl">
-          <h1 className="text-4xl font-bold mb-4">
+        {/* Hero */}
+        <section className="rounded-3xl bg-gradient-to-r from-emerald-700 to-green-600 text-white p-10 shadow-2xl">
+          <h1 className="text-5xl font-bold mb-4">
             Informationen zur Newcastle-Impfung
           </h1>
-          <p className="text-lg leading-8">
-            Bitte lesen Sie die nachfolgenden Informationen aufmerksam durch,
-            bevor Sie mit Ihrer Anmeldung fortfahren. Die Hinweise erklären die
-            Hintergründe der Sammelimpfung sowie den Ablauf der Anmeldung.
+
+          <p className="text-xl leading-8 max-w-4xl">
+            Willkommen zur Online-Anmeldung der Sammelimpfung. Bitte lesen Sie
+            die folgenden Informationen aufmerksam durch, bevor Sie mit Ihrer
+            Anmeldung fortfahren.
           </p>
-        </div>
+        </section>
 
-        <div className="grid gap-6 mt-8">
+        {/* Karten */}
+        <div className="space-y-8 mt-8">
 
-          <div className="bg-white rounded-2xl shadow-lg p-8">
-            <h2 className="text-2xl font-bold mb-4">🛡️ Warum wird geimpft?</h2>
-            <p className="leading-8">
-              Die Newcastle-Krankheit ist eine hochansteckende Viruserkrankung
-              des Geflügels. Regelmäßige Impfungen schützen Ihren Bestand und
-              helfen dabei, die Ausbreitung der Krankheit zu verhindern.
-            </p>
-          </div>
+          <section className="bg-white rounded-3xl shadow-xl p-8">
+            <h2 className="text-3xl font-bold mb-5">
+              🛡️ Herzlich willkommen
+            </h2>
 
-          <div className="bg-white rounded-2xl shadow-lg p-8">
-            <h2 className="text-2xl font-bold mb-4">⚖️ Gesetzliche Verpflichtung</h2>
-            <p className="leading-8">
-              Für Halter von Hühnern und Puten besteht eine gesetzliche
-              Impfpflicht gegen die Newcastle-Krankheit. Die Sammelimpfung
-              unterstützt Sie dabei, diese Vorgaben einfach und zuverlässig
-              einzuhalten.
-            </p>
-          </div>
+            {/* HIER DEIN AUSFÜHRLICHER TEXT */}
+          </section>
 
-          <div className="bg-white rounded-2xl shadow-lg p-8">
-            <h2 className="text-2xl font-bold mb-4">👥 Warum Sammelimpfungen?</h2>
-            <p className="leading-8">
-              Impfstoff wird in größeren Gebinden geliefert. Durch die
-              gemeinsame Organisation können Kosten reduziert und die
-              Dokumentation vereinfacht werden.
-            </p>
-          </div>
+          <section className="bg-white rounded-3xl shadow-xl p-8">
+            <h2 className="text-3xl font-bold mb-5">
+              💉 Warum wird gegen Newcastle geimpft?
+            </h2>
 
-          <div className="bg-white rounded-2xl shadow-lg p-8">
-            <h2 className="text-2xl font-bold mb-6">📝 Ablauf</h2>
+            {/* HIER DEIN AUSFÜHRLICHER TEXT */}
+          </section>
 
-            <div className="space-y-4">
-              <div>① Persönliche Daten eingeben</div>
-              <div>② Tierart und Tierzahl erfassen</div>
-              <div>③ Impftermin auswählen</div>
-              <div>④ Teilnahmegebühr bezahlen</div>
-              <div>⑤ Bestätigung erhalten</div>
+          <section className="bg-white rounded-3xl shadow-xl p-8">
+            <h2 className="text-3xl font-bold mb-5">
+              ⚖️ Gesetzliche Verpflichtung
+            </h2>
+
+            {/* HIER DEIN AUSFÜHRLICHER TEXT */}
+          </section>
+
+          <section className="bg-white rounded-3xl shadow-xl p-8">
+            <h2 className="text-3xl font-bold mb-5">
+              👥 Warum organisiert der Verein Sammelimpfungen?
+            </h2>
+
+            {/* HIER DEIN AUSFÜHRLICHER TEXT */}
+          </section>
+
+          <section className="bg-white rounded-3xl shadow-xl p-8">
+            <h2 className="text-3xl font-bold mb-5">
+              📝 Ablauf der Anmeldung
+            </h2>
+
+            <div className="grid md:grid-cols-5 gap-4">
+              <div className="rounded-2xl bg-slate-50 p-5 text-center shadow">
+                <div className="text-3xl font-bold text-emerald-700">1</div>
+                Anmeldung
+              </div>
+              <div className="rounded-2xl bg-slate-50 p-5 text-center shadow">
+                <div className="text-3xl font-bold text-emerald-700">2</div>
+                Tierdaten
+              </div>
+              <div className="rounded-2xl bg-slate-50 p-5 text-center shadow">
+                <div className="text-3xl font-bold text-emerald-700">3</div>
+                Termin
+              </div>
+              <div className="rounded-2xl bg-slate-50 p-5 text-center shadow">
+                <div className="text-3xl font-bold text-emerald-700">4</div>
+                Zahlung
+              </div>
+              <div className="rounded-2xl bg-slate-50 p-5 text-center shadow">
+                <div className="text-3xl font-bold text-emerald-700">5</div>
+                Bestätigung
+              </div>
             </div>
-          </div>
+          </section>
 
-          <div className="bg-amber-50 border-l-4 border-amber-500 rounded-2xl p-8">
-            <h2 className="text-2xl font-bold text-amber-800 mb-4">
+          <section className="bg-amber-50 border-l-8 border-amber-500 rounded-3xl p-8 shadow">
+            <h2 className="text-3xl font-bold text-amber-800 mb-5">
               ⚠️ Wichtige Hinweise
             </h2>
 
-            <ul className="list-disc ml-6 space-y-2">
-              <li>Bitte prüfen Sie alle Angaben sorgfältig.</li>
-              <li>Bei Nichterscheinen erfolgt keine Erstattung.</li>
-              <li>Bitte erscheinen Sie pünktlich zum gewählten Termin.</li>
-            </ul>
-          </div>
+            {/* HIER DEIN AUSFÜHRLICHER TEXT */}
+          </section>
 
-          <div className="bg-sky-50 border-l-4 border-sky-500 rounded-2xl p-8">
-            <h2 className="text-2xl font-bold text-sky-800 mb-4">
+          <section className="bg-sky-50 border-l-8 border-sky-500 rounded-3xl p-8 shadow">
+            <h2 className="text-3xl font-bold text-sky-800 mb-5">
               🔒 Datenschutz
             </h2>
 
-            <p className="leading-8">
-              Ihre Daten werden ausschließlich zur Organisation und Durchführung
-              der Sammelimpfung verarbeitet.
-            </p>
-          </div>
+            {/* HIER DEIN AUSFÜHRLICHER TEXT */}
+          </section>
 
         </div>
 
         <div className="flex justify-between mt-10">
           <button
             onClick={() => window.location.hash = '#'}
-            className="px-8 py-3 rounded-xl bg-slate-600 text-white hover:bg-slate-700">
+            className="px-8 py-4 rounded-xl bg-slate-600 text-white hover:bg-slate-700">
             ← Zurück
           </button>
 
           <button
             onClick={() => window.location.hash = '#signup'}
-            className="px-8 py-3 rounded-xl bg-emerald-600 text-white hover:bg-emerald-700">
+            className="px-8 py-4 rounded-xl bg-emerald-600 text-white hover:bg-emerald-700">
             Weiter zur Anmeldung →
           </button>
         </div>
 
       </div>
+
     </div>
   )
 }
+
 function ClubLogin() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
