@@ -102,9 +102,189 @@ function InfoPage() {
             Informationen zur Newcastle-Impfung
           </h1>
 
-          <p className="text-lg text-slate-700 text-center mb-8">
-            Hier entsteht die Informationsseite vor der eigentlichen Anmeldung.
-          </p>
+          <div className="space-y-10 text-slate-700 leading-8 text-lg">
+
+  <section>
+    <h2 className="text-2xl font-bold mb-4">Herzlich willkommen</h2>
+
+    <p>
+      Wir freuen uns, Sie auf der Online-Anmeldeseite unserer Impfgruppe begrüßen
+      zu dürfen. Mit dieser Anwendung können Sie sich schnell, sicher und bequem
+      für einen bevorstehenden Impftermin anmelden. Ziel dieser Plattform ist es,
+      den gesamten Ablauf der Sammelimpfung für alle Teilnehmer übersichtlich,
+      einfach und zeitsparend zu gestalten.
+    </p>
+
+    <p className="mt-4">
+      Durch Ihre Online-Anmeldung erhalten wir bereits im Vorfeld alle wichtigen
+      Informationen, die für die Organisation der Impfgruppe erforderlich sind.
+      Dazu gehören unter anderem die Anzahl der teilnehmenden Geflügelhalter,
+      die benötigte Impfstoffmenge sowie die Vorbereitung der Teilnehmerlisten
+      und Sammelimpfbescheinigungen. Dadurch können unnötige Wartezeiten am
+      Impftag vermieden und der organisatorische Aufwand erheblich reduziert
+      werden.
+    </p>
+
+    <p className="mt-4">
+      Bitte nehmen Sie sich einige Minuten Zeit, die nachfolgenden Informationen
+      aufmerksam zu lesen. Sie erfahren, weshalb die Newcastle-Impfung
+      durchgeführt wird, welche gesetzlichen Vorgaben gelten und wie der Ablauf
+      der Sammelimpfung organisiert ist. Erst anschließend gelangen Sie zur
+      eigentlichen Anmeldung.
+    </p>
+  </section>
+
+  <section>
+    <h2 className="text-2xl font-bold mb-4">
+      Warum wird gegen Newcastle geimpft?
+    </h2>
+
+    <p>
+      Die Newcastle-Krankheit, auch als Atypische Geflügelpest bezeichnet, ist
+      eine hochansteckende Viruserkrankung des Geflügels. Sie kann Hühner,
+      Puten sowie zahlreiche weitere Geflügelarten befallen und sich innerhalb
+      kürzester Zeit über ganze Bestände ausbreiten.
+    </p>
+
+    <p className="mt-4">
+      Erkrankte Tiere zeigen häufig Atemwegsprobleme, Mattigkeit,
+      Durchfallerkrankungen, eine verminderte Legeleistung oder neurologische
+      Ausfallerscheinungen. In schweren Fällen kann die Erkrankung zum Tod
+      zahlreicher Tiere führen und erhebliche wirtschaftliche Schäden
+      verursachen.
+    </p>
+
+    <p className="mt-4">
+      Durch eine regelmäßige Schutzimpfung wird das Risiko einer Ausbreitung
+      erheblich reduziert. Jede ordnungsgemäß durchgeführte Impfung trägt dazu
+      bei, sowohl den eigenen Tierbestand als auch die Bestände anderer
+      Geflügelhalter in der Region zu schützen.
+    </p>
+  </section>
+
+  <section>
+    <h2 className="text-2xl font-bold mb-4">
+      Gesetzliche Verpflichtung
+    </h2>
+
+    <p>
+      Nach den geltenden tierseuchenrechtlichen Bestimmungen besteht für Halter
+      von Hühnern und Puten die Verpflichtung, ihre Tiere regelmäßig gegen die
+      Newcastle-Krankheit impfen zu lassen. Diese Regelung dient dem Schutz der
+      gesamten Geflügelhaltung und unterstützt die Bekämpfung dieser
+      anzeigepflichtigen Tierseuche.
+    </p>
+
+    <p className="mt-4">
+      Die regelmäßige Durchführung der Impfungen trägt dazu bei, die Gesundheit
+      der Tiere zu erhalten und das Risiko behördlicher Maßnahmen im
+      Seuchenfall deutlich zu verringern. Mit Ihrer Teilnahme leisten Sie einen
+      wichtigen Beitrag zum Schutz aller Geflügelbestände.
+    </p>
+  </section>
+
+  <section>
+    <h2 className="text-2xl font-bold mb-4">
+      Warum organisiert der Verein Sammelimpfungen?
+    </h2>
+
+    <p>
+      Impfstoffe gegen die Newcastle-Krankheit werden in der Regel in größeren
+      Gebinden geliefert und sind nach dem Öffnen nur für einen begrenzten
+      Zeitraum verwendbar. Für kleinere Geflügelhaltungen wäre der Erwerb eines
+      kompletten Impfstoffgebindes häufig unwirtschaftlich.
+    </p>
+
+    <p className="mt-4">
+      Durch die gemeinsame Organisation einer Sammelimpfung können sich viele
+      Geflügelhalter die Kosten teilen. Gleichzeitig wird sichergestellt, dass
+      ausreichend Impfstoff vorhanden ist und alle Teilnehmer ordnungsgemäß
+      versorgt werden können.
+    </p>
+
+    <p className="mt-4">
+      Darüber hinaus ermöglicht die gemeinsame Durchführung eine einheitliche
+      Dokumentation der Impfung sowie eine einfache Erstellung der notwendigen
+      Unterlagen und Bescheinigungen.
+    </p>
+  </section>
+
+  <section>
+    <h2 className="text-2xl font-bold mb-4">
+      Ablauf der Anmeldung
+    </h2>
+
+    <p>
+      Im nächsten Schritt gelangen Sie zum eigentlichen Anmeldeformular. Dort
+      werden Sie gebeten, Ihre persönlichen Kontaktdaten sowie die Angaben zu
+      Ihrem Geflügelbestand einzutragen. Zusätzlich wählen Sie den gewünschten
+      Impftermin aus und schließen die Anmeldung durch die Zahlung der
+      Teilnahmegebühr ab.
+    </p>
+
+    <p className="mt-4">
+      Nach erfolgreicher Anmeldung werden Ihre Daten sicher gespeichert und
+      stehen der Impfgruppenleitung ausschließlich zur Organisation der
+      Sammelimpfung zur Verfügung. Dadurch können Teilnehmerlisten,
+      Impfstoffplanung und Sammelimpfbescheinigungen bereits im Vorfeld
+      vorbereitet werden.
+    </p>
+  </section>
+
+  <section className="bg-amber-50 border-l-4 border-amber-500 rounded-xl p-6">
+    <h2 className="text-2xl font-bold mb-4 text-amber-800">
+      Wichtige Hinweise
+    </h2>
+
+    <p>
+      Bitte überprüfen Sie Ihre Angaben vor dem Absenden der Anmeldung
+      sorgfältig. Falsche oder unvollständige Daten können die Vorbereitung der
+      Sammelimpfung erschweren und zu Verzögerungen führen.
+    </p>
+
+    <p className="mt-4">
+      Die Teilnahmegebühr wird im Rahmen der Online-Anmeldung entrichtet. Bei
+      Nichterscheinen zum gebuchten Impftermin besteht grundsätzlich kein
+      Anspruch auf Erstattung der Teilnahmegebühr.
+    </p>
+
+    <p className="mt-4">
+      Bitte erscheinen Sie am ausgewählten Termin pünktlich und beachten Sie
+      die Hinweise des veranstaltenden Vereins zur Ausgabe des Impfstoffes bzw.
+      zur Durchführung der Sammelimpfung.
+    </p>
+  </section>
+
+  <section>
+    <h2 className="text-2xl font-bold mb-4">
+      Datenschutz
+    </h2>
+
+    <p>
+      Ihre personenbezogenen Daten werden ausschließlich zur Organisation und
+      Durchführung der Sammelimpfung verarbeitet. Eine Weitergabe an Dritte
+      erfolgt nur, soweit dies gesetzlich vorgeschrieben oder für die
+      Durchführung der Impfaktion erforderlich ist. Weitere Informationen
+      entnehmen Sie bitte unserer Datenschutzerklärung.
+    </p>
+  </section>
+
+  <section>
+    <h2 className="text-2xl font-bold mb-4">
+      Vielen Dank
+    </h2>
+
+    <p>
+      Wir bedanken uns herzlich für Ihr Vertrauen und Ihre Unterstützung. Mit
+      Ihrer regelmäßigen Teilnahme an der Newcastle-Impfung leisten Sie einen
+      wichtigen Beitrag zum Schutz Ihres eigenen Tierbestandes sowie aller
+      Geflügelhalter in unserer Region. Gemeinsam tragen wir dazu bei, die
+      Gesundheit unserer Tiere zu erhalten und die gesetzlichen Anforderungen
+      verantwortungsvoll umzusetzen.
+    </p>
+  </section>
+
+</div>
 
           <div className="flex justify-between mt-10">
 
