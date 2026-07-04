@@ -95,7 +95,7 @@ function InfoPage() {
   return (
     <div className="min-h-screen bg-slate-100 py-10">
 
-      <div className="max-w-6xl mx-auto px-6">
+      <div className="max-w-5xl mx-auto px-6 lg:px-0">
 
         {/* Hero */}
         <section className="rounded-3xl overflow-hidden shadow-2xl">
@@ -169,9 +169,9 @@ function InfoPage() {
 </section>
 
         {/* Karten */}
-        <div className="space-y-8 mt-8">
+        <div className="space-y-10 mt-10">
 
-          <section className="bg-white rounded-3xl shadow-xl p-10 border border-slate-200">
+          <section className="bg-white rounded-3xl shadow-2xl p-10 border border-slate-200 hover:shadow-3xl transition-all duration-300">
 
   <div className="flex items-center gap-4 mb-6">
 
@@ -180,7 +180,7 @@ function InfoPage() {
     </div>
 
     <div>
-      <h2 className="text-3xl font-bold text-slate-800">
+      <h2 className="text-3xl font-extrabold tracking-tight text-slate-800">
         Herzlich willkommen
       </h2>
 
@@ -191,7 +191,7 @@ function InfoPage() {
 
   </div>
 
-  <div className="space-y-6 text-lg leading-9 text-slate-700">
+  <div className="space-y-6 text-[18px] leading-9 text-slate-700">
 
     <p>
       Wir freuen uns, Sie auf der Online-Anmeldeseite unserer Impfgruppe
@@ -236,7 +236,7 @@ function InfoPage() {
 
 </section>
 
-          <section className="bg-white rounded-3xl shadow-xl p-10 border border-slate-200">
+          <section className="bg-white rounded-3xl shadow-2xl p-10 border border-slate-200 hover:shadow-3xl transition-all duration-300">
 
   <div className="flex items-center gap-4 mb-6">
 
@@ -245,7 +245,7 @@ function InfoPage() {
     </div>
 
     <div>
-      <h2 className="text-3xl font-bold text-slate-800">
+      <h2 className="text-3xl font-extrabold tracking-tight text-slate-800">
         Warum wird gegen Newcastle geimpft?
       </h2>
 
@@ -256,7 +256,7 @@ function InfoPage() {
 
   </div>
 
-  <div className="space-y-6 text-lg leading-9 text-slate-700">
+  <div className="space-y-6 text-[18px] leading-9 text-slate-700">
 
     <p>
       Die Newcastle-Krankheit, auch als Atypische Geflügelpest bezeichnet,
@@ -307,7 +307,7 @@ function InfoPage() {
 
 </section>
 
-          <section className="bg-white rounded-3xl shadow-xl p-10 border border-slate-200">
+          <section className="bg-white rounded-3xl shadow-2xl p-10 border border-slate-200 hover:shadow-3xl transition-all duration-300">
 
   <div className="flex items-center gap-4 mb-6">
 
@@ -316,7 +316,7 @@ function InfoPage() {
     </div>
 
     <div>
-      <h2 className="text-3xl font-bold text-slate-800">
+      <h2 className="text-3xl font-extrabold tracking-tight text-slate-800">
         Gesetzliche Verpflichtung
       </h2>
 
@@ -327,7 +327,7 @@ function InfoPage() {
 
   </div>
 
-  <div className="space-y-6 text-lg leading-9 text-slate-700">
+  <div className="space-y-6 text-[18px] leading-9 text-slate-700">
 
     <p>
       Die regelmäßige Impfung gegen die Newcastle-Krankheit ist nicht nur
@@ -380,7 +380,7 @@ function InfoPage() {
 
 </section>
 
-          <section className="bg-white rounded-3xl shadow-xl p-10 border border-slate-200">
+          <section className="bg-white rounded-3xl shadow-2xl p-10 border border-slate-200 hover:shadow-3xl transition-all duration-300">
 
   <div className="flex items-center gap-4 mb-6">
 
@@ -389,7 +389,7 @@ function InfoPage() {
     </div>
 
     <div>
-      <h2 className="text-3xl font-bold text-slate-800">
+      <h2 className="text-3xl font-extrabold tracking-tight text-slate-800">
         Warum organisiert der Verein Sammelimpfungen?
       </h2>
 
@@ -400,7 +400,7 @@ function InfoPage() {
 
   </div>
 
-  <div className="space-y-6 text-lg leading-9 text-slate-700">
+  <div className="space-y-6 text-[18px] leading-9 text-slate-700">
 
     <p>
       Viele Geflügelhalter halten nur wenige Tiere. Die für die
@@ -476,7 +476,7 @@ function InfoPage() {
 
 </section>
 
-          <section className="bg-white rounded-3xl shadow-xl p-10 border border-slate-200">
+          <section className="bg-white rounded-3xl shadow-2xl p-10 border border-slate-200 hover:shadow-3xl transition-all duration-300">
 
   <div className="flex items-center gap-4 mb-8">
 
@@ -485,7 +485,7 @@ function InfoPage() {
     </div>
 
     <div>
-      <h2 className="text-3xl font-bold text-slate-800">
+      <h2 className="text-3xl font-extrabold tracking-tight text-slate-800">
         Ablauf der Anmeldung
       </h2>
 
@@ -614,13 +614,13 @@ function InfoPage() {
 
   <div className="bg-amber-500 px-8 py-5">
 
-    <h2 className="text-3xl font-bold text-white">
+    <h2 className="text-3xl font-extrabold tracking-tight text-white">
       ⚠️ Wichtige Hinweise
     </h2>
 
   </div>
 
-  <div className="p-10 space-y-8 text-lg leading-9 text-slate-700">
+  <div className="p-10 space-y-8 text-[18px] leading-9 text-slate-700">
 
     <div className="flex gap-5">
 
@@ -726,13 +726,13 @@ function InfoPage() {
 
   <div className="bg-sky-600 px-8 py-5">
 
-    <h2 className="text-3xl font-bold text-white">
+    <h2 className="text-3xl font-extrabold tracking-tight text-white">
       🔒 Datenschutz
     </h2>
 
   </div>
 
-  <div className="p-10 space-y-6 text-lg leading-9 text-slate-700">
+  <div className="p-10 space-y-6 text-[18px] leading-9 text-slate-700">
 
     <p>
       Der Schutz Ihrer personenbezogenen Daten hat für uns einen hohen
