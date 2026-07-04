@@ -907,6 +907,22 @@ if (!showForm) {
   value={form.member_code}
   onChange={update}
 />
+  <Input
+  label="Mitgliedercode (optional)"
+  name="member_code"
+  value={form.member_code}
+  onChange={update}
+/>
+
+<p
+  style={{
+    marginTop: '8px',
+    marginBottom: '16px',
+    color: '#6b7280',
+    fontSize: '14px'
+  }}
+>
+  Optional: Mitglieder Ihres Vereins erhalten bei Eingabe eines gültigen Mitgliedscodes automatisch den vergünstigten Preis.
           <label>
   Tierart
   <select
