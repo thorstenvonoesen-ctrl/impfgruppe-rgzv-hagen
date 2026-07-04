@@ -1195,7 +1195,96 @@ function InfoSammelimpfung() {
   dem Impftag einen vollständigen Überblick über alle Anmeldungen und kann
   die Impfaktion optimal vorbereiten.
 </p>
+<h2
+  style={{
+    color: "#ffffff",
+    fontSize: "34px",
+    marginTop: "60px",
+    marginBottom: "24px"
+  }}
+>
+  So läuft eine Sammelimpfung Schritt für Schritt ab
+</h2>
 
+<p
+  style={{
+    fontSize: "20px",
+    lineHeight: "1.9"
+  }}
+>
+  Damit eine Sammelimpfung reibungslos funktioniert, sind zahlreiche
+  organisatorische Schritte notwendig. Viele dieser Arbeiten bleiben für die
+  Teilnehmer unsichtbar, sorgen jedoch dafür, dass am Impftag alles
+  vorbereitet ist und der Impfstoff in ausreichender Menge zur Verfügung
+  steht.
+</p>
+
+<h3
+  style={{
+    color: "#ffffff",
+    fontSize: "28px",
+    marginTop: "35px"
+  }}
+>
+  1. Anmeldung der Teilnehmer
+</h3>
+
+<p
+  style={{
+    fontSize: "20px",
+    lineHeight: "1.9"
+  }}
+>
+  Zunächst melden die Geflügelhalter ihre Teilnahme an. Dabei werden nicht
+  nur die persönlichen Daten erfasst, sondern auch die Anzahl der Tiere und
+  die jeweiligen Tierarten. Diese Angaben sind wichtig, damit der Verein den
+  tatsächlichen Bedarf an Impfstoff berechnen kann.
+</p>
+
+<h3
+  style={{
+    color: "#ffffff",
+    fontSize: "28px",
+    marginTop: "35px"
+  }}
+>
+  2. Planung durch den Verein
+</h3>
+
+<p
+  style={{
+    fontSize: "20px",
+    lineHeight: "1.9"
+  }}
+>
+  Nach Ablauf der Anmeldefrist wertet der Verein sämtliche Anmeldungen aus.
+  Auf dieser Grundlage werden die benötigten Impfstoffmengen bestellt,
+  Termine bestätigt und die Ausgabe vorbereitet. Gleichzeitig können
+  Teilnehmerlisten, Impfbescheinigungen und organisatorische Unterlagen
+  bereits im Voraus erstellt werden.
+</p>
+
+<h3
+  style={{
+    color: "#ffffff",
+    fontSize: "28px",
+    marginTop: "35px"
+  }}
+>
+  3. Bestellung des Impfstoffes
+</h3>
+
+<p
+  style={{
+    fontSize: "20px",
+    lineHeight: "1.9"
+  }}
+>
+  Der Impfstoff wird entsprechend der gemeldeten Tierzahlen bestellt. Durch
+  die gemeinsame Bestellung können Überbestellungen vermieden und die
+  vorhandenen Mengen optimal genutzt werden. Gleichzeitig ist sichergestellt,
+  dass alle Teilnehmer den gleichen zugelassenen Impfstoff erhalten.
+</p>
             <button
               onClick={() => (window.location.hash = "#info")}
               style={{
