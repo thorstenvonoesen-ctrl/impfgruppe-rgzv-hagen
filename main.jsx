@@ -490,7 +490,8 @@ onMouseLeave={e => {
         boxShadow: "0 18px 40px rgba(0,0,0,.25)",
 cursor: "pointer",
 transition: "all .25s ease",
-minHeight: "170px",
+        overflow: "hidden",
+minHeight: openCard === title ? "360px" : "170px",
       }}
     >
       <div style={{ fontSize: "42px" }}>
