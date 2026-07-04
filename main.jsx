@@ -1783,6 +1783,77 @@ gesamten Sammelimpfung.
     marginBottom: "24px"
   }}
 >
+  <h2
+  style={{
+    color: "#ffffff",
+    fontSize: "34px",
+    marginTop: "60px",
+    marginBottom: "24px"
+  }}
+>
+  Was passiert nach der Anmeldung?
+</h2>
+
+<p
+  style={{
+    fontSize: "20px",
+    lineHeight: "1.9"
+  }}
+>
+  Nach dem Absenden Ihrer Online-Anmeldung werden die übermittelten Daten
+  unmittelbar in der Teilnehmerverwaltung des Vereins gespeichert. Dadurch
+  stehen alle Informationen sofort für die weitere Planung der Sammelimpfung
+  zur Verfügung. Eine zusätzliche schriftliche Anmeldung ist nicht erforderlich.
+</p>
+
+<p
+  style={{
+    fontSize: "20px",
+    lineHeight: "1.9"
+  }}
+>
+  Die gemeldete Tierzahl fließt direkt in die Berechnung des benötigten
+  Impfstoffes ein. Gleichzeitig erscheinen Sie automatisch auf der
+  Teilnehmerliste für den ausgewählten Impftermin. Am Tag der Impfung können
+  Ihre Daten schnell aufgerufen und die notwendigen Unterlagen ohne erneute
+  Datenerfassung erstellt werden.
+</p>
+
+<div
+  style={{
+    marginTop: "35px",
+    background: "rgba(255,255,255,.08)",
+    border: "1px solid rgba(255,255,255,.18)",
+    borderRadius: "18px",
+    padding: "30px"
+  }}
+>
+  <h3
+    style={{
+      marginTop: 0,
+      color: "#ffffff",
+      fontSize: "28px"
+    }}
+  >
+    Nach Ihrer Anmeldung
+  </h3>
+
+  <ul
+    style={{
+      fontSize: "20px",
+      lineHeight: "2",
+      paddingLeft: "26px",
+      marginBottom: 0
+    }}
+  >
+    <li>Speicherung Ihrer Anmeldung</li>
+    <li>Automatische Aufnahme in die Teilnehmerliste</li>
+    <li>Berechnung des Impfstoffbedarfes</li>
+    <li>Vorbereitung der Impfunterlagen</li>
+    <li>Schnellere Abwicklung am Impftag</li>
+    <li>Erstellung der Impfbescheinigungen</li>
+  </ul>
+</div>
   Datenschutz und Sicherheit Ihrer Daten
 </h2>
 
