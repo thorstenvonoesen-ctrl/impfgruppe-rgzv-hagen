@@ -84,6 +84,7 @@ const [showForm, setShowForm] = useState(false)
   if (page === '#info-newcastle') return <InfoNewcastle />
   if (page === '#info-pflicht') return <InfoPflicht />
   if (page === '#info-sammelimpfung') return <InfoSammelimpfung />
+  if (page === '#info-anmeldung') return <InfoAnmeldung />
 if (page === '#signup') return <PublicSignup />
   if (page === '#admin') return <Admin />
   if (page === '#datenschutz') return <Datenschutz />
