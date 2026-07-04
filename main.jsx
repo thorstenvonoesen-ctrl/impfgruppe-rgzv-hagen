@@ -514,6 +514,16 @@ minHeight: "170px",
 >
   {text}
 </p>
+      <div
+  style={{
+    marginTop: "22px",
+    color: "#fb923c",
+    fontWeight: "700",
+    fontSize: "15px"
+  }}
+>
+  Mehr erfahren →
+</div>
     </div>
   ))}
 </div> 
