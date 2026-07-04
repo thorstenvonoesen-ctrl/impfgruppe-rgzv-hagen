@@ -368,9 +368,9 @@ function InfoPage() {
       position: "relative",
       zIndex: 2,
       display: "grid",
-      gridTemplateColumns: "1.2fr .8fr",
+      gridTemplateColumns: "1.15fr .85fr",
       alignItems: "center",
-      gap: "60px"
+      gap: "80px"
     }}
   >
 
