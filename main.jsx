@@ -1668,7 +1668,22 @@ function InfoAnmeldung() {
               marginTop: "40px"
             }}
           >
-            Die Inhalte dieser Informationsseite werden im nächsten Schritt ergänzt.
+            Die Online-Anmeldung ermöglicht eine schnelle, einfache und sichere
+Registrierung zur Sammelimpfung. Anstatt Papierformulare auszufüllen oder
+telefonisch Termine abzustimmen, können alle erforderlichen Angaben bequem
+von Zuhause aus über Smartphone, Tablet oder Computer übermittelt werden.
+
+Durch die digitale Erfassung stehen sämtliche Daten dem Verein sofort zur
+Verfügung. Dadurch können Teilnehmerlisten automatisch erstellt, der
+Impfstoffbedarf exakt berechnet und die gesamte Impfaktion deutlich besser
+organisiert werden. Gleichzeitig werden Übertragungsfehler vermieden und der
+Verwaltungsaufwand für den Verein erheblich reduziert.
+
+Auch für die Teilnehmer bietet die Online-Anmeldung viele Vorteile. Die
+Anmeldung ist jederzeit möglich, alle Angaben werden übersichtlich erfasst
+und am Impftag müssen die Daten nicht erneut aufgenommen werden. Das spart
+Zeit, verkürzt Wartezeiten und sorgt für einen reibungslosen Ablauf der
+gesamten Sammelimpfung.
           </p>
 
           <button
