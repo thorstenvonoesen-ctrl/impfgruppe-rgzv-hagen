@@ -802,6 +802,89 @@ function InfoNewcastle() {
     </div>
   )
 }
+7function InfoPflicht() {
+  return (
+    <div className="min-h-screen bg-slate-100">
+
+      <section
+        style={{
+          background: "linear-gradient(135deg,#1e3a8a,#1e40af)",
+          color: "#fff",
+          padding: "90px 40px"
+        }}
+      >
+        <div
+          style={{
+            maxWidth: "1100px",
+            margin: "0 auto"
+          }}
+        >
+
+          <h1
+            style={{
+              fontSize: "58px",
+              fontWeight: "900",
+              margin: 0
+            }}
+          >
+            Gesetzliche Impfpflicht
+          </h1>
+
+          <div
+            style={{
+              marginTop: "40px",
+              maxWidth: "950px",
+              color: "#dbeafe"
+            }}
+          >
+
+            <h2 style={{ color: "#fff", fontSize: "34px" }}>
+              Warum gibt es überhaupt eine Impfpflicht?
+            </h2>
+
+            <p style={{ fontSize: "20px", lineHeight: "1.9" }}>
+              Die Newcastle-Krankheit zählt zu den bedeutendsten
+              Viruserkrankungen des Geflügels. Aufgrund ihrer hohen
+              Ansteckungsgefahr gelten in Deutschland besondere
+              tierseuchenrechtliche Vorschriften. Ziel dieser Regelungen ist
+              es, die Ausbreitung der Krankheit möglichst zu verhindern und
+              sowohl Hobbyhaltungen als auch größere Geflügelbestände zu
+              schützen.
+            </p>
+
+            <p style={{ fontSize: "20px", lineHeight: "1.9" }}>
+              Die regelmäßige Schutzimpfung ist deshalb ein wesentlicher
+              Bestandteil der Seuchenbekämpfung. Sie dient nicht nur dem
+              Schutz Ihrer eigenen Tiere, sondern trägt auch dazu bei,
+              benachbarte Bestände sowie die gesamte Geflügelhaltung vor den
+              wirtschaftlichen und tierschutzrelevanten Folgen eines
+              Seuchenausbruchs zu bewahren.
+            </p>
+
+          </div>
+
+          <button
+            onClick={() => (window.location.hash = "#info")}
+            style={{
+              marginTop: "60px",
+              padding: "16px 30px",
+              border: 0,
+              borderRadius: "14px",
+              background: "#f97316",
+              color: "#fff",
+              fontWeight: "700",
+              cursor: "pointer"
+            }}
+          >
+            ← Zurück
+          </button>
+
+        </div>
+      </section>
+
+    </div>
+  )
+}
 function ClubRegistration() {
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
