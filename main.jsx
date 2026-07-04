@@ -341,6 +341,7 @@ function ClubSelect() {
   )
 }
 function InfoPage() {
+  const [openCard, setOpenCard] = useState(null)
   return (
     <div className="min-h-screen bg-slate-100">
 <section
