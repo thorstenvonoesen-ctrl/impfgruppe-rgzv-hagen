@@ -964,7 +964,94 @@ Gemeinsame Impfaktionen erleichtern die Organisation, reduzieren Kosten und
 stellen sicher, dass möglichst viele Geflügelhalter ihre Tiere fristgerecht
 impfen lassen können.
 </p>
+<h2
+  style={{
+    color: "#ffffff",
+    fontSize: "34px",
+    marginTop: "60px",
+    marginBottom: "20px"
+  }}
+>
+  Gesetzliche Grundlagen
+</h2>
 
+<p style={{ fontSize: "20px", lineHeight: "1.9" }}>
+  Die Bekämpfung der Newcastle-Krankheit erfolgt in Deutschland auf Grundlage
+  tierseuchenrechtlicher Vorschriften. Ziel dieser Regelungen ist es,
+  Tierbestände dauerhaft zu schützen und die Ausbreitung gefährlicher
+  Tierseuchen frühzeitig zu verhindern. Die regelmäßige Schutzimpfung ist
+  deshalb keine Empfehlung, sondern ein wesentlicher Bestandteil der
+  Seuchenprävention.
+</p>
+
+<p style={{ fontSize: "20px", lineHeight: "1.9" }}>
+  Jeder Geflügelhalter trägt Verantwortung – nicht nur für die eigenen Tiere,
+  sondern auch für benachbarte Bestände. Bereits ein einzelner ungeimpfter
+  Bestand kann dazu beitragen, dass sich ein Virus unkontrolliert verbreitet.
+  Die gesetzlichen Vorgaben dienen deshalb dem Schutz aller Geflügelhalter und
+  der gesamten Geflügelwirtschaft.
+</p>
+
+<h2
+  style={{
+    color: "#ffffff",
+    fontSize: "34px",
+    marginTop: "60px",
+    marginBottom: "20px"
+  }}
+>
+  Praktische Hinweise für Geflügelhalter
+</h2>
+
+<p style={{ fontSize: "20px", lineHeight: "1.9" }}>
+  Planen Sie die Impfungen frühzeitig und halten Sie die vorgeschriebenen
+  Impfintervalle konsequent ein. Bewahren Sie Impfbescheinigungen und
+  Nachweise sorgfältig auf, damit diese bei Bedarf jederzeit vorgelegt werden
+  können.
+</p>
+
+<p style={{ fontSize: "20px", lineHeight: "1.9" }}>
+  Die Teilnahme an einer Sammelimpfung bietet viele Vorteile. Der Impfstoff
+  wird fachgerecht vorbereitet, alle Teilnehmer erhalten einen einheitlichen
+  Nachweis und die Organisation wird erheblich vereinfacht. Gleichzeitig
+  profitieren Vereine von einer besseren Planung und einem reibungslosen
+  Ablauf der Impftermine.
+</p>
+
+<div
+  style={{
+    marginTop: "40px",
+    background: "rgba(255,255,255,.08)",
+    border: "1px solid rgba(255,255,255,.18)",
+    borderRadius: "18px",
+    padding: "28px"
+  }}
+>
+  <h3
+    style={{
+      marginTop: 0,
+      color: "#ffffff",
+      fontSize: "28px"
+    }}
+  >
+    Wichtig zu beachten
+  </h3>
+
+  <ul
+    style={{
+      fontSize: "19px",
+      lineHeight: "2",
+      paddingLeft: "24px",
+      marginBottom: 0
+    }}
+  >
+    <li>Impftermine rechtzeitig planen.</li>
+    <li>Impfnachweise sicher aufbewahren.</li>
+    <li>Neue Tiere möglichst in den Impfplan aufnehmen.</li>
+    <li>Bei Fragen den Tierarzt oder den Verein kontaktieren.</li>
+    <li>Die Gesundheit des gesamten Bestandes regelmäßig beobachten.</li>
+  </ul>
+</div>
           <button
             onClick={() => (window.location.hash = "#info")}
             style={{
