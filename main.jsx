@@ -1775,7 +1775,78 @@ gesamten Sammelimpfung.
           >
             ← Zurück
           </button>
+<h2
+  style={{
+    color: "#ffffff",
+    fontSize: "34px",
+    marginTop: "60px",
+    marginBottom: "24px"
+  }}
+>
+  Datenschutz und Sicherheit Ihrer Daten
+</h2>
 
+<p
+  style={{
+    fontSize: "20px",
+    lineHeight: "1.9"
+  }}
+>
+  Der Schutz Ihrer personenbezogenen Daten hat für den veranstaltenden Verein
+  höchste Priorität. Sämtliche Angaben werden ausschließlich zur Organisation
+  der Sammelimpfung, zur Durchführung der Anmeldung sowie zur gesetzlich
+  erforderlichen Dokumentation verarbeitet. Eine Nutzung für Werbezwecke oder
+  eine Weitergabe an unbeteiligte Dritte erfolgt nicht.
+</p>
+
+<p
+  style={{
+    fontSize: "20px",
+    lineHeight: "1.9"
+  }}
+>
+  Die Daten werden ausschließlich von den verantwortlichen Vereinsmitgliedern
+  und – soweit erforderlich – vom betreuenden Tierarzt eingesehen. Alle
+  Verarbeitungsvorgänge erfolgen entsprechend der geltenden
+  Datenschutzbestimmungen. Nur die Informationen, die für die Durchführung
+  der Sammelimpfung notwendig sind, werden gespeichert.
+</p>
+
+<div
+  style={{
+    marginTop: "35px",
+    background: "rgba(255,255,255,.08)",
+    border: "1px solid rgba(255,255,255,.18)",
+    borderRadius: "18px",
+    padding: "30px"
+  }}
+>
+  <h3
+    style={{
+      marginTop: 0,
+      color: "#ffffff",
+      fontSize: "28px"
+    }}
+  >
+    Ihre Daten werden verwendet für:
+  </h3>
+
+  <ul
+    style={{
+      fontSize: "20px",
+      lineHeight: "2",
+      paddingLeft: "26px",
+      marginBottom: 0
+    }}
+  >
+    <li>Organisation der Sammelimpfung</li>
+    <li>Planung des Impfstoffbedarfes</li>
+    <li>Erstellung der Teilnehmerlisten</li>
+    <li>Dokumentation der Impfaktion</li>
+    <li>Erstellung von Impfbescheinigungen</li>
+    <li>Kontaktaufnahme bei wichtigen Änderungen</li>
+  </ul>
+</div>
         </div>
       </section>
     </div>
