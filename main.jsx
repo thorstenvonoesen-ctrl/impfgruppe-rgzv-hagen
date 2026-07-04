@@ -81,6 +81,7 @@ const [showForm, setShowForm] = useState(false)
       removeEventListener('hashchange', onHash)
   }, [])
   if (page === '#info') return <InfoPage />
+  if (page === '#info-newcastle') return <InfoNewcastle />
 if (page === '#signup') return <PublicSignup />
   if (page === '#admin') return <Admin />
   if (page === '#datenschutz') return <Datenschutz />
