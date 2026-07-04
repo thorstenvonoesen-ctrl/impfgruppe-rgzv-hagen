@@ -453,11 +453,15 @@ Erfahren Sie alles Wichtige zur gesetzlichen Impfpflicht, zum Ablauf der Impfgru
     <div
       key={title}
       style={{
-        background: "rgba(255,255,255,.08)",
-        border: "1px solid rgba(255,255,255,.15)",
+        background: "linear-gradient(180deg, rgba(255,255,255,.18), rgba(255,255,255,.06))",
+        border: "1px solid rgba(255,255,255,.20)",
         backdropFilter: "blur(12px)",
         borderRadius: "22px",
         padding: "28px"
+        boxShadow: "0 18px 40px rgba(0,0,0,.25)",
+cursor: "pointer",
+transition: "all .25s ease",
+minHeight: "170px",
       }}
     >
       <div style={{ fontSize: "42px" }}>
