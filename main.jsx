@@ -437,21 +437,7 @@ function InfoPage() {
 
     </div>
 
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "center"
-      }}
-    >
-      <img
-        src="/shield-orange.png"
-        alt=""
-        style={{
-          width: "320px",
-          filter: "drop-shadow(0 25px 40px rgba(0,0,0,.35))"
-        }}
-      />
-    </div>
+    
 
   </div>
 
