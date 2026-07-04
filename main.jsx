@@ -608,7 +608,8 @@ useEffect(() => {
     console.log('Code aus DB:', currentMemberCode)
 console.log('Eingegeben:', form.member_code)
     const isMember =
-  form.member_code?.trim() === currentMemberCode
+  form.member_code?.trim().toUpperCase() ===
+  currentMemberCode?.trim().toUpperCase()
 
 const paymentAmount = isMember ? 5 : 10
     const { member_code, ...formData } = form
