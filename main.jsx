@@ -289,7 +289,7 @@ function ClubSelect() {
   >
 
     <div
-      onClick={() => window.location.hash = '#signup'}
+      onClick={() => window.location.hash = '#info'}
       style={{
         background: '#fff',
         borderRadius: '22px',
