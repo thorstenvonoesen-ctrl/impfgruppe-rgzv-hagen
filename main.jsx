@@ -611,16 +611,116 @@ function InfoNewcastle() {
             Warum gegen Newcastle impfen?
           </h1>
 
-          <p
-            style={{
-              marginTop: "24px",
-              fontSize: "22px",
-              lineHeight: "1.8",
-              color: "#d1d5db"
-            }}
-          >
-            Ausführliche Informationen folgen im nächsten Schritt.
-          </p>
+          <div
+  style={{
+    marginTop: "40px",
+    maxWidth: "950px",
+    color: "#d1d5db"
+  }}
+>
+
+  <h2
+    style={{
+      color: "#ffffff",
+      fontSize: "34px",
+      marginBottom: "20px"
+    }}
+  >
+    Was ist die Newcastle-Krankheit?
+  </h2>
+
+  <p
+    style={{
+      fontSize: "20px",
+      lineHeight: "1.9",
+      marginBottom: "28px"
+    }}
+  >
+    Die Newcastle-Krankheit – auch als Atypische Geflügelpest bekannt – ist
+    eine hochansteckende Viruserkrankung des Geflügels. Sie befällt unter
+    anderem Hühner, Zwerghühner, Puten, Tauben, Fasane, Perlhühner,
+    Wachteln und zahlreiche weitere Vogelarten. Die Erkrankung gehört zu
+    den anzeigepflichtigen Tierseuchen und wird deshalb von den
+    Veterinärbehörden besonders überwacht.
+  </p>
+
+  <p
+    style={{
+      fontSize: "20px",
+      lineHeight: "1.9",
+      marginBottom: "28px"
+    }}
+  >
+    Das Virus verbreitet sich äußerst schnell. Bereits einzelne infizierte
+    Tiere können innerhalb kurzer Zeit einen gesamten Bestand anstecken.
+    Die Übertragung erfolgt nicht nur von Tier zu Tier, sondern auch über
+    Schuhe, Kleidung, Transportkisten, Fahrzeuge, Futter, Einstreu,
+    Gerätschaften oder Wildvögel. Dadurch kann sich die Krankheit auch dann
+    verbreiten, wenn keine direkten Kontakte zwischen zwei Geflügelhaltern
+    bestehen.
+  </p>
+
+  <div
+    style={{
+      background: "rgba(255,255,255,.08)",
+      border: "1px solid rgba(255,255,255,.15)",
+      borderRadius: "18px",
+      padding: "28px",
+      margin: "40px 0"
+    }}
+  >
+
+    <h3
+      style={{
+        color: "#ffffff",
+        marginTop: 0,
+        fontSize: "28px"
+      }}
+    >
+      Typische Krankheitsanzeichen
+    </h3>
+
+    <ul
+      style={{
+        lineHeight: "2",
+        fontSize: "19px",
+        paddingLeft: "24px"
+      }}
+    >
+      <li>Atemwegsprobleme und erschwerte Atmung</li>
+      <li>Teilnahmslosigkeit und Fressunlust</li>
+      <li>Durchfall und starker Leistungsabfall</li>
+      <li>Rückgang der Legeleistung</li>
+      <li>Lähmungen und neurologische Störungen</li>
+      <li>Hohe Verluste innerhalb kurzer Zeit</li>
+    </ul>
+
+  </div>
+
+  <h2
+    style={{
+      color: "#ffffff",
+      fontSize: "34px",
+      marginBottom: "20px"
+    }}
+  >
+    Warum ist die Impfung so wichtig?
+  </h2>
+
+  <p
+    style={{
+      fontSize: "20px",
+      lineHeight: "1.9"
+    }}
+  >
+    Die regelmäßige Newcastle-Impfung schützt nicht nur Ihren eigenen
+    Bestand, sondern trägt wesentlich dazu bei, die Ausbreitung dieser
+    gefährlichen Tierseuche zu verhindern. Jeder geimpfte Bestand hilft,
+    das Risiko eines Seuchenausbruchs zu reduzieren und die Gesundheit des
+    gesamten Geflügelbestandes in der Region langfristig zu sichern.
+  </p>
+
+</div>
 
           <button
             onClick={() => (window.location.hash = "#info")}
