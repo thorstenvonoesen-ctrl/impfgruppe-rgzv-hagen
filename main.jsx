@@ -364,7 +364,7 @@ function InfoPage() {
     style={{
       maxWidth: "1280px",
       margin: "0 auto",
-      padding: "90px 40px",
+      padding: "120px 60px",
       position: "relative",
       zIndex: 2,
       display: "grid",
@@ -393,7 +393,7 @@ function InfoPage() {
       <h1
         style={{
           color: "#fff",
-          fontSize: "64px",
+          fontSize: "72px",
           lineHeight: "1.05",
           fontWeight: "900",
           margin: 0
@@ -407,7 +407,7 @@ function InfoPage() {
       <p
         style={{
           marginTop: "28px",
-          fontSize: "22px",
+          fontSize: "24px",
           lineHeight: "1.8",
           color: "#d1d5db",
           maxWidth: "720px"
