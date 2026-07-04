@@ -340,58 +340,119 @@ function ClubSelect() {
     </div>
   )
 }
-function InfoPage() {
-  return (
-    <div className="min-h-screen bg-slate-100">
+<section
+  className="relative overflow-hidden"
+  style={{
+    background:
+      "linear-gradient(135deg,#0f172a 0%,#14532d 100%)"
+  }}
+>
 
-      <section className="relative overflow-hidden bg-gradient-to-br from-emerald-800 via-emerald-700 to-green-600">
+  <div
+    style={{
+      position: "absolute",
+      inset: 0,
+      background:
+        "radial-gradient(circle at top right, rgba(249,115,22,.25), transparent 35%)"
+    }}
+  />
 
-        <div className="max-w-7xl mx-auto px-6 py-24">
+  <div
+    style={{
+      maxWidth: "1280px",
+      margin: "0 auto",
+      padding: "90px 40px",
+      position: "relative",
+      zIndex: 2,
+      display: "grid",
+      gridTemplateColumns: "1.2fr .8fr",
+      alignItems: "center",
+      gap: "60px"
+    }}
+  >
 
-          <div className="max-w-3xl">
+    <div>
 
-            <span className="inline-block rounded-full bg-white/20 px-5 py-2 text-sm font-semibold tracking-wider uppercase text-white mb-6">
-              Online-Anmeldung
-            </span>
+      <div
+        style={{
+          display: "inline-block",
+          background: "#f97316",
+          color: "#fff",
+          padding: "8px 18px",
+          borderRadius: "999px",
+          fontWeight: "700",
+          marginBottom: "30px"
+        }}
+      >
+        Online-Anmeldung
+      </div>
 
-            <h1 className="text-5xl md:text-6xl font-extrabold text-white leading-tight">
-              Newcastle-
-              <br />
-              Sammelimpfung
-            </h1>
+      <h1
+        style={{
+          color: "#fff",
+          fontSize: "64px",
+          lineHeight: "1.05",
+          fontWeight: "900",
+          margin: 0
+        }}
+      >
+        Newcastle-
+        <br />
+        Sammelimpfung
+      </h1>
 
-            <p className="mt-8 text-xl leading-9 text-emerald-50">
-              Willkommen zur Online-Anmeldung unserer Impfgruppe.
-              Auf den folgenden Seiten erfahren Sie alles Wichtige
-              zur Newcastle-Impfung und können sich anschließend
-              bequem online anmelden.
-            </p>
+      <p
+        style={{
+          marginTop: "28px",
+          fontSize: "22px",
+          lineHeight: "1.8",
+          color: "#d1d5db",
+          maxWidth: "720px"
+        }}
+      >
+        Melden Sie Ihre Tiere bequem online an und informieren Sie sich
+        über die gesetzliche Impfpflicht sowie den Ablauf unserer
+        Sammelimpfung.
+      </p>
 
-            <div className="flex flex-wrap gap-4 mt-10">
+      <button
+        onClick={() => (window.location.hash = "#signup")}
+        style={{
+          marginTop: "45px",
+          background: "#f97316",
+          color: "#fff",
+          border: 0,
+          borderRadius: "16px",
+          padding: "18px 34px",
+          fontSize: "18px",
+          fontWeight: "700",
+          cursor: "pointer"
+        }}
+      >
+        Jetzt zur Anmeldung →
+      </button>
 
-              <button
-                onClick={() => window.location.hash = "#signup"}
-                className="rounded-2xl bg-amber-400 px-8 py-4 text-lg font-bold text-slate-900 hover:bg-amber-300 transition">
+    </div>
 
-                Jetzt anmelden →
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center"
+      }}
+    >
+      <img
+        src="/shield-orange.png"
+        alt=""
+        style={{
+          width: "320px",
+          filter: "drop-shadow(0 25px 40px rgba(0,0,0,.35))"
+        }}
+      />
+    </div>
 
-              </button>
+  </div>
 
-              <button
-                onClick={() => window.location.hash = "#"}
-                className="rounded-2xl border border-white/30 bg-white/10 px-8 py-4 text-lg font-semibold text-white hover:bg-white/20 transition">
-
-                Zurück
-
-              </button>
-
-            </div>
-
-          </div>
-
-        </div>
-
-      </section>
+</section>
 
     </div>
   );
