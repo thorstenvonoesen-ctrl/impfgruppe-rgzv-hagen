@@ -452,6 +452,15 @@ Erfahren Sie alles Wichtige zur gesetzlichen Impfpflicht, zum Ablauf der Impfgru
   ].map(([icon, title]) => (
     <div
       key={title}
+      onMouseEnter={e => {
+  e.currentTarget.style.transform = "translateY(-8px)"
+  e.currentTarget.style.boxShadow = "0 28px 55px rgba(0,0,0,.35)"
+}}
+
+onMouseLeave={e => {
+  e.currentTarget.style.transform = "translateY(0)"
+  e.currentTarget.style.boxShadow = "0 18px 40px rgba(0,0,0,.25)"
+}}
       style={{
         background: "linear-gradient(180deg, rgba(255,255,255,.18), rgba(255,255,255,.06))",
         border: "1px solid rgba(255,255,255,.20)",
