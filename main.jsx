@@ -1285,6 +1285,97 @@ function InfoSammelimpfung() {
   vorhandenen Mengen optimal genutzt werden. Gleichzeitig ist sichergestellt,
   dass alle Teilnehmer den gleichen zugelassenen Impfstoff erhalten.
 </p>
+            <h3
+  style={{
+    color: "#ffffff",
+    fontSize: "28px",
+    marginTop: "35px"
+  }}
+>
+  4. Vorbereitung des Impftages
+</h3>
+
+<p
+  style={{
+    fontSize: "20px",
+    lineHeight: "1.9"
+  }}
+>
+  Vor dem eigentlichen Impftermin werden alle organisatorischen Maßnahmen
+  abgeschlossen. Teilnehmerlisten werden überprüft, Impfbescheinigungen
+  vorbereitet und der Ablauf für die Ausgabe des Impfstoffes festgelegt.
+  Dadurch können Wartezeiten reduziert und ein reibungsloser Ablauf
+  gewährleistet werden.
+</p>
+
+<p
+  style={{
+    fontSize: "20px",
+    lineHeight: "1.9"
+  }}
+>
+  Gleichzeitig wird kontrolliert, ob alle notwendigen Unterlagen vorliegen
+  und ob die bestellte Impfstoffmenge den gemeldeten Tierzahlen entspricht.
+  Ziel ist es, jedem Teilnehmer ausreichend Impfstoff zur Verfügung zu
+  stellen und gleichzeitig unnötige Überschüsse zu vermeiden.
+</p>
+
+<h3
+  style={{
+    color: "#ffffff",
+    fontSize: "28px",
+    marginTop: "35px"
+  }}
+>
+  5. Ausgabe des Impfstoffes
+</h3>
+
+<p
+  style={{
+    fontSize: "20px",
+    lineHeight: "1.9"
+  }}
+>
+  Am vereinbarten Termin erhalten die Teilnehmer den Impfstoff entsprechend
+  ihrer Anmeldung. Dabei werden die benötigten Mengen ausgegeben und – je
+  nach Organisation des Vereins – wichtige Hinweise zur Anwendung,
+  Lagerung und zum Impfzeitpunkt erläutert. Eventuelle Rückfragen können
+  direkt vor Ort geklärt werden.
+</p>
+
+<p
+  style={{
+    fontSize: "20px",
+    lineHeight: "1.9"
+  }}
+>
+  Durch die vorherige Online-Anmeldung liegen alle Daten bereits vor.
+  Dadurch verkürzen sich Wartezeiten erheblich, Fehler bei der Erfassung
+  werden vermieden und die Ausgabe kann deutlich strukturierter erfolgen.
+</p>
+
+<h3
+  style={{
+    color: "#ffffff",
+    fontSize: "28px",
+    marginTop: "35px"
+  }}
+>
+  6. Dokumentation und Nachweis
+</h3>
+
+<p
+  style={{
+    fontSize: "20px",
+    lineHeight: "1.9"
+  }}
+>
+  Nach Abschluss der Sammelimpfung werden die erforderlichen Unterlagen
+  dokumentiert und die Impfbescheinigungen erstellt beziehungsweise
+  vervollständigt. Eine vollständige Dokumentation erleichtert spätere
+  Nachweise gegenüber Behörden und hilft dem Verein, zukünftige
+  Sammelimpfungen noch besser zu planen.
+</p>
             <button
               onClick={() => (window.location.hash = "#info")}
               style={{
