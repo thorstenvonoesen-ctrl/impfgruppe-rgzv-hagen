@@ -2347,7 +2347,12 @@ if (result.url) {
 
 if (!showForm) {
   return (
-    <div className="page">
+    <div
+  style={{
+    minHeight: '100vh',
+    background: 'linear-gradient(135deg,#1f2937 0%,#1b4332 100%)'
+  }}
+>
       <Header />
       <main
   className="card"
