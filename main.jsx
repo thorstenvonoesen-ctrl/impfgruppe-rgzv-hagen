@@ -2357,9 +2357,15 @@ if (!showForm) {
       <main
   className="card"
   style={{
-    maxWidth: '900px',
-    margin: '40px auto'
-  }}
+  maxWidth: '900px',
+  margin: '40px auto',
+  background: 'rgba(255,255,255,.08)',
+  backdropFilter: 'blur(14px)',
+  border: '1px solid rgba(255,255,255,.15)',
+  borderRadius: '28px',
+  boxShadow: '0 20px 50px rgba(0,0,0,.35)',
+  padding: '40px'
+}}
 >
   <div
     style={{
