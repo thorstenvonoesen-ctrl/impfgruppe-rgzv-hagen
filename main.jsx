@@ -319,7 +319,7 @@ border:'1px solid rgba(255,255,255,.15)',
         borderRadius:'22px',
         padding:'24px',
         boxShadow:'0 20px 50px rgba(0,0,0,.35)',
-        cursor:'pointer'
+        cursor:'pointer',
         transition:'all .25s ease',
       }}
     >
