@@ -342,6 +342,13 @@ border:'1px solid rgba(255,255,255,.15)',
 
     <div
       onClick={() => window.location.hash = '#register'}
+      onMouseEnter={e => {
+  e.currentTarget.style.transform = 'translateY(-8px)'
+}}
+
+onMouseLeave={e => {
+  e.currentTarget.style.transform = 'translateY(0)'
+}}
       style={{
         background:'rgba(255,255,255,.08)',
 backdropFilter:'blur(14px)',
@@ -349,7 +356,8 @@ border:'1px solid rgba(255,255,255,.15)',
         borderRadius:'22px',
         padding:'24px',
         boxShadow:'0 20px 50px rgba(0,0,0,.35)',
-        cursor:'pointer'
+        cursor:'pointer',
+transition:'all .25s ease'
       }}
     >
       <div style={{fontSize:'34px'}}>📅</div>
