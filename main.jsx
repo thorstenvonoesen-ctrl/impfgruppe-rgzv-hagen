@@ -269,11 +269,13 @@ position:'relative',padding:'40px 46px',borderRadius:'28px',marginBottom:'50px'}
     <div
       onClick={() => window.location.hash = '#info'}
       style={{
-        background: '#fff',
-        borderRadius: '22px',
-        padding: '24px',
-        cursor: 'pointer',
-        boxShadow: '0 10px 30px rgba(0,0,0,.08)'
+        background: 'rgba(255,255,255,.08)',
+backdropFilter: 'blur(14px)',
+border: '1px solid rgba(255,255,255,.15)',
+borderRadius: '22px',
+padding: '24px',
+cursor: 'pointer',
+boxShadow: '0 20px 50px rgba(0,0,0,.35)'
       }}
     >
       <div style={{fontSize:'34px'}}>👥</div>
