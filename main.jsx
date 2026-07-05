@@ -2593,13 +2593,15 @@ if (!showForm) {
   Persönliche Daten
 </div>
 
-<div className="form-section">
-style={{
-  background: 'transparent',
-  border: 'none',
-  boxShadow: 'none',
-  padding: 0
-}}
+<div
+  className="form-section"
+  style={{
+    background: 'transparent',
+    border: 'none',
+    boxShadow: 'none',
+    padding: 0
+  }}
+>
 <form onSubmit={submit} className="form">
           <div className="two"><Input label="Vorname" name="firstname" value={form.firstname} onChange={update} required/><Input label="Nachname" name="lastname" value={form.lastname} onChange={update} required/></div>
           <div className="two"><Input label="Straße" name="street" value={form.street} onChange={update}/><Input label="Hausnummer" name="housenumber" value={form.housenumber} onChange={update}/></div>
