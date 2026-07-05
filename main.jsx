@@ -2355,7 +2355,7 @@ if (!showForm) {
 >
       <Header />
       <main
-  className="card"
+  className=""
   style={{
   maxWidth: '900px',
   margin: '40px auto',
