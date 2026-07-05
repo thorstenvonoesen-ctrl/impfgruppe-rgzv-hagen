@@ -2589,7 +2589,18 @@ if (!showForm) {
   }}
 >
         <h2>Teilnehmer anmelden</h2>
-        <div className="section-title">
+        <div
+  className="section-title"
+  style={{
+    background: 'rgba(255,255,255,.08)',
+    border: '1px solid rgba(255,255,255,.12)',
+    color: '#fff',
+    borderLeft: '4px solid #f29a38',
+    borderRadius: '14px',
+    padding: '14px 18px',
+    fontWeight: 700
+  }}
+>
   Persönliche Daten
 </div>
 
@@ -2608,7 +2619,18 @@ if (!showForm) {
           <div className="two"><Input label="PLZ" name="zipcode" value={form.zipcode} onChange={update}/><Input label="Ort" name="city" value={form.city} onChange={update}/></div>
           <div className="two"><Input label="E-Mail" name="email" type="email" value={form.email} onChange={update} required/><Input label="Telefon" name="phone" value={form.phone} onChange={update}/></div>
      
-          <div className="section-title">
+          <div
+  className="section-title"
+  style={{
+    background: 'rgba(255,255,255,.08)',
+    border: '1px solid rgba(255,255,255,.12)',
+    color: '#fff',
+    borderLeft: '4px solid #f29a38',
+    borderRadius: '14px',
+    padding: '14px 18px',
+    fontWeight: 700
+  }}
+>
   Tierhalterdaten
 </div>
           <Input label="TSK Betriebsnummer." name="tsk_number" value={form.tsk_number} onChange={update} required/>
@@ -2649,7 +2671,18 @@ if (!showForm) {
   </select>
 </label>
           <div className="two"><Input label="Anzahl Tiere" name="animal_count" type="number" min="1" value={form.animal_count} onChange={update} required/><label>Impfstoff<select name="vaccine" value={form.vaccine} onChange={update}>{vaccines.map(v=><option key={v}>{v}</option>)}</select></label></div>
-          <div className="section-title">
+          <div
+  className="section-title"
+  style={{
+    background: 'rgba(255,255,255,.08)',
+    border: '1px solid rgba(255,255,255,.12)',
+    color: '#fff',
+    borderLeft: '4px solid #f29a38',
+    borderRadius: '14px',
+    padding: '14px 18px',
+    fontWeight: 700
+  }}
+>
   Impfung
 </div>
           <select
@@ -2666,7 +2699,18 @@ value={form.vaccination_date_id}
     </option>
   ))}
 </select>
-          <div className="section-title">
+          <div
+  className="section-title"
+  style={{
+    background: 'rgba(255,255,255,.08)',
+    border: '1px solid rgba(255,255,255,.12)',
+    color: '#fff',
+    borderLeft: '4px solid #f29a38',
+    borderRadius: '14px',
+    padding: '14px 18px',
+    fontWeight: 700
+  }}
+>
   Zahlung & Datenschutz
 </div>
           <label className="privacy-check">
