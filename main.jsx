@@ -3484,7 +3484,28 @@ function ExportButtons({ participants, vaccinationDates }) {
 }
 
 
-function Input({ label, ...props }) { return <label>{label}<input {...props}/></label> }
+function Input({ label, ...props }) {
+  return (
+    <label style={{ color: 'rgba(255,255,255,.92)', fontWeight: 600 }}>
+      {label}
+      <input
+        {...props}
+        style={{
+          width: '100%',
+          marginTop: '8px',
+          padding: '14px 16px',
+          borderRadius: '14px',
+          border: '1px solid rgba(255,255,255,.18)',
+          background: 'rgba(255,255,255,.08)',
+          backdropFilter: 'blur(10px)',
+          color: '#fff',
+          outline: 'none',
+          boxSizing: 'border-box'
+        }}
+      />
+    </label>
+  )
+}
 function Stat({ icon,label,value }) { return <div className="stat">{icon}<span>{label}</span><strong>{value}</strong></div> }
 function Datenschutz() {
   return (
