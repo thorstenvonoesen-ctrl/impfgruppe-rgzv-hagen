@@ -2681,7 +2681,11 @@ if (!showForm) {
     <option value="Sonstige">Sonstige</option>
   </select>
 </label>
-          <div className="two"><Input label="Anzahl Tiere" name="animal_count" type="number" min="1" value={form.animal_count} onChange={update} required/><label>Impfstoff<select name="vaccine" value={form.vaccine} onChange={update}>{vaccines.map(v=><option key={v}>{v}</option>)}</select></label></div>
+          <div className="two"><Input label="Anzahl Tiere" name="animal_count" type="number" min="1" value={form.animal_count} onChange={update} required/><label>Impfstoff<select
+  style={{
+    background: '#5d676d',
+    color: '#111827'
+  }} name="vaccine" value={form.vaccine} onChange={update}>{vaccines.map(v=><option key={v}>{v}</option>)}</select></label></div>
           <div
   className="section-title"
   style={{
