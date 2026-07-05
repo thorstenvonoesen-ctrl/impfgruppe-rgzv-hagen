@@ -278,11 +278,17 @@ position:'relative',padding:'40px 46px',borderRadius:'28px',marginBottom:'50px'}
     >
       <div style={{fontSize:'34px'}}>👥</div>
 
-      <h3 style={{margin:'12px 0 10px',fontSize:'18px'}}>
+      <h3
+  style={{
+    margin:'12px 0 10px',
+    fontSize:'18px',
+    color:'#fff'
+  }}
+>
         Zur Impfanmeldung
       </h3>
 
-      <p style={{color:'#6b7280',lineHeight:'1.7'}}>
+      <p style={{color:'rgba(255,255,255,.82)',lineHeight:'1.7'}}>
         Melden Sie Ihre Tiere bequem zum nächsten Impftermin Ihres Vereins an.
       </p>
     </div>
@@ -290,20 +296,28 @@ position:'relative',padding:'40px 46px',borderRadius:'28px',marginBottom:'50px'}
     <div
       onClick={() => window.location.hash = '#club-login'}
       style={{
-        background:'#fff',
+        background:'rgba(255,255,255,.08)',
+backdropFilter:'blur(14px)',
+border:'1px solid rgba(255,255,255,.15)',,
         borderRadius:'22px',
         padding:'24px',
-        boxShadow:'0 10px 30px rgba(0,0,0,.08)',
+        boxShadow:'0 20px 50px rgba(0,0,0,.35)',
         cursor:'pointer'
       }}
     >
       <div style={{fontSize:'34px'}}>🔒</div>
 
-      <h3 style={{margin:'12px 0 10px',fontSize:'18px'}}>
+      <h3
+  style={{
+    margin:'12px 0 10px',
+    fontSize:'18px',
+    color:'#fff'
+  }}
+>
         Vereinslogin
       </h3>
 
-      <p style={{color:'#6b7280',lineHeight:'1.7'}}>
+      <p style={{color:'rgba(255,255,255,.82)',lineHeight:'1.7'}}>
         Melden Sie sich mit Ihren Zugangsdaten an und verwalten Sie Impftermine, Teilnehmer, Zahlungen und die Einstellungen Ihres Vereins.
       </p>
     </div>
@@ -320,11 +334,17 @@ position:'relative',padding:'40px 46px',borderRadius:'28px',marginBottom:'50px'}
     >
       <div style={{fontSize:'34px'}}>📅</div>
 
-      <h3 style={{margin:'12px 0 10px',fontSize:'18px'}}>
+      <h3
+  style={{
+    margin:'12px 0 10px',
+    fontSize:'18px',
+    color:'#fff'
+  }}
+>
         Verein registrieren
       </h3>
 
-      <p style={{color:'#6b7280',lineHeight:'1.7'}}>
+      <p style={{color:'rgba(255,255,255,.82)',lineHeight:'1.7'}}>
   Registrieren Sie Ihren Verein und nutzen Sie den Impfgruppenmanager für Ihre eigene Impfgruppe. Nach der Freischaltung können Sie alle Vereinsdaten selbst verwalten.
 </p>
 
