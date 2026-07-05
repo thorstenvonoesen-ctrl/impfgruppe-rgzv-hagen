@@ -2557,7 +2557,12 @@ if (!showForm) {
 )
 }
   return (
-  <div className="page">
+  <div
+  style={{
+    minHeight: '100vh',
+    background: 'linear-gradient(135deg,#1f2937 0%,#1b4332 100%)'
+  }}
+>
     <Header />
     <main
   style={{
@@ -3460,7 +3465,12 @@ function Input({ label, ...props }) { return <label>{label}<input {...props}/></
 function Stat({ icon,label,value }) { return <div className="stat">{icon}<span>{label}</span><strong>{value}</strong></div> }
 function Datenschutz() {
   return (
-    <div className="page">
+    <div
+  style={{
+    minHeight: '100vh',
+    background: 'linear-gradient(135deg,#1f2937 0%,#1b4332 100%)'
+  }}
+>
       <Header />
       <main className="card">
         
@@ -3726,7 +3736,12 @@ function Datenschutz() {
 
 function Impressum() {
   return (
-    <div className="page">
+    <div
+  style={{
+    minHeight: '100vh',
+    background: 'linear-gradient(135deg,#1f2937 0%,#1b4332 100%)'
+  }}
+>
       <Header />
       <main className="card">
         <h1>Impressum</h1>
