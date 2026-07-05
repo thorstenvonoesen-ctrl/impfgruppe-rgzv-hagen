@@ -2347,25 +2347,14 @@ if (result.url) {
 
 if (!showForm) {
   return (
-    <div
-  style={{
-    minHeight: '100vh',
-    background: 'linear-gradient(135deg,#1f2937 0%,#1b4332 100%)'
-  }}
->
+    <div className="page">
       <Header />
       <main
-  className=""
+  className="card"
   style={{
-  maxWidth: '900px',
-  margin: '40px auto',
-  background: 'rgba(255,255,255,.08)',
-  backdropFilter: 'blur(14px)',
-  border: '1px solid rgba(255,255,255,.15)',
-  borderRadius: '28px',
-  boxShadow: '0 20px 50px rgba(0,0,0,.35)',
-  padding: '40px'
-}}
+    maxWidth: '900px',
+    margin: '40px auto'
+  }}
 >
   <div
     style={{
@@ -2563,12 +2552,7 @@ if (!showForm) {
 )
 }
   return (
-  <div
-  style={{
-    minHeight: '100vh',
-    background: 'linear-gradient(135deg,#1f2937 0%,#1b4332 100%)'
-  }}
->
+  <div className="page">
     <Header />
     <main
   style={{
@@ -2577,60 +2561,21 @@ if (!showForm) {
   }}
 >
       
-      <section
-  style={{
-    background: 'rgba(255,255,255,.08)',
-    backdropFilter: 'blur(14px)',
-    border: '1px solid rgba(255,255,255,.15)',
-    borderRadius: '28px',
-    boxShadow: '0 20px 50px rgba(0,0,0,.35)',
-    padding: '40px',
-    color: '#fff'
-  }}
->
+      <section className="card">
         <h2>Teilnehmer anmelden</h2>
-        <div
-  className="section-title"
-  style={{
-    background: 'rgba(255,255,255,.08)',
-    border: '1px solid rgba(255,255,255,.12)',
-    color: '#fff',
-    borderLeft: '4px solid #f29a38',
-    borderRadius: '14px',
-    padding: '14px 18px',
-    fontWeight: 700
-  }}
->
+        <div className="section-title">
   Persönliche Daten
 </div>
 
-<div
-  className="form-section"
-  style={{
-    background: 'transparent',
-    border: 'none',
-    boxShadow: 'none',
-    padding: 0
-  }}
->
+<div className="form-section">
+
 <form onSubmit={submit} className="form">
           <div className="two"><Input label="Vorname" name="firstname" value={form.firstname} onChange={update} required/><Input label="Nachname" name="lastname" value={form.lastname} onChange={update} required/></div>
           <div className="two"><Input label="Straße" name="street" value={form.street} onChange={update}/><Input label="Hausnummer" name="housenumber" value={form.housenumber} onChange={update}/></div>
           <div className="two"><Input label="PLZ" name="zipcode" value={form.zipcode} onChange={update}/><Input label="Ort" name="city" value={form.city} onChange={update}/></div>
           <div className="two"><Input label="E-Mail" name="email" type="email" value={form.email} onChange={update} required/><Input label="Telefon" name="phone" value={form.phone} onChange={update}/></div>
      
-          <div
-  className="section-title"
-  style={{
-    background: 'rgba(255,255,255,.08)',
-    border: '1px solid rgba(255,255,255,.12)',
-    color: '#fff',
-    borderLeft: '4px solid #f29a38',
-    borderRadius: '14px',
-    padding: '14px 18px',
-    fontWeight: 700
-  }}
->
+          <div className="section-title">
   Tierhalterdaten
 </div>
           <Input label="TSK Betriebsnummer." name="tsk_number" value={form.tsk_number} onChange={update} required/>
@@ -2660,17 +2605,6 @@ if (!showForm) {
     value={form.animal_type}
     onChange={update}
     required
-    style={{
-  width: '100%',
-  marginTop: '8px',
-  padding: '14px 16px',
-  borderRadius: '14px',
-  border: '1px solid rgba(255,255,255,.18)',
-  background: 'rgba(255,255,255,.08)',
-  backdropFilter: 'blur(10px)',
-  color: '#fff',
-  boxSizing: 'border-box'
-}}
   >
     <option value="">Bitte wählen</option>
     <option value="Hühner">Hühner</option>
@@ -2681,23 +2615,8 @@ if (!showForm) {
     <option value="Sonstige">Sonstige</option>
   </select>
 </label>
-          <div className="two"><Input label="Anzahl Tiere" name="animal_count" type="number" min="1" value={form.animal_count} onChange={update} required/><label>Impfstoff<select
-  style={{
-    background: '#5d676d',
-    color: '#111827'
-  }} name="vaccine" value={form.vaccine} onChange={update}>{vaccines.map(v=><option key={v}>{v}</option>)}</select></label></div>
-          <div
-  className="section-title"
-  style={{
-    background: 'rgba(255,255,255,.08)',
-    border: '1px solid rgba(255,255,255,.12)',
-    color: '#fff',
-    borderLeft: '4px solid #f29a38',
-    borderRadius: '14px',
-    padding: '14px 18px',
-    fontWeight: 700
-  }}
->
+          <div className="two"><Input label="Anzahl Tiere" name="animal_count" type="number" min="1" value={form.animal_count} onChange={update} required/><label>Impfstoff<select name="vaccine" value={form.vaccine} onChange={update}>{vaccines.map(v=><option key={v}>{v}</option>)}</select></label></div>
+          <div className="section-title">
   Impfung
 </div>
           <select
@@ -2714,18 +2633,7 @@ value={form.vaccination_date_id}
     </option>
   ))}
 </select>
-          <div
-  className="section-title"
-  style={{
-    background: 'rgba(255,255,255,.08)',
-    border: '1px solid rgba(255,255,255,.12)',
-    color: '#fff',
-    borderLeft: '4px solid #f29a38',
-    borderRadius: '14px',
-    padding: '14px 18px',
-    fontWeight: 700
-  }}
->
+          <div className="section-title">
   Zahlung & Datenschutz
 </div>
           <label className="privacy-check">
@@ -3543,37 +3451,11 @@ function ExportButtons({ participants, vaccinationDates }) {
 }
 
 
-function Input({ label, ...props }) {
-  return (
-    <label style={{ color: 'rgba(255,255,255,.92)', fontWeight: 600 }}>
-      {label}
-      <input
-        {...props}
-        style={{
-          width: '100%',
-          marginTop: '8px',
-          padding: '14px 16px',
-          borderRadius: '14px',
-          border: '1px solid rgba(255,255,255,.18)',
-          background: 'rgba(255,255,255,.08)',
-          backdropFilter: 'blur(10px)',
-          color: '#fff',
-          outline: 'none',
-          boxSizing: 'border-box'
-        }}
-      />
-    </label>
-  )
-}
+function Input({ label, ...props }) { return <label>{label}<input {...props}/></label> }
 function Stat({ icon,label,value }) { return <div className="stat">{icon}<span>{label}</span><strong>{value}</strong></div> }
 function Datenschutz() {
   return (
-    <div
-  style={{
-    minHeight: '100vh',
-    background: 'linear-gradient(135deg,#1f2937 0%,#1b4332 100%)'
-  }}
->
+    <div className="page">
       <Header />
       <main className="card">
         
@@ -3839,12 +3721,7 @@ function Datenschutz() {
 
 function Impressum() {
   return (
-    <div
-  style={{
-    minHeight: '100vh',
-    background: 'linear-gradient(135deg,#1f2937 0%,#1b4332 100%)'
-  }}
->
+    <div className="page">
       <Header />
       <main className="card">
         <h1>Impressum</h1>
