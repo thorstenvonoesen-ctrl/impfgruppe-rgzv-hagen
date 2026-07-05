@@ -153,7 +153,14 @@ function ClubSelect() {
   }
 
   return (
-    <div className="page">
+    <div
+  className="page"
+  style={{
+    minHeight: "100vh",
+    background:
+      "linear-gradient(120deg, #1f2937 0%, #163a2f 65%, #355e2b 100%)"
+  }}
+>
      <Header /> 
       <main style={{ maxWidth:'1240px', margin:'40px auto 80px' }}>
         <div style={{display:'grid',gridTemplateColumns:'150px 1fr 190px',alignItems:'center',gap:'20px',background:'#1f2937',color:'white',padding:'30px 36px',borderRadius:'28px',marginBottom:'50px'}}>
