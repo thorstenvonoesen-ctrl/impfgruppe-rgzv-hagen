@@ -8,10 +8,40 @@ export const config = {
   }
 }
 
+async function getRawBody(readable) {
+  const chunks = []
+
+  for await (const chunk of readable) {
+    chunks.push(typeof chunk === 'string' ? Buffer.from(chunk) : chunk)
+  }
+
+  return Buffer.concat(chunks)
+}
+
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).send('Method Not Allowed')
   }
 
-  res.status(200).send('Webhook erreichbar')
+  const sig = req.headers['stripe-signature']
+
+  try {
+    const rawBody = await getRawBody(req)
+
+    const event = stripe.webhooks.constructEvent(
+      rawBody,
+      sig,
+      process.env.STRIPE_WEBHOOK_SECRET
+    )
+
+    console.log('Webhook erhalten:', event.type)
+
+    return res.status(200).json({
+      received: true,
+      event: event.type
+    })
+  } catch (err) {
+    console.error(err)
+    return res.status(400).send(`Webhook Error: ${err.message}`)
+  }
 }
