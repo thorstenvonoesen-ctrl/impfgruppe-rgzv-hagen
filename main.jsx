@@ -198,7 +198,7 @@ position:'relative',padding:'40px 46px',borderRadius:'28px',marginBottom:'50px'}
     style={{
       margin: 0,
       color: '#ffffff',
-      fontSize: '46px',
+      fontSize: '44px',
       fontWeight: '800',
       lineHeight: '1.05',
       letterSpacing: '-1px'
