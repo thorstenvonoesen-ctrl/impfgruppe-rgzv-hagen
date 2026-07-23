@@ -24,7 +24,9 @@ export default function NextVaccinationCountdown() {
       }
 
       const days = Math.floor(diff / (1000 * 60 * 60 * 24))
-      setRemaining(`${days} Tage`)
+      setRemaining(
+  `${days} T • ${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`
+)
     }, 1000)
 
     return () => clearInterval(timer)
@@ -60,15 +62,25 @@ export default function NextVaccinationCountdown() {
   }
 
   return (
-    <span
-      style={{
-        color: '#ffffff',
-        fontSize: '14px',
-        fontWeight: 600,
-        whiteSpace: 'nowrap'
-      }}
-    >
-      🩺 {new Date(nextDate).toLocaleDateString('de-DE')} • Noch {remaining}
+  <span
+    style={{
+      display: 'flex',
+      alignItems: 'center',
+      gap: '8px',
+      color: '#ffffff',
+      fontSize: '13px',
+      fontWeight: 600,
+      whiteSpace: 'nowrap'
+    }}
+  >
+    <span style={{ color: '#f28c28' }}>🩺</span>
+
+    <span>
+      {new Date(nextDate).toLocaleDateString('de-DE')}
     </span>
-  )
-}
+
+    <span style={{ color: '#bdbdbd' }}>
+      • Noch {remaining}
+    </span>
+  </span>
+)
