@@ -307,11 +307,16 @@ boxShadow: '0 20px 50px rgba(0,0,0,.35)'
 
       <p
   style={{
-    color: '#f59e0b',
-    lineHeight: '1.7',
-    fontWeight: '700',
-    
-  }}
+  color: '#f59e0b',
+  lineHeight: '1.7',
+  fontWeight: '700',
+  opacity: pulse ? 1 : 0.45,
+  transform: pulse ? 'scale(1)' : 'scale(1.02)',
+  textShadow: pulse
+    ? '0 0 12px rgba(245,158,11,0.8)'
+    : '0 0 0 rgba(245,158,11,0)',
+  transition: 'all 0.6s ease-in-out'
+}}
 >
         Direkt zur Anmeldung Ihrer Tiere für den nächsten Impftermin des RGZV Hagen.
       </p>
