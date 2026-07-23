@@ -72,7 +72,7 @@ export default function NextVaccinationCountdown() {
   return (
     <div
       style={{
-        textAlign: 'center',
+        textAlign: 'right',
         padding: '14px 10px',
         background: 'rgba(255,255,255,.04)',
         borderBottom: '1px solid rgba(255,255,255,.08)'
