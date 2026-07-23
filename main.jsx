@@ -443,7 +443,7 @@ transition:'all .25s ease'
 </div>
 
 </div>
-     
+</div>     
       </main>
       <Footer />
     </div>
