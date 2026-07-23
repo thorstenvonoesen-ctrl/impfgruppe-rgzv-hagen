@@ -3940,23 +3940,35 @@ function Header() {
     <header
       style={{
         background: 'transparent',
-        padding: '18px 32px',
+        padding: '14px 32px',
         borderBottom: '1px solid rgba(255,255,255,0.08)'
       }}
     >
-      <nav>
-        <a
-          href="#admin"
-          style={{
-            color: '#ffffff',
-            textDecoration: 'none',
-            fontSize: '18px',
-            fontWeight: '700'
-          }}
-        >
-          Admin
-        </a>
-      </nav>
+      <div
+        style={{
+          maxWidth: '1440px',
+          margin: '0 auto',
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center'
+        }}
+      >
+        <nav>
+          <a
+            href="#admin"
+            style={{
+              color: '#ffffff',
+              textDecoration: 'none',
+              fontSize: '18px',
+              fontWeight: '700'
+            }}
+          >
+            Admin
+          </a>
+        </nav>
+
+        <NextVaccinationCountdown />
+      </div>
     </header>
   )
 }
