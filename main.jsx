@@ -3909,12 +3909,26 @@ function Impressum() {
 }
 function Header() {
   return (
-    <header>
-      
-
+    <header
+      style={{
+        background: 'transparent',
+        padding: '18px 32px',
+        borderBottom: '1px solid rgba(255,255,255,0.08)'
+      }}
+    >
       <nav>
-  <a href="#admin">Admin</a>
-</nav>
+        <a
+          href="#admin"
+          style={{
+            color: '#ffffff',
+            textDecoration: 'none',
+            fontSize: '18px',
+            fontWeight: '700'
+          }}
+        >
+          Admin
+        </a>
+      </nav>
     </header>
   )
 }
