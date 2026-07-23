@@ -188,7 +188,7 @@ position:'relative',padding:'40px 46px',borderRadius:'28px',marginBottom:'50px'}
     alt="Impfgruppenmanager"
     style={{
   width:'220px',
-height:'220px'
+height:'220px',
   objectFit: 'contain'
 }}
   />
