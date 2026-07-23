@@ -341,7 +341,7 @@ border:'1px solid rgba(255,255,255,.15)',
     </div>
 
     <div
-      onClick={() => window.location.hash = '#register'}
+      onClick={() => window.location.hash = '#register-info'}
       onMouseEnter={e => {
   e.currentTarget.style.transform = 'translateY(-8px)'
 }}
