@@ -2036,7 +2036,7 @@ gesamten Sammelimpfung.
     </div>
   )
 }
-function ClubLoginInfo() {
+function RegisterInfo() {
   return (
     <div
   style={{
