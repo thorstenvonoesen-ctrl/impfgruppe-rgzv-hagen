@@ -443,27 +443,7 @@ transition:'all .25s ease'
     Entwickelt von
   </div>
 
-  <div
-    style={{
-      color: '#f28c28',
-      fontFamily: "'Allura', cursive",
-      fontSize: '34px',
-      lineHeight: '1',
-      marginTop: '8px'
-    }}
-  >
-    Thorsten von Oesen
-  </div>
-
-  <div
-    style={{
-      color: 'rgba(255,255,255,.55)',
-      fontSize: '14px',
-      marginTop: '8px'
-    }}
-  >
-    Konzeption · Entwicklung · Design
-  </div>
+  
 </div>
 
 </div>
