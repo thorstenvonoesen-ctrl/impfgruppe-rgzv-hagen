@@ -2037,27 +2037,25 @@ function RegisterInfo() {
     <div style={{ maxWidth: "1100px", margin: "0 auto" }}>
         <h1>Vereinsregistrierung</h1>
 
-        <p>
-          Diese Funktion befindet sich derzeit noch in der Entwicklung.
-        </p>
+        p>
+  Diese Funktion befindet sich derzeit noch in der Entwicklung.
+</p>
 
-        <p>
-          Der Impfgruppenmanager wird derzeit im Rahmen eines Probelaufs gemeinsam
-          mit dem <strong>RGZV Hagen und Umgebung seit 1903 e.V.</strong> entwickelt
-          und getestet.
-        </p>
+<p>
+  Der Impfgruppenmanager wird aktuell im Rahmen eines gemeinsamen Probelaufs mit dem <strong>RGZV Hagen und Umgebung seit 1903 e.V.</strong> entwickelt und unter realen Bedingungen getestet.
+</p>
 
-        <p>
-          Der Schwerpunkt liegt aktuell auf der sicheren und zuverlässigen
-          Durchführung der Newcastle-Sammelimpfung für unseren Verein.
-          Aus diesem Grund ist die Registrierung weiterer Vereine derzeit
-          noch nicht freigeschaltet.
-        </p>
+<p>
+  Ziel der aktuellen Testphase ist ausschließlich die digitale Organisation und Durchführung der Newcastle-Sammelimpfung für die Mitglieder und Teilnehmer der Impfgruppe des RGZV Hagen.
+</p>
 
-        <p>
-          Nach Abschluss der Testphase werden die weiteren Funktionen der
-          Anwendung schrittweise umgesetzt.
-        </p>
+<p>
+  Aus diesem Grund ist die Registrierung weiterer Vereine derzeit bewusst noch nicht freigeschaltet. Der Schwerpunkt liegt zunächst auf einem erfolgreichen Praxistest innerhalb unseres Vereins.
+</p>
+
+<p>
+  Nach Abschluss der Testphase werden die weiteren Ausbaustufen der Anwendung gemeinsam mit dem Vorstand des RGZV Hagen bewertet und abgestimmt.
+</p>
 
         <div style={{ marginTop: '30px' }}>
           <button
