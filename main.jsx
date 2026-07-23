@@ -204,11 +204,21 @@ height:'220px',
       letterSpacing: '-1px'
     }}
   >
-    Online-Anmeldung zur Newcastle-
+    Newcastle-
 <br />
-Sammelimpfung des RGZV Hagen und
+Sammelimpfung
 <br />
-Umgebung seit 1903 e.V.
+<span
+  style={{
+    fontSize: '0.72em',
+    fontWeight: '600',
+    opacity: 0.95
+  }}
+>
+  Online-Anmeldung des
+  <br />
+  RGZV Hagen und Umgebung seit 1903 e.V.
+</span>
   </h1>
 
   <p
