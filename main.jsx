@@ -170,7 +170,7 @@ useEffect(() => {
   }}
 >
      <Header /> 
-      <main style={{ maxWidth:'1440px', margin:'12px auto'' }}>
+      <main style={{ maxWidth:'1440px', margin:'12px auto' }}>
         <div style={{display:'grid',gridTemplateColumns:'250px minmax(0,1fr)',alignItems:'center',gap:'20px',background:'rgba(255,255,255,.08)',
 backdropFilter:'blur(14px)',
 border:'1px solid rgba(255,255,255,.15)',
