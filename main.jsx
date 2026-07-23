@@ -300,7 +300,7 @@ boxShadow: '0 20px 50px rgba(0,0,0,.35)'
       </h3>
 
       <p style={{color:'rgba(255,255,255,.82)',lineHeight:'1.7'}}>
-        Melden Sie Ihre Tiere bequem zum nächsten Impftermin Ihres Vereins an.
+        Direkt zur Anmeldung Ihrer Tiere für den nächsten Impftermin des RGZV Hagen.
       </p>
     </div>
 
