@@ -84,3 +84,4 @@ export default function NextVaccinationCountdown() {
     </span>
   </span>
 )
+}
