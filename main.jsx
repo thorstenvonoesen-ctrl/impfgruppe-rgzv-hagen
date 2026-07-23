@@ -3955,21 +3955,20 @@ function Header() {
 >
   
 
-  <a
-    href="#admin"
-    style={{
-      color: '#ffffff',
-      textDecoration: 'none',
-      fontSize: '18px',
-      fontWeight: '700'
-    }}
-  >
-    Admin-Login
-        </a>
+  <NextVaccinationCountdown />
 
-        <div style={{ justifySelf: 'end' }}>
-          <NextVaccinationCountdown />
-        </div>
+<a
+  href="#admin"
+  style={{
+    color: '#ffffff',
+    textDecoration: 'none',
+    fontSize: '18px',
+    fontWeight: '700',
+    marginLeft: 'auto'
+  }}
+>
+  Admin-Login
+</a>
       </div>
     </header>
   )
