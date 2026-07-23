@@ -243,11 +243,7 @@ height:'220px',
     }}
   />
 </div>
- <div
-  style={{
-    display: 'none'
-  }}
->
+ 
             <div style={{fontSize:'18px',marginBottom:'22px',fontWeight:'500',color:'#fff'}}>© 2026</div>
             <div
   style={{
