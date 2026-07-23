@@ -83,7 +83,7 @@ export default function NextVaccinationCountdown() {
           color: '#f28c28',
           fontWeight: 700,
           fontSize: '13px',
-          marginBottom: '4px'
+          marginBottom: '1px'
         }}
       >
         🩺 Nächster Impftermin
