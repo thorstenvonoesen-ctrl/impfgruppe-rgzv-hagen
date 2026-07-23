@@ -2166,6 +2166,7 @@ useEffect(() => {
   return () => clearInterval(timer)
 }, [vaccinationDates])
   async function finishPaypalPayment() {
+    alert(window.location.search)
     const params = new URLSearchParams(window.location.search)
     const paypal = params.get('paypal')
     const token = params.get('token')
