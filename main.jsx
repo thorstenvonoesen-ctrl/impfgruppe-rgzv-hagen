@@ -2037,7 +2037,7 @@ function RegisterInfo() {
     <div style={{ maxWidth: "1100px", margin: "0 auto" }}>
         <h1>Vereinsregistrierung</h1>
 
-        p>
+        <p>
   Diese Funktion befindet sich derzeit noch in der Entwicklung.
 </p>
 
