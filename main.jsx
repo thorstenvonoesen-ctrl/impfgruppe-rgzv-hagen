@@ -2179,6 +2179,8 @@ if (!participantId) return
 setLoading(true)
 
 if (stripe === 'success') {
+  console.log('Stripe Success erkannt')
+console.log('Participant ID:', participantId)
   const { data: participant } = await supabase
     .from('participants')
     .select('*')
