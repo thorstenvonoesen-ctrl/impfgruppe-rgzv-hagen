@@ -211,7 +211,7 @@ position:'relative',padding:'40px 46px',borderRadius:'28px',marginBottom:'50px'}
       maxWidth: '700px'
     }}
   >
-    Impfgruppenmanager – die einfache Lösung für Geflügelhalter.
+    Online-Anmeldung – die einfache Lösung für Geflügelhalter.
     <br />
     Wählen Sie Ihren Verein aus und melden Sie sich schnell und bequem online an.
   </p>
