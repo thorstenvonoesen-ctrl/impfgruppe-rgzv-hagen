@@ -44,10 +44,27 @@ export default async function handler(req, res) {
 
 if (event.type === 'checkout.session.completed') {
   const session = event.data.object
-
   const participantId = session.metadata?.participantId
 
   console.log('Participant:', participantId)
+
+  if (participantId) {
+    const { error } = await supabase
+      .from('participants')
+      .update({
+        payment_status: 'bezahlt',
+        payment_method: 'stripe',
+        payment_date: new Date().toISOString(),
+        payment_id: session.payment_intent
+      })
+      .eq('id', participantId)
+
+    if (error) {
+      console.error('Supabase Fehler:', error)
+    } else {
+      console.log('Teilnehmer erfolgreich aktualisiert.')
+    }
+  }
 }
 
 return res.status(200).json({
