@@ -3953,7 +3953,7 @@ function Header() {
     alignItems: 'center'
   }}
 >
-  <NextVaccinationCountdown />
+  
 
   <a
     href="#admin"
