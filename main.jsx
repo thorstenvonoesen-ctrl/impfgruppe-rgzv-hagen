@@ -44,6 +44,7 @@ async function getMemberCode() {
 import './styles.css'
 import logo from './public/Logoklein.jpg'
 import { APP } from './config'
+import NextVaccinationCountdown from './NextVaccinationCountdown'
 const vaccines = ['Newcastle', 'IB', 'ILT', 'Marek', 'Kokzidiose', 'Salmonellen']
 const ADMIN_PIN = import.meta.env.VITE_ADMIN_PIN || '1234'
 const PAYMENT_URL = import.meta.env.VITE_PAYMENT_URL || ''
