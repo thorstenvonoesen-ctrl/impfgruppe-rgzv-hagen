@@ -2091,7 +2091,61 @@ function RegisterInfo() {
 </div>
   )
 }
+function ClubLoginInfo() {
+  return (
+    <div
+      style={{
+        minHeight: '100vh',
+        background: 'linear-gradient(135deg,#0f172a,#14532d)'
+      }}
+    >
+      <Header />
 
+      <section
+        style={{
+          background: 'linear-gradient(135deg,#0f172a,#14532d)',
+          color: '#fff',
+          padding: '90px 40px'
+        }}
+      >
+        <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
+          <h1>Vereinslogin</h1>
+
+          <p>
+            Diese Funktion befindet sich derzeit noch in der Entwicklung.
+          </p>
+
+          <p>
+            Der Vereinslogin wird nach erfolgreichem Abschluss der aktuellen
+            Testphase schrittweise ausgebaut.
+          </p>
+
+          <p>
+            Ziel ist es, den teilnehmenden Vereinen künftig einen geschützten
+            Verwaltungsbereich für Impftermine, Teilnehmer, Zahlungen,
+            Bescheinigungen und Vereinseinstellungen bereitzustellen.
+          </p>
+
+          <p>
+            Während der laufenden Testphase steht diese Funktion noch nicht zur
+            Verfügung.
+          </p>
+
+          <div style={{ marginTop: '30px' }}>
+            <button
+              className="primary"
+              onClick={() => (window.location.hash = '#')}
+            >
+              Zur Startseite
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <Footer />
+    </div>
+  )
+}
 function ClubRegistration() {
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
