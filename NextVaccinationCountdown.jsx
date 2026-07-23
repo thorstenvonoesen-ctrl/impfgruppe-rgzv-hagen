@@ -82,7 +82,7 @@ export default function NextVaccinationCountdown() {
         style={{
           color: '#f28c28',
           fontWeight: 700,
-          fontSize: '15px',
+          fontSize: '13px',
           marginBottom: '4px'
         }}
       >
