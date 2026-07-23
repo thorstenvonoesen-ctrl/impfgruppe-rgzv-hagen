@@ -171,7 +171,7 @@ useEffect(() => {
 >
      <Header /> 
       <main style={{ maxWidth:'1240px', margin:'40px auto 80px' }}>
-        <div style={{display:'grid',gridTemplateColumns:'180px minmax(0,1fr) 140px',alignItems:'center',gap:'20px',background:'rgba(255,255,255,.08)',
+        <div style={{display:'grid',gridTemplateColumns:'250px minmax(0,1fr)',alignItems:'center',gap:'20px',background:'rgba(255,255,255,.08)',
 backdropFilter:'blur(14px)',
 border:'1px solid rgba(255,255,255,.15)',
 boxShadow:'0 20px 50px rgba(0,0,0,.35)',color:'white',overflow:'hidden',
