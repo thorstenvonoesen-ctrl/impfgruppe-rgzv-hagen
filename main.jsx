@@ -146,7 +146,13 @@ const [pulse, setPulse] = useState(true)
   useEffect(() => {
     loadClubs()
   }, [])
+useEffect(() => {
+  const interval = setInterval(() => {
+    setPulse(p => !p)
+  }, 1000)
 
+  return () => clearInterval(interval)
+}, [])
   async function loadClubs() {
     if (!hasSupabase) return
     const { data } = await supabase.from('clubs').select('*').order('name')
