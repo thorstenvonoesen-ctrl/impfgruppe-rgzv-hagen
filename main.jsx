@@ -420,7 +420,7 @@ transition:'all .25s ease'
   <div
   style={{
     textAlign: 'center',
-    marginTop: '40px',
+    marginTop: '70px',
     marginBottom: '20px'
   }}
 >
