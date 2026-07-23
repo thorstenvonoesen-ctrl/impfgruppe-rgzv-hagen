@@ -24,13 +24,7 @@ export default function NextVaccinationCountdown() {
       }
 
       const days = Math.floor(diff / (1000 * 60 * 60 * 24))
-      const hours = Math.floor((diff / (1000 * 60 * 60)) % 24)
-      const minutes = Math.floor((diff / (1000 * 60)) % 60)
-      const seconds = Math.floor((diff / 1000) % 60)
-
-      setRemaining(
-        `${days} Tage • ${hours} Std • ${minutes} Min • ${seconds} Sek`
-      )
+      setRemaining(`${days} Tage`)
     }, 1000)
 
     return () => clearInterval(timer)
@@ -41,72 +35,40 @@ export default function NextVaccinationCountdown() {
 
     const { data } = await supabase
       .from('vaccination_dates')
-      .select('*')
+      .select('date')
       .gte('date', today)
       .order('date', { ascending: true })
       .limit(1)
       .single()
 
-    if (data) {
-      setNextDate(data.date)
-    } else {
-      setNextDate(null)
-    }
+    setNextDate(data?.date ?? null)
   }
 
   if (!nextDate) {
     return (
-      <div
+      <span
         style={{
-          textAlign: 'center',
-          padding: '14px',
-          color: '#ffffff',
-          fontSize: '16px'
+          color: '#d8d8d8',
+          fontSize: '14px',
+          fontWeight: 500,
+          whiteSpace: 'nowrap'
         }}
       >
-        🩺 Zurzeit ist kein Impftermin geplant.
-      </div>
+        🩺 Kein Impftermin
+      </span>
     )
   }
 
   return (
-    <div
+    <span
       style={{
-        textAlign: 'right',
-        padding: '0',
-        
-        
+        color: '#ffffff',
+        fontSize: '14px',
+        fontWeight: 600,
+        whiteSpace: 'nowrap'
       }}
     >
-      <div
-        style={{
-          color: '#f28c28',
-          fontWeight: 700,
-          fontSize: '13px',
-          marginBottom: '1px'
-        }}
-      >
-        🩺 Nächster Impftermin
-      </div>
-
-      <div
-        style={{
-          color: '#ffffff',
-          fontSize: '15px'
-        }}
-      >
-        {new Date(nextDate).toLocaleDateString('de-DE')}
-      </div>
-
-      <div
-        style={{
-          color: '#d8d8d8',
-          fontSize: '14px',
-          marginTop: '4px'
-        }}
-      >
-        Noch {remaining}
-      </div>
-    </div>
+      🩺 {new Date(nextDate).toLocaleDateString('de-DE')} • Noch {remaining}
+    </span>
   )
 }
