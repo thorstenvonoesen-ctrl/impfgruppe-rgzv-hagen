@@ -25,11 +25,12 @@ export default function NextVaccinationCountdown() {
 
       const days = Math.floor(diff / (1000 * 60 * 60 * 24))
       const hours = Math.floor((diff / (1000 * 60 * 60)) % 24)
-const minutes = Math.floor((diff / (1000 * 60)) % 60)
-const seconds = Math.floor((diff / 1000) % 60)
+      const minutes = Math.floor((diff / (1000 * 60)) % 60)
+      const seconds = Math.floor((diff / 1000) % 60)
+
       setRemaining(
-  `${days} Tage ${hours} Stunden ${minutes} Minuten ${seconds} Sekunden`
-)
+        `${days} Tage · ${hours} Stunden · ${minutes} Minuten · ${seconds} Sekunden`
+      )
     }, 1000)
 
     return () => clearInterval(timer)
@@ -50,30 +51,20 @@ const seconds = Math.floor((diff / 1000) % 60)
   }
 
   if (!nextDate) {
-    return (
-      <span
-        style={{
-          color: '#d8d8d8',
-          fontSize: '14px',
-          fontWeight: 500,
-          whiteSpace: 'nowrap'
-        }}
-      >
-        🩺 Kein Impftermin
-      </span>
-    )
+    return null
   }
 
   return (
-  <div
-    style={{
-      color: '#f28c28',
-      fontSize: '17px',
-      fontWeight: 400,
-      whiteSpace: 'nowrap',
-      marginTop: '8px'
-    }}
-  >
-    ⏳ Nächster Impftermin: {new Date(nextDate).toLocaleDateString('de-DE')} • Noch {remaining}
-  </div>
-)
+    <div
+      style={{
+        color: '#f28c28',
+        fontSize: '17px',
+        fontWeight: 400,
+        whiteSpace: 'nowrap',
+        marginTop: '8px'
+      }}
+    >
+      ⏳ Nächster Impftermin: {new Date(nextDate).toLocaleDateString('de-DE')} • Noch {remaining}
+    </div>
+  )
+}
