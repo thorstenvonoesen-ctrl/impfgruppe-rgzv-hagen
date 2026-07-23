@@ -142,7 +142,7 @@ function ClubDashboard() {
 }
 function ClubSelect() {
   const [clubs, setClubs] = useState([])
-
+const [pulse, setPulse] = useState(true)
   useEffect(() => {
     loadClubs()
   }, [])
