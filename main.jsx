@@ -204,9 +204,7 @@ height:'220px',
       letterSpacing: '-1px'
     }}
   >
-    Newcastle-
-<br />
-Sammelimpfung
+    Newcastle-Sammelimpfung
 <br />
 <span
   style={{
