@@ -235,12 +235,9 @@ RGZV Hagen und Umgebung seit 1903 e.V.
     }}
   />
 </div>
-          <div
+ <div
   style={{
-    textAlign: 'left',
-    marginLeft: '20px',
-    marginTop: '-10px',
-    alignSelf: 'center'
+    display: 'none'
   }}
 >
             <div style={{fontSize:'18px',marginBottom:'22px',fontWeight:'500',color:'#fff'}}>© 2026</div>
