@@ -417,13 +417,56 @@ transition:'all .25s ease'
 
   </div>
 
-  <div style={{textAlign:'center',marginTop:'38px'}}>
+  <div
+  style={{
+    textAlign: 'center',
+    marginTop: '40px',
+    marginBottom: '20px'
+  }}
+>
+  <div
+    style={{
+      width: '80px',
+      height: '3px',
+      background: '#f28c28',
+      borderRadius: '999px',
+      margin: '0 auto 18px'
+    }}
+  />
 
-    
-
-    
-
+  <div
+    style={{
+      color: 'rgba(255,255,255,.65)',
+      fontSize: '13px',
+      textTransform: 'uppercase',
+      letterSpacing: '2px'
+    }}
+  >
+    Entwickelt von
   </div>
+
+  <div
+    style={{
+      color: '#f28c28',
+      fontFamily: "'Allura', cursive",
+      fontSize: '34px',
+      lineHeight: '1',
+      marginTop: '8px'
+    }}
+  >
+    Thorsten von Oesen
+  </div>
+
+  <div
+    style={{
+      color: 'rgba(255,255,255,.55)',
+      fontSize: '14px',
+      marginTop: '8px'
+    }}
+  >
+    Konzeption · Entwicklung · Design
+  </div>
+</div>
 
 </div>
      
