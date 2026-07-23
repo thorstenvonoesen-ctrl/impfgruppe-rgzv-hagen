@@ -2043,7 +2043,7 @@ function RegisterInfo() {
         </p>
 
         <p>
-          Nach Abschluss der Testphase werden die weiteren Ausbaustufen der
+          Nach Abschluss der Testphase werden die weiteren Funktionen der
           Anwendung schrittweise umgesetzt.
         </p>
 
