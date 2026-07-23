@@ -193,7 +193,7 @@ position:'relative',padding:'40px 46px',borderRadius:'28px',marginBottom:'50px'}
 }}
   />
 </div>
-          <div>
+          <div style={{ flex: 1, minWidth: 0 }}>
   <h1
     style={{
       margin: 0,
