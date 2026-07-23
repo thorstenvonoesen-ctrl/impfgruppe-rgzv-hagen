@@ -394,37 +394,7 @@ transition:'all .25s ease'
 }}>
   Freischaltung und Nutzung nach erfolgreicher Prüfung kostenpflichtig.
 </p>
-    </div>
-
-  </div>
-
-  <div
-  style={{
-    textAlign: 'center',
-    marginTop: '70px',
-    marginBottom: '20px'
-  }}
->
-  <div
-    style={{
-      width: '80px',
-      height: '3px',
-      background: '#f28c28',
-      borderRadius: '999px',
-      margin: '0 auto 18px'
-    }}
-  />
-
-  <div
-    style={{
-      color: 'rgba(255,255,255,.65)',
-      fontSize: '13px',
-      textTransform: 'uppercase',
-      letterSpacing: '2px'
-    }}
-  >
-    Entwickelt von
-  </div>
+    
 
   
 </div>
