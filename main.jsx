@@ -2019,7 +2019,12 @@ gesamten Sammelimpfung.
 }
 function RegisterInfo() {
   return (
-    <div className="min-h-screen bg-slate-100">
+    <div
+  style={{
+    minHeight: '100vh',
+    background: 'linear-gradient(135deg,#0f172a,#14532d)'
+  }}
+>
   <Header />
 
   <section
