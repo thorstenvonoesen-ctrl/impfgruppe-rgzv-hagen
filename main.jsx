@@ -2064,8 +2064,12 @@ function RegisterInfo() {
         </div>
       </section>
 
-      <Footer />
-    </main>
+      </div>
+</section>
+
+<Footer />
+
+</div>
   )
 }
 function ClubRegistration() {
