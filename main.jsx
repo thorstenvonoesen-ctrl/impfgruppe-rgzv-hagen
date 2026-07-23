@@ -3839,7 +3839,14 @@ function Header() {
 }
 function Footer() {
   return (
-    <footer>
+    <footer
+  style={{
+    textAlign: 'center',
+    padding: '30px 20px',
+    color: '#ffffff',
+    background: 'transparent'
+  }}
+>
       © 2026 Thorsten von Oesen – Impfgruppenmanager
       {' | '}
       <a href="#datenschutz">Datenschutz</a>
