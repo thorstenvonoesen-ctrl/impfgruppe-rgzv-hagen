@@ -374,7 +374,7 @@ transition:'all .25s ease'
       </h3>
 
       <p style={{color:'rgba(255,255,255,.82)',lineHeight:'1.7'}}>
-  Registrieren Sie Ihren Verein und nutzen Sie den Impfgruppenmanager für Ihre eigene Impfgruppe. Nach der Freischaltung können Sie alle Vereinsdaten selbst verwalten.
+  Registrieren Sie Ihren Verein und beantragen Sie die Freischaltung. Nach der Freigabe können Sie ihre eigene Newcastle-Sammelimpfung sowie Teilnehmer und Vereinsdaten selbst verwalten.
 </p>
 
 <p style={{
@@ -383,7 +383,7 @@ transition:'all .25s ease'
   fontWeight:'600',
   fontSize:'14px'
 }}>
-  Nutzung nach Freischaltung kostenpflichtig.
+  Freischaltung und Nutzung nach erfolgreicher Prüfung kostenpflichtig.
 </p>
     </div>
 
