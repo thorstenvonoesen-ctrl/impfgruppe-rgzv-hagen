@@ -401,40 +401,41 @@ transition:'all .25s ease'
 
 </div>
 </div> 
-        <div
+<div
   style={{
     textAlign: 'center',
     marginTop: '40px',
-    marginBottom: '10px'
+    marginBottom: '24px'
   }}
 >
   <div
     style={{
       width: '80px',
-      height: '3px',
+      height: '4px',
       background: '#f28c28',
       borderRadius: '999px',
-      margin: '0 auto 16px'
+      margin: '0 auto 18px'
     }}
   />
 
   <div
     style={{
-      color: 'rgba(255,255,255,.65)',
+      color: 'rgba(255,255,255,0.75)',
       fontSize: '13px',
+      letterSpacing: '3px',
       textTransform: 'uppercase',
-      letterSpacing: '2px'
+      marginBottom: '10px'
     }}
   >
-    Entwickelt von
+    ENTWICKELT VON
   </div>
 
   <div
     style={{
       color: '#f28c28',
       fontFamily: "'Allura', cursive",
-      fontSize: '28px',
-      marginTop: '8px'
+      fontSize: '42px',
+      lineHeight: 1
     }}
   >
     Thorsten von Oesen
@@ -442,12 +443,12 @@ transition:'all .25s ease'
 
   <div
     style={{
-      color: '#ffffff',
-      fontSize: '14px',
-      marginTop: '6px'
+      color: 'rgba(255,255,255,0.65)',
+      fontSize: '15px',
+      marginTop: '12px'
     }}
   >
-    Inhaber & Entwickler
+    Konzeption · Entwicklung · Design
   </div>
 </div>
       </main>
