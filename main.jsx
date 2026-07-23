@@ -2216,7 +2216,8 @@ if (participant?.email) {
 }
 
 
-  setMessage('Stripe-Zahlung erfolgreich bestätigt.')
+  alert('Stripe-Code wurde ausgeführt')
+setMessage('Stripe-Zahlung erfolgreich bestätigt.')
   setLoading(false)
   return
 }
