@@ -310,7 +310,7 @@ boxShadow: '0 20px 50px rgba(0,0,0,.35)'
     color: '#f59e0b',
     lineHeight: '1.7',
     fontWeight: '700',
-    animation: 'pulse 2s ease-in-out infinite'
+    
   }}
 >
         Direkt zur Anmeldung Ihrer Tiere für den nächsten Impftermin des RGZV Hagen.
