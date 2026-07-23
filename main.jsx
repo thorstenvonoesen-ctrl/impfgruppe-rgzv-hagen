@@ -3948,26 +3948,27 @@ function Header() {
         style={{
           maxWidth: '1440px',
           margin: '0 auto',
-          display: 'flex',
-          justifyContent: 'space-between',
+          display: 'grid',
+          gridTemplateColumns: '1fr auto',
           alignItems: 'center'
         }}
       >
-        <nav>
-          <a
-            href="#admin"
-            style={{
-              color: '#ffffff',
-              textDecoration: 'none',
-              fontSize: '18px',
-              fontWeight: '700'
-            }}
-          >
-            Admin
-          </a>
-        </nav>
+        <a
+          href="#admin"
+          style={{
+            color: '#ffffff',
+            textDecoration: 'none',
+            fontSize: '18px',
+            fontWeight: '700',
+            justifySelf: 'start'
+          }}
+        >
+          Admin
+        </a>
 
-        <NextVaccinationCountdown />
+        <div style={{ justifySelf: 'end' }}>
+          <NextVaccinationCountdown />
+        </div>
       </div>
     </header>
   )
