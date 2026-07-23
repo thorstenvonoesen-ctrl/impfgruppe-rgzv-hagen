@@ -74,7 +74,7 @@ export default function NextVaccinationCountdown() {
       style={{
         textAlign: 'right',
         padding: '0',
-        background: 'rgba(255,255,255,.04)',
+        
         borderBottom: '1px solid rgba(255,255,255,.08)'
       }}
     >
