@@ -204,9 +204,11 @@ position:'relative',padding:'40px 46px',borderRadius:'28px',marginBottom:'50px'}
       letterSpacing: '-1px'
     }}
   >
-    Online-Anmeldung zur Newcastle-Sammelimpfung
-    <br />
-    des RGZV Hagen und Umgebung seit 1903 e.V.
+    Online-Anmeldung zur
+<br />
+Newcastle-Sammelimpfung des
+<br />
+RGZV Hagen und Umgebung seit 1903 e.V.
   </h1>
 
   <p
