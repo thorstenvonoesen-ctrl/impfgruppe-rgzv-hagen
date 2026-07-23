@@ -164,7 +164,7 @@ useEffect(() => {
     <div
   className="page"
   style={{
-    minHeight: "100vh",
+    minHeight: "99vh",
     background:
       "linear-gradient(120deg, #1f2937 0%, #163a2f 65%, #355e2b 100%)"
   }}
