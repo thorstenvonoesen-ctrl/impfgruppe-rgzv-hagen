@@ -215,7 +215,7 @@ Sammelimpfung
     opacity: 0.95
   }}
 >
-  Online-Anmeldung des
+  Online-Anmeldung für den
   <br />
   RGZV Hagen und Umgebung seit 1903 e.V.
 </span>
