@@ -181,16 +181,6 @@ border:'1px solid rgba(255,255,255,.15)',
 boxShadow:'0 20px 50px rgba(0,0,0,.35)',color:'white',overflow:'hidden',
 position:'relative',padding:'24px 40px',borderRadius:'28px',marginBottom:'24px'}}>
           <div
-            style={{
-              position:'absolute',
-              top:'24px',
-              right:'40px',
-              zIndex:10
-            }}
-          >
-            <NextVaccinationCountdown />
-          </div>
-          <div
   style={{
     display: 'flex',
     justifyContent: 'center',
@@ -246,6 +236,10 @@ height:'220px',
     <br />
     Mitglieder des RGZV Hagen und Umgebung seit 1903 e.V. und Teilnehmer der Impfgruppe können direkt über „Zur Impfanmeldung“ ihren nächsten Impftermin anmelden.
   </p>
+
+  <div style={{ marginTop:'18px' }}>
+    <NextVaccinationCountdown />
+  </div>
 
   <div
     style={{
