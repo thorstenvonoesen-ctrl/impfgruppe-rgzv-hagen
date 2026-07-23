@@ -213,7 +213,7 @@ position:'relative',padding:'40px 46px',borderRadius:'28px',marginBottom:'50px'}
   >
     Schnell, einfach und sicher zur Anmeldung Ihres Impftermins.
     <br />
-    Wählen Sie Ihren Verein aus und melden Sie sich schnell und bequem online an.
+    Mitglieder des RGZV Hagen und Umgebung seit 1903 e.V. und Teilnehmer der Impfgruppe können direkt über „Zur Impfanmeldung“ ihren nächsten Impftermin anmelden.
   </p>
 
   <div
