@@ -65,26 +65,34 @@ const seconds = Math.floor((diff / 1000) % 60)
   }
 
   return (
-  <span
+  <div
     style={{
       display: 'flex',
-      alignItems: 'center',
-      gap: '8px',
-      color: '#ffffff',
-      fontSize: '18px',
-      fontWeight: 600,
-      whiteSpace: 'nowrap'
+      flexDirection: 'column',
+      alignItems: 'flex-start',
+      lineHeight: 1.3
     }}
   >
-    <span style={{ color: '#f28c28' }}>🩺</span>
+    <div
+      style={{
+        color: '#f28c28',
+        fontSize: '15px',
+        fontWeight: 700
+      }}
+    >
+      🩺 Countdown bis zum nächsten Impftermin:
+    </div>
 
-    <span>
-      {new Date(nextDate).toLocaleDateString('de-DE')}
-    </span>
-
-    <span style={{ color: '#bdbdbd' }}>
-      • Noch {remaining}
-    </span>
-  </span>
+    <div
+      style={{
+        color: '#f28c28',
+        fontSize: '18px',
+        fontWeight: 700,
+        whiteSpace: 'nowrap'
+      }}
+    >
+      {new Date(nextDate).toLocaleDateString('de-DE')} • Noch {remaining}
+    </div>
+  </div>
 )
 }
