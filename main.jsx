@@ -175,7 +175,7 @@ useEffect(() => {
 backdropFilter:'blur(14px)',
 border:'1px solid rgba(255,255,255,.15)',
 boxShadow:'0 20px 50px rgba(0,0,0,.35)',color:'white',overflow:'hidden',
-position:'relative',padding:'24px 40px',borderRadius:'28px',marginBottom:'50px'}}>
+position:'relative',padding:'24px 40px',borderRadius:'28px',marginBottom:'24px'}}>
           <div
   style={{
     display: 'flex',
