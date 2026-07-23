@@ -2092,6 +2092,7 @@ function RegisterInfo() {
 </div>
   )
 }
+function ClubLoginInfo() {
 function ClubRegistration() {
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
