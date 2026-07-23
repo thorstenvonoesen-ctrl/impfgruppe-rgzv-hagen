@@ -2062,8 +2062,6 @@ function RegisterInfo() {
             Zur Startseite
           </button>
         </div>
-      </section>
-
       </div>
 </section>
 
