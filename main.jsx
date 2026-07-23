@@ -212,14 +212,13 @@ height:'220px',
 <br />
 <span
   style={{
-    fontSize: '0.72em',
-    fontWeight: '600',
-    opacity: 0.95
+  fontSize: '0.64em',
+  fontWeight: '600',
+  opacity: 0.95,
+  whiteSpace: 'nowrap'
   }}
 >
-  Online-Anmeldung für den
-  <br />
-  RGZV Hagen und Umgebung seit 1903 e.V.
+  Online-Anmeldung für den RGZV Hagen und Umgebung seit 1903 e.V.
 </span>
   </h1>
 
