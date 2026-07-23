@@ -90,6 +90,7 @@ if (page === '#signup') return <PublicSignup />
   if (page === '#datenschutz') return <Datenschutz />
   if (page === '#impressum') return <Impressum />
 if (page === '#register') return <ClubRegistration />
+  if (page === '#register-info') return <RegisterInfo />
   if (page === '#club-login') return <ClubLogin />
   if (page === '#club-dashboard') return <ClubDashboard />
   if (page === '#') return <ClubSelect />
