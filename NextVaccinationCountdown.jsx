@@ -71,7 +71,7 @@ const seconds = Math.floor((diff / 1000) % 60)
       alignItems: 'center',
       gap: '8px',
       color: '#ffffff',
-      fontSize: '13px',
+      fontSize: '18px',
       fontWeight: 600,
       whiteSpace: 'nowrap'
     }}
