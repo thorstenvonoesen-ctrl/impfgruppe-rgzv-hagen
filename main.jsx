@@ -187,8 +187,8 @@ position:'relative',padding:'40px 46px',borderRadius:'28px',marginBottom:'50px'}
     src="/shield-orange.png"
     alt="Impfgruppenmanager"
     style={{
-  width: '180px',
-height: '180px',
+  width:'220px'
+height:'220px'
   objectFit: 'contain'
 }}
   />
