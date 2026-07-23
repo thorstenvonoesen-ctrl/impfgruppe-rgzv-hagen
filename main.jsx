@@ -400,7 +400,56 @@ transition:'all .25s ease'
 </div>
 
 </div>
-</div>     
+</div> 
+        <div
+  style={{
+    textAlign: 'center',
+    marginTop: '40px',
+    marginBottom: '10px'
+  }}
+>
+  <div
+    style={{
+      width: '80px',
+      height: '3px',
+      background: '#f28c28',
+      borderRadius: '999px',
+      margin: '0 auto 16px'
+    }}
+  />
+
+  <div
+    style={{
+      color: 'rgba(255,255,255,.65)',
+      fontSize: '13px',
+      textTransform: 'uppercase',
+      letterSpacing: '2px'
+    }}
+  >
+    Entwickelt von
+  </div>
+
+  <div
+    style={{
+      color: '#f28c28',
+      fontFamily: "'Allura', cursive",
+      fontSize: '28px',
+      marginTop: '8px'
+    }}
+  >
+    Thorsten von Oesen
+  </div>
+
+  <div
+    style={{
+      color: '#ffffff',
+      fontSize: '14px',
+      marginTop: '6px'
+    }}
+  >
+    Inhaber & Entwickler
+  </div>
+</div>
       </main>
       <Footer />
     </div>
