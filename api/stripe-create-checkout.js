@@ -14,7 +14,7 @@ export default async function handler(req, res) {
       payment_method_types: ['card', 'sepa_debit'],
       mode: 'payment',
       metadata: {
-  participantId
+  participantId: participantId
 },
 
       line_items: [
