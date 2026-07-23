@@ -3840,18 +3840,23 @@ function Header() {
 function Footer() {
   return (
     <footer
-  style={{
-    textAlign: 'center',
-    padding: '30px 20px',
-    color: '#ffffff',
-    background: 'transparent'
-  }}
->
-      © 2026 Thorsten von Oesen – Impfgruppenmanager
+      style={{
+        textAlign: 'center',
+        padding: '30px 20px',
+        color: '#ffffff',
+        background: 'transparent',
+        borderTop: '1px solid rgba(255,255,255,0.08)'
+      }}
+    >
+      © 2026 Thorsten von Oesen – Für den RGZV Hagen und Umgebung seit 1903 e.V.
       {' | '}
-      <a href="#datenschutz">Datenschutz</a>
+      <a href="#datenschutz" style={{ color: '#ffffff' }}>
+        Datenschutz
+      </a>
       {' | '}
-      <a href="#impressum">Impressum</a>
+      <a href="#impressum" style={{ color: '#ffffff' }}>
+        Impressum
+      </a>
     </footer>
   )
 }
