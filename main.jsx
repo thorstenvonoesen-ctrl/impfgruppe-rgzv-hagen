@@ -2017,6 +2017,50 @@ gesamten Sammelimpfung.
     </div>
   )
 }
+function RegisterInfo() {
+  return (
+    <main className="container">
+      <Header />
+
+      <section className="hero">
+        <h1>Vereinsregistrierung</h1>
+
+        <p>
+          Diese Funktion befindet sich derzeit noch in der Entwicklung.
+        </p>
+
+        <p>
+          Der Impfgruppenmanager wird derzeit im Rahmen eines Probelaufs gemeinsam
+          mit dem <strong>RGZV Hagen und Umgebung seit 1903 e.V.</strong> entwickelt
+          und getestet.
+        </p>
+
+        <p>
+          Der Schwerpunkt liegt aktuell auf der sicheren und zuverlässigen
+          Durchführung der Newcastle-Sammelimpfung für unseren Verein.
+          Aus diesem Grund ist die Registrierung weiterer Vereine derzeit
+          noch nicht freigeschaltet.
+        </p>
+
+        <p>
+          Nach Abschluss der Testphase werden die weiteren Ausbaustufen der
+          Anwendung schrittweise umgesetzt.
+        </p>
+
+        <div style={{ marginTop: '30px' }}>
+          <button
+            className="primary"
+            onClick={() => (window.location.hash = '#')}
+          >
+            Zur Startseite
+          </button>
+        </div>
+      </section>
+
+      <Footer />
+    </main>
+  )
+}
 function ClubRegistration() {
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
