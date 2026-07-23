@@ -3946,10 +3946,8 @@ function Header() {
     >
       <div
   style={{
-    maxWidth: '100%',
-    margin: '0 auto',
+    width: '100%',
     display: 'flex',
-    justifyContent: 'space-between',
     alignItems: 'center'
   }}
 >
@@ -3960,11 +3958,12 @@ function Header() {
 <a
   href="#admin"
   style={{
+    marginLeft: 'auto',
+    paddingRight: '32px',
     color: '#ffffff',
     textDecoration: 'none',
     fontSize: '18px',
-    fontWeight: '700',
-    marginLeft: 'auto'
+    fontWeight: '700'
   }}
 >
   Admin-Login
