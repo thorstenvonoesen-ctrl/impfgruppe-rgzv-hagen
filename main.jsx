@@ -323,7 +323,7 @@ boxShadow: '0 20px 50px rgba(0,0,0,.35)'
     </div>
 
     <div
-      onClick={() => window.location.hash = '#club-login'}
+      onClick={() => window.location.hash = '#club-login-info'
       onMouseEnter={e => {
   e.currentTarget.style.transform = 'translateY(-8px)'
 }}
