@@ -2019,10 +2019,17 @@ gesamten Sammelimpfung.
 }
 function RegisterInfo() {
   return (
-    <main className="container">
-      <Header />
+    <div className="min-h-screen bg-slate-100">
+  <Header />
 
-      <section className="hero">
+  <section
+    style={{
+      background: "linear-gradient(135deg,#0f172a,#14532d)",
+      color: "#fff",
+      padding: "90px 40px"
+    }}
+  >
+    <div style={{ maxWidth: "1100px", margin: "0 auto" }}>
         <h1>Vereinsregistrierung</h1>
 
         <p>
