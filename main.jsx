@@ -250,7 +250,7 @@ function AppointmentCountdown({ appointments }) {
     <div className="appointment-countdown">
       <strong>{appointment.title}</strong>
       <small>{appointment.target.toLocaleDateString('de-DE')}{appointment.time ? ` · ${appointment.time} Uhr` : ''}</small>
-      <em>Noch {days} Tage · {hours} Stunden · {minutes} Minuten · {seconds} Sekunden</em>
+      <em>Noch {days} Tage · {hours} Stunden · {minutes} Minuten · <b>{seconds} Sekunden</b></em>
     </div>
   )
 }
