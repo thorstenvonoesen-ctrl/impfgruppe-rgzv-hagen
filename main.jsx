@@ -4,7 +4,7 @@ import { Syringe, ShieldCheck, Users, Euro, Download, Search, Lock, LogOut, Cale
 import jsPDF from 'jspdf'
 import autoTable from 'jspdf-autotable'
 import QRCode from 'qrcode'
-import { supabase, hasSupabase } from './supabase.js'
+import { supabase, hasSupabase, supabaseConfigMessage } from './supabase.js'
 async function getDefaultClubId() {
   if (!hasSupabase) return null
 
@@ -2679,6 +2679,11 @@ useEffect(() => {
 }, [])
   async function submit(e) {
     e.preventDefault(); setMessage(''); setLoading(true)
+    if (!hasSupabase) {
+      setMessage(supabaseConfigMessage)
+      setLoading(false)
+      return
+    }
     if (!privacyAccepted) {
   setMessage('Bitte der Datenschutzerklärung zustimmen.')
   setLoading(false)
@@ -3259,6 +3264,7 @@ function Admin() {
   }, [])
   async function login() {
     setLoginError('')
+    if (!hasSupabase) return setLoginError(supabaseConfigMessage)
     if (!ADMIN_PIN) return setLoginError('Der Adminzugang ist noch nicht vollständig konfiguriert.')
     if (pin !== ADMIN_PIN) return setLoginError('Die Admin-PIN ist nicht korrekt.')
     const { data, error } = await supabase.auth.signInWithPassword({ email, password })
@@ -4461,6 +4467,7 @@ function Header() {
         borderBottom: '1px solid rgba(255,255,255,0.08)'
       }}
     >
+      {!hasSupabase && <p role="alert" style={{ margin: '0 0 10px', color: '#ffe1c2', fontSize: '13px', fontWeight: '700', textAlign: 'center' }}>{supabaseConfigMessage}</p>}
       <div
   style={{
     width: '100%',

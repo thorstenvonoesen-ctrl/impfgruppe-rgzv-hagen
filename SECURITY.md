@@ -8,11 +8,13 @@ In Vercel für Production setzen:
 
 - `SUPABASE_URL`
 - `SUPABASE_SERVICE_ROLE_KEY`
+- `VITE_SUPABASE_URL`
+- `VITE_SUPABASE_ANON_KEY`
 - `VITE_ADMIN_PIN` – ohne nicht leeren Wert ist ein Admin-Login absichtlich nicht möglich
 - bestehende Zahlungs- und Mailvariablen: `PAYPAL_CLIENT_ID`, `PAYPAL_SECRET`, `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, `RESEND_API_KEY`
 - `VITE_SUPABASE_URL` muss für bereits vorhandene Zahlungs-Webhooks weiter gesetzt bleiben; der neue serverseitige Code bevorzugt `SUPABASE_URL`.
 
-Der Service-Role-Schlüssel darf nie in `VITE_*`-Variablen oder im Browser stehen. `VITE_ADMIN_PIN` ist wegen des Vite-Präfixes nur eine zusätzliche UI-Sperre und kein Berechtigungsnachweis. Die echte Berechtigung erfolgt ausschließlich über Supabase Auth und `club_admin_memberships`. Es gibt keinen fest codierten PIN-Fallback.
+`VITE_SUPABASE_URL` und `VITE_SUPABASE_ANON_KEY` sind für das Frontend zwingend erforderlich. Der Anon-Key ist ein öffentlicher Client-Key und kein Service-Role-Key. Der Service-Role-Schlüssel darf nie in `VITE_*`-Variablen oder im Browser stehen. `VITE_ADMIN_PIN` ist wegen des Vite-Präfixes nur eine zusätzliche UI-Sperre und kein Berechtigungsnachweis. Die echte Berechtigung erfolgt ausschließlich über Supabase Auth und `club_admin_memberships`. Es gibt keinen fest codierten PIN-Fallback.
 
 ## Clubadmin zuordnen
 
