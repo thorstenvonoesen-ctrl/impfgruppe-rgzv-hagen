@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { createRoot } from 'react-dom/client'
 import { Syringe, ShieldCheck, Users, Euro, Download, Search, Lock, LogOut } from 'lucide-react'
 import jsPDF from 'jspdf'
@@ -49,6 +49,54 @@ const vaccines = ['Newcastle', 'IB', 'ILT', 'Marek', 'Kokzidiose', 'Salmonellen'
 const ADMIN_PIN = import.meta.env.VITE_ADMIN_PIN || '1234'
 const PAYMENT_URL = import.meta.env.VITE_PAYMENT_URL || ''
 const MEMBER_CODE = 'RGZV2026'
+
+function PremiumBackground() {
+  const pointerLightRef = useRef(null)
+
+  useEffect(() => {
+    const supportsPointer = window.matchMedia('(hover: hover) and (pointer: fine)')
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)')
+
+    if (!supportsPointer.matches || prefersReducedMotion.matches || !pointerLightRef.current) return
+
+    const pointerLight = pointerLightRef.current
+    let targetX = window.innerWidth / 2
+    let targetY = window.innerHeight / 2
+    let currentX = targetX
+    let currentY = targetY
+    let frameId
+
+    const updateTarget = event => {
+      targetX = event.clientX
+      targetY = event.clientY
+    }
+
+    const animate = () => {
+      currentX += (targetX - currentX) * 0.055
+      currentY += (targetY - currentY) * 0.055
+      pointerLight.style.setProperty('--premium-pointer-x', `${currentX}px`)
+      pointerLight.style.setProperty('--premium-pointer-y', `${currentY}px`)
+      frameId = requestAnimationFrame(animate)
+    }
+
+    window.addEventListener('pointermove', updateTarget, { passive: true })
+    frameId = requestAnimationFrame(animate)
+
+    return () => {
+      window.removeEventListener('pointermove', updateTarget)
+      cancelAnimationFrame(frameId)
+    }
+  }, [])
+
+  return (
+    <div className="premium-background" aria-hidden="true">
+      <div className="premium-orb premium-orb-one" />
+      <div className="premium-orb premium-orb-two" />
+      <div className="premium-orb premium-orb-three" />
+      <div ref={pointerLightRef} className="premium-pointer-light" />
+    </div>
+  )
+}
 
 function emptyForm() {
   return {
@@ -244,8 +292,7 @@ useEffect(() => {
   className="page"
   style={{
     minHeight: "99vh",
-    background:
-      "linear-gradient(120deg, #1f2937 0%, #163a2f 65%, #355e2b 100%)"
+    background: 'transparent'
   }}
 >
      <Header />
@@ -4112,4 +4159,4 @@ function Footer({ showDeveloper = false }) {
   )
 }
 
-createRoot(document.getElementById('root')).render(<App />)
+createRoot(document.getElementById('root')).render(<><PremiumBackground /><App /></>)

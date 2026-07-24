@@ -527,3 +527,25 @@ td .paid {
 .footer-signature { color: rgba(255,255,255,.55); font-size: 12px; line-height: 1.4; text-align: right; }
 .footer-signature span { color: #f28c28; }
 @media (max-width: 700px) { .footer-with-signature .footer-content { flex-direction: column; gap: 6px; } .footer-signature { text-align: center; } }
+
+/* Appweiter Premium-Hintergrund */
+:root { background: #163a2f; }
+body { background: #163a2f; }
+#root > :not(.premium-background) { position: relative; z-index: 1; }
+.premium-background { position: fixed; z-index: 0; inset: 0; overflow: hidden; pointer-events: none; background: linear-gradient(120deg, #1f2937 0%, #163a2f 65%, #355e2b 100%); }
+.premium-orb,
+.premium-pointer-light { position: absolute; width: min(72vw, 980px); aspect-ratio: 1; border-radius: 50%; pointer-events: none; filter: blur(90px); will-change: transform; }
+.premium-orb { opacity: .19; }
+.premium-orb-one { top: -34%; left: -22%; background: rgba(33, 112, 83, .72); animation: premium-drift-one 36s ease-in-out infinite alternate; }
+.premium-orb-two { right: -28%; bottom: -42%; background: rgba(207, 111, 33, .46); animation: premium-drift-two 42s ease-in-out infinite alternate; }
+.premium-orb-three { top: 28%; left: 34%; width: min(56vw, 760px); background: rgba(35, 103, 102, .34); animation: premium-drift-three 30s ease-in-out infinite alternate; }
+.premium-pointer-light { top: 0; left: 0; width: min(70vw, 880px); opacity: .13; background: radial-gradient(circle, rgba(242, 140, 40, .42) 0%, rgba(48, 121, 91, .24) 40%, transparent 72%); transform: translate3d(calc(var(--premium-pointer-x, 50vw) - 50%), calc(var(--premium-pointer-y, 50vh) - 50%), 0); }
+.page,
+.signup-page,
+.admin-login-page,
+.admin { background: transparent; }
+@keyframes premium-drift-one { from { transform: translate3d(0, 0, 0) scale(1); } to { transform: translate3d(14vw, 11vh, 0) scale(1.16); } }
+@keyframes premium-drift-two { from { transform: translate3d(0, 0, 0) scale(1); } to { transform: translate3d(-15vw, -12vh, 0) scale(1.13); } }
+@keyframes premium-drift-three { from { transform: translate3d(0, 0, 0) scale(.94); } to { transform: translate3d(-10vw, 9vh, 0) scale(1.11); } }
+@media (hover: none), (pointer: coarse) { .premium-pointer-light { display: none; } }
+@media (prefers-reduced-motion: reduce) { .premium-orb { animation: none; } .premium-pointer-light { display: none; } }
