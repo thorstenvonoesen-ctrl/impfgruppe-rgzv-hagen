@@ -830,22 +830,22 @@ function InfoPage() {
   [
     "🛡️",
     "Schutz Ihrer Tiere",
-    "Regelmäßige Newcastle-Impfungen schützen Ihren gesamten Geflügelbestand zuverlässig vor einer hochansteckenden Krankheit. Sie senken das Ausbruchsrisiko und tragen dauerhaft zur Gesundheit Ihrer Tiere bei."
+    "Regelmäßige Newcastle-Impfungen schützen Ihren Geflügelbestand zuverlässig und reduzieren das Risiko einer Ausbreitung."
   ],
   [
     "⚖️",
     "Gesetzliche Impfpflicht",
-    "Die Newcastle-Impfung ist für Geflügelhalter gesetzlich vorgeschrieben und schützt vor größeren Ausbrüchen. Mit der App melden Sie Ihren Bestand einfach und übersichtlich zur Sammelimpfung an."
+    "Die Newcastle-Impfung ist gesetzlich vorgeschrieben. Mit der App melden Sie Ihren Bestand einfach online an."
   ],
   [
     "👥",
     "Gemeinsame Sammelimpfung",
-    "Die gemeinsame Planung bündelt Termine und Impfstoffbestellungen zentral. Das reduziert den organisatorischen Aufwand, spart wertvolle Zeit und ermöglicht allen Geflügelhaltern eine unkomplizierte Teilnahme."
+    "Gemeinsame Termin- und Impfstoffplanung spart Zeit, reduziert den Aufwand und vereinfacht die Organisation."
   ],
   [
     "▣",
     "QR-Check-in",
-    "Nach erfolgreicher Zahlung erhalten Sie automatisch Ihren persönlichen QR-Code per E-Mail. Am Impftag wird er nur noch vorgezeigt und für einen schnellen, sicheren Check-in gescannt."
+    "Nach erfolgreicher Zahlung erhalten Sie Ihren persönlichen QR-Code. Am Impftag genügt ein kurzer Scan."
   ]
 ].map(([icon, title, text]) => (
     <div
