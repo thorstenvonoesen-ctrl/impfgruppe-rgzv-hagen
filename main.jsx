@@ -530,7 +530,7 @@ transition:'all .25s ease'
   </div>
 </div>
       </main>
-      <Footer />
+      <Footer showDeveloper />
     </div>
   )
 }
@@ -4080,9 +4080,10 @@ function Header() {
     </header>
   )
 }
-function Footer() {
+function Footer({ showDeveloper = false }) {
   return (
     <footer
+      className={showDeveloper ? 'footer footer-with-signature' : 'footer'}
       style={{
         textAlign: 'center',
         padding: '30px 20px',
@@ -4091,6 +4092,7 @@ function Footer() {
         borderTop: '1px solid rgba(255,255,255,0.08)'
       }}
     >
+      <div className="footer-content">
       © 2026 Thorsten von Oesen – Für den RGZV Hagen und Umgebung seit 1903 e.V.
       {' | '}
       <a href="#datenschutz" style={{ color: '#ffffff' }}>
@@ -4100,6 +4102,12 @@ function Footer() {
       <a href="#impressum" style={{ color: '#ffffff' }}>
         Impressum
       </a>
+      {showDeveloper && (
+        <div className="footer-signature">
+          Entwickelt von <span>Thorsten von Oesen</span> · Konzeption, Entwicklung &amp; Design
+        </div>
+      )}
+      </div>
     </footer>
   )
 }

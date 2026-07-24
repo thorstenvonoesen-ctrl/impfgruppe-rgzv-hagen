@@ -519,3 +519,11 @@ td .paid {
 .home-credits > div:nth-child(3) { font-size: 28px !important; }
 .home-credits > div:nth-child(4) { margin-top: 6px !important; font-size: 12px !important; }
 @media (max-width: 700px) { .home-hero,.live-signup-stats,.home-card-grid-wrap { width: min(100% - 28px,1240px); } }
+
+/* Dezente Entwickler-Signatur im Startseiten-Footer */
+.home-credits { display: none; }
+.footer-with-signature { padding: 14px 20px !important; }
+.footer-with-signature .footer-content { display: flex; align-items: center; justify-content: space-between; gap: 18px; width: min(100%,1240px); margin: 0 auto; }
+.footer-signature { color: rgba(255,255,255,.55); font-size: 12px; line-height: 1.4; text-align: right; }
+.footer-signature span { color: #f28c28; }
+@media (max-width: 700px) { .footer-with-signature .footer-content { flex-direction: column; gap: 6px; } .footer-signature { text-align: center; } }
