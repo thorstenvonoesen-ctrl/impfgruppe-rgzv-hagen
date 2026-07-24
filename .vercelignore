@@ -1,0 +1,8 @@
+# Lokale Abhängigkeiten, Build-Ausgaben und Konfigurationen gehören nicht ins Vercel-Uploadpaket.
+node_modules/
+dist/
+.npm-cache/
+.vercel/
+.env
+.env.*
+!.env.example
