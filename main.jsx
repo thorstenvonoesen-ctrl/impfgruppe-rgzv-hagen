@@ -252,8 +252,8 @@ useEffect(() => {
 
 
 
-<main style={{ maxWidth:'1440px', margin:'12px auto' }}>
-        <div style={{display:'grid',gridTemplateColumns:'250px minmax(0,1fr)',alignItems:'center',gap:'20px',background:'rgba(255,255,255,.08)',
+<main className="home-main" style={{ maxWidth:'1440px', margin:'12px auto' }}>
+        <div className="home-hero" style={{display:'grid',gridTemplateColumns:'250px minmax(0,1fr)',alignItems:'center',gap:'20px',background:'rgba(255,255,255,.08)',
 backdropFilter:'blur(14px)',
 border:'1px solid rgba(255,255,255,.15)',
 boxShadow:'0 20px 50px rgba(0,0,0,.35)',color:'white',overflow:'hidden',
@@ -334,23 +334,12 @@ height:'220px',
          
         </div>
         <LiveSignupStats />
-<div
-  style={{
-    maxWidth: '1240px',
-    margin: '20px auto 0',
-    padding: '0 20px'
-  }}
->
+<div className="home-card-grid-wrap">
 
-  <div
-    style={{
-      display: 'grid',
-      gridTemplateColumns: 'repeat(3,1fr)',
-      gap: '28px'
-    }}
-  >
+  <div className="home-nav-grid">
 
     <div
+      className="home-nav-card"
       onClick={() => window.location.hash = '#info'}
       onMouseEnter={e => {
   e.currentTarget.style.transform = 'translateY(-8px)'
@@ -400,6 +389,7 @@ boxShadow: '0 20px 50px rgba(0,0,0,.35)'
     </div>
 
     <div
+      className="home-nav-card"
       onClick={() => window.location.hash = '#club-login-info'}
       onMouseEnter={e => {
   e.currentTarget.style.transform = 'translateY(-8px)'
@@ -437,6 +427,7 @@ border:'1px solid rgba(255,255,255,.15)',
     </div>
 
     <div
+      className="home-nav-card"
       onClick={() => window.location.hash = '#register-info'}
       onMouseEnter={e => {
   e.currentTarget.style.transform = 'translateY(-8px)'
