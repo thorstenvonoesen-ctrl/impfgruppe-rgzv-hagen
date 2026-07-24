@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { createRoot } from 'react-dom/client'
-import { Syringe, ShieldCheck, Users, Euro, Download, Search, Lock, LogOut, CalendarDays, Navigation, FileText, CreditCard, Mail, QrCode, Check } from 'lucide-react'
+import { Syringe, ShieldCheck, Users, Euro, Download, Search, Lock, LogOut, CalendarDays, Navigation, FileText, CreditCard, Mail, QrCode, Check, Clock, ScanLine, FileX, Settings2 } from 'lucide-react'
 import jsPDF from 'jspdf'
 import autoTable from 'jspdf-autotable'
 import QRCode from 'qrcode'
@@ -426,10 +426,27 @@ function LiveSignupStats({ club }) {
   }, [])
 
   return (
-    <section className="live-signup-stats" aria-label="Aktuelle Anmeldestatistik">
-      <InteractiveStatCard className="live-stat-card" icon={<Users size={25}/>} label="Teilnehmer" value={stats.participants} loading={!ready} tone="stat-participants" animationIndex={0} />
-      <InteractiveStatCard className="live-stat-card" icon={<Syringe size={25}/>} label="Tiere" value={stats.animals} loading={!ready} tone="stat-animals" animationIndex={1} />
-      <InteractiveStatCard className="live-stat-card" icon={<CalendarDays size={25}/>} label="Nächster Impftermin" loading={!ready} appointmentDates={stats.dates} club={club} isAppointment tone="stat-date" animationIndex={2} />
+    <section className="live-signup-stats home-dashboard-grid" aria-label="Nächster Impftermin und Vorteile der Online-Anmeldung">
+      <div className="home-benefits-card premium-home-surface">
+        <div className="home-benefits-heading">
+          <span>Digital. Sicher. Zeitsparend.</span>
+          <h2>Warum online anmelden?</h2>
+          <p>Von der Registrierung bis zum Impftag begleitet Sie ein klarer, vollständig digitaler Ablauf.</p>
+        </div>
+        <div className="home-benefits-list">
+          {[
+            [Clock, 'Anmeldung in wenigen Minuten'],
+            [CreditCard, 'Sichere Onlinezahlung'],
+            [Mail, 'QR-Code automatisch per E-Mail'],
+            [FileX, 'Kein Papier am Impftag'],
+            [ScanLine, 'Schneller Check-in'],
+            [Settings2, 'Weniger Verwaltungsaufwand']
+          ].map(([Icon, text]) => (
+            <div key={text}><span><Icon size={18} strokeWidth={2}/></span>{text}</div>
+          ))}
+        </div>
+      </div>
+      <InteractiveStatCard className="live-stat-card home-countdown-card" icon={<CalendarDays size={30}/>} label="Nächster Impftermin" loading={!ready} appointmentDates={stats.dates} club={club} isAppointment tone="stat-date" animationIndex={0} />
     </section>
   )
 }
@@ -466,12 +483,13 @@ useEffect(() => {
 
 
 <main className="home-main" style={{ maxWidth:'1440px', margin:'12px auto' }}>
-        <div className="home-hero" style={{display:'grid',gridTemplateColumns:'250px minmax(0,1fr)',alignItems:'center',gap:'20px',background:'rgba(255,255,255,.08)',
+        <div className="home-hero premium-home-surface" style={{display:'grid',gridTemplateColumns:'250px minmax(0,1fr)',alignItems:'center',gap:'20px',background:'rgba(255,255,255,.08)',
 backdropFilter:'blur(14px)',
 border:'1px solid rgba(255,255,255,.15)',
 boxShadow:'0 20px 50px rgba(0,0,0,.35)',color:'white',overflow:'hidden',
 position:'relative',padding:'24px 40px',borderRadius:'28px',marginBottom:'24px'}}>
           <div
+  className="home-logo-stage"
   style={{
     display: 'flex',
     justifyContent: 'center',
@@ -479,6 +497,7 @@ position:'relative',padding:'24px 40px',borderRadius:'28px',marginBottom:'24px'}
   }}
 >
   <img
+    className="home-hero-logo"
     src="/shield-orange.png"
     alt="Impfgruppenmanager"
     style={{
@@ -488,7 +507,7 @@ height:'220px',
 }}
   />
 </div>
-          <div style={{ flex: 1, minWidth: 0 }}>
+          <div className="home-hero-copy" style={{ flex: 1, minWidth: 0 }}>
   <h1
     style={{
       margin: 0,
@@ -548,7 +567,7 @@ height:'220px',
   <div className="home-nav-grid">
 
     <div
-      className="home-nav-card"
+      className="home-nav-card home-nav-card-primary premium-home-surface"
       onClick={() => window.location.hash = '#info'}
       onMouseEnter={e => {
   e.currentTarget.style.transform = 'translateY(-8px)'
@@ -595,10 +614,11 @@ boxShadow: '0 20px 50px rgba(0,0,0,.35)'
 >
         Direkt zur Anmeldung Ihrer Tiere für den nächsten Impftermin des RGZV Hagen.
       </p>
+      <span className="home-nav-cta">Zur Impfanmeldung <span aria-hidden="true">→</span></span>
     </div>
 
     <div
-      className="home-nav-card"
+      className="home-nav-card premium-home-surface"
       onClick={() => window.location.hash = '#club-login-info'}
       onMouseEnter={e => {
   e.currentTarget.style.transform = 'translateY(-8px)'
@@ -636,7 +656,7 @@ border:'1px solid rgba(255,255,255,.15)',
     </div>
 
     <div
-      className="home-nav-card"
+      className="home-nav-card premium-home-surface"
       onClick={() => window.location.hash = '#register-info'}
       onMouseEnter={e => {
   e.currentTarget.style.transform = 'translateY(-8px)'
