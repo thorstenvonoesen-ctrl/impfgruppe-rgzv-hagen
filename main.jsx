@@ -190,6 +190,10 @@ function ClubDashboard() {
     </div>
   )
 }
+
+function emptyVaccinationAddress() {
+  return { venue_name: '', street: '', house_number: '', postal_code: '', city: '' }
+}
 function AnimatedMetric({ value, currency = false }) {
   const [displayed, setDisplayed] = useState(0)
 
@@ -229,7 +233,19 @@ function getNextAppointment(dates) {
   return (dates || []).map(getAppointmentDetails).find(appointment => appointment.target.getTime() > now) || null
 }
 
-function getWeatherLocation(club) {
+function formatVaccinationAddress(appointment) {
+  if (!appointment) return []
+  const venue = appointment.venue_name?.trim()
+  const street = [appointment.street, appointment.house_number].filter(Boolean).join(' ').trim()
+  const locality = [appointment.postal_code, appointment.city].filter(Boolean).join(' ').trim()
+  return [venue, street, locality].filter(Boolean)
+}
+
+function getWeatherLocation(club, appointment) {
+  const appointmentAddress = formatVaccinationAddress(appointment)
+  if (appointment?.postal_code && appointment?.city) return `${appointment.postal_code} ${appointment.city}`
+  if (appointment?.city) return appointment.city
+  if (appointmentAddress.length) return appointmentAddress.join(', ')
   if (!club) return null
   const directLocation = club.weather_location || club.location || club.venue || club.city || club.place
   if (typeof directLocation === 'string' && directLocation.trim()) return directLocation.trim()
@@ -311,7 +327,7 @@ function WeatherPreview({ location, date }) {
   return <div className="appointment-weather"><span>{weather.icon} {Math.round(weather.temperature)} °C · {weather.label}</span><small>Regenwahrscheinlichkeit: {weather.precipitation} %</small></div>
 }
 
-function AppointmentCountdown({ appointments, weatherLocation }) {
+function AppointmentCountdown({ appointments, club }) {
   const [now, setNow] = useState(Date.now())
   const appointment = useMemo(() => getNextAppointment(appointments), [appointments, now])
 
@@ -334,12 +350,12 @@ function AppointmentCountdown({ appointments, weatherLocation }) {
       <strong>{appointment.title}</strong>
       <small>{appointment.target.toLocaleDateString('de-DE')}{appointment.time ? ` · ${appointment.time} Uhr` : ''}</small>
       <em>Noch {days} Tage · {hours} Stunden · {minutes} Minuten · <b>{seconds} Sekunden</b></em>
-      <WeatherPreview location={weatherLocation} date={appointment.date} />
+      <WeatherPreview location={getWeatherLocation(club, appointment)} date={appointment.date} />
     </div>
   )
 }
 
-function InteractiveStatCard({ className, icon, label, value, loading, currency = false, appointmentDates = [], weatherLocation = null, isAppointment = false, tone = '', animationIndex = 0 }) {
+function InteractiveStatCard({ className, icon, label, value, loading, currency = false, appointmentDates = [], club = null, isAppointment = false, tone = '', animationIndex = 0 }) {
   const updateTilt = event => {
     if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return
     const bounds = event.currentTarget.getBoundingClientRect()
@@ -358,7 +374,7 @@ function InteractiveStatCard({ className, icon, label, value, loading, currency 
       <div className="dashboard-stat-icon">{icon}</div>
       <div className="dashboard-stat-content">
         <span>{label}</span>
-        {loading ? <i className="dashboard-stat-skeleton" aria-label="Daten werden geladen" /> : isAppointment ? <AppointmentCountdown appointments={appointmentDates} weatherLocation={weatherLocation} /> : <strong><AnimatedMetric value={Number(value || 0)} currency={currency} /></strong>}
+        {loading ? <i className="dashboard-stat-skeleton" aria-label="Daten werden geladen" /> : isAppointment ? <AppointmentCountdown appointments={appointmentDates} club={club} /> : <strong><AnimatedMetric value={Number(value || 0)} currency={currency} /></strong>}
       </div>
     </div>
   )
@@ -396,7 +412,7 @@ function LiveSignupStats({ club }) {
     <section className="live-signup-stats" aria-label="Aktuelle Anmeldestatistik">
       <InteractiveStatCard className="live-stat-card" icon={<Users size={25}/>} label="Teilnehmer" value={stats.participants} loading={!ready} tone="stat-participants" animationIndex={0} />
       <InteractiveStatCard className="live-stat-card" icon={<Syringe size={25}/>} label="Tiere" value={stats.animals} loading={!ready} tone="stat-animals" animationIndex={1} />
-      <InteractiveStatCard className="live-stat-card" icon={<CalendarDays size={25}/>} label="Nächster Impftermin" loading={!ready} appointmentDates={stats.dates} weatherLocation={getWeatherLocation(club)} isAppointment tone="stat-date" animationIndex={2} />
+      <InteractiveStatCard className="live-stat-card" icon={<CalendarDays size={25}/>} label="Nächster Impftermin" loading={!ready} appointmentDates={stats.dates} club={club} isAppointment tone="stat-date" animationIndex={2} />
     </section>
   )
 }
@@ -3264,6 +3280,9 @@ const [selectedDate, setSelectedDate] = useState(null)
   const [newDate, setNewDate] = useState('')
   const [newDateTitle, setNewDateTitle] = useState('')
 const [newDateNote, setNewDateNote] = useState('')
+  const [newDateAddress, setNewDateAddress] = useState(emptyVaccinationAddress())
+  const [editingVaccinationDate, setEditingVaccinationDate] = useState(null)
+  const [dateFeedback, setDateFeedback] = useState('')
   const [clubs, setClubs] = useState([])
 const [selectedClub, setSelectedClub] = useState(null)
   const activeClub = selectedClub || clubs.find(club => club.slug === getCurrentSlug()) || null
@@ -3341,22 +3360,48 @@ setIsVaccinationDay(
   async function addVaccinationDate() {
   if (!newDate || !newDateTitle) return
 
-  await supabase
+  setDateFeedback('')
+  const { error } = await supabase
     .from('vaccination_dates')
     .insert([
   {
     club_id: await getDefaultClubId(),
     title: newDateTitle,
     date: newDate,
-    note: newDateNote
+    note: newDateNote,
+    ...newDateAddress
   }
 ])
 
+  if (error) {
+    setDateFeedback('Impftermin konnte nicht gespeichert werden.')
+    return
+  }
   setNewDate('')
     setNewDateTitle('')
 setNewDateNote('')
+  setNewDateAddress(emptyVaccinationAddress())
+  setDateFeedback('Impftermin wurde gespeichert.')
   load()
 }
+  async function updateVaccinationDate() {
+    if (!editingVaccinationDate?.date || !editingVaccinationDate?.title) return
+    setDateFeedback('')
+    const clubId = await getDefaultClubId()
+    const { id, club_id, created_at, ...updates } = editingVaccinationDate
+    const { error } = await supabase
+      .from('vaccination_dates')
+      .update(updates)
+      .eq('id', id)
+      .eq('club_id', clubId)
+    if (error) {
+      setDateFeedback('Impftermin konnte nicht aktualisiert werden.')
+      return
+    }
+    setEditingVaccinationDate(null)
+    setDateFeedback('Impftermin wurde aktualisiert.')
+    load()
+  }
   useEffect(()=>{ load() }, [])
   async function markPaid(id, paid) {
   if (hasSupabase) {
@@ -3547,6 +3592,23 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
     </div>
   )}
 
+  {editingVaccinationDate && (
+    <div className="modal">
+      <section className="modal-card vaccination-edit-modal" role="dialog" aria-modal="true" aria-labelledby="edit-vaccination-title">
+        <h2 id="edit-vaccination-title">Impftermin bearbeiten</h2>
+        <label>Titel (inklusive Uhrzeit, falls vorhanden)<input value={editingVaccinationDate.title || ''} onChange={event => setEditingVaccinationDate({ ...editingVaccinationDate, title: event.target.value })} /></label>
+        <label>Datum<input type="date" value={editingVaccinationDate.date || ''} onChange={event => setEditingVaccinationDate({ ...editingVaccinationDate, date: event.target.value })} /></label>
+        <label>Hinweis oder Beschreibung<input value={editingVaccinationDate.note || ''} onChange={event => setEditingVaccinationDate({ ...editingVaccinationDate, note: event.target.value })} /></label>
+        <VaccinationAddressFields value={editingVaccinationDate} onChange={address => setEditingVaccinationDate({ ...editingVaccinationDate, ...address })} />
+        {dateFeedback && <p className="vaccination-date-feedback">{dateFeedback}</p>}
+        <div className="vaccination-modal-actions">
+          <button className="primary" onClick={updateVaccinationDate}>Änderungen speichern</button>
+          <button className="ghost" onClick={() => setEditingVaccinationDate(null)}>Abbrechen</button>
+        </div>
+      </section>
+    </div>
+  )}
+
   
     <main className="admin-wrap">
       <div className="admin-top"><h1>Adminbereich</h1><button className="ghost" onClick={onLogout}><LogOut size={16}/> Logout</button></div>
@@ -3554,7 +3616,7 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
         <InteractiveStatCard className="stat" icon={<Users/>} label="Teilnehmer" value={stats.total} loading={loading} tone="stat-participants" animationIndex={0} />
         <InteractiveStatCard className="stat" icon={<ShieldCheck/>} label="Tiere" value={stats.animals} loading={loading} tone="stat-animals" animationIndex={1} />
         <InteractiveStatCard className="stat" icon={<Euro/>} label="Einnahmen" value={stats.revenue} loading={loading} currency tone="stat-revenue" animationIndex={2} />
-        <InteractiveStatCard className="stat" icon={<CalendarDays/>} label="Nächster Impftermin" loading={loading} appointmentDates={vaccinationDates} weatherLocation={getWeatherLocation(activeClub)} isAppointment tone="stat-date" animationIndex={3} />
+        <InteractiveStatCard className="stat" icon={<CalendarDays/>} label="Nächster Impftermin" loading={loading} appointmentDates={vaccinationDates} club={activeClub} isAppointment tone="stat-date" animationIndex={3} />
       </div>
       <section className="card admin-appointments-card">
   <h2>Anmeldungen pro Impftermin</h2>
@@ -3594,9 +3656,12 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
     onChange={e => setNewDateNote(e.target.value)}
   />
 
+  <VaccinationAddressFields value={newDateAddress} onChange={setNewDateAddress} />
+
   <button className="primary" onClick={addVaccinationDate}>
     Impftermin speichern
   </button>
+  {dateFeedback && <p className="vaccination-date-feedback">{dateFeedback}</p>}
         
 
 {vaccinationDates.map(v => (
@@ -3619,6 +3684,11 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
           <small>{v.note}</small>
         </>
       )}
+      {formatVaccinationAddress(v).length > 0 && (
+        <div className="vaccination-date-address">
+          {formatVaccinationAddress(v).map(line => <small key={line}>{line}</small>)}
+        </div>
+      )}
     </div>
 <div
   style={{
@@ -3627,6 +3697,16 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
     alignItems: 'center'
   }}
 >
+  <button
+    className="small"
+    onClick={() => {
+      setDateFeedback('')
+      setEditingVaccinationDate({ ...emptyVaccinationAddress(), ...v })
+    }}
+  >
+    Bearbeiten
+  </button>
+
   <button
     className="small"
     onClick={() => pdfForVaccinationDate(v)}
@@ -3653,6 +3733,7 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
         .from('vaccination_dates')
         .delete()
         .eq('id', v.id)
+        .eq('club_id', await getDefaultClubId())
 
       load()
     }}
@@ -4014,6 +4095,23 @@ function ExportButtons({ participants, vaccinationDates }) {
   )
 }
 
+
+function VaccinationAddressFields({ value, onChange }) {
+  const update = field => event => onChange({ ...value, [field]: event.target.value })
+  return (
+    <div className="vaccination-address-fields">
+      <label>Veranstaltungsort<input value={value.venue_name || ''} onChange={update('venue_name')} placeholder="z. B. Vereinsheim RGZV Hagen" /></label>
+      <div className="two">
+        <label>Straße<input value={value.street || ''} onChange={update('street')} /></label>
+        <label>Hausnummer<input value={value.house_number || ''} onChange={update('house_number')} /></label>
+      </div>
+      <div className="two">
+        <label>Postleitzahl<input value={value.postal_code || ''} onChange={update('postal_code')} /></label>
+        <label>Ort<input value={value.city || ''} onChange={update('city')} /></label>
+      </div>
+    </div>
+  )
+}
 
 function Input({ label, ...props }) { return <label>{label}<input {...props}/></label> }
 function Stat({ icon,label,value }) { return <div className="stat">{icon}<span>{label}</span><strong>{value}</strong></div> }
