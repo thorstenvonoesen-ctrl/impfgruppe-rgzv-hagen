@@ -375,8 +375,8 @@ function AppointmentCountdown({ appointments, club, isAdmin }) {
       </div>
       {showPublicAddress && <small className="appointment-public-address">{routeAddress}</small>}
       {canOpenRoute && <button type="button" className="appointment-route-button" onClick={() => openVaccinationRoute(appointment)}><Navigation size={14} />{isAdmin ? 'Route prüfen' : 'Route starten'}</button>}
-      <WeatherPreview location={getWeatherLocation(club, appointment)} date={appointment.date} />
       {!isAdmin && <button type="button" className="home-countdown-cta" onClick={() => { window.location.hash = '#info' }}>Jetzt zur Impfanmeldung <span aria-hidden="true">→</span></button>}
+      <WeatherPreview location={getWeatherLocation(club, appointment)} date={appointment.date} />
     </div>
   )
 }
