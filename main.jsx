@@ -410,16 +410,13 @@ function LiveSignupStats({ club }) {
         if (active) setReady(true)
         return
       }
-      const clubId = await getDefaultClubId()
-      const [{ data: participants, error: participantsError }, { data: dates, error: datesError }] = await Promise.all([
-        supabase.from('participants').select('animal_count').eq('club_id', clubId),
-        supabase.from('vaccination_dates').select('date,title').eq('club_id', clubId).order('date', { ascending: true })
-      ])
+      const response = await fetch(`/api/public-dashboard?slug=${encodeURIComponent(getCurrentSlug())}`)
+      const result = response.ok ? await response.json() : null
       if (!active) return
       setStats({
-        participants: participantsError ? 0 : participants?.length || 0,
-        animals: participantsError ? 0 : (participants || []).reduce((sum, participant) => sum + Number(participant.animal_count || 0), 0),
-        dates: datesError ? [] : dates || []
+        participants: result?.participants || 0,
+        animals: result?.animals || 0,
+        dates: result?.dates || []
       })
       setReady(true)
     }
@@ -2635,49 +2632,15 @@ if (!participantId) return
 setLoading(true)
 
 if (stripe === 'success') {
-  console.log('Stripe Success erkannt')
-console.log('Participant ID:', participantId)
-  let emailWasSent = false
-  const { data: participant } = await supabase
-    .from('participants')
-    .select('*')
-    .eq('id', participantId)
-    .single()
-
-  await supabase
-    .from('participants')
-    .update({
-      payment_status: 'bezahlt',
-      payment_method: 'stripe',
-      payment_date: new Date().toISOString(),
-      payment_id: 'stripe_checkout'
-    })
-    .eq('id', participantId)
-  console.log('PARTICIPANT', participant)
-console.log('EMAIL', participant?.email)
-if (participant?.email) {
-  console.log('SENDE EMAIL AN:', participant.email)
-
-  const emailResult = await fetch('/api/send-payment-email', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      email: participant.email,
-      firstname: participant.firstname,
-      lastname: participant.lastname
-    })
+  const response = await fetch('/api/stripe-confirm-payment', {
+    method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ participantId, sessionId: params.get('session_id') })
   })
-
-  console.log('EMAIL RESPONSE STATUS:', emailResult.status)
-  console.log('EMAIL RESPONSE:', await emailResult.text())
-  emailWasSent = emailResult.ok
-}
-
-
-  alert('Stripe-Code wurde ausgeführt')
+  const result = await response.json()
+  if (!response.ok || !result.success) throw new Error(result.error || 'Stripe-Zahlung konnte nicht bestätigt werden.')
 setMessage('Stripe-Zahlung erfolgreich bestätigt.')
   if (hasSupabase) {
-    setConfirmationEmailSent(emailWasSent)
+    setConfirmationEmailSent(Boolean(result.emailSent))
     setShowPaymentSuccess(true)
   }
   setLoading(false)
@@ -2687,7 +2650,7 @@ setMessage('Stripe-Zahlung erfolgreich bestätigt.')
       const response = await fetch('/api/paypal-capture-order', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ token })
+        body: JSON.stringify({ token, participantId })
       })
 
       const result = await response.json()
@@ -2696,39 +2659,7 @@ setMessage('Stripe-Zahlung erfolgreich bestätigt.')
         throw new Error(result.error || 'PayPal-Zahlung konnte nicht bestätigt werden')
       }
 
-      let emailWasSent = false
-      if (hasSupabase) {
-  const { data: participant } = await supabase
-    .from('participants')
-    .select('*')
-    .eq('id', participantId)
-    .single()
-
-  await supabase
-    .from('participants')
-    .update({
-  payment_status: 'bezahlt',
-  payment_method: stripe === 'success' ? 'stripe' : 'paypal',
-  payment_date: new Date().toISOString(),
-  payment_id: stripe === 'success' ? 'stripe_checkout' : token
-})
-    .eq('id', participantId)
-
-  if (participant?.email) {
-    const emailResponse = await fetch('/api/send-payment-email', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        email: participant.email,
-        firstname: participant.firstname,
-        lastname: participant.lastname
-      })
-    })
-    emailWasSent = emailResponse.ok
-  }
-}
+      const emailWasSent = Boolean(result.emailSent)
  
       setMessage('Zahlung erfolgreich bestätigt. Vielen Dank!')
       if (hasSupabase) {
@@ -2752,34 +2683,25 @@ useEffect(() => {
   setLoading(false)
   return
 }
-    const currentMemberCode = await getMemberCode()
-    console.log('Code aus DB:', currentMemberCode)
-console.log('Eingegeben:', form.member_code)
-    const isMember =
-  form.member_code?.trim().toUpperCase() ===
-  currentMemberCode?.trim().toUpperCase()
-
-const paymentAmount = isMember ? 5 : 10
     const { member_code, ...formData } = form
-    const payload = {
-  ...formData,
-  club_id: await getDefaultClubId(),
-  animal_count: Number(form.animal_count),
-  vaccination_date_id: form.vaccination_date_id,
-  payment_status: 'offen',
-  payment_amount: paymentAmount,
-  is_member: isMember
-}
     try {
       let participantId = null
+      let paymentAmount = 10
       if (hasSupabase) {
-        const { data, error } = await supabase
-  .from('participants')
-  .insert(payload)
-  .select()
-        participantId = data?.[0]?.id
-        if (error) throw error
+        const response = await fetch('/api/create-registration', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ ...formData, member_code, animal_count: Number(form.animal_count), vaccination_date_id: form.vaccination_date_id })
+        })
+        const result = await response.json()
+        if (!response.ok) throw new Error(result.error || 'Anmeldung konnte nicht gespeichert werden.')
+        participantId = result.participantId
+        paymentAmount = Number(result.paymentAmount || 10)
       } else {
+        const currentMemberCode = await getMemberCode()
+        const isMember = form.member_code?.trim().toUpperCase() === currentMemberCode?.trim().toUpperCase()
+        paymentAmount = isMember ? 5 : 10
+        const payload = { ...formData, club_id: await getDefaultClubId(), animal_count: Number(form.animal_count), vaccination_date_id: form.vaccination_date_id, payment_status: 'offen', payment_amount: paymentAmount, is_member: isMember }
         const list = JSON.parse(localStorage.getItem('participants') || '[]')
         list.push({ id: crypto.randomUUID(), ...payload, created_at: new Date().toISOString() })
         localStorage.setItem('participants', JSON.stringify(list))
@@ -3250,8 +3172,32 @@ function SignupSuccessOverlay({ emailSent, onHome, onAnother }) {
 }
 
 function Admin() {
-  const [logged, setLogged] = useState(sessionStorage.getItem('admin') === '1')
+  const [logged, setLogged] = useState(false)
   const [pin, setPin] = useState('')
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [adminContext, setAdminContext] = useState(null)
+  const [loginError, setLoginError] = useState('')
+  const [authLoading, setAuthLoading] = useState(true)
+  useEffect(() => {
+    let active = true
+    supabase.auth.getSession().then(async ({ data: { session } }) => {
+      if (!session || !active) return
+      const { data: memberships } = await supabase.from('club_admin_memberships').select('club_id, role, active').eq('active', true)
+      if (active && memberships?.[0]) { setAdminContext(memberships[0]); setLogged(true) }
+    }).finally(() => active && setAuthLoading(false))
+    return () => { active = false }
+  }, [])
+  async function login() {
+    setLoginError('')
+    if (pin !== ADMIN_PIN) return setLoginError('Die Admin-PIN ist nicht korrekt.')
+    const { data, error } = await supabase.auth.signInWithPassword({ email, password })
+    if (error || !data.session) return setLoginError('E-Mail oder Passwort ist nicht korrekt.')
+    const { data: memberships } = await supabase.from('club_admin_memberships').select('club_id, role, active').eq('active', true)
+    if (!memberships?.[0]) { await supabase.auth.signOut(); return setLoginError('Für dieses Konto ist keine aktive Vereinsrolle hinterlegt.') }
+    setAdminContext(memberships[0]); setLogged(true)
+  }
+  if (authLoading) return null
   if (!logged) return (
     <div className="page admin-login-page">
       <Header />
@@ -3267,23 +3213,26 @@ function Admin() {
           <div className="admin-login-heading">
             <span>RGZV Hagen</span>
             <h2>Willkommen zurück</h2>
-            <p>Bitte geben Sie Ihre Admin-PIN ein.</p>
+            <p>Bitte bestätigen Sie Ihre PIN und melden Sie sich mit Ihrem Admin-Konto an.</p>
           </div>
           <label className="admin-login-field">
             <span>Admin-PIN</span>
             <input placeholder="Admin-PIN" value={pin} onChange={e=>setPin(e.target.value)} type="password"/>
           </label>
-          <button className="primary admin-login-submit" onClick={()=>{ if(pin===ADMIN_PIN){sessionStorage.setItem('admin','1');setLogged(true)} }}>Einloggen</button>
+          <label className="admin-login-field"><span>E-Mail</span><input placeholder="admin@verein.de" value={email} onChange={e=>setEmail(e.target.value)} type="email" autoComplete="username" /></label>
+          <label className="admin-login-field"><span>Passwort</span><input placeholder="Passwort" value={password} onChange={e=>setPassword(e.target.value)} type="password" autoComplete="current-password" /></label>
+          {loginError && <p role="alert" className="admin-login-error">{loginError}</p>}
+          <button className="primary admin-login-submit" onClick={login}>Einloggen</button>
           <a className="admin-login-back" href="#">← Zur Anmeldung</a>
         </section>
       </main>
       <Footer />
     </div>
   )
-  return <AdminDashboard onLogout={()=>{sessionStorage.removeItem('admin');setLogged(false)}} />
+  return <AdminDashboard adminContext={adminContext} onLogout={async()=>{ await supabase.auth.signOut(); setAdminContext(null); setLogged(false) }} />
 }
 
-function AdminDashboard({ onLogout }) {
+function AdminDashboard({ onLogout, adminContext }) {
   const [participants, setParticipants] = useState([])
   const [isVaccinationDay, setIsVaccinationDay] = useState(false)
   const [q, setQ] = useState('')
@@ -3304,7 +3253,8 @@ const [newDateNote, setNewDateNote] = useState('')
   const [dateFeedback, setDateFeedback] = useState('')
   const [clubs, setClubs] = useState([])
 const [selectedClub, setSelectedClub] = useState(null)
-  const activeClub = selectedClub || clubs.find(club => club.slug === getCurrentSlug()) || null
+  const adminClubId = adminContext?.club_id
+  const activeClub = selectedClub || clubs.find(club => club.id === adminClubId) || null
   async function sendReminderMail() {
   if (!selectedDate) return
 
@@ -3351,7 +3301,7 @@ if (result.sent === 0) {
 
 setClubs(clubData || [])
     if (hasSupabase) {
-      const clubId = await getDefaultClubId()
+const clubId = adminClubId
 
 const { data, error } = await supabase
   .from('participants')
@@ -3384,7 +3334,7 @@ setIsVaccinationDay(
     .from('vaccination_dates')
     .insert([
   {
-    club_id: await getDefaultClubId(),
+    club_id: adminClubId,
     title: newDateTitle,
     date: newDate,
     note: newDateNote,
@@ -3406,7 +3356,7 @@ setNewDateNote('')
   async function updateVaccinationDate() {
     if (!editingVaccinationDate?.date || !editingVaccinationDate?.title) return
     setDateFeedback('')
-    const clubId = await getDefaultClubId()
+    const clubId = adminClubId
     const { id, club_id, created_at, ...updates } = editingVaccinationDate
     const { error } = await supabase
       .from('vaccination_dates')
@@ -3424,33 +3374,12 @@ setNewDateNote('')
   useEffect(()=>{ load() }, [])
   async function markPaid(id, paid) {
   if (hasSupabase) {
-    const { data: participant } = await supabase
-      .from('participants')
-      .select('*')
-      .eq('id', id)
-      .single()
-
-    await supabase
-      .from('participants')
-      .update({
-        payment_status: paid ? 'bezahlt' : 'offen',
-        payment_date: paid ? new Date().toISOString() : null
-      })
-      .eq('id', id)
-
-    if (paid && participant?.email) {
-      await fetch('/api/send-payment-email', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          email: participant.email,
-          firstname: participant.firstname,
-          lastname: participant.lastname
-        })
-      })
-    }
+    const { data: { session } } = await supabase.auth.getSession()
+    const response = await fetch('/api/admin-payment', {
+      method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${session?.access_token || ''}` },
+      body: JSON.stringify({ participantId: id, paid })
+    })
+    if (!response.ok) { alert('Zahlungsstatus konnte nicht gespeichert werden.'); return }
   } else {
     const list = participants.map(p =>
       p.id === id ? { ...p, payment_status: paid ? 'bezahlt' : 'offen' } : p
@@ -3463,7 +3392,7 @@ setNewDateNote('')
   load()
 }
   async function saveParticipant(p) {
-   const clubId = await getDefaultClubId()                                  
+   const clubId = adminClubId
   const { error } = await supabase
     .from('participants')
     .update({
@@ -3489,7 +3418,7 @@ setNewDateNote('')
 }
   async function deleteParticipant(id) {
   if (!confirm('Teilnehmer wirklich löschen?')) return
-const clubId = await getDefaultClubId()
+const clubId = adminClubId
   await supabase
     .from('participants')
     .delete()
@@ -3754,7 +3683,7 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
         .from('vaccination_dates')
         .delete()
         .eq('id', v.id)
-        .eq('club_id', await getDefaultClubId())
+        .eq('club_id', adminClubId)
 
       load()
     }}

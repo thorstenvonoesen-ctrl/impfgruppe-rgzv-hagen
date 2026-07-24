@@ -31,7 +31,7 @@ export default async function handler(req, res) {
       ],
 
       success_url:
-        `https://${req.headers.host}/?stripe=success&participant=${participantId}`,
+        `https://${req.headers.host}/?stripe=success&participant=${participantId}&session_id={CHECKOUT_SESSION_ID}`,
 
       cancel_url:
         `https://${req.headers.host}/?stripe=cancel`
