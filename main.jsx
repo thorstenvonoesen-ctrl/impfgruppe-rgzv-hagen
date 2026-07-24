@@ -765,6 +765,7 @@ function InfoPage() {
   />
 
   <div
+    className="info-page-layout"
     style={{
       maxWidth: "1280px",
       margin: "0 auto",
@@ -780,21 +781,8 @@ function InfoPage() {
 
     <div>
 
-      <div
-        style={{
-          display: "inline-block",
-          background: "#f97316",
-          color: "#fff",
-          padding: "8px 18px",
-          borderRadius: "999px",
-          fontWeight: "700",
-          marginBottom: "30px"
-        }}
-      >
-        Online-Anmeldung
-      </div>
-
       <h1
+        className="info-page-title"
         style={{
           color: "#fff",
           fontSize: "72px",
@@ -803,12 +791,11 @@ function InfoPage() {
           margin: 0
         }}
       >
-        Newcastle-
-        <br />
-        Sammelimpfung
+        Newcastle-Sammelimpfung
       </h1>
 
       <p
+        className="info-page-intro"
         style={{
           marginTop: "28px",
           fontSize: "24px",
@@ -817,12 +804,17 @@ function InfoPage() {
           maxWidth: "720px"
         }}
       >
-        Registrieren Sie Ihre Tiere schnell und unkompliziert für die nächste Newcastle-Sammelimpfung.
-
-Erfahren Sie alles Wichtige zur gesetzlichen Impfpflicht, zum Ablauf der Impfgruppe und melden Sie sich anschließend direkt online an.
+        Registrieren Sie Ihren Geflügelbestand bequem online für die nächste Newcastle-Sammelimpfung. Informieren Sie sich über die gesetzliche Impfpflicht, den Ablauf der Sammelimpfung und melden Sie Ihre Tiere anschließend direkt an.
       </p>
 
+      <div className="info-page-benefits" aria-label="Vorteile der Online-Anmeldung">
+        <span>✓ Online anmelden</span>
+        <span>✓ Sicher bezahlen</span>
+        <span>✓ QR-Code für den Check-in am Impftag</span>
+      </div>
+
       <button
+        className="info-page-signup-button"
         onClick={() => (window.location.hash = "#signup")}
         style={{
           marginTop: "45px",
@@ -830,18 +822,20 @@ Erfahren Sie alles Wichtige zur gesetzlichen Impfpflicht, zum Ablauf der Impfgru
           color: "#fff",
           border: 0,
           borderRadius: "16px",
-          padding: "18px 34px",
-          fontSize: "18px",
+          padding: "20px 38px",
+          fontSize: "19px",
           fontWeight: "700",
           cursor: "pointer"
         }}
       >
-        Jetzt zur Anmeldung →
+        <span>Jetzt zur Anmeldung</span>
+        <span className="info-page-signup-arrow" aria-hidden="true">→</span>
       </button>
 
     </div>
 
    <div
+  className="info-page-card-grid"
   style={{
     display: "grid",
     gridTemplateColumns: "repeat(2,1fr)",
@@ -865,12 +859,13 @@ Erfahren Sie alles Wichtige zur gesetzlichen Impfpflicht, zum Ablauf der Impfgru
     "Durch die gemeinsame Organisation sparen alle Teilnehmer Zeit und Kosten."
   ],
   [
-    "📝",
-    "Online-Anmeldung",
-    "In wenigen Minuten bequem online anmelden und den Impftermin sichern."
+    "▣",
+    "QR-Check-in",
+    "Nach erfolgreicher Zahlung erhalten Sie Ihren persönlichen QR-Code für einen schnellen Check-in am Impftag."
   ]
 ].map(([icon, title, text]) => (
     <div
+      className="info-page-card"
       key={title}
       onClick={() => {
   if (title === "Schutz Ihrer Tiere") {
@@ -880,33 +875,24 @@ Erfahren Sie alles Wichtige zur gesetzlichen Impfpflicht, zum Ablauf der Impfgru
   } else if (title === "Gemeinsame Sammelimpfung") {
     window.location.hash = "#info-sammelimpfung"
   }
-        else if (title === "Online-Anmeldung") {
+        else if (title === "QR-Check-in") {
   window.location.hash = "#info-anmeldung"
 }
-}}
-      onMouseEnter={e => {
-  e.currentTarget.style.transform = "translateY(-8px)"
-  e.currentTarget.style.boxShadow = "0 28px 55px rgba(0,0,0,.35)"
-}}
-
-onMouseLeave={e => {
-  e.currentTarget.style.transform = "translateY(0)"
-  e.currentTarget.style.boxShadow = "0 18px 40px rgba(0,0,0,.25)"
 }}
       style={{
         background: "linear-gradient(180deg, rgba(255,255,255,.18), rgba(255,255,255,.06))",
         border: "1px solid rgba(255,255,255,.20)",
         backdropFilter: "blur(12px)",
         borderRadius: "22px",
-        padding: "28px",
-        boxShadow: "0 18px 40px rgba(0,0,0,.25)",
+        padding: "34px",
+        boxShadow: "0 20px 44px rgba(0,0,0,.3)",
 cursor: "pointer",
 transition: "all .25s ease",
         overflow: "hidden",
-minHeight: openCard === title ? "360px" : "170px",
+minHeight: openCard === title ? "360px" : "230px",
       }}
     >
-      <div style={{ fontSize: "42px" }}>
+      <div className="info-page-card-icon" style={{ fontSize: "48px" }}>
         {icon}
       </div>
 
@@ -967,11 +953,11 @@ minHeight: openCard === title ? "360px" : "170px",
       </>
     )}
 
-    {title === "Online-Anmeldung" && (
+    {title === "QR-Check-in" && (
       <>
-        Nach den Informationen gelangen Sie direkt zur Anmeldung. Dort
-        erfassen Sie Ihre Daten, wählen den Impftermin und schließen die
-        Anmeldung bequem online ab.
+        Der persönliche QR-Code wird nach erfolgreicher Zahlung direkt in
+        der Bestätigungs-E-Mail bereitgestellt und beschleunigt die Anmeldung
+        beim Impftermin.
       </>
     )}
   </div>
