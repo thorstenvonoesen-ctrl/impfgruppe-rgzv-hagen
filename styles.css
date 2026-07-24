@@ -1214,3 +1214,29 @@ body { background: #163a2f; }
   .home-nav-grid { grid-template-columns: 1fr; }
   .home-nav-card { min-height: 0; }
 }
+
+/* Finaler Balance-Pass der bestehenden Landingpage */
+@media (min-width: 1081px) {
+  .home-hero {
+    min-height: 220px;
+    gap: clamp(38px,4.5vw,66px) !important;
+    margin-bottom: 22px !important;
+    padding: clamp(29px,3.6vw,44px) !important;
+  }
+  .home-logo-stage { min-height: 170px; }
+  .home-logo-stage::before { width: 165px; height: 165px; }
+  .home-hero-logo { width: 180px !important; height: 180px !important; }
+  .home-dashboard-grid {
+    grid-template-columns: minmax(0,1.38fr) minmax(370px,.62fr) !important;
+    gap: 20px !important;
+    margin-bottom: 22px !important;
+  }
+  .home-countdown-card { min-height: 338px !important; }
+  .home-countdown-card.dashboard-stat-card { padding: clamp(27px,3.1vw,40px) !important; }
+  .home-dashboard-support { gap: 13px; }
+  .home-community-card { padding: 16px 11px; }
+  .home-benefits-card { padding: 20px 21px; }
+  .home-nav-grid { gap: 16px; }
+  .home-nav-card { min-height: 182px; padding: 20px !important; }
+  .home-main + footer { padding-top: 25px; }
+}
