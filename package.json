@@ -9,17 +9,18 @@
     "preview": "vite preview"
   },
   "dependencies": {
-  "@supabase/supabase-js": "latest",
-  "@vitejs/plugin-react": "latest",
-  "vite": "latest",
-  "react": "latest",
-  "react-dom": "latest",
-  "jspdf": "latest",
-  "jspdf-autotable": "latest",
-  "lucide-react": "latest",
-"resend": "^4.0.0",
+    "@supabase/supabase-js": "latest",
+    "@vitejs/plugin-react": "latest",
+    "html5-qrcode": "^2.3.8",
+    "jspdf": "latest",
+    "jspdf-autotable": "latest",
+    "lucide-react": "latest",
     "nodemailer": "^6.9.14",
-"stripe": "^18.3.0"
-},
-  "devDependencies": {}
+    "qrcode": "^1.5.4",
+    "react": "latest",
+    "react-dom": "latest",
+    "resend": "^4.0.0",
+    "stripe": "^18.3.0",
+    "vite": "latest"
+  }
 }

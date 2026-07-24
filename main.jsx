@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client'
 import { Syringe, ShieldCheck, Users, Euro, Download, Search, Lock, LogOut, CalendarDays, Navigation } from 'lucide-react'
 import jsPDF from 'jspdf'
 import autoTable from 'jspdf-autotable'
+import QRCode from 'qrcode'
 import { supabase, hasSupabase } from './supabase.js'
 async function getDefaultClubId() {
   if (!hasSupabase) return null
@@ -3171,6 +3172,66 @@ function SignupSuccessOverlay({ emailSent, onHome, onAnother }) {
   )
 }
 
+function CheckinPanel({ participants, vaccinationDates, onChanged }) {
+  const [dateId, setDateId] = useState('')
+  const [query, setQuery] = useState('')
+  const [candidate, setCandidate] = useState(null)
+  const [qrImage, setQrImage] = useState('')
+  const [feedback, setFeedback] = useState('')
+  const [scannerActive, setScannerActive] = useState(false)
+  const scannerRef = useRef(null)
+  const selectedParticipants = participants.filter(item => String(item.vaccination_date_id) === String(dateId))
+  const checkedIn = selectedParticipants.filter(item => item.checked_in).length
+
+  useEffect(() => () => { scannerRef.current?.stop?.().catch(() => {}) }, [])
+  async function showQr(participant) {
+    setCandidate(participant)
+    setFeedback('')
+    setQrImage(await QRCode.toDataURL(participant.checkin_token, { width: 280, margin: 1, color: { dark: '#123c2b', light: '#ffffff' } }))
+  }
+  async function startScanner() {
+    if (!dateId) return setFeedback('Bitte wählen Sie zuerst einen Impftermin.')
+    setScannerActive(true)
+    setFeedback('')
+    requestAnimationFrame(async () => {
+      const { Html5Qrcode } = await import('html5-qrcode')
+      const scanner = new Html5Qrcode('checkin-scanner')
+      scannerRef.current = scanner
+      await scanner.start({ facingMode: 'environment' }, { fps: 8, qrbox: { width: 230, height: 230 } }, async token => {
+        const match = selectedParticipants.find(item => item.checkin_token === token)
+        await scanner.stop().catch(() => {})
+        scannerRef.current = null
+        setScannerActive(false)
+        if (match) { setCandidate(match); setFeedback('QR-Code erkannt. Bitte Check-in bestätigen.') }
+        else setFeedback('Dieser QR-Code gehört nicht zum ausgewählten Impftermin.')
+      }, () => {})
+    })
+  }
+  async function confirmCheckin(checkedInValue) {
+    if (!candidate || !dateId) return
+    const { data: { session } } = await supabase.auth.getSession()
+    const response = await fetch('/api/checkin', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${session?.access_token || ''}` },
+      body: JSON.stringify({ token: candidate.checkin_token, vaccinationDateId: dateId, checkedIn: checkedInValue })
+    })
+    const result = await response.json()
+    if (!response.ok) return setFeedback(result.error || 'Check-in konnte nicht gespeichert werden.')
+    setFeedback(checkedInValue ? 'Check-in erfolgreich gespeichert.' : 'Check-in wurde zurückgesetzt.')
+    setCandidate({ ...candidate, checked_in: checkedInValue })
+    onChanged()
+  }
+  return <section className="card checkin-panel">
+    <div className="checkin-head"><div><span>QR-CHECK-IN</span><h2>Einlass am Impftermin</h2></div>{dateId && <strong>{checkedIn}/{selectedParticipants.length} eingecheckt</strong>}</div>
+    <select value={dateId} onChange={event => { setDateId(event.target.value); setCandidate(null); setQrImage(''); setFeedback('') }}><option value="">Impftermin auswählen</option>{vaccinationDates.map(date => <option key={date.id} value={date.id}>{date.title} · {date.date}</option>)}</select>
+    {dateId && <><div className="checkin-actions"><button className="primary" type="button" onClick={startScanner}>QR-Code scannen</button><input value={query} onChange={event => setQuery(event.target.value)} placeholder="Name, E-Mail oder TSK suchen" /></div>
+      <div className="checkin-candidates">{selectedParticipants.filter(item => `${item.firstname} ${item.lastname} ${item.email} ${item.tsk_number}`.toLowerCase().includes(query.toLowerCase())).map(item => <div key={item.id} className="checkin-person"><div><strong>{item.firstname} {item.lastname}</strong><small>{item.email} · {item.animal_count} Tiere</small></div><div><span className={item.checked_in ? 'checkin-status done' : 'checkin-status'}>{item.checked_in ? 'Eingecheckt' : 'Offen'}</span><button type="button" className="small" onClick={() => showQr(item)}>QR-Code</button><button type="button" className="small" onClick={() => { setCandidate(item); setFeedback('Bitte Check-in bestätigen.') }}>Prüfen</button></div></div>)}</div></>}
+    {scannerActive && <div className="checkin-scanner-wrap"><div id="checkin-scanner" /><button className="ghost" type="button" onClick={async () => { await scannerRef.current?.stop?.().catch(() => {}); scannerRef.current = null; setScannerActive(false) }}>Scanner schließen</button></div>}
+    {candidate && <div className="checkin-confirm"><div>{qrImage && <img src={qrImage} alt={`QR-Code für ${candidate.firstname} ${candidate.lastname}`} />}<div><strong>{candidate.firstname} {candidate.lastname}</strong><p>{candidate.checked_in ? 'Bereits eingecheckt.' : 'Noch nicht eingecheckt.'}</p></div></div><div><button className="primary" type="button" onClick={() => confirmCheckin(true)}>Check-in bestätigen</button>{candidate.checked_in && <button className="ghost" type="button" onClick={() => confirmCheckin(false)}>Zurücksetzen</button>}</div></div>}
+    {feedback && <p className="checkin-feedback" role="status">{feedback}</p>}
+  </section>
+}
+
 function Admin() {
   const [logged, setLogged] = useState(false)
   const [pin, setPin] = useState('')
@@ -3566,6 +3627,7 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
         <InteractiveStatCard className="stat" icon={<Euro/>} label="Einnahmen" value={stats.revenue} loading={loading} currency tone="stat-revenue" animationIndex={2} />
         <InteractiveStatCard className="stat" icon={<CalendarDays/>} label="Nächster Impftermin" loading={loading} appointmentDates={vaccinationDates} club={activeClub} isAppointment isAdmin tone="stat-date" animationIndex={3} />
       </div>
+      <CheckinPanel participants={participants} vaccinationDates={vaccinationDates} onChanged={load} />
       <section className="card admin-appointments-card">
   <h2>Anmeldungen pro Impftermin</h2>
 

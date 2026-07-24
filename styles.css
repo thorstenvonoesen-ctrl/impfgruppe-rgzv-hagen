@@ -693,3 +693,14 @@ body { background: #163a2f; }
 .appointment-route-button:hover { filter: brightness(1.08); transform: translateY(-2px); box-shadow: 0 12px 23px rgba(0,0,0,.27), 0 0 18px rgba(242,140,40,.16); }
 .appointment-route-button:focus-visible { outline: 3px solid rgba(255,243,229,.85); outline-offset: 3px; }
 @media (max-width: 700px) { .appointment-route-button { width: 100%; min-height: 40px; } }
+
+/* QR-Check-in */
+.checkin-panel { display: grid; gap: 16px; }
+.checkin-head,.checkin-actions,.checkin-person,.checkin-person > div:last-child,.checkin-confirm,.checkin-confirm > div:first-child { display: flex; align-items: center; gap: 12px; }
+.checkin-head { justify-content: space-between; }.checkin-head span { color: #f4a047; font-size: 11px; font-weight: 900; letter-spacing: .12em; }.checkin-head h2 { margin: 4px 0 0; }.checkin-head > strong { color: #d1fae5; font-size: 13px; }
+.checkin-actions input { flex: 1; }.checkin-candidates { display: grid; max-height: 300px; overflow: auto; border-top: 1px solid rgba(255,255,255,.12); }
+.checkin-person { justify-content: space-between; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,.1); }.checkin-person small { display: block; margin-top: 3px; color: rgba(237,245,241,.64); }.checkin-person > div:last-child { flex-wrap: wrap; justify-content: flex-end; }
+.checkin-status { padding: 4px 8px; border-radius: 999px; color: #ffe1c2; background: rgba(242,140,40,.16); font-size: 11px; font-weight: 800; }.checkin-status.done { color: #d1fae5; background: rgba(52,211,153,.16); }
+.checkin-scanner-wrap { display: grid; justify-items: center; gap: 12px; padding: 16px; border: 1px solid rgba(255,255,255,.13); border-radius: 18px; }.checkin-scanner-wrap #checkin-scanner { width: min(100%, 360px); overflow: hidden; border-radius: 14px; }
+.checkin-confirm { justify-content: space-between; padding: 14px; background: rgba(5,35,26,.46); border: 1px solid rgba(240,166,82,.25); border-radius: 16px; }.checkin-confirm img { width: 94px; height: 94px; padding: 5px; background: white; border-radius: 10px; }.checkin-confirm p,.checkin-feedback { margin: 4px 0 0; color: rgba(237,245,241,.72); }.checkin-confirm > div:last-child { display: flex; flex-wrap: wrap; gap: 8px; }
+@media (max-width: 700px) { .checkin-head,.checkin-actions,.checkin-person,.checkin-confirm { align-items: stretch; flex-direction: column; }.checkin-person > div:last-child { justify-content: flex-start; }.checkin-confirm img { width: 110px; height: 110px; }.checkin-confirm > div:last-child { flex-direction: column; }.checkin-confirm button { width: 100%; } }
