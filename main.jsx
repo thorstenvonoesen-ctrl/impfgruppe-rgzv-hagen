@@ -773,13 +773,14 @@ function InfoPage() {
       position: "relative",
       zIndex: 2,
       display: "grid",
-      gridTemplateColumns: "1.15fr .85fr",
+      gridTemplateColumns: "1fr",
       alignItems: "center",
-      gap: "80px"
+      gap: "64px",
+      textAlign: "center"
     }}
   >
 
-    <div>
+    <div className="info-page-hero">
 
       <h1
         className="info-page-title"
@@ -801,7 +802,9 @@ function InfoPage() {
           fontSize: "24px",
           lineHeight: "1.8",
           color: "#d1d5db",
-          maxWidth: "720px"
+          maxWidth: "850px",
+          marginLeft: "auto",
+          marginRight: "auto"
         }}
       >
         Registrieren Sie Ihren Geflügelbestand bequem online für die nächste Newcastle-Sammelimpfung. Informieren Sie sich über die gesetzliche Impfpflicht, den Ablauf der Sammelimpfung und melden Sie Ihre Tiere anschließend direkt an.
@@ -813,33 +816,14 @@ function InfoPage() {
         <span>✓ QR-Code für den Check-in am Impftag</span>
       </div>
 
-      <button
-        className="info-page-signup-button"
-        onClick={() => (window.location.hash = "#signup")}
-        style={{
-          marginTop: "45px",
-          background: "#f97316",
-          color: "#fff",
-          border: 0,
-          borderRadius: "16px",
-          padding: "20px 38px",
-          fontSize: "19px",
-          fontWeight: "700",
-          cursor: "pointer"
-        }}
-      >
-        <span>Jetzt zur Anmeldung</span>
-        <span className="info-page-signup-arrow" aria-hidden="true">→</span>
-      </button>
-
     </div>
 
    <div
   className="info-page-card-grid"
   style={{
     display: "grid",
-    gridTemplateColumns: "repeat(2,1fr)",
-    gap: "18px"
+    gridTemplateColumns: "repeat(4,minmax(0,1fr))",
+    gap: "22px"
   }}
 >
   {[
@@ -890,6 +874,10 @@ cursor: "pointer",
 transition: "all .25s ease",
         overflow: "hidden",
 minHeight: openCard === title ? "360px" : "230px",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        textAlign: "center"
       }}
     >
       <div className="info-page-card-icon" style={{ fontSize: "48px" }}>
@@ -964,7 +952,8 @@ minHeight: openCard === title ? "360px" : "230px",
 )}
       <div
   style={{
-    marginTop: "22px",
+    marginTop: "auto",
+    paddingTop: "22px",
     color: "#fb923c",
     fontWeight: "700",
     fontSize: "15px"
@@ -975,6 +964,25 @@ minHeight: openCard === title ? "360px" : "230px",
     </div>
   ))}
 </div> 
+
+      <button
+        className="info-page-signup-button"
+        onClick={() => (window.location.hash = "#signup")}
+        style={{
+          margin: "12px auto 0",
+          background: "#f97316",
+          color: "#fff",
+          border: 0,
+          borderRadius: "16px",
+          padding: "21px 42px",
+          fontSize: "20px",
+          fontWeight: "700",
+          cursor: "pointer"
+        }}
+      >
+        <span>Jetzt zur Anmeldung</span>
+        <span className="info-page-signup-arrow" aria-hidden="true">→</span>
+      </button>
 
   </div>
 
