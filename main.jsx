@@ -830,22 +830,22 @@ function InfoPage() {
   [
     "🛡️",
     "Schutz Ihrer Tiere",
-    "Die Newcastle-Krankheit ist hochansteckend und kann für ungeschütztes Geflügel schwerwiegende Folgen haben. Regelmäßige Sammelimpfungen stärken den Schutz Ihrer Tiere und helfen, eine Ausbreitung im gesamten Bestand zuverlässig zu verhindern."
+    "Die Newcastle-Krankheit ist hochansteckend und kann für ungeschütztes Geflügel schwere Folgen haben. Regelmäßige Impfungen schützen Ihre Tiere und den gesamten Bestand."
   ],
   [
     "⚖️",
     "Gesetzliche Impfpflicht",
-    "Geflügelhalter sind gesetzlich verpflichtet, ihre Tiere gegen die Newcastle-Krankheit impfen zu lassen. Diese Vorgabe schützt einzelne Bestände und begrenzt das Risiko größerer Ausbrüche. Die App erleichtert Ihnen die Teilnahme an einer ordnungsgemäß organisierten Sammelimpfung."
+    "Die Newcastle-Impfung ist für Geflügelhalter gesetzlich vorgeschrieben und beugt größeren Ausbrüchen vor. Die App erleichtert die Teilnahme an einer ordnungsgemäßen Sammelimpfung."
   ],
   [
     "👥",
     "Gemeinsame Sammelimpfung",
-    "Zentrale Terminplanung und gemeinsame Impfstoffbestellung reduzieren den organisatorischen Aufwand für alle Beteiligten. So sparen Geflügelhalter Zeit, erhalten klare Informationen und können unkompliziert an einem koordinierten Impftermin teilnehmen."
+    "Zentrale Terminplanung und gemeinsame Impfstoffbestellung reduzieren den Aufwand. Geflügelhalter sparen Zeit und nehmen unkompliziert an einem organisierten Termin teil."
   ],
   [
     "▣",
     "QR-Check-in",
-    "Nach erfolgreicher Anmeldung und Zahlung erhalten Sie automatisch Ihren persönlichen QR-Code per E-Mail. Am Impftag zeigen Sie ihn einfach vor und der Impfwart scannt ihn. Der Check-in erfolgt dadurch schnell, sicher und ohne aufwendige Listen oder Papierunterlagen."
+    "Nach Anmeldung und Zahlung erhalten Sie Ihren persönlichen QR-Code per E-Mail. Vorzeigen und scannen genügt für einen schnellen, sicheren Check-in ohne Papierlisten."
   ]
 ].map(([icon, title, text]) => (
     <div
