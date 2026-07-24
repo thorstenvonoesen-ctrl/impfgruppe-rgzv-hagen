@@ -335,11 +335,11 @@ function WeatherPreview({ location, date }) {
     return () => { active = false }
   }, [location, date])
 
-  if (status === 'later') return <div className="appointment-weather weather-note">Wettervorschau erst näher am Termin verfügbar</div>
-  if (status === 'unavailable') return <div className="appointment-weather weather-note">Wettervorschau nicht verfügbar</div>
-  if (status !== 'ready' || !weather) return <div className="appointment-weather weather-note">Wettervorschau wird geladen</div>
+  if (status === 'later') return <button type="button" className="appointment-weather-button" disabled title="Erst kurz vor dem Impftermin verfügbar">🌤 Wettervorhersage</button>
+  if (status === 'unavailable') return <button type="button" className="appointment-weather-button" disabled title="Wettervorhersage derzeit nicht verfügbar">🌤 Wettervorhersage</button>
+  if (status !== 'ready' || !weather) return <button type="button" className="appointment-weather-button" disabled>🌤 Wetter wird geladen</button>
 
-  return <div className="appointment-weather"><span>{weather.icon} {Math.round(weather.temperature)} °C · {weather.label}</span><small>Regenwahrscheinlichkeit: {weather.precipitation} %</small></div>
+  return <button type="button" className="appointment-weather-button appointment-weather-ready" title={`Regenwahrscheinlichkeit: ${weather.precipitation} %`}>{weather.icon} {Math.round(weather.temperature)} °C · {weather.label}</button>
 }
 
 function AppointmentCountdown({ appointments, club, isAdmin }) {
@@ -374,7 +374,10 @@ function AppointmentCountdown({ appointments, club, isAdmin }) {
         <span className="appointment-countdown-seconds"><b key={seconds}>{seconds}</b><small>Sekunden</small></span>
       </div>
       {showPublicAddress && <small className="appointment-public-address">{routeAddress}</small>}
-      {canOpenRoute && <button type="button" className="appointment-route-button" onClick={() => openVaccinationRoute(appointment)}><Navigation size={14} />{isAdmin ? 'Route prüfen' : 'Route starten'}</button>}
+      <div className="appointment-action-buttons">
+        {canOpenRoute && <button type="button" className="appointment-route-button" onClick={() => openVaccinationRoute(appointment)}><Navigation size={14} />{isAdmin ? 'Route prüfen' : 'Route starten'}</button>}
+        <WeatherPreview location={getWeatherLocation(club, appointment)} date={appointment.date} />
+      </div>
     </div>
   )
 }
