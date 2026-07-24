@@ -875,3 +875,41 @@ body { background: #163a2f; }
   .home-closing-traits { align-items: center; flex-direction: column; }
 }
 @media (prefers-reduced-motion: reduce) { .home-community-card { opacity: 1; translate: 0 0; animation: none; } }
+
+/* Kompakte Startseitenstruktur */
+.home-dashboard-grid { grid-template-columns: minmax(0,.92fr) minmax(0,1.28fr) !important; grid-template-rows: auto 1fr; gap: 18px 22px !important; }
+.home-countdown-card { grid-column: 2; grid-row: 1 / span 2; min-height: 100% !important; }
+.home-community-card { grid-column: 1; grid-row: 1; min-height: 0; padding: 22px 24px; align-content: start; }
+.home-community-card::after { width: 180px; height: 180px; }
+.home-community-heading h2 { margin: 0; font-size: 23px; letter-spacing: -.5px; }
+.home-community-metrics { gap: 10px; margin: 15px 0 12px; }
+.home-community-metrics > div { grid-template-columns: 34px 1fr; grid-template-rows: auto auto; min-height: 76px; padding: 11px 12px; column-gap: 10px; justify-items: start; }
+.home-community-metrics span { grid-row: 1 / span 2; width: 34px; height: 34px; }
+.home-community-metrics strong { font-size: clamp(28px,3.4vw,40px); letter-spacing: -1px; }
+.home-community-metrics small { font-size: 10px; }
+.home-community-card > p { font-size: 12px; line-height: 1.45; text-align: left; }
+.home-benefits-card { grid-column: 1; grid-row: 2; min-height: 0; padding: 22px 24px; gap: 15px; }
+.home-benefits-heading > span { font-size: 9px; }
+.home-benefits-heading h2 { margin: 7px 0 6px; font-size: 24px; letter-spacing: -.5px; }
+.home-benefits-heading p { font-size: 12px; line-height: 1.45; }
+.home-benefits-list { gap: 8px; }
+.home-benefits-list > div { min-height: 40px; padding: 7px 8px; gap: 8px; font-size: 10px; border-radius: 11px; }
+.home-benefits-list > div > span { width: 27px; height: 27px; border-radius: 8px; }
+.home-benefits-list svg { width: 15px; height: 15px; }
+.home-countdown-card.dashboard-stat-card { padding: clamp(30px,4vw,44px) !important; }
+.home-countdown-card .appointment-countdown strong { font-size: clamp(28px,3.2vw,42px); }
+@media (max-width: 1000px) {
+  .home-dashboard-grid { grid-template-columns: 1fr !important; grid-template-rows: auto; }
+  .home-countdown-card,.home-community-card,.home-benefits-card { grid-column: auto; grid-row: auto; }
+  .home-countdown-card { order: 1; min-height: 310px !important; }
+  .home-community-card { order: 2; }
+  .home-benefits-card { order: 3; }
+}
+@media (max-width: 700px) {
+  .home-countdown-card { min-height: 0 !important; }
+  .home-community-metrics { grid-template-columns: repeat(2,minmax(0,1fr)); }
+  .home-benefits-list { grid-template-columns: 1fr; }
+}
+@media (max-width: 430px) {
+  .home-community-metrics { grid-template-columns: 1fr; }
+}

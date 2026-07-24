@@ -430,14 +430,13 @@ function LiveSignupStats({ club }) {
       <InteractiveStatCard className="live-stat-card home-countdown-card" icon={<CalendarDays size={30}/>} label="Nächster Impftermin" loading={!ready} appointmentDates={stats.dates} club={club} isAppointment tone="stat-date" animationIndex={0} />
       <div className="home-community-card premium-home-surface">
         <div className="home-community-heading">
-          <span>Gemeinsam vorsorgen</span>
           <h2>Bereits angemeldet</h2>
         </div>
         <div className="home-community-metrics">
           <div><span><Users size={22}/></span><strong>{ready ? <AnimatedMetric value={Number(stats.participants || 0)}/> : '–'}</strong><small>Geflügelhalter</small></div>
           <div><span><Syringe size={22}/></span><strong>{ready ? <AnimatedMetric value={Number(stats.animals || 0)}/> : '–'}</strong><small>Tiere</small></div>
         </div>
-        <p>Werden gemeinsam bei der nächsten Newcastle-Sammelimpfung geschützt.</p>
+        <p>Schon {Number(stats.participants || 0)} Geflügelhalter haben {Number(stats.animals || 0)} Tiere angemeldet.</p>
       </div>
       <div className="home-benefits-card premium-home-surface">
         <div className="home-benefits-heading">
@@ -566,11 +565,6 @@ height:'220px',
       marginTop: '32px'
     }}
   />
-  <div className="home-hero-trust" aria-label="Sicherheit und Vorteile">
-    <span><Check size={15}/>Sichere Onlinezahlung</span>
-    <span><Check size={15}/>QR-Code für den Check-in</span>
-    <span><Check size={15}/>Gesetzeskonforme Sammelimpfung</span>
-  </div>
 </div>
  
             
@@ -579,12 +573,6 @@ height:'220px',
         </div>
         <LiveSignupStats club={currentClub} />
 <div className="home-card-grid-wrap">
-
-  <div className="home-actions-heading">
-    <span>Einfach weiter</span>
-    <h2>Ihr nächster Schritt</h2>
-    <p>Wählen Sie den passenden Einstieg in den Impfgruppenmanager.</p>
-  </div>
 
   <div className="home-nav-grid">
 
@@ -729,16 +717,6 @@ transition:'all .25s ease'
 
 </div>
 </div> 
-<section className="home-closing premium-home-surface">
-  <span className="home-closing-eyebrow">Digital organisiert</span>
-  <h2>Gemeinsam für gesunde Geflügelbestände.</h2>
-  <p>Der Impfgruppenmanager unterstützt Vereine bei der digitalen Organisation ihrer Newcastle-Sammelimpfungen – von der Anmeldung über die sichere Online-Zahlung bis zum QR-Check-in am Impftag.</p>
-  <div className="home-closing-traits">
-    <span><Check size={16}/>Digital</span>
-    <span><Check size={16}/>Sicher</span>
-    <span><Check size={16}/>Gesetzeskonform</span>
-  </div>
-</section>
 <div
   className="home-credits"
   style={{
