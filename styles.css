@@ -684,3 +684,12 @@ body { background: #163a2f; }
 .vaccination-modal-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 5px; }
 .vaccination-modal-actions .primary,.vaccination-modal-actions .ghost { width: auto; margin: 0; }
 @media (max-width: 700px) { .vaccination-address-fields .two { grid-template-columns: 1fr; } .vaccination-modal-actions { flex-direction: column; } .vaccination-modal-actions .primary,.vaccination-modal-actions .ghost { width: 100%; justify-content: center; } }
+
+/* Öffentliche und interne Google-Maps-Navigation */
+.vaccination-address-public { display: flex !important; align-items: center; gap: 9px !important; color: rgba(237,245,241,.78) !important; font-size: 12px !important; font-weight: 700 !important; }
+.vaccination-address-public input { width: 16px; height: 16px; accent-color: #f28c28; }
+.appointment-public-address { display: block; margin-top: 2px; color: rgba(237,245,241,.66) !important; font-size: 10px !important; line-height: 1.35 !important; }
+.appointment-route-button { display: inline-flex; align-items: center; justify-content: center; gap: 7px; width: fit-content; min-height: 34px; margin-top: 7px; padding: 7px 11px; color: #fff7ed; font-size: 12px; font-weight: 800; background: linear-gradient(135deg, rgba(47,166,106,.82), rgba(201,109,39,.76)); border: 1px solid rgba(255,255,255,.22); border-radius: 10px; box-shadow: 0 8px 18px rgba(0,0,0,.2); transition: transform .24s ease, box-shadow .24s ease, filter .24s ease; }
+.appointment-route-button:hover { filter: brightness(1.08); transform: translateY(-2px); box-shadow: 0 12px 23px rgba(0,0,0,.27), 0 0 18px rgba(242,140,40,.16); }
+.appointment-route-button:focus-visible { outline: 3px solid rgba(255,243,229,.85); outline-offset: 3px; }
+@media (max-width: 700px) { .appointment-route-button { width: 100%; min-height: 40px; } }

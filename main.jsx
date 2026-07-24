@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { createRoot } from 'react-dom/client'
-import { Syringe, ShieldCheck, Users, Euro, Download, Search, Lock, LogOut, CalendarDays } from 'lucide-react'
+import { Syringe, ShieldCheck, Users, Euro, Download, Search, Lock, LogOut, CalendarDays, Navigation } from 'lucide-react'
 import jsPDF from 'jspdf'
 import autoTable from 'jspdf-autotable'
 import { supabase, hasSupabase } from './supabase.js'
@@ -192,7 +192,7 @@ function ClubDashboard() {
 }
 
 function emptyVaccinationAddress() {
-  return { venue_name: '', street: '', house_number: '', postal_code: '', city: '' }
+  return { venue_name: '', street: '', house_number: '', postal_code: '', city: '', address_public: false }
 }
 function AnimatedMetric({ value, currency = false }) {
   const [displayed, setDisplayed] = useState(0)
@@ -239,6 +239,20 @@ function formatVaccinationAddress(appointment) {
   const street = [appointment.street, appointment.house_number].filter(Boolean).join(' ').trim()
   const locality = [appointment.postal_code, appointment.city].filter(Boolean).join(' ').trim()
   return [venue, street, locality].filter(Boolean)
+}
+
+function hasVaccinationRouteAddress(appointment) {
+  return Boolean(appointment?.city?.trim())
+}
+
+function getVaccinationRouteAddress(appointment) {
+  return formatVaccinationAddress(appointment).join(', ')
+}
+
+function openVaccinationRoute(appointment) {
+  const destination = getVaccinationRouteAddress(appointment)
+  if (!destination) return
+  window.open(`https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(destination)}`, '_blank', 'noopener,noreferrer')
 }
 
 function getWeatherLocation(club, appointment) {
@@ -327,7 +341,7 @@ function WeatherPreview({ location, date }) {
   return <div className="appointment-weather"><span>{weather.icon} {Math.round(weather.temperature)} °C · {weather.label}</span><small>Regenwahrscheinlichkeit: {weather.precipitation} %</small></div>
 }
 
-function AppointmentCountdown({ appointments, club }) {
+function AppointmentCountdown({ appointments, club, isAdmin }) {
   const [now, setNow] = useState(Date.now())
   const appointment = useMemo(() => getNextAppointment(appointments), [appointments, now])
 
@@ -344,18 +358,23 @@ function AppointmentCountdown({ appointments, club }) {
   const hours = Math.floor((difference / 3600000) % 24)
   const minutes = Math.floor((difference / 60000) % 60)
   const seconds = Math.floor((difference / 1000) % 60)
+  const routeAddress = getVaccinationRouteAddress(appointment)
+  const showPublicAddress = Boolean(appointment.address_public) && hasVaccinationRouteAddress(appointment)
+  const canOpenRoute = hasVaccinationRouteAddress(appointment) && (isAdmin || Boolean(appointment.address_public))
 
   return (
     <div className="appointment-countdown">
       <strong>{appointment.title}</strong>
       <small>{appointment.target.toLocaleDateString('de-DE')}{appointment.time ? ` · ${appointment.time} Uhr` : ''}</small>
       <em>Noch {days} Tage · {hours} Stunden · {minutes} Minuten · <b>{seconds} Sekunden</b></em>
+      {showPublicAddress && <small className="appointment-public-address">{routeAddress}</small>}
+      {canOpenRoute && <button type="button" className="appointment-route-button" onClick={() => openVaccinationRoute(appointment)}><Navigation size={14} />{isAdmin ? 'Route prüfen' : 'Route starten'}</button>}
       <WeatherPreview location={getWeatherLocation(club, appointment)} date={appointment.date} />
     </div>
   )
 }
 
-function InteractiveStatCard({ className, icon, label, value, loading, currency = false, appointmentDates = [], club = null, isAppointment = false, tone = '', animationIndex = 0 }) {
+function InteractiveStatCard({ className, icon, label, value, loading, currency = false, appointmentDates = [], club = null, isAppointment = false, isAdmin = false, tone = '', animationIndex = 0 }) {
   const updateTilt = event => {
     if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return
     const bounds = event.currentTarget.getBoundingClientRect()
@@ -374,7 +393,7 @@ function InteractiveStatCard({ className, icon, label, value, loading, currency 
       <div className="dashboard-stat-icon">{icon}</div>
       <div className="dashboard-stat-content">
         <span>{label}</span>
-        {loading ? <i className="dashboard-stat-skeleton" aria-label="Daten werden geladen" /> : isAppointment ? <AppointmentCountdown appointments={appointmentDates} club={club} /> : <strong><AnimatedMetric value={Number(value || 0)} currency={currency} /></strong>}
+        {loading ? <i className="dashboard-stat-skeleton" aria-label="Daten werden geladen" /> : isAppointment ? <AppointmentCountdown appointments={appointmentDates} club={club} isAdmin={isAdmin} /> : <strong><AnimatedMetric value={Number(value || 0)} currency={currency} /></strong>}
       </div>
     </div>
   )
@@ -3616,7 +3635,7 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
         <InteractiveStatCard className="stat" icon={<Users/>} label="Teilnehmer" value={stats.total} loading={loading} tone="stat-participants" animationIndex={0} />
         <InteractiveStatCard className="stat" icon={<ShieldCheck/>} label="Tiere" value={stats.animals} loading={loading} tone="stat-animals" animationIndex={1} />
         <InteractiveStatCard className="stat" icon={<Euro/>} label="Einnahmen" value={stats.revenue} loading={loading} currency tone="stat-revenue" animationIndex={2} />
-        <InteractiveStatCard className="stat" icon={<CalendarDays/>} label="Nächster Impftermin" loading={loading} appointmentDates={vaccinationDates} club={activeClub} isAppointment tone="stat-date" animationIndex={3} />
+        <InteractiveStatCard className="stat" icon={<CalendarDays/>} label="Nächster Impftermin" loading={loading} appointmentDates={vaccinationDates} club={activeClub} isAppointment isAdmin tone="stat-date" animationIndex={3} />
       </div>
       <section className="card admin-appointments-card">
   <h2>Anmeldungen pro Impftermin</h2>
@@ -3706,6 +3725,8 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
   >
     Bearbeiten
   </button>
+
+  {hasVaccinationRouteAddress(v) && <button className="small" onClick={() => openVaccinationRoute(v)}>Route prüfen</button>}
 
   <button
     className="small"
@@ -4109,6 +4130,7 @@ function VaccinationAddressFields({ value, onChange }) {
         <label>Postleitzahl<input value={value.postal_code || ''} onChange={update('postal_code')} /></label>
         <label>Ort<input value={value.city || ''} onChange={update('city')} /></label>
       </div>
+      <label className="vaccination-address-public"><input type="checkbox" checked={Boolean(value.address_public)} onChange={event => onChange({ ...value, address_public: event.target.checked })} /> Adresse öffentlich für Route freigeben</label>
     </div>
   )
 }
