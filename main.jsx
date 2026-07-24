@@ -2873,7 +2873,34 @@ value={form.vaccination_date_id}
 function Admin() {
   const [logged, setLogged] = useState(sessionStorage.getItem('admin') === '1')
   const [pin, setPin] = useState('')
-  if (!logged) return <div className="page center"><section className="card login"><Lock/><h1>Adminbereich</h1><input placeholder="Admin-PIN" value={pin} onChange={e=>setPin(e.target.value)} type="password"/><button className="primary" onClick={()=>{ if(pin===ADMIN_PIN){sessionStorage.setItem('admin','1');setLogged(true)} }}>Einloggen</button><a href="#">Zur Anmeldung</a></section></div>
+  if (!logged) return (
+    <div className="page admin-login-page">
+      <Header />
+      <main className="admin-login-shell">
+        <section className="admin-login-hero">
+          <div className="admin-login-eyebrow">Geschützter Bereich</div>
+          <h1>Admin-Login</h1>
+          <p>Verwalten Sie Teilnehmer, Impftermine und Zahlungen zentral an einem Ort.</p>
+        </section>
+
+        <section className="card admin-login-card">
+          <div className="admin-login-icon"><Lock size={28}/></div>
+          <div className="admin-login-heading">
+            <span>RGZV Hagen</span>
+            <h2>Willkommen zurück</h2>
+            <p>Bitte geben Sie Ihre Admin-PIN ein.</p>
+          </div>
+          <label className="admin-login-field">
+            <span>Admin-PIN</span>
+            <input placeholder="Admin-PIN" value={pin} onChange={e=>setPin(e.target.value)} type="password"/>
+          </label>
+          <button className="primary admin-login-submit" onClick={()=>{ if(pin===ADMIN_PIN){sessionStorage.setItem('admin','1');setLogged(true)} }}>Einloggen</button>
+          <a className="admin-login-back" href="#">← Zur Anmeldung</a>
+        </section>
+      </main>
+      <Footer />
+    </div>
+  )
   return <AdminDashboard onLogout={()=>{sessionStorage.removeItem('admin');setLogged(false)}} />
 }
 
