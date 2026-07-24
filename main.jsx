@@ -561,9 +561,6 @@ height:'220px',
   </p>
 
   <div className="home-hero-actions">
-    <button type="button" className="home-hero-cta" onClick={() => { window.location.hash = '#info' }}>
-      Zur Impfanmeldung <span aria-hidden="true">→</span>
-    </button>
     <a className="home-club-link" href="https://www.rgzv-hagen-westfalen.com" target="_blank" rel="noopener noreferrer">
       RGZV Hagen kennenlernen
     </a>
