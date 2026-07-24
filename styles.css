@@ -1363,3 +1363,6 @@ body { background: #163a2f; }
   .appointment-action-buttons .appointment-route-button,
   .appointment-weather-button { width: 100%; margin-top: 0; }
 }
+
+.home-hero-copy { text-align: center; }
+.home-hero-copy .home-hero-actions { justify-content: center; }
