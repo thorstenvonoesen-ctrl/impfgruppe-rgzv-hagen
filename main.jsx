@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { createRoot } from 'react-dom/client'
-import { Syringe, ShieldCheck, Users, Euro, Download, Search, Lock, LogOut } from 'lucide-react'
+import { Syringe, ShieldCheck, Users, Euro, Download, Search, Lock, LogOut, CalendarDays } from 'lucide-react'
 import jsPDF from 'jspdf'
 import autoTable from 'jspdf-autotable'
 import { supabase, hasSupabase } from './supabase.js'
@@ -190,81 +190,97 @@ function ClubDashboard() {
     </div>
   )
 }
+function AnimatedMetric({ value, currency = false }) {
+  const [displayed, setDisplayed] = useState(0)
+
+  useEffect(() => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      setDisplayed(value)
+      return
+    }
+    const duration = 1200
+    const start = performance.now()
+    let frame
+    const animate = now => {
+      const progress = Math.min((now - start) / duration, 1)
+      const eased = 1 - Math.pow(1 - progress, 3)
+      setDisplayed(value * eased)
+      if (progress < 1) frame = requestAnimationFrame(animate)
+    }
+    frame = requestAnimationFrame(animate)
+    return () => cancelAnimationFrame(frame)
+  }, [value])
+
+  return currency
+    ? new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(displayed)
+    : Math.round(displayed).toLocaleString('de-DE')
+}
+
+function InteractiveStatCard({ className, icon, label, value, loading, currency = false, date = false, tone = '' }) {
+  const updateTilt = event => {
+    if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return
+    const bounds = event.currentTarget.getBoundingClientRect()
+    const rotateX = ((event.clientY - bounds.top) / bounds.height - .5) * -4
+    const rotateY = ((event.clientX - bounds.left) / bounds.width - .5) * 5
+    event.currentTarget.style.setProperty('--stat-rotate-x', `${rotateX}deg`)
+    event.currentTarget.style.setProperty('--stat-rotate-y', `${rotateY}deg`)
+  }
+  const resetTilt = event => {
+    event.currentTarget.style.removeProperty('--stat-rotate-x')
+    event.currentTarget.style.removeProperty('--stat-rotate-y')
+  }
+
+  return (
+    <div className={`${className} dashboard-stat-card ${tone}`} onMouseMove={updateTilt} onMouseLeave={resetTilt}>
+      <div className="dashboard-stat-icon">{icon}</div>
+      <div className="dashboard-stat-content">
+        <span>{label}</span>
+        {loading ? <i className="dashboard-stat-skeleton" aria-label="Daten werden geladen" /> : date ? <strong className="dashboard-stat-date">{value || 'Noch kein Termin geplant'}</strong> : <strong><AnimatedMetric value={Number(value || 0)} currency={currency} /></strong>}
+      </div>
+    </div>
+  )
+}
+
 function LiveSignupStats() {
-  const [stats, setStats] = useState({ participants: 0, animals: 0 })
-  const [displayed, setDisplayed] = useState({ participants: 0, animals: 0 })
+  const [stats, setStats] = useState({ participants: 0, animals: 0, nextDate: null })
   const [ready, setReady] = useState(false)
 
   useEffect(() => {
     let active = true
-
     async function loadStats() {
       if (!hasSupabase) {
         if (active) setReady(true)
         return
       }
-
       const clubId = await getDefaultClubId()
-      const { data, error } = await supabase
-        .from('participants')
-        .select('animal_count')
-        .eq('club_id', clubId)
-
+      const [{ data: participants, error: participantsError }, { data: dates, error: datesError }] = await Promise.all([
+        supabase.from('participants').select('animal_count').eq('club_id', clubId),
+        supabase.from('vaccination_dates').select('date,title').eq('club_id', clubId).order('date', { ascending: true })
+      ])
       if (!active) return
-
-      if (!error) {
-        setStats({
-          participants: data?.length || 0,
-          animals: (data || []).reduce((sum, participant) => sum + Number(participant.animal_count || 0), 0)
-        })
-      }
-
+      const today = new Date()
+      today.setHours(0, 0, 0, 0)
+      const nextDate = datesError ? null : (dates || []).find(date => new Date(`${date.date}T00:00:00`) >= today) || null
+      setStats({
+        participants: participantsError ? 0 : participants?.length || 0,
+        animals: participantsError ? 0 : (participants || []).reduce((sum, participant) => sum + Number(participant.animal_count || 0), 0),
+        nextDate
+      })
       setReady(true)
     }
-
     loadStats()
     return () => { active = false }
   }, [])
 
-  useEffect(() => {
-    if (!ready) return
-
-    const duration = 900
-    const start = performance.now()
-    let frame
-
-    const animate = now => {
-      const progress = Math.min((now - start) / duration, 1)
-      const eased = 1 - Math.pow(1 - progress, 3)
-
-      setDisplayed({
-        participants: Math.round(stats.participants * eased),
-        animals: Math.round(stats.animals * eased)
-      })
-
-      if (progress < 1) frame = requestAnimationFrame(animate)
-    }
-
-    frame = requestAnimationFrame(animate)
-    return () => cancelAnimationFrame(frame)
-  }, [ready, stats])
+  const nextDateLabel = stats.nextDate
+    ? `${stats.nextDate.title} · ${new Date(`${stats.nextDate.date}T00:00:00`).toLocaleDateString('de-DE')}`
+    : 'Noch kein Termin geplant'
 
   return (
     <section className="live-signup-stats" aria-label="Aktuelle Anmeldestatistik">
-      <div className="live-stat-card">
-        <div className="live-stat-icon"><Users size={25}/></div>
-        <div>
-          <span>Bereits angemeldete Teilnehmer</span>
-          <strong>{displayed.participants}</strong>
-        </div>
-      </div>
-      <div className="live-stat-card">
-        <div className="live-stat-icon"><Syringe size={25}/></div>
-        <div>
-          <span>Bereits angemeldete Tiere</span>
-          <strong>{displayed.animals}</strong>
-        </div>
-      </div>
+      <InteractiveStatCard className="live-stat-card" icon={<Users size={25}/>} label="Teilnehmer" value={stats.participants} loading={!ready} tone="stat-participants" />
+      <InteractiveStatCard className="live-stat-card" icon={<Syringe size={25}/>} label="Tiere" value={stats.animals} loading={!ready} tone="stat-animals" />
+      <InteractiveStatCard className="live-stat-card" icon={<CalendarDays size={25}/>} label="Nächster Impftermin" value={nextDateLabel} loading={!ready} date tone="stat-date" />
     </section>
   )
 }
@@ -3312,7 +3328,21 @@ const clubId = await getDefaultClubId()
 
   return matchesSearch && matchesStatus
     })
-  const stats = useMemo(()=>({ total:participants.length, animals:participants.reduce((s,p)=>s+Number(p.animal_count||0),0), paid:participants.filter(p=>p.payment_status==='bezahlt').length, open:participants.filter(p=>p.payment_status!=='bezahlt').length }),[participants])
+  const stats = useMemo(() => ({
+    total: participants.length,
+    animals: participants.reduce((sum, participant) => sum + Number(participant.animal_count || 0), 0),
+    revenue: participants
+      .filter(participant => participant.payment_status === 'bezahlt')
+      .reduce((sum, participant) => sum + Number(participant.payment_amount || 0), 0)
+  }), [participants])
+  const nextVaccinationDate = useMemo(() => {
+    const today = new Date()
+    today.setHours(0, 0, 0, 0)
+    return vaccinationDates.find(date => new Date(`${date.date}T00:00:00`) >= today) || null
+  }, [vaccinationDates])
+  const nextVaccinationLabel = nextVaccinationDate
+    ? `${nextVaccinationDate.title} · ${new Date(`${nextVaccinationDate.date}T00:00:00`).toLocaleDateString('de-DE')}`
+    : 'Noch kein Termin geplant'
   const dateStats = vaccinationDates.map(v => ({
   ...v,
   count: participants.filter(p => p.vaccination_date_id === v.id).length
@@ -3414,7 +3444,12 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
   
     <main className="admin-wrap">
       <div className="admin-top"><h1>Adminbereich</h1><button className="ghost" onClick={onLogout}><LogOut size={16}/> Logout</button></div>
-      <div className="stats"><Stat icon={<Users/>} label="Teilnehmer" value={stats.total}/><Stat icon={<ShieldCheck/>} label="Tiere" value={stats.animals}/><Stat icon={<Euro/>} label="Bezahlt" value={stats.paid}/><Stat icon={<Euro/>} label="Offen" value={stats.open}/></div>
+      <div className="stats admin-dashboard-stats">
+        <InteractiveStatCard className="stat" icon={<Users/>} label="Teilnehmer" value={stats.total} loading={loading} tone="stat-participants" />
+        <InteractiveStatCard className="stat" icon={<ShieldCheck/>} label="Tiere" value={stats.animals} loading={loading} tone="stat-animals" />
+        <InteractiveStatCard className="stat" icon={<Euro/>} label="Einnahmen" value={stats.revenue} loading={loading} currency tone="stat-revenue" />
+        <InteractiveStatCard className="stat" icon={<CalendarDays/>} label="Nächster Impftermin" value={nextVaccinationLabel} loading={loading} date tone="stat-date" />
+      </div>
       <section className="card">
   <h2>Anmeldungen pro Impftermin</h2>
 
