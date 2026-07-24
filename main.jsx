@@ -46,7 +46,7 @@ import './styles.css'
 import logo from './public/Logoklein.jpg'
 import { APP } from './config'
 const vaccines = ['Newcastle', 'IB', 'ILT', 'Marek', 'Kokzidiose', 'Salmonellen']
-const ADMIN_PIN = import.meta.env.VITE_ADMIN_PIN || '1234'
+const ADMIN_PIN = import.meta.env.VITE_ADMIN_PIN?.trim() || ''
 const PAYMENT_URL = import.meta.env.VITE_PAYMENT_URL || ''
 const MEMBER_CODE = 'RGZV2026'
 const weatherPreviewCache = new Map()
@@ -3232,6 +3232,10 @@ function CheckinPanel({ participants, vaccinationDates, onChanged }) {
   </section>
 }
 
+function isMissingAdminMembershipSchema(error) {
+  return error?.code === '42P01' || error?.code === 'PGRST205' || /club_admin_memberships/i.test(error?.message || '')
+}
+
 function Admin() {
   const [logged, setLogged] = useState(false)
   const [pin, setPin] = useState('')
@@ -3244,17 +3248,26 @@ function Admin() {
     let active = true
     supabase.auth.getSession().then(async ({ data: { session } }) => {
       if (!session || !active) return
-      const { data: memberships } = await supabase.from('club_admin_memberships').select('club_id, role, active').eq('active', true)
+      const { data: memberships, error } = await supabase.from('club_admin_memberships').select('club_id, role, active').eq('active', true)
+      if (error && active) {
+        setLoginError(isMissingAdminMembershipSchema(error) ? 'Die Sicherheitsmigration für den Adminbereich wurde noch nicht ausgeführt.' : 'Der Adminzugang ist noch nicht vollständig konfiguriert.')
+        return
+      }
       if (active && memberships?.[0]) { setAdminContext(memberships[0]); setLogged(true) }
     }).finally(() => active && setAuthLoading(false))
     return () => { active = false }
   }, [])
   async function login() {
     setLoginError('')
+    if (!ADMIN_PIN) return setLoginError('Der Adminzugang ist noch nicht vollständig konfiguriert.')
     if (pin !== ADMIN_PIN) return setLoginError('Die Admin-PIN ist nicht korrekt.')
     const { data, error } = await supabase.auth.signInWithPassword({ email, password })
     if (error || !data.session) return setLoginError('E-Mail oder Passwort ist nicht korrekt.')
-    const { data: memberships } = await supabase.from('club_admin_memberships').select('club_id, role, active').eq('active', true)
+    const { data: memberships, error: membershipError } = await supabase.from('club_admin_memberships').select('club_id, role, active').eq('active', true)
+    if (membershipError) {
+      await supabase.auth.signOut()
+      return setLoginError(isMissingAdminMembershipSchema(membershipError) ? 'Die Sicherheitsmigration für den Adminbereich wurde noch nicht ausgeführt.' : 'Der Adminzugang ist noch nicht vollständig konfiguriert.')
+    }
     if (!memberships?.[0]) { await supabase.auth.signOut(); return setLoginError('Für dieses Konto ist keine aktive Vereinsrolle hinterlegt.') }
     setAdminContext(memberships[0]); setLogged(true)
   }
@@ -3282,8 +3295,9 @@ function Admin() {
           </label>
           <label className="admin-login-field"><span>E-Mail</span><input placeholder="admin@verein.de" value={email} onChange={e=>setEmail(e.target.value)} type="email" autoComplete="username" /></label>
           <label className="admin-login-field"><span>Passwort</span><input placeholder="Passwort" value={password} onChange={e=>setPassword(e.target.value)} type="password" autoComplete="current-password" /></label>
+          {!ADMIN_PIN && <p role="alert" className="admin-login-error">Der Adminzugang ist noch nicht vollständig konfiguriert.</p>}
           {loginError && <p role="alert" className="admin-login-error">{loginError}</p>}
-          <button className="primary admin-login-submit" onClick={login}>Einloggen</button>
+          <button className="primary admin-login-submit" onClick={login} disabled={!ADMIN_PIN}>Einloggen</button>
           <a className="admin-login-back" href="#">← Zur Anmeldung</a>
         </section>
       </main>
