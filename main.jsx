@@ -367,10 +367,16 @@ function AppointmentCountdown({ appointments, club, isAdmin }) {
     <div className="appointment-countdown">
       <strong>{appointment.title}</strong>
       <small>{appointment.target.toLocaleDateString('de-DE')}{appointment.time ? ` · ${appointment.time} Uhr` : ''}</small>
-      <em>Noch {days} Tage · {hours} Stunden · {minutes} Minuten · <b>{seconds} Sekunden</b></em>
+      <div className="appointment-countdown-units" aria-label={`Noch ${days} Tage, ${hours} Stunden, ${minutes} Minuten und ${seconds} Sekunden`}>
+        <span><b>{days}</b><small>Tage</small></span>
+        <span><b>{hours}</b><small>Stunden</small></span>
+        <span><b>{minutes}</b><small>Minuten</small></span>
+        <span className="appointment-countdown-seconds"><b key={seconds}>{seconds}</b><small>Sekunden</small></span>
+      </div>
       {showPublicAddress && <small className="appointment-public-address">{routeAddress}</small>}
       {canOpenRoute && <button type="button" className="appointment-route-button" onClick={() => openVaccinationRoute(appointment)}><Navigation size={14} />{isAdmin ? 'Route prüfen' : 'Route starten'}</button>}
       <WeatherPreview location={getWeatherLocation(club, appointment)} date={appointment.date} />
+      {!isAdmin && <button type="button" className="home-countdown-cta" onClick={() => { window.location.hash = '#info' }}>Jetzt zur Impfanmeldung <span aria-hidden="true">→</span></button>}
     </div>
   )
 }
@@ -428,7 +434,8 @@ function LiveSignupStats({ club }) {
   return (
     <section className="live-signup-stats home-dashboard-grid" aria-label="Nächster Impftermin und Vorteile der Online-Anmeldung">
       <InteractiveStatCard className="live-stat-card home-countdown-card" icon={<CalendarDays size={30}/>} label="Nächster Impftermin" loading={!ready} appointmentDates={stats.dates} club={club} isAppointment tone="stat-date" animationIndex={0} />
-      <div className="home-community-card premium-home-surface">
+      <div className="home-dashboard-support">
+      <div className="home-community-card">
         <div className="home-community-heading">
           <h2>Bereits angemeldet</h2>
         </div>
@@ -436,7 +443,7 @@ function LiveSignupStats({ club }) {
           <div><span><Users size={22}/></span><strong>{ready ? <AnimatedMetric value={Number(stats.participants || 0)}/> : '–'}</strong><small>Geflügelhalter</small></div>
           <div><span><Syringe size={22}/></span><strong>{ready ? <AnimatedMetric value={Number(stats.animals || 0)}/> : '–'}</strong><small>Tiere</small></div>
         </div>
-        <p>Schon {Number(stats.participants || 0)} Geflügelhalter haben {Number(stats.animals || 0)} Tiere angemeldet.</p>
+        <p>Bereits für den nächsten Termin angemeldet.</p>
       </div>
       <div className="home-benefits-card premium-home-surface">
         <div className="home-benefits-heading">
@@ -456,6 +463,7 @@ function LiveSignupStats({ club }) {
             <div key={text}><span><Icon size={18} strokeWidth={2}/></span>{text}</div>
           ))}
         </div>
+      </div>
       </div>
     </section>
   )
@@ -551,10 +559,12 @@ height:'220px',
       maxWidth: '700px'
     }}
   >
-    Schnell, einfach und sicher zur Anmeldung Ihres Impftermins.
-    <br />
-    Mitglieder des RGZV Hagen und Umgebung seit 1903 e.V. und Teilnehmer der Impfgruppe können direkt über „Zur Impfanmeldung“ ihren nächsten Impftermin anmelden.
+    Geflügelbestand sicher online anmelden, bequem bezahlen und am Impftag digital einchecken.
   </p>
+
+  <button type="button" className="home-hero-cta" onClick={() => { window.location.hash = '#info' }}>
+    Zur Impfanmeldung <span aria-hidden="true">→</span>
+  </button>
 
   <div
     style={{

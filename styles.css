@@ -913,3 +913,77 @@ body { background: #163a2f; }
 @media (max-width: 430px) {
   .home-community-metrics { grid-template-columns: 1fr; }
 }
+
+/* Startseite mit klarer Premium-Hierarchie */
+.home-hero { grid-template-columns: 190px minmax(0,1fr) !important; min-height: 245px; gap: 34px !important; padding: 30px 42px !important; }
+.home-logo-stage { min-height: 170px; }
+.home-logo-stage::before { width: 165px; height: 165px; }
+.home-hero-logo { width: 178px !important; height: 178px !important; }
+.home-hero-copy h1 { font-size: clamp(39px,4.4vw,58px) !important; line-height: 1 !important; }
+.home-hero-copy h1 span { margin-top: 10px; font-size: clamp(17px,2vw,24px) !important; }
+.home-hero-copy p { max-width: 680px !important; margin: 17px 0 0 !important; font-size: 16px !important; line-height: 1.55 !important; }
+.home-hero-copy > div { display: none; }
+.home-hero-cta,.home-countdown-cta { display: inline-flex; width: fit-content; align-items: center; justify-content: center; gap: 10px; color: #fff; background: #f28c28; border: 1px solid rgba(255,255,255,.22); border-radius: 13px; box-shadow: 0 13px 28px rgba(194,93,13,.32),inset 0 1px 0 rgba(255,255,255,.23); transition: transform .24s ease,box-shadow .24s ease,background .24s ease; }
+.home-hero-cta { min-height: 46px; margin-top: 21px; padding: 12px 20px; font-size: 15px; }
+.home-hero-cta:hover,.home-countdown-cta:hover { background: #df791f; box-shadow: 0 18px 34px rgba(194,93,13,.42); transform: translateY(-3px); }
+.home-hero-cta:active,.home-countdown-cta:active { transform: translateY(0) scale(.985); }
+.home-dashboard-grid { display: grid; grid-template-columns: 1fr !important; grid-template-rows: auto !important; gap: 22px !important; }
+.home-countdown-card { grid-column: auto; grid-row: auto; min-height: 390px !important; }
+.home-countdown-card.dashboard-stat-card { align-items: center; padding: clamp(34px,5vw,58px) !important; background: radial-gradient(circle at 82% 10%,rgba(242,140,40,.17),transparent 32%),linear-gradient(135deg,rgba(91,62,29,.88),rgba(23,62,46,.84) 58%,rgba(12,42,33,.8)) !important; }
+.home-countdown-card .dashboard-stat-icon { width: 78px; height: 78px; }
+.home-countdown-card .dashboard-stat-content { text-align: center; }
+.home-countdown-card .dashboard-stat-content > span { margin-bottom: 10px; font-size: 12px; }
+.home-countdown-card .appointment-countdown { justify-items: center; }
+.home-countdown-card .appointment-countdown strong { font-size: clamp(32px,4.2vw,54px); }
+.home-countdown-card .appointment-countdown > small { font-size: 16px; }
+.appointment-countdown-units { display: grid; grid-template-columns: repeat(4,minmax(58px,1fr)); gap: 8px; margin-top: 9px; }
+.appointment-countdown-units > span { display: grid; min-width: 0; padding: 8px; place-items: center; background: rgba(255,255,255,.065); border: 1px solid rgba(255,255,255,.1); border-radius: 10px; }
+.appointment-countdown-units b { color: #fff3e5; font-size: 20px; line-height: 1; font-variant-numeric: tabular-nums; }
+.appointment-countdown-units small { margin-top: 4px; color: rgba(237,245,241,.6) !important; font-size: 8px !important; font-weight: 750; text-transform: uppercase; }
+.home-countdown-card .appointment-countdown-units { gap: 12px; width: min(100%,620px); margin-top: 15px; }
+.home-countdown-card .appointment-countdown-units > span { min-height: 96px; padding: 15px 10px; border-radius: 17px; box-shadow: inset 0 1px 0 rgba(255,255,255,.08); }
+.home-countdown-card .appointment-countdown-units b { font-size: clamp(33px,5vw,58px); letter-spacing: -1.5px; }
+.home-countdown-card .appointment-countdown-units small { margin-top: 8px; font-size: 10px !important; letter-spacing: .08em; }
+.appointment-countdown-seconds b { animation: countdown-second-in .28s ease-out both; }
+@keyframes countdown-second-in { from { opacity: .25; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+.home-countdown-card .appointment-public-address { margin-top: 7px; font-size: 12px !important; }
+.home-countdown-card .appointment-route-button { margin-top: 8px; }
+.home-countdown-card .appointment-weather { width: min(100%,620px); }
+.home-countdown-cta { min-height: 48px; margin-top: 14px; padding: 12px 22px; font-size: 15px; }
+.home-dashboard-support { display: grid; grid-template-columns: minmax(0,.72fr) minmax(0,1.28fr); gap: 22px; align-items: stretch; }
+.home-community-card { display: grid; grid-column: auto; grid-row: auto; min-height: 0; padding: 25px 26px; align-content: center; background: transparent !important; border: 0 !important; box-shadow: none !important; backdrop-filter: none !important; opacity: 1; translate: none; animation: none; }
+.home-community-card::after { display: none; }
+.home-community-heading h2 { font-size: 21px; }
+.home-community-metrics { margin: 15px 0 10px; }
+.home-community-metrics > div { min-height: 86px; background: rgba(255,255,255,.06); border-color: rgba(255,255,255,.12); border-radius: 16px; }
+.home-community-metrics strong { font-size: clamp(31px,4vw,45px); }
+.home-community-card > p { color: rgba(237,245,241,.62); font-size: 11px; text-align: center; }
+.home-benefits-card { grid-column: auto; grid-row: auto; min-height: 0; padding: 25px 27px; }
+.home-benefits-list > div { min-height: 42px; }
+.home-card-grid-wrap { margin-top: 4px; }
+.home-nav-grid { gap: 18px; }
+.home-nav-card { min-height: 215px; padding: 20px !important; }
+.home-nav-card h3 { font-size: 17px !important; }
+.home-nav-card p { font-size: 13px; line-height: 1.55 !important; }
+.home-nav-cta { padding: 10px 14px; font-size: 13px; }
+@media (max-width: 900px) {
+  .home-dashboard-support { grid-template-columns: 1fr; }
+  .home-community-card { padding: 18px 8px; }
+}
+@media (max-width: 700px) {
+  .home-hero { grid-template-columns: 1fr !important; padding: 26px 22px !important; }
+  .home-logo-stage { min-height: 118px; }
+  .home-logo-stage::before { width: 118px; height: 118px; }
+  .home-hero-logo { width: 128px !important; height: 128px !important; }
+  .home-hero-cta { margin-right: auto; margin-left: auto; }
+  .home-countdown-card.dashboard-stat-card { min-height: 0 !important; align-items: center; }
+  .home-countdown-card .appointment-countdown-units { gap: 7px; }
+  .home-countdown-card .appointment-countdown-units > span { min-height: 76px; border-radius: 13px; }
+  .home-countdown-card .appointment-countdown-units b { font-size: clamp(28px,9vw,40px); }
+  .home-nav-card { min-height: 0; }
+}
+@media (max-width: 430px) {
+  .appointment-countdown-units { grid-template-columns: repeat(2,minmax(0,1fr)); }
+  .home-countdown-card .appointment-countdown-units { grid-template-columns: repeat(2,minmax(0,1fr)); }
+}
+@media (prefers-reduced-motion: reduce) { .appointment-countdown-seconds b { animation: none; } }
