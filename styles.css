@@ -618,3 +618,18 @@ body { background: #163a2f; }
 @media (max-width: 700px) { .live-signup-stats { grid-template-columns: 1fr; } .live-stat-card:nth-child(3) { grid-column: auto; } .dashboard-stat-card:hover { transform: none; } }
 @media (hover: none), (pointer: coarse) { .dashboard-stat-card { transform: none; } .dashboard-stat-card:hover { transform: none; box-shadow: inherit; } }
 @media (prefers-reduced-motion: reduce) { .dashboard-stat-card,.dashboard-stat-card:hover { transition: none; transform: none; } .dashboard-stat-skeleton,.dashboard-stat-date { animation: none; } }
+
+/* Gestaffelte Dashboard-Einblendungen und Termin-Countdown */
+.dashboard-stat-card { opacity: 0; translate: 0 14px; animation: dashboard-stat-enter .52s cubic-bezier(.2,.8,.25,1) var(--dashboard-delay, 0ms) both; }
+.appointment-countdown { display: grid; gap: 3px; margin-top: 5px; }
+.appointment-countdown strong { margin: 0; color: #fff8ed; font-size: clamp(15px, 1.45vw, 19px); line-height: 1.25; letter-spacing: -.15px; }
+.appointment-countdown small { color: rgba(237,245,241,.74); font-size: 13px; line-height: 1.35; }
+.appointment-countdown em { display: block; margin-top: 5px; color: #fed7aa; font-size: 12px; font-style: normal; font-weight: 750; line-height: 1.45; }
+.live-stat-card.dashboard-stat-card { min-height: 176px; }
+.admin .stat.dashboard-stat-card { min-height: 178px; }
+.admin-appointments-card { opacity: 0; translate: 0 10px; animation: dashboard-stat-enter .48s ease-out .38s both; }
+.dashboard-date-row { opacity: 0; translate: 0 7px; animation: dashboard-stat-enter .38s ease-out calc(.48s + var(--date-row-delay, 0ms)) both; }
+@keyframes dashboard-stat-enter { to { opacity: 1; translate: 0 0; } }
+@media (max-width: 950px) { .live-stat-card.dashboard-stat-card { min-height: 166px; } }
+@media (max-width: 700px) { .live-stat-card.dashboard-stat-card,.admin .stat.dashboard-stat-card { min-height: 0; } .appointment-countdown em { font-size: 11px; } }
+@media (prefers-reduced-motion: reduce) { .dashboard-stat-card,.admin-appointments-card,.dashboard-date-row { opacity: 1; translate: 0 0; animation: none; } }

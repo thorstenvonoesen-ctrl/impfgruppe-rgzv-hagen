@@ -44,7 +44,6 @@ async function getMemberCode() {
 import './styles.css'
 import logo from './public/Logoklein.jpg'
 import { APP } from './config'
-import NextVaccinationCountdown from './NextVaccinationCountdown'
 const vaccines = ['Newcastle', 'IB', 'ILT', 'Marek', 'Kokzidiose', 'Salmonellen']
 const ADMIN_PIN = import.meta.env.VITE_ADMIN_PIN || '1234'
 const PAYMENT_URL = import.meta.env.VITE_PAYMENT_URL || ''
@@ -216,7 +215,47 @@ function AnimatedMetric({ value, currency = false }) {
     : Math.round(displayed).toLocaleString('de-DE')
 }
 
-function InteractiveStatCard({ className, icon, label, value, loading, currency = false, date = false, tone = '' }) {
+function getAppointmentDetails(appointment) {
+  if (!appointment) return null
+  const timeMatch = appointment.title?.match(/\b([01]?\d|2[0-3]):[0-5]\d\b/)
+  const time = timeMatch?.[0] || null
+  const target = new Date(`${appointment.date}T${time || '00:00'}:00`)
+  return { ...appointment, time, target }
+}
+
+function getNextAppointment(dates) {
+  const now = Date.now()
+  return (dates || []).map(getAppointmentDetails).find(appointment => appointment.target.getTime() > now) || null
+}
+
+function AppointmentCountdown({ appointments }) {
+  const [now, setNow] = useState(Date.now())
+  const appointment = useMemo(() => getNextAppointment(appointments), [appointments, now])
+
+  useEffect(() => {
+    setNow(Date.now())
+    const timer = window.setInterval(() => setNow(Date.now()), 1000)
+    return () => window.clearInterval(timer)
+  }, [appointments])
+
+  if (!appointment) return <strong className="dashboard-stat-date">Aktuell ist kein neuer Impftermin geplant.</strong>
+
+  const difference = Math.max(0, appointment.target.getTime() - now)
+  const days = Math.floor(difference / 86400000)
+  const hours = Math.floor((difference / 3600000) % 24)
+  const minutes = Math.floor((difference / 60000) % 60)
+  const seconds = Math.floor((difference / 1000) % 60)
+
+  return (
+    <div className="appointment-countdown">
+      <strong>{appointment.title}</strong>
+      <small>{appointment.target.toLocaleDateString('de-DE')}{appointment.time ? ` · ${appointment.time} Uhr` : ''}</small>
+      <em>Noch {days} Tage · {hours} Stunden · {minutes} Minuten · {seconds} Sekunden</em>
+    </div>
+  )
+}
+
+function InteractiveStatCard({ className, icon, label, value, loading, currency = false, appointmentDates = [], isAppointment = false, tone = '', animationIndex = 0 }) {
   const updateTilt = event => {
     if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return
     const bounds = event.currentTarget.getBoundingClientRect()
@@ -231,18 +270,18 @@ function InteractiveStatCard({ className, icon, label, value, loading, currency 
   }
 
   return (
-    <div className={`${className} dashboard-stat-card ${tone}`} onMouseMove={updateTilt} onMouseLeave={resetTilt}>
+    <div className={`${className} dashboard-stat-card ${tone}`} style={{ '--dashboard-delay': `${animationIndex * 120}ms` }} onMouseMove={updateTilt} onMouseLeave={resetTilt}>
       <div className="dashboard-stat-icon">{icon}</div>
       <div className="dashboard-stat-content">
         <span>{label}</span>
-        {loading ? <i className="dashboard-stat-skeleton" aria-label="Daten werden geladen" /> : date ? <strong className="dashboard-stat-date">{value || 'Noch kein Termin geplant'}</strong> : <strong><AnimatedMetric value={Number(value || 0)} currency={currency} /></strong>}
+        {loading ? <i className="dashboard-stat-skeleton" aria-label="Daten werden geladen" /> : isAppointment ? <AppointmentCountdown appointments={appointmentDates} /> : <strong><AnimatedMetric value={Number(value || 0)} currency={currency} /></strong>}
       </div>
     </div>
   )
 }
 
 function LiveSignupStats() {
-  const [stats, setStats] = useState({ participants: 0, animals: 0, nextDate: null })
+  const [stats, setStats] = useState({ participants: 0, animals: 0, dates: [] })
   const [ready, setReady] = useState(false)
 
   useEffect(() => {
@@ -258,13 +297,10 @@ function LiveSignupStats() {
         supabase.from('vaccination_dates').select('date,title').eq('club_id', clubId).order('date', { ascending: true })
       ])
       if (!active) return
-      const today = new Date()
-      today.setHours(0, 0, 0, 0)
-      const nextDate = datesError ? null : (dates || []).find(date => new Date(`${date.date}T00:00:00`) >= today) || null
       setStats({
         participants: participantsError ? 0 : participants?.length || 0,
         animals: participantsError ? 0 : (participants || []).reduce((sum, participant) => sum + Number(participant.animal_count || 0), 0),
-        nextDate
+        dates: datesError ? [] : dates || []
       })
       setReady(true)
     }
@@ -272,15 +308,11 @@ function LiveSignupStats() {
     return () => { active = false }
   }, [])
 
-  const nextDateLabel = stats.nextDate
-    ? `${stats.nextDate.title} · ${new Date(`${stats.nextDate.date}T00:00:00`).toLocaleDateString('de-DE')}`
-    : 'Noch kein Termin geplant'
-
   return (
     <section className="live-signup-stats" aria-label="Aktuelle Anmeldestatistik">
-      <InteractiveStatCard className="live-stat-card" icon={<Users size={25}/>} label="Teilnehmer" value={stats.participants} loading={!ready} tone="stat-participants" />
-      <InteractiveStatCard className="live-stat-card" icon={<Syringe size={25}/>} label="Tiere" value={stats.animals} loading={!ready} tone="stat-animals" />
-      <InteractiveStatCard className="live-stat-card" icon={<CalendarDays size={25}/>} label="Nächster Impftermin" value={nextDateLabel} loading={!ready} date tone="stat-date" />
+      <InteractiveStatCard className="live-stat-card" icon={<Users size={25}/>} label="Teilnehmer" value={stats.participants} loading={!ready} tone="stat-participants" animationIndex={0} />
+      <InteractiveStatCard className="live-stat-card" icon={<Syringe size={25}/>} label="Tiere" value={stats.animals} loading={!ready} tone="stat-animals" animationIndex={1} />
+      <InteractiveStatCard className="live-stat-card" icon={<CalendarDays size={25}/>} label="Nächster Impftermin" loading={!ready} appointmentDates={stats.dates} isAppointment tone="stat-date" animationIndex={2} />
     </section>
   )
 }
@@ -376,10 +408,6 @@ height:'220px',
     <br />
     Mitglieder des RGZV Hagen und Umgebung seit 1903 e.V. und Teilnehmer der Impfgruppe können direkt über „Zur Impfanmeldung“ ihren nächsten Impftermin anmelden.
   </p>
-
-  <div style={{ marginTop:'18px' }}>
-    <NextVaccinationCountdown />
-  </div>
 
   <div
     style={{
@@ -3335,14 +3363,6 @@ const clubId = await getDefaultClubId()
       .filter(participant => participant.payment_status === 'bezahlt')
       .reduce((sum, participant) => sum + Number(participant.payment_amount || 0), 0)
   }), [participants])
-  const nextVaccinationDate = useMemo(() => {
-    const today = new Date()
-    today.setHours(0, 0, 0, 0)
-    return vaccinationDates.find(date => new Date(`${date.date}T00:00:00`) >= today) || null
-  }, [vaccinationDates])
-  const nextVaccinationLabel = nextVaccinationDate
-    ? `${nextVaccinationDate.title} · ${new Date(`${nextVaccinationDate.date}T00:00:00`).toLocaleDateString('de-DE')}`
-    : 'Noch kein Termin geplant'
   const dateStats = vaccinationDates.map(v => ({
   ...v,
   count: participants.filter(p => p.vaccination_date_id === v.id).length
@@ -3445,16 +3465,16 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
     <main className="admin-wrap">
       <div className="admin-top"><h1>Adminbereich</h1><button className="ghost" onClick={onLogout}><LogOut size={16}/> Logout</button></div>
       <div className="stats admin-dashboard-stats">
-        <InteractiveStatCard className="stat" icon={<Users/>} label="Teilnehmer" value={stats.total} loading={loading} tone="stat-participants" />
-        <InteractiveStatCard className="stat" icon={<ShieldCheck/>} label="Tiere" value={stats.animals} loading={loading} tone="stat-animals" />
-        <InteractiveStatCard className="stat" icon={<Euro/>} label="Einnahmen" value={stats.revenue} loading={loading} currency tone="stat-revenue" />
-        <InteractiveStatCard className="stat" icon={<CalendarDays/>} label="Nächster Impftermin" value={nextVaccinationLabel} loading={loading} date tone="stat-date" />
+        <InteractiveStatCard className="stat" icon={<Users/>} label="Teilnehmer" value={stats.total} loading={loading} tone="stat-participants" animationIndex={0} />
+        <InteractiveStatCard className="stat" icon={<ShieldCheck/>} label="Tiere" value={stats.animals} loading={loading} tone="stat-animals" animationIndex={1} />
+        <InteractiveStatCard className="stat" icon={<Euro/>} label="Einnahmen" value={stats.revenue} loading={loading} currency tone="stat-revenue" animationIndex={2} />
+        <InteractiveStatCard className="stat" icon={<CalendarDays/>} label="Nächster Impftermin" loading={loading} appointmentDates={vaccinationDates} isAppointment tone="stat-date" animationIndex={3} />
       </div>
-      <section className="card">
+      <section className="card admin-appointments-card">
   <h2>Anmeldungen pro Impftermin</h2>
 
-  {dateStats.map(d => (
-    <div key={d.id} className="date-stat">
+  {dateStats.map((d, index) => (
+    <div key={d.id} className="date-stat dashboard-date-row" style={{ '--date-row-delay': `${index * 70}ms` }}>
       <div>
         <strong>{d.title}</strong>
         <br />
