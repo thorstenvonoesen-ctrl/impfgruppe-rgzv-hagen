@@ -534,18 +534,18 @@ body { background: #163a2f; }
 #root > :not(.premium-background) { position: relative; z-index: 1; }
 .premium-background { position: fixed; z-index: 0; inset: 0; overflow: hidden; pointer-events: none; background: linear-gradient(120deg, #1f2937 0%, #163a2f 65%, #355e2b 100%); }
 .premium-orb,
-.premium-pointer-light { position: absolute; width: min(72vw, 980px); aspect-ratio: 1; border-radius: 50%; pointer-events: none; filter: blur(90px); will-change: transform; }
-.premium-orb { opacity: .19; }
-.premium-orb-one { top: -34%; left: -22%; background: rgba(33, 112, 83, .72); animation: premium-drift-one 36s ease-in-out infinite alternate; }
-.premium-orb-two { right: -28%; bottom: -42%; background: rgba(207, 111, 33, .46); animation: premium-drift-two 42s ease-in-out infinite alternate; }
-.premium-orb-three { top: 28%; left: 34%; width: min(56vw, 760px); background: rgba(35, 103, 102, .34); animation: premium-drift-three 30s ease-in-out infinite alternate; }
-.premium-pointer-light { top: 0; left: 0; width: min(70vw, 880px); opacity: .13; background: radial-gradient(circle, rgba(242, 140, 40, .42) 0%, rgba(48, 121, 91, .24) 40%, transparent 72%); transform: translate3d(calc(var(--premium-pointer-x, 50vw) - 50%), calc(var(--premium-pointer-y, 50vh) - 50%), 0); }
+.premium-pointer-light { position: absolute; width: min(82vw, 1160px); aspect-ratio: 1; border-radius: 50%; pointer-events: none; filter: blur(104px); will-change: transform; }
+.premium-orb { opacity: .28; }
+.premium-orb-one { top: -38%; left: -26%; background: rgba(33, 112, 83, .78); animation: premium-drift-one 34s ease-in-out infinite alternate; }
+.premium-orb-two { right: -31%; bottom: -45%; background: rgba(207, 111, 33, .54); animation: premium-drift-two 40s ease-in-out infinite alternate; }
+.premium-orb-three { top: 24%; left: 30%; width: min(66vw, 900px); background: rgba(35, 103, 102, .42); animation: premium-drift-three 30s ease-in-out infinite alternate; }
+.premium-pointer-light { top: 0; left: 0; width: min(86vw, 1180px); opacity: .19; background: radial-gradient(circle, rgba(242, 140, 40, .52) 0%, rgba(48, 121, 91, .31) 42%, transparent 74%); transform: translate3d(calc(var(--premium-pointer-x, 50vw) - 50%), calc(var(--premium-pointer-y, 50vh) - 50%), 0); }
 .page,
 .signup-page,
 .admin-login-page,
 .admin { background: transparent; }
-@keyframes premium-drift-one { from { transform: translate3d(0, 0, 0) scale(1); } to { transform: translate3d(14vw, 11vh, 0) scale(1.16); } }
-@keyframes premium-drift-two { from { transform: translate3d(0, 0, 0) scale(1); } to { transform: translate3d(-15vw, -12vh, 0) scale(1.13); } }
-@keyframes premium-drift-three { from { transform: translate3d(0, 0, 0) scale(.94); } to { transform: translate3d(-10vw, 9vh, 0) scale(1.11); } }
+@keyframes premium-drift-one { from { transform: translate3d(0, 0, 0) scale(1); } to { transform: translate3d(20vw, 15vh, 0) scale(1.2); } }
+@keyframes premium-drift-two { from { transform: translate3d(0, 0, 0) scale(1); } to { transform: translate3d(-21vw, -16vh, 0) scale(1.17); } }
+@keyframes premium-drift-three { from { transform: translate3d(0, 0, 0) scale(.94); } to { transform: translate3d(-14vw, 12vh, 0) scale(1.14); } }
 @media (hover: none), (pointer: coarse) { .premium-pointer-light { display: none; } }
 @media (prefers-reduced-motion: reduce) { .premium-orb { animation: none; } .premium-pointer-light { display: none; } }
