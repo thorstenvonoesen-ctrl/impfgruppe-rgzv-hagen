@@ -1364,5 +1364,10 @@ body { background: #163a2f; }
   .appointment-weather-button { width: 100%; margin-top: 0; }
 }
 
-.home-hero-copy { text-align: center; }
+.home-hero-copy {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
 .home-hero-copy .home-hero-actions { justify-content: center; }
