@@ -48,6 +48,7 @@ const vaccines = ['Newcastle', 'IB', 'ILT', 'Marek', 'Kokzidiose', 'Salmonellen'
 const ADMIN_PIN = import.meta.env.VITE_ADMIN_PIN || '1234'
 const PAYMENT_URL = import.meta.env.VITE_PAYMENT_URL || ''
 const MEMBER_CODE = 'RGZV2026'
+const weatherPreviewCache = new Map()
 
 function PremiumBackground() {
   const pointerLightRef = useRef(null)
@@ -228,7 +229,89 @@ function getNextAppointment(dates) {
   return (dates || []).map(getAppointmentDetails).find(appointment => appointment.target.getTime() > now) || null
 }
 
-function AppointmentCountdown({ appointments }) {
+function getWeatherLocation(club) {
+  if (!club) return null
+  const directLocation = club.weather_location || club.location || club.venue || club.city || club.place
+  if (typeof directLocation === 'string' && directLocation.trim()) return directLocation.trim()
+  const address = [club.address, club.street, club.zipcode, club.city].filter(Boolean).join(', ')
+  return address || null
+}
+
+function weatherInfo(code) {
+  if (code === 0) return { icon: '☀️', label: 'Sonnig' }
+  if ([1, 2].includes(code)) return { icon: '⛅', label: 'Leicht bewölkt' }
+  if (code === 3) return { icon: '☁️', label: 'Bedeckt' }
+  if ([45, 48].includes(code)) return { icon: '🌫️', label: 'Neblig' }
+  if ([51, 53, 55, 56, 57].includes(code)) return { icon: '🌦️', label: 'Nieselregen' }
+  if ([61, 63, 65, 66, 67, 80, 81, 82].includes(code)) return { icon: '🌧️', label: 'Regnerisch' }
+  if ([71, 73, 75, 77, 85, 86].includes(code)) return { icon: '❄️', label: 'Schnee' }
+  if ([95, 96, 99].includes(code)) return { icon: '⛈️', label: 'Gewitter' }
+  return { icon: '🌤️', label: 'Wechselhaft' }
+}
+
+async function loadWeatherPreview(location, date) {
+  const cacheKey = `${location}|${date}`
+  if (weatherPreviewCache.has(cacheKey)) return weatherPreviewCache.get(cacheKey)
+
+  const request = (async () => {
+    const geocodingUrl = `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(location)}&count=1&language=de&format=json`
+    const geocodingResponse = await fetch(geocodingUrl)
+    if (!geocodingResponse.ok) throw new Error('Ort nicht verfügbar')
+    const geocodingData = await geocodingResponse.json()
+    const place = geocodingData.results?.[0]
+    if (!place) throw new Error('Ort nicht verfügbar')
+
+    const forecastUrl = `https://api.open-meteo.com/v1/forecast?latitude=${place.latitude}&longitude=${place.longitude}&daily=weather_code,temperature_2m_max,precipitation_probability_max&timezone=auto&start_date=${date}&end_date=${date}`
+    const forecastResponse = await fetch(forecastUrl)
+    if (!forecastResponse.ok) throw new Error('Wetter nicht verfügbar')
+    const forecastData = await forecastResponse.json()
+    const code = forecastData.daily?.weather_code?.[0]
+    const temperature = forecastData.daily?.temperature_2m_max?.[0]
+    const precipitation = forecastData.daily?.precipitation_probability_max?.[0]
+    if (typeof code !== 'number' || typeof temperature !== 'number') throw new Error('Wetter nicht verfügbar')
+    return { ...weatherInfo(code), temperature, precipitation: Number(precipitation || 0) }
+  })()
+
+  weatherPreviewCache.set(cacheKey, request)
+  try {
+    return await request
+  } catch (error) {
+    weatherPreviewCache.delete(cacheKey)
+    throw error
+  }
+}
+
+function WeatherPreview({ location, date }) {
+  const [weather, setWeather] = useState(null)
+  const [status, setStatus] = useState('idle')
+
+  useEffect(() => {
+    let active = true
+    const targetDate = new Date(`${date}T00:00:00`)
+    const daysUntil = Math.ceil((targetDate.getTime() - Date.now()) / 86400000)
+    if (!location) {
+      setStatus('unavailable')
+      return () => { active = false }
+    }
+    if (daysUntil > 16) {
+      setStatus('later')
+      return () => { active = false }
+    }
+    setStatus('loading')
+    loadWeatherPreview(location, date)
+      .then(data => { if (active) { setWeather(data); setStatus('ready') } })
+      .catch(() => { if (active) setStatus('unavailable') })
+    return () => { active = false }
+  }, [location, date])
+
+  if (status === 'later') return <div className="appointment-weather weather-note">Wettervorschau erst näher am Termin verfügbar</div>
+  if (status === 'unavailable') return <div className="appointment-weather weather-note">Wettervorschau nicht verfügbar</div>
+  if (status !== 'ready' || !weather) return <div className="appointment-weather weather-note">Wettervorschau wird geladen</div>
+
+  return <div className="appointment-weather"><span>{weather.icon} {Math.round(weather.temperature)} °C · {weather.label}</span><small>Regenwahrscheinlichkeit: {weather.precipitation} %</small></div>
+}
+
+function AppointmentCountdown({ appointments, weatherLocation }) {
   const [now, setNow] = useState(Date.now())
   const appointment = useMemo(() => getNextAppointment(appointments), [appointments, now])
 
@@ -251,11 +334,12 @@ function AppointmentCountdown({ appointments }) {
       <strong>{appointment.title}</strong>
       <small>{appointment.target.toLocaleDateString('de-DE')}{appointment.time ? ` · ${appointment.time} Uhr` : ''}</small>
       <em>Noch {days} Tage · {hours} Stunden · {minutes} Minuten · <b>{seconds} Sekunden</b></em>
+      <WeatherPreview location={weatherLocation} date={appointment.date} />
     </div>
   )
 }
 
-function InteractiveStatCard({ className, icon, label, value, loading, currency = false, appointmentDates = [], isAppointment = false, tone = '', animationIndex = 0 }) {
+function InteractiveStatCard({ className, icon, label, value, loading, currency = false, appointmentDates = [], weatherLocation = null, isAppointment = false, tone = '', animationIndex = 0 }) {
   const updateTilt = event => {
     if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return
     const bounds = event.currentTarget.getBoundingClientRect()
@@ -274,13 +358,13 @@ function InteractiveStatCard({ className, icon, label, value, loading, currency 
       <div className="dashboard-stat-icon">{icon}</div>
       <div className="dashboard-stat-content">
         <span>{label}</span>
-        {loading ? <i className="dashboard-stat-skeleton" aria-label="Daten werden geladen" /> : isAppointment ? <AppointmentCountdown appointments={appointmentDates} /> : <strong><AnimatedMetric value={Number(value || 0)} currency={currency} /></strong>}
+        {loading ? <i className="dashboard-stat-skeleton" aria-label="Daten werden geladen" /> : isAppointment ? <AppointmentCountdown appointments={appointmentDates} weatherLocation={weatherLocation} /> : <strong><AnimatedMetric value={Number(value || 0)} currency={currency} /></strong>}
       </div>
     </div>
   )
 }
 
-function LiveSignupStats() {
+function LiveSignupStats({ club }) {
   const [stats, setStats] = useState({ participants: 0, animals: 0, dates: [] })
   const [ready, setReady] = useState(false)
 
@@ -312,7 +396,7 @@ function LiveSignupStats() {
     <section className="live-signup-stats" aria-label="Aktuelle Anmeldestatistik">
       <InteractiveStatCard className="live-stat-card" icon={<Users size={25}/>} label="Teilnehmer" value={stats.participants} loading={!ready} tone="stat-participants" animationIndex={0} />
       <InteractiveStatCard className="live-stat-card" icon={<Syringe size={25}/>} label="Tiere" value={stats.animals} loading={!ready} tone="stat-animals" animationIndex={1} />
-      <InteractiveStatCard className="live-stat-card" icon={<CalendarDays size={25}/>} label="Nächster Impftermin" loading={!ready} appointmentDates={stats.dates} isAppointment tone="stat-date" animationIndex={2} />
+      <InteractiveStatCard className="live-stat-card" icon={<CalendarDays size={25}/>} label="Nächster Impftermin" loading={!ready} appointmentDates={stats.dates} weatherLocation={getWeatherLocation(club)} isAppointment tone="stat-date" animationIndex={2} />
     </section>
   )
 }
@@ -334,6 +418,7 @@ useEffect(() => {
     const { data } = await supabase.from('clubs').select('*').order('name')
     setClubs(data || [])
   }
+  const currentClub = clubs.find(club => club.slug === getCurrentSlug()) || null
 
   return (
     <div
@@ -424,7 +509,7 @@ height:'220px',
             
          
         </div>
-        <LiveSignupStats />
+        <LiveSignupStats club={currentClub} />
 <div className="home-card-grid-wrap">
 
   <div className="home-nav-grid">
@@ -3178,9 +3263,10 @@ const [selectedDate, setSelectedDate] = useState(null)
   const [vaccinationDates, setVaccinationDates] = useState([])
   const [newDate, setNewDate] = useState('')
   const [newDateTitle, setNewDateTitle] = useState('')
-  const [newDateNote, setNewDateNote] = useState('')
+const [newDateNote, setNewDateNote] = useState('')
   const [clubs, setClubs] = useState([])
 const [selectedClub, setSelectedClub] = useState(null)
+  const activeClub = selectedClub || clubs.find(club => club.slug === getCurrentSlug()) || null
   async function sendReminderMail() {
   if (!selectedDate) return
 
@@ -3468,7 +3554,7 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
         <InteractiveStatCard className="stat" icon={<Users/>} label="Teilnehmer" value={stats.total} loading={loading} tone="stat-participants" animationIndex={0} />
         <InteractiveStatCard className="stat" icon={<ShieldCheck/>} label="Tiere" value={stats.animals} loading={loading} tone="stat-animals" animationIndex={1} />
         <InteractiveStatCard className="stat" icon={<Euro/>} label="Einnahmen" value={stats.revenue} loading={loading} currency tone="stat-revenue" animationIndex={2} />
-        <InteractiveStatCard className="stat" icon={<CalendarDays/>} label="Nächster Impftermin" loading={loading} appointmentDates={vaccinationDates} isAppointment tone="stat-date" animationIndex={3} />
+        <InteractiveStatCard className="stat" icon={<CalendarDays/>} label="Nächster Impftermin" loading={loading} appointmentDates={vaccinationDates} weatherLocation={getWeatherLocation(activeClub)} isAppointment tone="stat-date" animationIndex={3} />
       </div>
       <section className="card admin-appointments-card">
   <h2>Anmeldungen pro Impftermin</h2>
