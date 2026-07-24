@@ -3267,8 +3267,30 @@ function Admin() {
     if (!hasSupabase) return setLoginError(supabaseConfigMessage)
     if (!ADMIN_PIN) return setLoginError('Der Adminzugang ist noch nicht vollständig konfiguriert.')
     if (pin !== ADMIN_PIN) return setLoginError('Die Admin-PIN ist nicht korrekt.')
-    const { data, error } = await supabase.auth.signInWithPassword({ email, password })
-    if (error || !data.session) return setLoginError('E-Mail oder Passwort ist nicht korrekt.')
+    const normalizedEmail = email.trim()
+
+const { data, error } = await supabase.auth.signInWithPassword({
+  email: normalizedEmail,
+  password
+})
+
+if (error) {
+  if (error.message?.includes('Invalid login credentials')) {
+    return setLoginError('E-Mail oder Passwort ist nicht korrekt.')
+  }
+
+  if (error.message?.includes('Email not confirmed')) {
+    return setLoginError('Die E-Mail-Adresse ist noch nicht bestätigt.')
+  }
+
+  return setLoginError(`Anmeldung fehlgeschlagen: ${error.message}`)
+}
+
+if (!data.session) {
+  return setLoginError(
+    'Die Anmeldung wurde akzeptiert, aber es konnte keine Sitzung erstellt werden.'
+  )
+}
     const { data: memberships, error: membershipError } = await supabase.from('club_admin_memberships').select('club_id, role, active').eq('active', true)
     if (membershipError) {
       await supabase.auth.signOut()
