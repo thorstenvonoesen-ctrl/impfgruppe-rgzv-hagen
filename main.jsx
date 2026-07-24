@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { createRoot } from 'react-dom/client'
-import { Syringe, ShieldCheck, Users, Euro, Download, Search, Lock, LogOut, CalendarDays, Navigation, FileText, CreditCard, Mail, QrCode } from 'lucide-react'
+import { Syringe, ShieldCheck, Users, Euro, Download, Search, Lock, LogOut, CalendarDays, Navigation, FileText, CreditCard, Mail, QrCode, Check } from 'lucide-react'
 import jsPDF from 'jspdf'
 import autoTable from 'jspdf-autotable'
 import QRCode from 'qrcode'
@@ -825,14 +825,26 @@ function InfoPage() {
           [QrCode, 'Check-in', 'QR-Code am Impftag scannen'],
           [Syringe, 'Impfung', 'Direkt teilnehmen']
         ].map(([Icon, title, description], index) => (
-          <div className="info-process-step" key={title} style={{ '--process-index': index }}>
-            <div className="info-process-icon"><Icon size={28} strokeWidth={1.8}/></div>
+          <div className={`info-process-step${title === 'QR-Code' ? ' info-process-step-featured' : ''}`} key={title} style={{ '--process-index': index }}>
+            {title === 'QR-Code' && <span className="info-process-badge">Digital</span>}
+            <div className="info-process-icon"><Icon size={33} strokeWidth={1.8}/></div>
             <h3>{title}</h3>
             <p>{description}</p>
           </div>
         ))}
       </div>
     </section>
+
+    <div className="info-process-trust" aria-label="Vorteile des digitalen Ablaufs">
+      {[
+        'Anmeldung in wenigen Minuten',
+        'Sichere Onlinezahlung',
+        'QR-Code automatisch per E-Mail',
+        'Kein Papier am Impftag erforderlich'
+      ].map(benefit => (
+        <span key={benefit}><Check size={16} strokeWidth={2.5}/>{benefit}</span>
+      ))}
+    </div>
 
       <button
         className="info-page-signup-button"
