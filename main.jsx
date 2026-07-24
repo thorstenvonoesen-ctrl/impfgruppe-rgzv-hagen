@@ -2399,6 +2399,8 @@ function PublicSignup() {
   const [paymentMethod, setPaymentMethod] = useState('paypal')
   const [showForm, setShowForm] = useState(true)
   const [countdown, setCountdown] = useState('')
+  const [showPaymentSuccess, setShowPaymentSuccess] = useState(false)
+  const [confirmationEmailSent, setConfirmationEmailSent] = useState(false)
   
   const update = e => setForm({ ...form, [e.target.name]: e.target.value })
  
@@ -2471,6 +2473,7 @@ setLoading(true)
 if (stripe === 'success') {
   console.log('Stripe Success erkannt')
 console.log('Participant ID:', participantId)
+  let emailWasSent = false
   const { data: participant } = await supabase
     .from('participants')
     .select('*')
@@ -2503,11 +2506,16 @@ if (participant?.email) {
 
   console.log('EMAIL RESPONSE STATUS:', emailResult.status)
   console.log('EMAIL RESPONSE:', await emailResult.text())
+  emailWasSent = emailResult.ok
 }
 
 
   alert('Stripe-Code wurde ausgeführt')
 setMessage('Stripe-Zahlung erfolgreich bestätigt.')
+  if (hasSupabase) {
+    setConfirmationEmailSent(emailWasSent)
+    setShowPaymentSuccess(true)
+  }
   setLoading(false)
   return
 }
@@ -2524,6 +2532,7 @@ setMessage('Stripe-Zahlung erfolgreich bestätigt.')
         throw new Error(result.error || 'PayPal-Zahlung konnte nicht bestätigt werden')
       }
 
+      let emailWasSent = false
       if (hasSupabase) {
   const { data: participant } = await supabase
     .from('participants')
@@ -2542,7 +2551,7 @@ setMessage('Stripe-Zahlung erfolgreich bestätigt.')
     .eq('id', participantId)
 
   if (participant?.email) {
-    await fetch('/api/send-payment-email', {
+    const emailResponse = await fetch('/api/send-payment-email', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -2553,10 +2562,15 @@ setMessage('Stripe-Zahlung erfolgreich bestätigt.')
         lastname: participant.lastname
       })
     })
+    emailWasSent = emailResponse.ok
   }
 }
  
       setMessage('Zahlung erfolgreich bestätigt. Vielen Dank!')
+      if (hasSupabase) {
+        setConfirmationEmailSent(emailWasSent)
+        setShowPaymentSuccess(true)
+      }
       window.history.replaceState({}, document.title, window.location.pathname)
     } catch (error) {
       setMessage('Fehler bei Zahlungsbestätigung: ' + error.message)
@@ -2845,6 +2859,7 @@ if (!showForm) {
 )
 }
   return (
+  <>
   <div className="page signup-page">
     <Header />
     <main
@@ -2986,7 +3001,88 @@ value={form.vaccination_date_id}
 </button>
     <Footer />
   </div>
+  {showPaymentSuccess && (
+    <SignupSuccessOverlay
+      emailSent={confirmationEmailSent}
+      onHome={() => {
+        setShowPaymentSuccess(false)
+        window.location.hash = '#'
+      }}
+      onAnother={() => {
+        setShowPaymentSuccess(false)
+        setConfirmationEmailSent(false)
+        setForm(emptyForm())
+        setPrivacyAccepted(false)
+        setPaymentMethod('paypal')
+        setMessage('')
+      }}
+    />
+  )}
+  </>
 )
+}
+
+function SignupSuccessOverlay({ emailSent, onHome, onAnother }) {
+  const homeButtonRef = useRef(null)
+  const onHomeRef = useRef(onHome)
+  const leaveTimerRef = useRef(null)
+  const leavingRef = useRef(false)
+  const [isLeaving, setIsLeaving] = useState(false)
+  const confetti = Array.from({ length: 24 }, (_, index) => ({
+    id: index,
+    x: `${((index * 73) % 520) - 260}px`,
+    y: `${100 + ((index * 47) % 210)}px`,
+    rotate: `${180 + ((index * 59) % 300)}deg`
+  }))
+
+  useEffect(() => {
+    onHomeRef.current = onHome
+  }, [onHome])
+
+  const leave = action => {
+    if (leavingRef.current) return
+    leavingRef.current = true
+    setIsLeaving(true)
+    leaveTimerRef.current = window.setTimeout(action, 240)
+  }
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => leave(onHomeRef.current), 8000)
+    homeButtonRef.current?.focus()
+
+    return () => {
+      window.clearTimeout(timer)
+      window.clearTimeout(leaveTimerRef.current)
+    }
+  }, [])
+
+  return (
+    <div className={`signup-success-overlay${isLeaving ? ' is-leaving' : ''}`} role="dialog" aria-modal="true" aria-labelledby="signup-success-title">
+      <section className="signup-success-card" role="status" aria-live="polite">
+        <div className="signup-success-confetti" aria-hidden="true">
+          {confetti.map(piece => (
+            <i
+              key={piece.id}
+              className="signup-success-confetti-piece"
+              style={{ '--confetti-x': piece.x, '--confetti-y': piece.y, '--confetti-rotate': piece.rotate }}
+            />
+          ))}
+        </div>
+        <div className="signup-success-icon" aria-hidden="true">
+          <svg viewBox="0 0 52 52" focusable="false">
+            <path d="M14 27.5 22 35.5 39 17.5" />
+          </svg>
+        </div>
+        <h2 id="signup-success-title">Anmeldung erfolgreich!</h2>
+        <p>Vielen Dank für Ihre Anmeldung.<br />Ihre Daten wurden erfolgreich gespeichert.</p>
+        {emailSent && <p className="signup-success-email">Eine Bestätigungs-E-Mail wurde an Ihre E-Mail-Adresse versendet.</p>}
+        <div className="signup-success-actions">
+          <button ref={homeButtonRef} type="button" className="signup-success-home" onClick={() => leave(onHome)}>Zur Startseite</button>
+          <button type="button" className="signup-success-another" onClick={() => leave(onAnother)}>Weitere Anmeldung erfassen</button>
+        </div>
+      </section>
+    </div>
+  )
 }
 
 function Admin() {
