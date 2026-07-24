@@ -2648,10 +2648,10 @@ setMessage('Stripe-Zahlung erfolgreich bestätigt.')
   return
 }
     try {
-      const response = await fetch('/api/paypal-capture-order', {
+      const response = await fetch('/api/paypal-create-order', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ token, participantId })
+        body: JSON.stringify({ action: 'capture', token, participantId })
       })
 
       const result = await response.json()
