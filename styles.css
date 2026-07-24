@@ -508,3 +508,14 @@ td .paid {
 .home-nav-card p:last-child { margin-top: auto !important; }
 @media (max-width: 950px) { .home-nav-grid { grid-template-columns: repeat(2,minmax(0,1fr)); } .home-nav-card { min-height: 230px; } }
 @media (max-width: 700px) { .live-signup-stats,.home-card-grid-wrap { width: min(100% - 28px,1240px); } .home-hero { margin-bottom: 14px !important; } .live-signup-stats { gap: 14px; margin-bottom: 14px; } .home-nav-grid { grid-template-columns: 1fr; gap: 14px; } .home-nav-card { min-height: 0; } }
+
+/* Gemeinsame Breite der Startseitenbereiche */
+.home-hero,
+.live-signup-stats,
+.home-card-grid-wrap { width: min(100% - 40px, 1240px); max-width: none; margin-right: auto; margin-left: auto; }
+.home-credits { margin-top: 22px !important; margin-bottom: 12px !important; }
+.home-credits > div:nth-child(1) { width: 48px !important; height: 3px !important; margin-bottom: 10px !important; }
+.home-credits > div:nth-child(2) { margin-bottom: 6px !important; font-size: 10px !important; letter-spacing: 2px !important; }
+.home-credits > div:nth-child(3) { font-size: 28px !important; }
+.home-credits > div:nth-child(4) { margin-top: 6px !important; font-size: 12px !important; }
+@media (max-width: 700px) { .home-hero,.live-signup-stats,.home-card-grid-wrap { width: min(100% - 28px,1240px); } }

@@ -479,6 +479,7 @@ transition:'all .25s ease'
 </div>
 </div> 
 <div
+  className="home-credits"
   style={{
     textAlign: 'center',
     marginTop: '40px',
