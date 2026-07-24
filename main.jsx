@@ -2727,30 +2727,36 @@ if (!showForm) {
 )
 }
   return (
-  <div className="page">
+  <div className="page signup-page">
     <Header />
     <main
-  style={{
-    maxWidth: '900px',
-    margin: '40px auto'
-  }}
+      className="signup-shell"
 >
-      
-      <section className="card">
-        <h2>Teilnehmer anmelden</h2>
-        <div className="section-title">
+      <section className="signup-hero">
+        <div className="signup-eyebrow">Online-Anmeldung</div>
+        <h1>Teilnehmer anmelden</h1>
+        <p>Registrieren Sie Ihre Tiere einfach und sicher für den nächsten Impftermin.</p>
+      </section>
+
+      <section className="card signup-card">
+        <div className="signup-card-heading">
+          <span>Impfgruppe RGZV Hagen</span>
+          <h2>Ihre Anmeldung</h2>
+          <p>Bitte füllen Sie die folgenden Angaben vollständig aus.</p>
+        </div>
+        <div className="section-title signup-section-title">
   Persönliche Daten
 </div>
 
-<div className="form-section">
+<div className="form-section signup-form-section">
 
-<form onSubmit={submit} className="form">
+<form onSubmit={submit} className="form signup-form">
           <div className="two"><Input label="Vorname" name="firstname" value={form.firstname} onChange={update} required/><Input label="Nachname" name="lastname" value={form.lastname} onChange={update} required/></div>
           <div className="two"><Input label="Straße" name="street" value={form.street} onChange={update}/><Input label="Hausnummer" name="housenumber" value={form.housenumber} onChange={update}/></div>
           <div className="two"><Input label="PLZ" name="zipcode" value={form.zipcode} onChange={update}/><Input label="Ort" name="city" value={form.city} onChange={update}/></div>
           <div className="two"><Input label="E-Mail" name="email" type="email" value={form.email} onChange={update} required/><Input label="Telefon" name="phone" value={form.phone} onChange={update}/></div>
      
-          <div className="section-title">
+          <div className="section-title signup-section-title">
   Tierhalterdaten
 </div>
           <Input label="TSK Betriebsnummer." name="tsk_number" value={form.tsk_number} onChange={update} required/>
@@ -2791,7 +2797,7 @@ if (!showForm) {
   </select>
 </label>
           <div className="two"><Input label="Anzahl Tiere" name="animal_count" type="number" min="1" value={form.animal_count} onChange={update} required/><label>Impfstoff<select name="vaccine" value={form.vaccine} onChange={update}>{vaccines.map(v=><option key={v}>{v}</option>)}</select></label></div>
-          <div className="section-title">
+          <div className="section-title signup-section-title">
   Impfung
 </div>
           <select
@@ -2808,7 +2814,7 @@ value={form.vaccination_date_id}
     </option>
   ))}
 </select>
-          <div className="section-title">
+          <div className="section-title signup-section-title">
   Zahlung & Datenschutz
 </div>
           <label className="privacy-check">
@@ -2819,10 +2825,10 @@ value={form.vaccination_date_id}
   />
   Ich habe die Datenschutzerklärung gelesen und stimme der Verarbeitung meiner Daten zu.
 </label>
-   <div style={{ marginTop: '15px', marginBottom: '15px' }}>
+   <div className="payment-methods" style={{ marginTop: '15px', marginBottom: '15px' }}>
   <strong>Zahlungsart:</strong>
 
-  <div style={{ marginTop: '10px' }}>
+  <div className="payment-option" style={{ marginTop: '10px' }}>
     <input
       type="radio"
       name="paymentMethod"
@@ -2833,7 +2839,7 @@ value={form.vaccination_date_id}
     <span style={{ marginLeft: '8px' }}>PayPal</span>
   </div>
 
-  <div style={{ marginTop: '10px' }}>
+  <div className="payment-option" style={{ marginTop: '10px' }}>
     <input
       type="radio"
       name="paymentMethod"
@@ -2846,7 +2852,7 @@ value={form.vaccination_date_id}
     </span>
   </div>
 </div>
-          <button disabled={loading} className="primary">{loading ? 'Speichern...' : 'Anmelden & bezahlen'}</button>
+          <button disabled={loading} className="primary signup-submit">{loading ? 'Speichern...' : 'Anmelden & bezahlen'}</button>
           {message && <p className="message">{message}</p>}
         </form>
   </div>
