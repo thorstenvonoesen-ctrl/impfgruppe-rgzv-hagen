@@ -142,6 +142,84 @@ function ClubDashboard() {
     </div>
   )
 }
+function LiveSignupStats() {
+  const [stats, setStats] = useState({ participants: 0, animals: 0 })
+  const [displayed, setDisplayed] = useState({ participants: 0, animals: 0 })
+  const [ready, setReady] = useState(false)
+
+  useEffect(() => {
+    let active = true
+
+    async function loadStats() {
+      if (!hasSupabase) {
+        if (active) setReady(true)
+        return
+      }
+
+      const clubId = await getDefaultClubId()
+      const { data, error } = await supabase
+        .from('participants')
+        .select('animal_count')
+        .eq('club_id', clubId)
+
+      if (!active) return
+
+      if (!error) {
+        setStats({
+          participants: data?.length || 0,
+          animals: (data || []).reduce((sum, participant) => sum + Number(participant.animal_count || 0), 0)
+        })
+      }
+
+      setReady(true)
+    }
+
+    loadStats()
+    return () => { active = false }
+  }, [])
+
+  useEffect(() => {
+    if (!ready) return
+
+    const duration = 900
+    const start = performance.now()
+    let frame
+
+    const animate = now => {
+      const progress = Math.min((now - start) / duration, 1)
+      const eased = 1 - Math.pow(1 - progress, 3)
+
+      setDisplayed({
+        participants: Math.round(stats.participants * eased),
+        animals: Math.round(stats.animals * eased)
+      })
+
+      if (progress < 1) frame = requestAnimationFrame(animate)
+    }
+
+    frame = requestAnimationFrame(animate)
+    return () => cancelAnimationFrame(frame)
+  }, [ready, stats])
+
+  return (
+    <section className="live-signup-stats" aria-label="Aktuelle Anmeldestatistik">
+      <div className="live-stat-card">
+        <div className="live-stat-icon"><Users size={25}/></div>
+        <div>
+          <span>Bereits angemeldete Teilnehmer</span>
+          <strong>{displayed.participants}</strong>
+        </div>
+      </div>
+      <div className="live-stat-card">
+        <div className="live-stat-icon"><Syringe size={25}/></div>
+        <div>
+          <span>Bereits angemeldete Tiere</span>
+          <strong>{displayed.animals}</strong>
+        </div>
+      </div>
+    </section>
+  )
+}
 function ClubSelect() {
   const [clubs, setClubs] = useState([])
 const [pulse, setPulse] = useState(true)
@@ -255,6 +333,7 @@ height:'220px',
             
          
         </div>
+        <LiveSignupStats />
 <div
   style={{
     maxWidth: '1240px',
