@@ -3586,6 +3586,121 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
   doc.save(`teilnehmerliste-${v.date}.pdf`)
 }
 
+  function cashReportForVaccinationDate(v) {
+    const list = participants.filter(
+      participant => String(participant.vaccination_date_id) === String(v.id)
+    )
+    const paid = list.filter(participant => participant.payment_status === 'bezahlt')
+    const isPaymentMethod = (participant, method) =>
+      String(participant.payment_method || '').toLowerCase() === method
+    const amount = participant => Number(participant.payment_amount || 0)
+    const totalRevenue = paid.reduce((sum, participant) => sum + amount(participant), 0)
+    const paypalRevenue = paid
+      .filter(participant => isPaymentMethod(participant, 'paypal'))
+      .reduce((sum, participant) => sum + amount(participant), 0)
+    const stripeRevenue = paid
+      .filter(participant => isPaymentMethod(participant, 'stripe'))
+      .reduce((sum, participant) => sum + amount(participant), 0)
+    const cashRevenue = totalRevenue - paypalRevenue - stripeRevenue
+    const formatDate = value => value
+      ? new Date(value).toLocaleDateString('de-DE')
+      : '-'
+    const formatAmount = value => `${Number(value || 0).toLocaleString('de-DE', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    })} EUR`
+    const paymentMethodLabel = participant => {
+      if (isPaymentMethod(participant, 'paypal')) return 'PayPal'
+      if (isPaymentMethod(participant, 'stripe')) return 'Stripe'
+      if (participant.payment_status === 'bezahlt') return 'Barzahlung'
+      return '-'
+    }
+
+    const doc = new jsPDF({ orientation: 'landscape' })
+    const clubName = activeClub?.name || APP.clubName
+
+    doc.setFontSize(20)
+    doc.text(clubName, 14, 15)
+    doc.setFontSize(16)
+    doc.text('Kassenbericht', 14, 24)
+    doc.setFontSize(10)
+    doc.text(`Impftermin: ${v.title || '-'}`, 14, 32)
+    doc.text(`Datum des Impftermins: ${formatDate(v.date)}`, 14, 38)
+    doc.text(`Erstellungsdatum: ${formatDate(new Date())}`, 14, 44)
+
+    doc.setFontSize(11)
+    doc.text(`Teilnehmer gesamt: ${list.length}`, 14, 55)
+    doc.text(`Bezahlte Teilnehmer: ${paid.length}`, 14, 62)
+    doc.text(`Offene Zahlungen: ${list.length - paid.length}`, 14, 69)
+    doc.text(`Summe aller Einnahmen: ${formatAmount(totalRevenue)}`, 115, 55)
+    doc.text(`Summe Barzahlung: ${formatAmount(cashRevenue)}`, 115, 62)
+    doc.text(`Summe PayPal: ${formatAmount(paypalRevenue)}`, 205, 55)
+    doc.text(`Summe Stripe: ${formatAmount(stripeRevenue)}`, 205, 62)
+
+    autoTable(doc, {
+      startY: 78,
+      head: [[
+        'Nr.',
+        'Nachname',
+        'Vorname',
+        'Mitglied',
+        'Tierart',
+        'Anzahl Tiere',
+        'Impfstoff',
+        'Zahlungsart',
+        'Betrag',
+        'Zahlungsstatus',
+        'Zahlungsdatum'
+      ]],
+      body: list.map((participant, index) => [
+        index + 1,
+        participant.lastname || '',
+        participant.firstname || '',
+        participant.is_member ? 'Ja' : 'Nein',
+        participant.animal_type || '',
+        participant.animal_count || 0,
+        participant.vaccine || '',
+        paymentMethodLabel(participant),
+        formatAmount(participant.payment_amount),
+        participant.payment_status || 'offen',
+        formatDate(participant.payment_date)
+      ]),
+      theme: 'grid',
+      styles: { fontSize: 7, cellPadding: 2 },
+      headStyles: { fillColor: [22, 58, 47], textColor: 255, fontStyle: 'bold' },
+      alternateRowStyles: { fillColor: [248, 250, 252] },
+      columnStyles: {
+        0: { cellWidth: 10 },
+        3: { cellWidth: 15 },
+        5: { cellWidth: 18 },
+        8: { cellWidth: 22 },
+        9: { cellWidth: 24 },
+        10: { cellWidth: 23 }
+      }
+    })
+
+    let finalY = doc.lastAutoTable.finalY + 12
+    if (finalY > doc.internal.pageSize.getHeight() - 48) {
+      doc.addPage()
+      finalY = 20
+    }
+
+    doc.setFillColor(255, 248, 241)
+    doc.setDrawColor(242, 140, 40)
+    doc.roundedRect(14, finalY, 100, 14, 2, 2, 'FD')
+    doc.setFontSize(13)
+    doc.setFont(undefined, 'bold')
+    doc.text(`Gesamteinnahmen: ${formatAmount(totalRevenue)}`, 19, finalY + 9)
+    doc.setFont(undefined, 'normal')
+    doc.setFontSize(10)
+    doc.text('____________________________', 14, finalY + 28)
+    doc.text('Erstellt von', 14, finalY + 34)
+    doc.text('____________________________', 115, finalY + 28)
+    doc.text('Datum / Unterschrift', 115, finalY + 34)
+
+    doc.save(`kassenbericht-${v.date}.pdf`)
+  }
+
 
 
 
@@ -3746,7 +3861,8 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
   style={{
     display: 'flex',
     gap: '10px',
-    alignItems: 'center'
+    alignItems: 'center',
+    flexWrap: 'wrap'
   }}
 >
   <button
@@ -3766,6 +3882,13 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
     onClick={() => pdfForVaccinationDate(v)}
   >
     PDF
+  </button>
+
+  <button
+    className="small"
+    onClick={() => cashReportForVaccinationDate(v)}
+  >
+    Kassenbericht
   </button>
 
   <button
