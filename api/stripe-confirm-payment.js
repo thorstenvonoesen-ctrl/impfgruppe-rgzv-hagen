@@ -15,7 +15,7 @@ export default async function handler(req, res) {
     if (participantError || !participant) return res.status(404).json({ error: 'Teilnehmer nicht gefunden.' })
     const { error: updateError } = await supabase.from('participants').update({ payment_status: 'bezahlt', payment_method: 'stripe', payment_date: new Date().toISOString(), payment_id: String(session.payment_intent || session.id) }).eq('id', participantId)
     if (updateError) throw updateError
-    const emailResponse = participant.email ? await fetch(`https://${req.headers.host}/api/send-payment-email`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(participant) }) : null
+    const emailResponse = participant.email ? await fetch(`https://${req.headers.host}/api/send-payment-email`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ participantId }) }) : null
     return res.status(200).json({ success: true, emailSent: Boolean(emailResponse?.ok) })
   } catch (error) {
     return res.status(500).json({ error: 'Stripe-Zahlung konnte nicht bestätigt werden.' })

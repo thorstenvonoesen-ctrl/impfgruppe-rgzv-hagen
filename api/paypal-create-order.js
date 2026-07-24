@@ -61,7 +61,7 @@ export default async function handler(req, res) {
       }).eq('id', participantId)
       if (updateError) throw updateError
       const emailResponse = participant.email ? await fetch(`https://${req.headers.host}/api/send-payment-email`, {
-        method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(participant)
+        method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ participantId })
       }) : null
       return res.status(200).json({
         success: true,

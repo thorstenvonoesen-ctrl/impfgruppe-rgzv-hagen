@@ -41,11 +41,7 @@ if (participant?.email) {
     headers: {
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify({
-      email: participant.email,
-      firstname: participant.firstname,
-      lastname: participant.lastname
-    })
+    body: JSON.stringify({ participantId: participant.id })
   })
 }
 
