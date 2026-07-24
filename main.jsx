@@ -1923,21 +1923,6 @@ function InfoSammelimpfung() {
   verkürzt und alle notwendigen Informationen stehen rechtzeitig zur
   Verfügung.
 </p>
-            <button
-              onClick={() => (window.location.hash = "#info")}
-              style={{
-                marginTop: "50px",
-                padding: "16px 30px",
-                border: 0,
-                borderRadius: "14px",
-                background: "#f97316",
-                color: "#fff",
-                fontWeight: "700",
-                cursor: "pointer"
-              }}
-            >
-              ← Zurück
-            </button>
           </div>
           <h2
   style={{
@@ -2025,6 +2010,22 @@ Impftag deutlich reduziert.
     verantwortungsvolle Teilnahme an der Sammelimpfung.
   </p>
 </div>
+          <button
+            onClick={() => (window.location.hash = "#info")}
+            style={{
+              display: "block",
+              marginTop: "50px",
+              padding: "16px 30px",
+              border: 0,
+              borderRadius: "14px",
+              background: "#f97316",
+              color: "#fff",
+              fontWeight: "700",
+              cursor: "pointer"
+            }}
+          >
+            ← Zurück
+          </button>
         </div>
       </section>
     </div>
@@ -2153,21 +2154,6 @@ gesamten Sammelimpfung.
     <li>Zahlungsart</li>
   </ul>
 </div>
-          <button
-            onClick={() => (window.location.hash = "#info")}
-            style={{
-              marginTop: "50px",
-              padding: "16px 30px",
-              border: 0,
-              borderRadius: "14px",
-              background: "#f97316",
-              color: "#fff",
-              fontWeight: "700",
-              cursor: "pointer"
-            }}
-          >
-            ← Zurück
-          </button>
 <h2
   style={{
     color: "#ffffff",
@@ -2345,6 +2331,22 @@ gesamten Sammelimpfung.
     <li>Kontaktaufnahme bei wichtigen Änderungen</li>
   </ul>
 </div>
+          <button
+            onClick={() => (window.location.hash = "#info")}
+            style={{
+              display: "block",
+              marginTop: "50px",
+              padding: "16px 30px",
+              border: 0,
+              borderRadius: "14px",
+              background: "#f97316",
+              color: "#fff",
+              fontWeight: "700",
+              cursor: "pointer"
+            }}
+          >
+            ← Zurück
+          </button>
         </div>
       </section>
     </div>
