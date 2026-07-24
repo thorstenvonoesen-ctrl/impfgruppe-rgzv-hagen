@@ -471,322 +471,569 @@ function LiveSignupStats({ club }) {
 }
 function ClubSelect() {
   const [clubs, setClubs] = useState([])
-const [pulse, setPulse] = useState(true)
+
   useEffect(() => {
+    async function loadClubs() {
+      if (!hasSupabase) return
+      const { data } = await supabase.from('clubs').select('*').order('name')
+      setClubs(data || [])
+    }
+
     loadClubs()
   }, [])
-useEffect(() => {
-  const interval = setInterval(() => {
-    setPulse(p => !p)
-  }, 1000)
 
-  return () => clearInterval(interval)
-}, [])
-  async function loadClubs() {
-    if (!hasSupabase) return
-    const { data } = await supabase.from('clubs').select('*').order('name')
-    setClubs(data || [])
-  }
   const currentClub = clubs.find(club => club.slug === getCurrentSlug()) || null
 
   return (
-    <div
-  className="page"
-  style={{
-    minHeight: "99vh",
-    background: 'transparent'
-  }}
->
-     <Header />
+    <div className="page final-home-page">
+      <style>{`
+        .final-home-page {
+          min-height: 100vh !important;
+          background: transparent !important;
+        }
 
+        .final-home {
+          width: min(calc(100% - 32px), 1440px);
+          margin: 8px auto 0;
+          display: grid;
+          gap: 12px;
+        }
 
+        .final-home-hero {
+          min-height: 176px;
+          display: grid;
+          grid-template-columns: minmax(0, 1fr) 176px;
+          align-items: center;
+          gap: 28px;
+          padding: 18px 34px;
+          color: #fff;
+          overflow: hidden;
+          border-radius: 24px;
+          background: rgba(255,255,255,.075) !important;
+          border: 1px solid rgba(255,255,255,.15) !important;
+          box-shadow: 0 18px 44px rgba(0,0,0,.28) !important;
+          backdrop-filter: blur(14px);
+        }
 
-<main className="home-main" style={{ maxWidth:'1440px', margin:'12px auto' }}>
-        <div className="home-hero premium-home-surface" style={{display:'grid',gridTemplateColumns:'250px minmax(0,1fr)',alignItems:'center',gap:'20px',background:'rgba(255,255,255,.08)',
-backdropFilter:'blur(14px)',
-border:'1px solid rgba(255,255,255,.15)',
-boxShadow:'0 20px 50px rgba(0,0,0,.35)',color:'white',overflow:'hidden',
-position:'relative',padding:'24px 40px',borderRadius:'28px',marginBottom:'24px'}}>
-          <div
-  className="home-logo-stage"
-  style={{
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center'
-  }}
->
-  <img
-    className="home-hero-logo"
-    src="/shield-orange.png"
-    alt="Impfgruppenmanager"
-    style={{
-  width:'220px',
-height:'220px',
-  objectFit: 'contain'
-}}
-  />
-</div>
-          <div className="home-hero-copy" style={{ flex: 1, minWidth: 0 }}>
-  <h1
-    style={{
-      margin: 0,
-      color: '#ffffff',
-      fontSize: '40px',
-      fontWeight: '800',
-      lineHeight: '1.05',
-      letterSpacing: '-1px'
-    }}
-  >
-    Newcastle-Sammelimpfung
-<br />
-<span
-  style={{
-  fontSize: '0.64em',
-  fontWeight: '600',
-  opacity: 0.95,
-  whiteSpace: 'nowrap'
-  }}
->
-  Online-Anmeldung für den RGZV Hagen und Umgebung seit 1903 e.V.
-</span>
-  </h1>
+        .final-home-hero-copy {
+          min-width: 0;
+        }
 
-  <p
-    style={{
-      marginTop: '18px',
-      color: '#e5e7eb',
-      fontSize: '17px',
-      lineHeight: '1.8',
-      maxWidth: '700px'
-    }}
-  >
-    Geflügelbestand sicher online anmelden, bequem bezahlen und am Impftag digital einchecken.
-  </p>
+        .final-home-hero-copy h1 {
+          margin: 0;
+          color: #fff;
+          font-size: clamp(38px, 3.7vw, 58px);
+          line-height: .98;
+          letter-spacing: -1.8px;
+          white-space: nowrap;
+        }
 
-  <div className="home-hero-actions">
-    <a className="home-club-link" href="https://www.rgzv-hagen-westfalen.com" target="_blank" rel="noopener noreferrer">
-      RGZV Hagen kennenlernen
-    </a>
-  </div>
+        .final-home-hero-copy h2 {
+          margin: 13px 0 0;
+          color: rgba(255,255,255,.94);
+          font-size: clamp(16px, 1.5vw, 21px);
+          line-height: 1.15;
+          white-space: nowrap;
+        }
 
-  <div
-    className="home-hero-accent"
-    style={{
-      width: '120px',
-      height: '5px',
-      background: '#f28c28',
-      borderRadius: '999px',
-      marginTop: '32px'
-    }}
-  />
-</div>
- 
-            
-            
-         
-        </div>
+        .final-home-hero-copy p {
+          margin: 9px 0 0;
+          color: rgba(237,245,241,.78);
+          font-size: 14px;
+          line-height: 1.35;
+          white-space: nowrap;
+        }
+
+        .final-home-club-link {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          min-height: 36px;
+          margin-top: 12px;
+          padding: 7px 14px;
+          color: #fff;
+          font-size: 12px;
+          font-weight: 800;
+          text-decoration: none;
+          border: 1px solid rgba(255,255,255,.38);
+          border-radius: 10px;
+          background: rgba(255,255,255,.08);
+          box-shadow: inset 0 1px 0 rgba(255,255,255,.13);
+          transition: .2s ease;
+        }
+
+        .final-home-club-link:hover {
+          background: rgba(255,255,255,.14);
+          border-color: rgba(255,255,255,.58);
+          transform: translateY(-2px);
+        }
+
+        .final-home-logo-stage {
+          display: grid;
+          place-items: center;
+          width: 146px;
+          height: 146px;
+          justify-self: center;
+          border: 1px solid rgba(255,255,255,.12);
+          border-radius: 50%;
+          background: radial-gradient(circle, rgba(242,140,40,.15), rgba(255,255,255,.025) 68%);
+        }
+
+        .final-home-logo-stage img {
+          width: 126px;
+          height: 126px;
+          object-fit: contain;
+        }
+
+        .final-home .home-dashboard-grid {
+          width: 100%;
+          margin: 0 !important;
+          display: grid !important;
+          grid-template-columns: minmax(0, 1.78fr) minmax(330px, .92fr) !important;
+          grid-template-rows: 270px !important;
+          gap: 12px !important;
+          align-items: stretch;
+        }
+
+        .final-home .home-countdown-card {
+          grid-column: 1 !important;
+          grid-row: 1 !important;
+          min-height: 270px !important;
+          height: 270px !important;
+        }
+
+        .final-home .home-countdown-card.dashboard-stat-card {
+          display: grid !important;
+          grid-template-columns: 52px minmax(0,1fr) !important;
+          align-items: center !important;
+          gap: 12px !important;
+          padding: 13px 22px !important;
+        }
+
+        .final-home .home-countdown-card .dashboard-stat-icon {
+          width: 46px !important;
+          height: 46px !important;
+          border-radius: 12px !important;
+        }
+
+        .final-home .home-countdown-card .dashboard-stat-content {
+          min-width: 0;
+          text-align: center;
+        }
+
+        .final-home .home-countdown-card .dashboard-stat-content > span {
+          margin: 0 0 2px !important;
+          font-size: 10px !important;
+          letter-spacing: .12em;
+        }
+
+        .final-home .home-countdown-card .appointment-countdown {
+          display: grid;
+          justify-items: center;
+          gap: 2px;
+        }
+
+        .final-home .home-countdown-card .appointment-countdown strong {
+          font-size: clamp(27px, 2.6vw, 38px) !important;
+          line-height: 1 !important;
+        }
+
+        .final-home .home-countdown-card .appointment-countdown > small {
+          font-size: 11px !important;
+          line-height: 1.2;
+        }
+
+        .final-home .home-countdown-card .appointment-countdown-units {
+          width: min(100%, 430px) !important;
+          margin-top: 4px !important;
+          gap: 6px !important;
+        }
+
+        .final-home .home-countdown-card .appointment-countdown-units > span {
+          min-height: 57px !important;
+          padding: 5px 6px !important;
+          border-radius: 11px !important;
+        }
+
+        .final-home .home-countdown-card .appointment-countdown-units b {
+          font-size: clamp(25px, 2.4vw, 33px) !important;
+          line-height: .95 !important;
+        }
+
+        .final-home .home-countdown-card .appointment-countdown-units small {
+          margin-top: 3px !important;
+          font-size: 7px !important;
+        }
+
+        .final-home .home-countdown-card .appointment-public-address {
+          margin-top: 2px !important;
+          font-size: 10px !important;
+        }
+
+        .final-home .appointment-action-buttons {
+          width: min(100%, 400px) !important;
+          margin-top: 0;
+          gap: 8px !important;
+        }
+
+        .final-home .appointment-action-buttons .appointment-route-button,
+        .final-home .appointment-weather-button {
+          min-height: 33px !important;
+          margin-top: 3px !important;
+          padding: 6px 11px !important;
+          font-size: 10px !important;
+          border-radius: 10px !important;
+        }
+
+        .final-home .home-dashboard-support {
+          grid-column: 2 !important;
+          grid-row: 1 !important;
+          display: grid !important;
+          grid-template-columns: 1fr !important;
+          grid-template-rows: 84px 174px !important;
+          gap: 12px !important;
+          min-width: 0;
+        }
+
+        .final-home .home-community-card {
+          grid-column: auto !important;
+          grid-row: auto !important;
+          min-height: 0 !important;
+          padding: 5px 8px !important;
+        }
+
+        .final-home .home-community-heading h2 {
+          margin: 0 0 2px !important;
+          font-size: 17px !important;
+        }
+
+        .final-home .home-community-metrics {
+          margin: 0 !important;
+          gap: 8px !important;
+        }
+
+        .final-home .home-community-metrics > div {
+          min-height: 46px !important;
+          padding: 3px 7px !important;
+        }
+
+        .final-home .home-community-metrics span {
+          width: 27px !important;
+          height: 27px !important;
+        }
+
+        .final-home .home-community-metrics strong {
+          font-size: 26px !important;
+        }
+
+        .final-home .home-community-metrics small {
+          font-size: 8px !important;
+        }
+
+        .final-home .home-community-card > p {
+          margin-top: 1px !important;
+          font-size: 9px !important;
+          line-height: 1.15 !important;
+        }
+
+        .final-home .home-benefits-card {
+          grid-column: auto !important;
+          grid-row: auto !important;
+          min-height: 0 !important;
+          padding: 9px 13px !important;
+          gap: 4px !important;
+        }
+
+        .final-home .home-benefits-heading > span {
+          font-size: 8px !important;
+        }
+
+        .final-home .home-benefits-heading h2 {
+          margin: 2px 0 !important;
+          font-size: 18px !important;
+        }
+
+        .final-home .home-benefits-heading p {
+          margin: 0 !important;
+          font-size: 10px !important;
+          line-height: 1.2 !important;
+        }
+
+        .final-home .home-benefits-list {
+          gap: 3px !important;
+        }
+
+        .final-home .home-benefits-list > div {
+          min-height: 26px !important;
+          padding: 2px 6px !important;
+          gap: 6px !important;
+          font-size: 9px !important;
+          border-radius: 9px !important;
+        }
+
+        .final-home .home-benefits-list > div > span {
+          width: 22px !important;
+          height: 22px !important;
+          border-radius: 7px !important;
+        }
+
+        .final-home .home-benefits-list svg {
+          width: 13px !important;
+          height: 13px !important;
+        }
+
+        .final-home-nav {
+          display: grid;
+          grid-template-columns: repeat(3, minmax(0,1fr));
+          gap: 12px;
+        }
+
+        .final-home-nav-card {
+          min-height: 132px;
+          display: grid;
+          grid-template-columns: 36px minmax(0,1fr);
+          grid-template-rows: 1fr auto;
+          gap: 7px 11px;
+          align-items: start;
+          padding: 12px 15px;
+          color: #fff;
+          text-align: left;
+          border-radius: 19px;
+          background: rgba(255,255,255,.07) !important;
+          border: 1px solid rgba(255,255,255,.14) !important;
+          box-shadow: 0 15px 36px rgba(0,0,0,.24) !important;
+          cursor: pointer;
+          transition: transform .2s ease, border-color .2s ease, background .2s ease;
+        }
+
+        .final-home-nav-card:hover {
+          transform: translateY(-3px);
+          background: rgba(255,255,255,.1) !important;
+          border-color: rgba(255,255,255,.25) !important;
+        }
+
+        .final-home-nav-primary {
+          border-color: rgba(242,140,40,.44) !important;
+          background: linear-gradient(135deg, rgba(105,75,34,.55), rgba(20,65,48,.42)) !important;
+        }
+
+        .final-home-nav-icon {
+          grid-column: 1;
+          grid-row: 1;
+          font-size: 26px;
+          line-height: 1;
+        }
+
+        .final-home-nav-text {
+          grid-column: 2;
+          grid-row: 1;
+          min-width: 0;
+        }
+
+        .final-home-nav-text strong {
+          display: block;
+          margin-bottom: 7px;
+          color: #fff;
+          font-size: 16px;
+          line-height: 1.15;
+        }
+
+        .final-home-nav-text small {
+          display: block;
+          color: rgba(237,245,241,.76);
+          font-size: 10px;
+          line-height: 1.38;
+        }
+
+        .final-home-nav-text em {
+          display: block;
+          margin-top: 4px;
+          color: #f28c28;
+          font-size: 10px;
+          font-style: normal;
+          font-weight: 800;
+        }
+
+        .final-home-nav-action {
+          grid-column: 1 / -1;
+          grid-row: 2;
+          justify-self: start;
+          padding: 6px 10px;
+          color: #fff;
+          font-size: 10px;
+          font-weight: 800;
+          border-radius: 9px;
+          background: #f28c28;
+        }
+
+        .final-home-page > footer {
+          padding-top: 7px !important;
+          padding-bottom: 9px !important;
+          font-size: 12px !important;
+        }
+
+        @media (min-width: 1200px) and (min-height: 850px) {
+          .final-home-page {
+            height: 100vh;
+            overflow: hidden;
+          }
+        }
+
+        @media (max-width: 1080px) {
+          .final-home-page {
+            height: auto;
+            overflow: visible;
+          }
+
+          .final-home {
+            width: min(calc(100% - 28px), 920px);
+          }
+
+          .final-home-hero {
+            grid-template-columns: minmax(0,1fr) 135px;
+            padding: 22px;
+          }
+
+          .final-home-hero-copy h1,
+          .final-home-hero-copy h2,
+          .final-home-hero-copy p {
+            white-space: normal;
+          }
+
+          .final-home-logo-stage {
+            width: 125px;
+            height: 125px;
+          }
+
+          .final-home-logo-stage img {
+            width: 106px;
+            height: 106px;
+          }
+
+          .final-home .home-dashboard-grid {
+            grid-template-columns: 1fr !important;
+            grid-template-rows: auto auto !important;
+          }
+
+          .final-home .home-countdown-card {
+            height: auto !important;
+            min-height: 260px !important;
+          }
+
+          .final-home .home-dashboard-support {
+            grid-column: 1 !important;
+            grid-row: 2 !important;
+            grid-template-columns: 1fr 1.25fr !important;
+            grid-template-rows: auto !important;
+          }
+
+          .final-home-nav {
+            grid-template-columns: 1fr;
+          }
+        }
+
+        @media (max-width: 680px) {
+          .final-home-hero {
+            grid-template-columns: 1fr;
+            text-align: center;
+          }
+
+          .final-home-logo-stage {
+            grid-row: 1;
+            margin: 0 auto;
+          }
+
+          .final-home-club-link {
+            margin-left: auto;
+            margin-right: auto;
+          }
+
+          .final-home .home-countdown-card.dashboard-stat-card {
+            grid-template-columns: 1fr !important;
+          }
+
+          .final-home .home-countdown-card .dashboard-stat-icon {
+            margin: 0 auto;
+          }
+
+          .final-home .home-dashboard-support {
+            grid-template-columns: 1fr !important;
+          }
+        }
+      `}</style>
+
+      <Header />
+
+      <main className="final-home">
+        <section className="final-home-hero premium-home-surface">
+          <div className="final-home-hero-copy">
+            <h1>Newcastle-Sammelimpfung</h1>
+            <h2>Online-Anmeldung für den RGZV Hagen und Umgebung seit 1903 e.V.</h2>
+            <p>Geflügelbestand sicher online anmelden, bequem bezahlen und am Impftag digital einchecken.</p>
+
+            <a
+              className="final-home-club-link"
+              href="https://www.rgzv-hagen-westfalen.com"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              RGZV Hagen kennenlernen
+            </a>
+          </div>
+
+          <div className="final-home-logo-stage" aria-hidden="true">
+            <img src="/shield-orange.png" alt="" />
+          </div>
+        </section>
+
         <LiveSignupStats club={currentClub} />
-<div className="home-card-grid-wrap">
 
-  <div className="home-nav-grid">
+        <section className="final-home-nav" aria-label="Weitere Bereiche">
+          <button
+            type="button"
+            className="final-home-nav-card final-home-nav-primary premium-home-surface"
+            onClick={() => { window.location.hash = '#info' }}
+          >
+            <span className="final-home-nav-icon" aria-hidden="true">👥</span>
+            <span className="final-home-nav-text">
+              <strong>Zur Impfanmeldung</strong>
+              <small>Direkt zur Anmeldung Ihrer Tiere für den nächsten Impftermin des RGZV Hagen.</small>
+            </span>
+            <span className="final-home-nav-action">Zur Impfanmeldung →</span>
+          </button>
 
-    <div
-      className="home-nav-card home-nav-card-primary premium-home-surface"
-      onClick={() => window.location.hash = '#info'}
-      onMouseEnter={e => {
-  e.currentTarget.style.transform = 'translateY(-8px)'
-}}
+          <button
+            type="button"
+            className="final-home-nav-card premium-home-surface"
+            onClick={() => { window.location.hash = '#club-login-info' }}
+          >
+            <span className="final-home-nav-icon" aria-hidden="true">🔒</span>
+            <span className="final-home-nav-text">
+              <strong>Vereinslogin</strong>
+              <small>Impftermine, Teilnehmer, Zahlungen und Vereinseinstellungen verwalten.</small>
+            </span>
+          </button>
 
-onMouseLeave={e => {
-  e.currentTarget.style.transform = 'translateY(0)'
-}}
-      style={{
-        background: 'rgba(255,255,255,.08)',
-backdropFilter: 'blur(14px)',
-border: '1px solid rgba(255,255,255,.15)',
-borderRadius: '22px',
-padding: '24px',
-cursor: 'pointer',
-        transition: 'all .25s ease',
-boxShadow: '0 20px 50px rgba(0,0,0,.35)'
-      }}
-    >
-      <div style={{fontSize:'34px'}}>👥</div>
-
-      <h3
-  style={{
-    margin:'12px 0 10px',
-    fontSize:'18px',
-    color:'#fff'
-  }}
->
-        Zur Impfanmeldung
-      </h3>
-
-      <p
-  style={{
-  color: '#f59e0b',
-  lineHeight: '1.7',
-  fontWeight: '700',
-  opacity: pulse ? 1 : 0.45,
-  transform: pulse ? 'scale(1)' : 'scale(1.02)',
-  textShadow: pulse
-    ? '0 0 12px rgba(245,158,11,0.8)'
-    : '0 0 0 rgba(245,158,11,0)',
-  transition: 'all 0.6s ease-in-out'
-}}
->
-        Direkt zur Anmeldung Ihrer Tiere für den nächsten Impftermin des RGZV Hagen.
-      </p>
-      <span className="home-nav-cta">Zur Impfanmeldung <span aria-hidden="true">→</span></span>
-    </div>
-
-    <div
-      className="home-nav-card premium-home-surface"
-      onClick={() => window.location.hash = '#club-login-info'}
-      onMouseEnter={e => {
-  e.currentTarget.style.transform = 'translateY(-8px)'
-}}
-
-onMouseLeave={e => {
-  e.currentTarget.style.transform = 'translateY(0)'
-}}
-      style={{
-        background:'rgba(255,255,255,.08)',
-backdropFilter:'blur(14px)',
-border:'1px solid rgba(255,255,255,.15)',
-        borderRadius:'22px',
-        padding:'24px',
-        boxShadow:'0 20px 50px rgba(0,0,0,.35)',
-        cursor:'pointer',
-        transition:'all .25s ease',
-      }}
-    >
-      <div style={{fontSize:'34px'}}>🔒</div>
-
-      <h3
-  style={{
-    margin:'12px 0 10px',
-    fontSize:'18px',
-    color:'#fff'
-  }}
->
-        Vereinslogin
-      </h3>
-
-      <p style={{color:'rgba(255,255,255,.82)',lineHeight:'1.7'}}>
-        Melden Sie sich mit Ihren Zugangsdaten an und verwalten Sie Impftermine, Teilnehmer, Zahlungen und die Einstellungen Ihres Vereins.
-      </p>
-    </div>
-
-    <div
-      className="home-nav-card premium-home-surface"
-      onClick={() => window.location.hash = '#register-info'}
-      onMouseEnter={e => {
-  e.currentTarget.style.transform = 'translateY(-8px)'
-}}
-
-onMouseLeave={e => {
-  e.currentTarget.style.transform = 'translateY(0)'
-}}
-      style={{
-        background:'rgba(255,255,255,.08)',
-backdropFilter:'blur(14px)',
-border:'1px solid rgba(255,255,255,.15)',
-        borderRadius:'22px',
-        padding:'24px',
-        boxShadow:'0 20px 50px rgba(0,0,0,.35)',
-        cursor:'pointer',
-transition:'all .25s ease'
-      }}
-    >
-      <div style={{fontSize:'34px'}}>📅</div>
-
-      <h3
-  style={{
-    margin:'12px 0 10px',
-    fontSize:'18px',
-    color:'#fff'
-  }}
->
-        Verein registrieren
-      </h3>
-
-      <p style={{color:'rgba(255,255,255,.82)',lineHeight:'1.7'}}>
-  Registrieren Sie Ihren Verein und beantragen Sie die Freischaltung. Nach der Freigabe können Sie ihre eigene Newcastle-Sammelimpfung sowie Teilnehmer und Vereinsdaten selbst verwalten.
-</p>
-
-<p style={{
-  marginTop:'12px',
-  color:'#e38a2d',
-  fontWeight:'600',
-  fontSize:'14px'
-}}>
-  Freischaltung und Nutzung nach erfolgreicher Prüfung kostenpflichtig.
-</p>
-    
-
-  
-</div>
-
-</div>
-</div> 
-<div
-  className="home-credits"
-  style={{
-    textAlign: 'center',
-    marginTop: '40px',
-    marginBottom: '24px'
-  }}
->
-  <div
-    style={{
-      width: '80px',
-      height: '4px',
-      background: '#f28c28',
-      borderRadius: '999px',
-      margin: '0 auto 18px'
-    }}
-  />
-
-  <div
-    style={{
-      color: 'rgba(255,255,255,0.75)',
-      fontSize: '13px',
-      letterSpacing: '3px',
-      textTransform: 'uppercase',
-      marginBottom: '10px'
-    }}
-  >
-    ENTWICKELT VON
-  </div>
-
-  <div
-    style={{
-      color: '#f28c28',
-      fontFamily: "'Allura', cursive",
-      fontSize: '42px',
-      lineHeight: 1
-    }}
-  >
-    Thorsten von Oesen
-  </div>
-
-  <div
-    style={{
-      color: 'rgba(255,255,255,0.65)',
-      fontSize: '15px',
-      marginTop: '12px'
-    }}
-  >
-    Konzeption · Entwicklung · Design
-  </div>
-</div>
+          <button
+            type="button"
+            className="final-home-nav-card premium-home-surface"
+            onClick={() => { window.location.hash = '#register-info' }}
+          >
+            <span className="final-home-nav-icon" aria-hidden="true">🗓️</span>
+            <span className="final-home-nav-text">
+              <strong>Verein registrieren</strong>
+              <small>Eigenen Verein registrieren und nach erfolgreicher Prüfung freischalten lassen.</small>
+              <em>Freischaltung und Nutzung kostenpflichtig.</em>
+            </span>
+          </button>
+        </section>
       </main>
+
       <Footer showDeveloper />
     </div>
   )
 }
+
 function InfoPage() {
   const [openCard, setOpenCard] = useState(null)
   return (
