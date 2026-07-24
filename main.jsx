@@ -2790,6 +2790,7 @@ if (!showForm) {
     <option value="">Bitte wählen</option>
     <option value="Hühner">Hühner</option>
     <option value="Zwerghühner">Zwerghühner</option>
+    <option value="Puten">Puten</option>
     <option value="Tauben">Tauben</option>
     <option value="Wachteln">Wachteln</option>
     <option value="Wassergeflügel">Wassergeflügel</option>
