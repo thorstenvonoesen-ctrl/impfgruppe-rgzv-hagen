@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { createRoot } from 'react-dom/client'
-import { Syringe, ShieldCheck, Users, Euro, Download, Search, Lock, LogOut, CalendarDays, Navigation } from 'lucide-react'
+import { Syringe, ShieldCheck, Users, Euro, Download, Search, Lock, LogOut, CalendarDays, Navigation, FileText, CreditCard, Mail, QrCode } from 'lucide-react'
 import jsPDF from 'jspdf'
 import autoTable from 'jspdf-autotable'
 import QRCode from 'qrcode'
@@ -807,16 +807,51 @@ function InfoPage() {
           marginRight: "auto"
         }}
       >
-        Registrieren Sie Ihren Geflügelbestand bequem online für die nächste Newcastle-Sammelimpfung. Informieren Sie sich über die gesetzliche Impfpflicht, den Ablauf der Sammelimpfung und melden Sie Ihre Tiere anschließend direkt an.
+        Erfüllen Sie die gesetzliche Impfpflicht bequem online: Bestand anmelden, sicher bezahlen und am Impftag digital einchecken – schnell, übersichtlich und zuverlässig.
       </p>
 
-      <div className="info-page-benefits" aria-label="Vorteile der Online-Anmeldung">
-        <span>✓ Online anmelden</span>
-        <span>✓ Sicher bezahlen</span>
-        <span>✓ QR-Code für den Check-in am Impftag</span>
-      </div>
-
     </div>
+
+    <section className="info-process" aria-labelledby="info-process-title">
+      <div className="info-process-heading">
+        <span>Ihr Weg zum Impftermin</span>
+        <h2 id="info-process-title">So einfach funktioniert&apos;s</h2>
+      </div>
+      <div className="info-process-grid">
+        {[
+          [FileText, 'Anmeldung', 'Teilnehmer online registrieren'],
+          [CreditCard, 'Zahlung', 'Sicher online bezahlen'],
+          [Mail, 'QR-Code', 'Automatisch per E-Mail erhalten'],
+          [QrCode, 'Check-in', 'QR-Code am Impftag scannen'],
+          [Syringe, 'Impfung', 'Direkt teilnehmen']
+        ].map(([Icon, title, description], index) => (
+          <div className="info-process-step" key={title} style={{ '--process-index': index }}>
+            <div className="info-process-icon"><Icon size={28} strokeWidth={1.8}/></div>
+            <h3>{title}</h3>
+            <p>{description}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+
+      <button
+        className="info-page-signup-button"
+        onClick={() => (window.location.hash = "#signup")}
+        style={{
+          margin: "0 auto",
+          background: "#f97316",
+          color: "#fff",
+          border: 0,
+          borderRadius: "16px",
+          padding: "21px 42px",
+          fontSize: "20px",
+          fontWeight: "700",
+          cursor: "pointer"
+        }}
+      >
+        <span>Jetzt zur Anmeldung</span>
+        <span className="info-page-signup-arrow" aria-hidden="true">→</span>
+      </button>
 
    <div
   className="info-page-card-grid"
@@ -964,25 +999,6 @@ minHeight: openCard === title ? "360px" : "230px",
     </div>
   ))}
 </div> 
-
-      <button
-        className="info-page-signup-button"
-        onClick={() => (window.location.hash = "#signup")}
-        style={{
-          margin: "12px auto 0",
-          background: "#f97316",
-          color: "#fff",
-          border: 0,
-          borderRadius: "16px",
-          padding: "21px 42px",
-          fontSize: "20px",
-          fontWeight: "700",
-          cursor: "pointer"
-        }}
-      >
-        <span>Jetzt zur Anmeldung</span>
-        <span className="info-page-signup-arrow" aria-hidden="true">→</span>
-      </button>
 
   </div>
 
