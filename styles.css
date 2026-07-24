@@ -419,3 +419,33 @@ td .paid {
 .admin td { color: rgba(237,245,241,.9); border-bottom-color: rgba(255,255,255,.1); }
 .admin tbody tr:hover { background: rgba(242,140,40,.12); }
 .admin .modal-card { color: #edf5f1; background: rgba(16,43,35,.94); border-color: rgba(255,255,255,.16); backdrop-filter: blur(18px); }
+
+/* Admin-Login-Karte im dunklen Glasdesign */
+.admin-login-card {
+  width: 100%;
+  max-width: none;
+  padding: clamp(24px, 4vw, 36px);
+  color: #edf5f1;
+  background: rgba(16,43,35,.68);
+  border: 1px solid rgba(255,255,255,.16);
+  border-radius: 28px;
+  box-shadow: 0 20px 50px rgba(0,0,0,.35);
+  backdrop-filter: blur(16px);
+}
+.admin-login-card .admin-login-icon { width: 52px; height: 52px; margin-bottom: 16px; border-radius: 16px; }
+.admin-login-heading { padding-bottom: 18px; border-bottom-color: rgba(255,255,255,.14); }
+.admin-login-heading > span { color: #fed7aa; background: rgba(242,140,40,.16); border-color: rgba(254,215,170,.25); }
+.admin-login-heading h2 { color: #fff3e5; }
+.admin-login-heading p { color: rgba(237,245,241,.76); }
+.admin-login-field { margin-top: 20px; color: rgba(237,245,241,.9); }
+.admin-login-field input {
+  color: #edf5f1;
+  background: rgba(255,255,255,.1);
+  border-color: rgba(255,255,255,.2);
+}
+.admin-login-field input::placeholder { color: rgba(237,245,241,.6); }
+.admin-login-field input:focus { border-color: #f28c28; box-shadow: 0 0 0 4px rgba(242,140,40,.16); }
+.admin-login-submit { margin-top: 18px; }
+.admin-login-back { margin-top: 18px; color: #fed7aa; }
+.admin-login-back:hover { color: #fff; }
+@media (max-width: 700px) { .admin-login-card { border-radius: 20px; } }
