@@ -562,11 +562,17 @@ height:'220px',
     Geflügelbestand sicher online anmelden, bequem bezahlen und am Impftag digital einchecken.
   </p>
 
-  <button type="button" className="home-hero-cta" onClick={() => { window.location.hash = '#info' }}>
-    Zur Impfanmeldung <span aria-hidden="true">→</span>
-  </button>
+  <div className="home-hero-actions">
+    <button type="button" className="home-hero-cta" onClick={() => { window.location.hash = '#info' }}>
+      Zur Impfanmeldung <span aria-hidden="true">→</span>
+    </button>
+    <a className="home-club-link" href="https://rgzv-hagen-westfalen.com/" target="_blank" rel="noopener noreferrer">
+      Wer wir sind
+    </a>
+  </div>
 
   <div
+    className="home-hero-accent"
     style={{
       width: '120px',
       height: '5px',

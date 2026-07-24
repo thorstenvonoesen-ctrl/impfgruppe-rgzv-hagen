@@ -1090,3 +1090,57 @@ body { background: #163a2f; }
   .home-hero-logo { width: 96px !important; height: 96px !important; }
   .home-hero-cta { margin-right: auto; margin-left: auto; }
 }
+
+/* Finale Desktop-Verdichtung und Vereinslink */
+.home-hero-actions { display: flex !important; flex-wrap: wrap; gap: 9px; margin-top: 13px; }
+.home-hero-actions .home-hero-cta { margin: 0; }
+.home-club-link { display: inline-flex; min-height: 40px; padding: 9px 16px; align-items: center; justify-content: center; color: rgba(255,255,255,.88); text-decoration: none; background: rgba(255,255,255,.065); border: 1px solid rgba(255,255,255,.2); border-radius: 13px; box-shadow: inset 0 1px 0 rgba(255,255,255,.08); font-size: 13px; font-weight: 800; transition: transform .24s ease,background .24s ease,border-color .24s ease,box-shadow .24s ease; }
+.home-club-link:hover { color: #fff; background: rgba(255,255,255,.11); border-color: rgba(255,255,255,.32); box-shadow: 0 12px 24px rgba(0,0,0,.2),inset 0 1px 0 rgba(255,255,255,.12); transform: translateY(-2px); }
+.home-club-link:focus-visible { outline: 3px solid rgba(255,243,229,.8); outline-offset: 3px; }
+.home-hero-accent { display: none !important; }
+.home-main + footer { padding-top: 12px; padding-bottom: 12px; }
+@media (min-width: 1100px) {
+  .home-main { margin-top: 4px !important; margin-bottom: 0 !important; padding-bottom: 6px; }
+  .home-hero { grid-template-columns: 126px minmax(0,1fr) !important; min-height: 154px; gap: 22px !important; margin-bottom: 11px !important; padding: 15px 27px !important; border-radius: 21px !important; }
+  .home-logo-stage { min-height: 112px; }
+  .home-logo-stage::before { width: 108px; height: 108px; }
+  .home-hero-logo { width: 118px !important; height: 118px !important; }
+  .home-hero-copy h1 { font-size: clamp(32px,3.1vw,44px) !important; letter-spacing: -1.5px !important; }
+  .home-hero-copy h1 span { margin-top: 4px; font-size: clamp(14px,1.45vw,18px) !important; }
+  .home-hero-copy p { margin-top: 7px !important; font-size: 12px !important; }
+  .home-hero-actions { margin-top: 9px; }
+  .home-hero-cta,.home-club-link { min-height: 34px; padding: 7px 13px; font-size: 11px; border-radius: 10px; }
+  .home-dashboard-grid { gap: 11px !important; margin-bottom: 11px !important; }
+  .home-countdown-card { min-height: 258px !important; }
+  .home-countdown-card.dashboard-stat-card { gap: 12px; padding: 18px 23px !important; border-radius: 21px !important; }
+  .home-countdown-card .dashboard-stat-icon { width: 46px; height: 46px; border-radius: 13px; }
+  .home-countdown-card .appointment-countdown strong { font-size: clamp(23px,2.4vw,31px); }
+  .home-countdown-card .appointment-countdown-units { width: min(100%,360px); margin-top: 7px; }
+  .home-countdown-card .appointment-countdown-units > span { min-height: 47px; padding: 5px; border-radius: 9px; }
+  .home-countdown-card .appointment-countdown-units b { font-size: clamp(21px,2.3vw,27px); }
+  .home-countdown-card .appointment-countdown-units small { margin-top: 3px; font-size: 7px !important; }
+  .home-countdown-card .appointment-route-button { min-height: 28px; margin-top: 4px; padding: 5px 9px; font-size: 9px; }
+  .home-countdown-card .home-countdown-cta { min-height: 32px; margin-top: 3px; padding: 6px 13px; font-size: 10px; }
+  .home-countdown-card .appointment-weather { margin-top: 3px; padding-top: 4px; font-size: 9px; }
+  .home-dashboard-support { gap: 8px; }
+  .home-community-card { padding: 7px 2px; }
+  .home-community-heading h2 { font-size: 16px; }
+  .home-community-metrics { margin: 6px 0 4px; }
+  .home-community-metrics > div { min-height: 52px; padding: 5px 7px; }
+  .home-community-metrics strong { font-size: clamp(22px,2.3vw,29px); }
+  .home-benefits-card { padding: 12px 14px; gap: 7px; border-radius: 17px !important; }
+  .home-benefits-heading h2 { font-size: 17px; }
+  .home-benefits-heading p { font-size: 10px; }
+  .home-benefits-list { gap: 4px; }
+  .home-benefits-list > div { min-height: 29px; padding: 4px 6px; font-size: 9px; }
+  .home-card-grid-wrap { margin-top: 0; }
+  .home-nav-grid { gap: 10px; }
+  .home-nav-card { min-height: 138px; padding: 13px !important; border-radius: 17px !important; }
+  .home-nav-card > div:first-child { font-size: 23px !important; }
+  .home-nav-card h3 { margin: 6px 0 4px !important; font-size: 14px !important; }
+  .home-nav-card p { font-size: 10.5px; line-height: 1.35 !important; }
+  .home-nav-cta { padding: 6px 10px; font-size: 10px; }
+}
+@media (max-width: 700px) {
+  .home-hero-actions { justify-content: center; }
+}
