@@ -375,7 +375,6 @@ function AppointmentCountdown({ appointments, club, isAdmin }) {
       </div>
       {showPublicAddress && <small className="appointment-public-address">{routeAddress}</small>}
       {canOpenRoute && <button type="button" className="appointment-route-button" onClick={() => openVaccinationRoute(appointment)}><Navigation size={14} />{isAdmin ? 'Route prüfen' : 'Route starten'}</button>}
-      {!isAdmin && <button type="button" className="home-countdown-cta" onClick={() => { window.location.hash = '#info' }}>Jetzt zur Impfanmeldung <span aria-hidden="true">→</span></button>}
       <WeatherPreview location={getWeatherLocation(club, appointment)} date={appointment.date} />
     </div>
   )
@@ -566,8 +565,8 @@ height:'220px',
     <button type="button" className="home-hero-cta" onClick={() => { window.location.hash = '#info' }}>
       Zur Impfanmeldung <span aria-hidden="true">→</span>
     </button>
-    <a className="home-club-link" href="https://rgzv-hagen-westfalen.com/" target="_blank" rel="noopener noreferrer">
-      Wer wir sind
+    <a className="home-club-link" href="https://www.rgzv-hagen-westfalen.com" target="_blank" rel="noopener noreferrer">
+      RGZV Hagen kennenlernen
     </a>
   </div>
 

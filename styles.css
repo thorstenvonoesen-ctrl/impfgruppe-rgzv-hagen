@@ -1094,7 +1094,7 @@ body { background: #163a2f; }
 /* Finale Desktop-Verdichtung und Vereinslink */
 .home-hero-actions { display: flex !important; flex-wrap: wrap; gap: 12px; margin-top: 16px; }
 .home-hero-actions .home-hero-cta { margin: 0; }
-.home-club-link { display: inline-flex; min-height: 40px; padding: 9px 16px; align-items: center; justify-content: center; color: rgba(255,255,255,.88); text-decoration: none; background: rgba(255,255,255,.065); border: 1px solid rgba(255,255,255,.2); border-radius: 13px; box-shadow: inset 0 1px 0 rgba(255,255,255,.08); font-size: 13px; font-weight: 800; transition: transform .24s ease,background .24s ease,border-color .24s ease,box-shadow .24s ease; }
+.home-club-link { display: inline-flex; min-height: 40px; padding: 9px 16px; align-items: center; justify-content: center; color: rgba(255,255,255,.88); text-decoration: none; white-space: nowrap; background: rgba(255,255,255,.065); border: 1px solid rgba(255,255,255,.2); border-radius: 13px; box-shadow: inset 0 1px 0 rgba(255,255,255,.08); font-size: 13px; font-weight: 800; transition: transform .24s ease,background .24s ease,border-color .24s ease,box-shadow .24s ease; }
 .home-club-link:hover { color: #fff; background: rgba(255,255,255,.11); border-color: rgba(255,255,255,.32); box-shadow: 0 12px 24px rgba(0,0,0,.2),inset 0 1px 0 rgba(255,255,255,.12); transform: translateY(-2px); }
 .home-club-link:focus-visible { outline: 3px solid rgba(255,243,229,.8); outline-offset: 3px; }
 .home-hero-accent { display: none !important; }
@@ -1143,6 +1143,10 @@ body { background: #163a2f; }
 }
 @media (max-width: 700px) {
   .home-hero-actions { justify-content: center; }
+}
+@media (max-width: 430px) {
+  .home-hero-actions { align-items: stretch; flex-direction: column; }
+  .home-hero-actions .home-hero-cta,.home-club-link { width: 100%; }
 }
 
 /* UI/UX Designer Pass: klare Landingpage-Hierarchie */
