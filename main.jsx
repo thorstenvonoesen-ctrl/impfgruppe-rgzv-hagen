@@ -3013,10 +3013,15 @@ function PublicSignup() {
     setReuseConfirmation('')
 
     try {
-      const response = await fetch('/api/lookup-participant', {
+      const response = await fetch('/api/create-registration', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: 'check', email, slug: getCurrentSlug() })
+        body: JSON.stringify({
+          action: 'lookup-participant',
+          lookupAction: 'check',
+          email,
+          slug: getCurrentSlug()
+        })
       })
       const result = await response.json().catch(() => ({}))
       if (requestId !== reuseRequestRef.current) return
@@ -3038,11 +3043,12 @@ function PublicSignup() {
     const lookupEmail = reuseLookup.email
     setReuseLookup(current => ({ ...current, status: 'retrieving' }))
     try {
-      const response = await fetch('/api/lookup-participant', {
+      const response = await fetch('/api/create-registration', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          action: 'retrieve',
+          action: 'lookup-participant',
+          lookupAction: 'retrieve',
           email: lookupEmail,
           slug: getCurrentSlug(),
           lookupToken: reuseLookup.token
