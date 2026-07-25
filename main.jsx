@@ -3408,6 +3408,26 @@ if (!showForm) {
   10 € für Gäste<br />
   5 € für Mitglieder des {club?.name || 'Vereins'} mit gültigem Mitgliedscode
 </p>
+      <aside className="participation-fee-notice" role="note">
+        <span className="participation-fee-notice-icon" aria-hidden="true">!</span>
+        <div>
+          <h3>Hinweis zur Teilnahmegebühr</h3>
+          <p>
+            Die Teilnahmegebühr wird mit der verbindlichen Anmeldung fällig. Der
+            Impfstoff wird ausschließlich auf Grundlage der eingegangenen
+            Anmeldungen bestellt und bereitgestellt.
+          </p>
+          <p>
+            Bei einer Absage oder einem unentschuldigten Nichterscheinen kann die
+            bereits entrichtete Teilnahmegebühr daher grundsätzlich nicht
+            erstattet werden.
+          </p>
+          <p>
+            Sollte in begründeten Ausnahmefällen eine Erstattung möglich sein,
+            entscheidet der Veranstalter im Einzelfall.
+          </p>
+        </div>
+      </aside>
     </div>
   </div>
 
@@ -3638,6 +3658,18 @@ value={form.vaccination_date_id}
     </span>
   </div>
 </div>
+          <aside
+            className="participation-fee-notice participation-fee-notice-compact"
+            role="note"
+          >
+            <span className="participation-fee-notice-icon" aria-hidden="true">!</span>
+            <p>
+              <strong>Hinweis:</strong> Mit Ihrer verbindlichen Anmeldung wird der
+              Impfstoff speziell für Sie bestellt. Bei einer Absage oder einem
+              unentschuldigten Nichterscheinen kann die bereits entrichtete
+              Teilnahmegebühr daher grundsätzlich nicht erstattet werden.
+            </p>
+          </aside>
           <button disabled={loading} className="primary signup-submit">{loading ? 'Speichern...' : 'Anmelden & bezahlen'}</button>
           {message && <p className="message">{message}</p>}
         </form>

@@ -284,6 +284,13 @@ td .paid {
 .payment-methods { padding: 18px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 14px; }
 .payment-option { display: flex; align-items: center; min-height: 44px; padding: 0 12px; color: #334155; background: #fff; border: 1px solid #e2e8f0; border-radius: 10px; }
 .payment-option:has(input:checked) { color: #163a2f; background: #fff8f1; border-color: #f28c28; }
+.participation-fee-notice { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 14px; margin-top: 18px; padding: 18px 20px; color: #713f12; background: #fffbeb; border: 1px solid #fde68a; border-radius: 14px; box-shadow: 0 8px 20px rgba(120, 53, 15, .08); }
+.participation-fee-notice-icon { display: inline-grid; place-items: center; width: 28px; height: 28px; color: #fff; font-size: 17px; font-weight: 800; line-height: 1; background: #d97706; border-radius: 50%; }
+.participation-fee-notice h3 { margin: 1px 0 9px; color: #78350f; font-size: 17px; }
+.participation-fee-notice p { margin: 0; color: #713f12; font-size: 14px; line-height: 1.55; }
+.participation-fee-notice p + p { margin-top: 8px; }
+.participation-fee-notice-compact { margin: 0; padding: 14px 16px; }
+.participation-fee-notice-compact p { align-self: center; }
 .signup-submit { justify-content: center; width: 100%; min-height: 54px; margin-top: 4px; font-size: 17px; background: #f28c28; box-shadow: 0 12px 24px rgba(194, 93, 13, .25); }
 .signup-submit:hover:not(:disabled) { background: #dc741d; box-shadow: 0 16px 28px rgba(194, 93, 13, .32); }
 .signup-submit:disabled { cursor: wait; opacity: .7; }
