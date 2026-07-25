@@ -135,6 +135,7 @@ const [showForm, setShowForm] = useState(false)
   if (page === '#info-pflicht') return <InfoPflicht />
   if (page === '#info-sammelimpfung') return <InfoSammelimpfung />
   if (page === '#info-anmeldung') return <InfoAnmeldung />
+  if (page === '#impfwart-grusswort') return <ImpfwartGrusswort />
 if (page === '#signup') return <PublicSignup />
   if (page === '#admin') return <Admin />
   if (page === '#datenschutz') return <Datenschutz />
@@ -546,10 +547,10 @@ function ClubSelect() {
 
         .final-home-club-link {
           display: inline-flex;
+          flex: 1 1 220px;
           align-items: center;
           justify-content: center;
           min-height: 36px;
-          margin-top: 12px;
           padding: 7px 14px;
           color: #fff;
           font-size: 12px;
@@ -560,6 +561,14 @@ function ClubSelect() {
           background: rgba(255,255,255,.08);
           box-shadow: inset 0 1px 0 rgba(255,255,255,.13);
           transition: .2s ease;
+        }
+
+        .final-home-hero-actions {
+          display: flex;
+          flex-wrap: wrap;
+          width: min(100%, 500px);
+          gap: 10px;
+          margin-top: 12px;
         }
 
         .final-home-club-link:hover {
@@ -966,9 +975,16 @@ function ClubSelect() {
             margin: 0 auto;
           }
 
+          .final-home-hero-actions {
+            width: 100%;
+            flex-direction: column;
+            align-items: stretch;
+          }
+
           .final-home-club-link {
-            margin-left: auto;
-            margin-right: auto;
+            width: 100%;
+            flex-basis: auto;
+            white-space: normal;
           }
 
           .final-home .home-countdown-card.dashboard-stat-card {
@@ -994,14 +1010,19 @@ function ClubSelect() {
             <h2>zur Newcastle-Sammelimpfung</h2>
             <p>Geflügelbestand sicher online anmelden, bequem bezahlen und am Impftag digital einchecken.</p>
 
-            <a
-              className="final-home-club-link"
-              href="https://www.rgzv-hagen-westfalen.com"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              RGZV Hagen kennenlernen
-            </a>
+            <div className="final-home-hero-actions">
+              <a
+                className="final-home-club-link"
+                href="https://www.rgzv-hagen-westfalen.com"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                RGZV Hagen kennenlernen
+              </a>
+              <a className="final-home-club-link" href="#impfwart-grusswort">
+                Grußwort unseres Impfwartes
+              </a>
+            </div>
           </div>
 
           <div className="final-home-logo-stage" aria-hidden="true">
@@ -1053,6 +1074,63 @@ function ClubSelect() {
       </main>
 
       <Footer showDeveloper />
+    </div>
+  )
+}
+
+function ImpfwartGrusswort() {
+  const paragraphs = [
+    'ich freue mich sehr, Sie auf der Online-Anmeldeseite zu unseren Sammelimpfungen begrüßen zu dürfen.',
+    'Als Impfwart des RGZV Hagen und Umgebung seit 1903 e. V. ist es mir ein besonderes Anliegen, Sie bei der verantwortungsvollen Haltung und Versorgung Ihrer Tiere bestmöglich zu unterstützen. Die Gesundheit unserer Geflügelbestände steht dabei immer an erster Stelle.',
+    'Mit dem Impfgruppenmanager möchten wir Ihnen die Anmeldung zu unseren Impfterminen so einfach, bequem und übersichtlich wie möglich machen. Sie können die für die Organisation erforderlichen Angaben in Ruhe eingeben und erhalten alle wichtigen Informationen zu Ihrem gewählten Impftermin.',
+    'Gleichzeitig hilft uns die digitale Anmeldung dabei, die Anzahl der teilnehmenden Tierhalter und Tiere frühzeitig zu erfassen. Dadurch können wir den benötigten Impfstoff bedarfsgerecht bestellen und den Ablauf der jeweiligen Impfaktion zuverlässig vorbereiten.',
+    'Eine regelmäßige und ordnungsgemäße Impfung ist ein wichtiger Bestandteil einer verantwortungsvollen Geflügelhaltung. Sie dient nicht nur dem Schutz des eigenen Tierbestandes, sondern trägt auch dazu bei, die Ausbreitung ansteckender Krankheiten zu verhindern.',
+    'Jeder Geflügelhalter übernimmt mit der Teilnahme an einer Sammelimpfung Verantwortung – für seine eigenen Tiere, für die Bestände anderer Halter und für die Gemeinschaft insgesamt. Gerade bei Krankheiten, die sich schnell verbreiten können, sind Vorsorge, Zuverlässigkeit und gemeinsames Handeln von großer Bedeutung.',
+    'Unsere Sammelimpfungen sollen allen Geflügelhalterinnen und Geflügelhaltern eine unkomplizierte Möglichkeit bieten, ihre Tiere entsprechend den geltenden Vorgaben schützen zu lassen. Dabei spielt es für uns keine Rolle, ob Sie Mitglied unseres Vereins sind, einem anderen Verein angehören oder Ihre Tiere als Hobbyhalter betreuen. Entscheidend ist das gemeinsame Ziel, unsere Geflügelbestände gesund zu erhalten.',
+    'Durch die digitale Anmeldung können wir die Impfaktionen besser planen, Wartezeiten reduzieren und die notwendigen Unterlagen übersichtlich vorbereiten. Dies erleichtert nicht nur unsere Arbeit als Verein, sondern soll auch für Sie zu einem angenehmeren und transparenteren Ablauf führen.',
+    'Bitte achten Sie bei der Anmeldung darauf, alle erforderlichen Angaben vollständig und korrekt einzutragen. Besonders wichtig sind die Anzahl und Art der zu impfenden Tiere, der gewünschte Impfstoff, der ausgewählte Impftermin sowie Ihre Kontaktdaten.',
+    'Die Impfstoffbestellung erfolgt auf Grundlage der eingegangenen Anmeldungen. Sollten sich Ihre Angaben nachträglich ändern oder sollten Sie einen vereinbarten Termin nicht wahrnehmen können, bitten wir Sie darum, uns möglichst frühzeitig zu informieren. So können wir die Planung entsprechend anpassen und unnötige Kosten oder nicht benötigte Impfstoffmengen vermeiden.',
+    'Mir ist bewusst, dass digitale Anmeldesysteme für manche Teilnehmer zunächst ungewohnt sein können. Sollten bei der Anmeldung Fragen oder Schwierigkeiten auftreten, lassen wir Sie selbstverständlich nicht allein. Sprechen Sie uns bitte an, damit wir gemeinsam eine Lösung finden können.',
+    'Auch bei allgemeinen Fragen zum Ablauf der Sammelimpfung, zu den benötigten Angaben oder zur Organisation des Impftermins stehe ich Ihnen gerne zur Verfügung.',
+    'Ich möchte mich bereits heute herzlich für Ihr Vertrauen, Ihre Unterstützung und Ihre Teilnahme bedanken. Nur durch die Bereitschaft vieler verantwortungsbewusster Geflügelhalter ist es möglich, solche Impfaktionen zuverlässig und regelmäßig durchzuführen.',
+    'Mein Dank gilt ebenfalls allen Helferinnen und Helfern, die bei der Vorbereitung, Organisation und Durchführung unserer Impfaktionen mitwirken. Eine gut organisierte Sammelimpfung ist immer eine Gemeinschaftsleistung und ohne ehrenamtliches Engagement kaum möglich.',
+    'Der RGZV Hagen und Umgebung seit 1903 e. V. steht seit vielen Jahren für Gemeinschaft, Erfahrung und die verantwortungsvolle Haltung und Zucht von Geflügel. Mit dem Impfgruppenmanager möchten wir traditionelle Vereinsarbeit und moderne Organisation sinnvoll miteinander verbinden.',
+    'Unser Ziel ist es, Ihnen einen einfachen Zugang zu unseren Impfangeboten zu ermöglichen und gleichzeitig die notwendigen Abläufe so zuverlässig wie möglich zu gestalten.',
+    'Ich wünsche Ihnen viel Freude mit Ihren Tieren, gesunde Bestände, erfolgreiche Zuchtergebnisse und weiterhin viel Begeisterung für unser gemeinsames Hobby.',
+    'Ich freue mich darauf, Sie bei einem unserer nächsten Impftermine persönlich begrüßen zu dürfen.'
+  ]
+
+  return (
+    <div className="page impfwart-greeting-page">
+      <Header />
+      <main className="impfwart-greeting-shell">
+        <article className="impfwart-greeting-card">
+          <header className="impfwart-greeting-heading">
+            <span aria-hidden="true">🐔</span>
+            <div>
+              <small>RGZV Hagen und Umgebung seit 1903 e. V.</small>
+              <h1>Grußwort unseres Impfwartes</h1>
+            </div>
+          </header>
+
+          <div className="impfwart-greeting-copy">
+            <p className="impfwart-greeting-salutation">Liebe Geflügelhalterinnen und Geflügelhalter,</p>
+            {paragraphs.map(paragraph => <p key={paragraph}>{paragraph}</p>)}
+
+            <div className="impfwart-greeting-signature">
+              <p>Mit freundlichen Grüßen</p>
+              <strong>Rainer Koplin</strong>
+              <span>Impfwart</span>
+              <span>RGZV Hagen und Umgebung seit 1903 e. V.</span>
+            </div>
+          </div>
+
+          <button type="button" className="impfwart-greeting-back" onClick={() => { window.location.hash = '#' }}>
+            ← Zurück zur Informationsseite
+          </button>
+        </article>
+      </main>
+      <Footer />
     </div>
   )
 }
