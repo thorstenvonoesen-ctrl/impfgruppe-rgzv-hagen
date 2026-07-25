@@ -531,7 +531,7 @@ function ClubSelect() {
         .final-home-hero-copy h2 {
           margin: 13px 0 0;
           color: rgba(255,255,255,.94);
-          font-size: clamp(16px, 1.5vw, 21px);
+          font-size: clamp(22px, 2vw, 30px);
           line-height: 1.15;
           white-space: nowrap;
         }
@@ -990,8 +990,8 @@ function ClubSelect() {
       <main className="final-home">
         <section className="final-home-hero premium-home-surface">
           <div className="final-home-hero-copy">
-            <h1>Newcastle-Sammelimpfung</h1>
-            <h2>Online-Anmeldung für den RGZV Hagen und Umgebung seit 1903 e.V.</h2>
+            <h1>Online-Anmeldung beim RGZV Hagen und Umgebung seit 1903 e.V.</h1>
+            <h2>zur Newcastle-Sammelimpfung</h2>
             <p>Geflügelbestand sicher online anmelden, bequem bezahlen und am Impftag digital einchecken.</p>
 
             <a
