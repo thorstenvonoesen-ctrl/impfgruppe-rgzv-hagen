@@ -477,7 +477,7 @@ td .paid {
 .admin-login-card {
   width: 100%;
   max-width: none;
-  padding: clamp(18px, 3vw, 27px) clamp(21px, 3.5vw, 31px);
+  padding: 14px clamp(21px, 3.5vw, 31px);
   color: #edf5f1;
   background: rgba(16,43,35,.68);
   border: 1px solid rgba(255,255,255,.16);
@@ -488,9 +488,9 @@ td .paid {
 .admin-login-card .admin-login-icon { width: 52px; height: 52px; margin-bottom: 12px; border-radius: 16px; }
 .admin-login-heading { padding-bottom: 14px; border-bottom-color: rgba(255,255,255,.14); }
 .admin-login-heading > span { color: #fed7aa; background: rgba(242,140,40,.16); border-color: rgba(254,215,170,.25); }
-.admin-login-heading h2 { color: #fff3e5; }
+.admin-login-heading h2 { margin: 10px 0 6px; color: #fff3e5; }
 .admin-login-heading p { color: rgba(237,245,241,.76); }
-.admin-login-field { margin-top: 17px; color: rgba(237,245,241,.9); }
+.admin-login-field { margin-top: 15px; color: rgba(237,245,241,.9); }
 .admin-login-field input {
   color: #1f2937;
   caret-color: #1f2937;
