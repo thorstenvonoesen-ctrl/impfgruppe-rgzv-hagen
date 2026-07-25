@@ -1227,7 +1227,7 @@ body { background: #163a2f; }
   .home-logo-stage::before { width: 165px; height: 165px; }
   .home-hero-logo { width: 180px !important; height: 180px !important; }
   .home-dashboard-grid {
-    grid-template-columns: minmax(0,1.38fr) minmax(370px,.62fr) !important;
+    grid-template-columns: minmax(0,1.35fr) minmax(370px,.65fr) !important;
     gap: 20px !important;
     margin-bottom: 22px !important;
   }
@@ -1339,7 +1339,7 @@ body { background: #163a2f; }
   .home-benefits-list { gap: 2px; }
   .home-benefits-list > div { min-height: 29px; padding: 2px 6px; }
   .home-nav-grid { gap: 14px; }
-  .home-nav-card { min-height: 140px; padding: 9px 16px !important; }
+  .home-nav-card { min-height: 158px; padding: 9px 16px !important; }
   .home-nav-card > div:first-child { font-size: 26px !important; }
   .home-nav-card h3 { margin: 4px 0 3px !important; font-size: 15px !important; }
   .home-nav-card p { font-size: 11px; line-height: 1.38 !important; }
