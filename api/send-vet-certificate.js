@@ -1,5 +1,7 @@
 import nodemailer from 'nodemailer'
 
+const TEST_RECIPIENT = 'thorsten-von-oesen@t-online.de'
+
 const transporter = nodemailer.createTransport({
   host: process.env.SMTP_HOST,
   port: Number(process.env.SMTP_PORT),
@@ -10,114 +12,109 @@ const transporter = nodemailer.createTransport({
   }
 })
 
+function formatGermanDate(value) {
+  const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(value || ''))
+  return match ? `${match[3]}.${match[2]}.${match[1]}` : null
+}
+
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method not allowed' })
+    return res.status(405).json({ success: false, error: 'Method not allowed' })
   }
 
   try {
     const { pdfData, datum } = req.body || {}
-const deutschesDatum = new Date(datum).toLocaleDateString('de-DE')
-const attachments = []
+    const deutschesDatum = formatGermanDate(datum)
 
-if (pdfData && pdfData !== 'TEST') {
-  attachments.push({
-    filename: 'sammelimpfbescheinigung.pdf',
-    content: pdfData.replace(/^data:application\/pdf;filename=generated\.pdf;base64,/, ''),
-    encoding: 'base64'
-  })
-}
+    if (!deutschesDatum || !pdfData || typeof pdfData !== 'string') {
+      return res.status(400).json({
+        success: false,
+        error: 'Impftermin oder Sammelimpfbescheinigung fehlt.'
+      })
+    }
 
-console.log('PDF DATA:', pdfData)
-console.log('PDF LENGTH:', pdfData?.length)
-console.log('ATTACHMENTS:', attachments.length)
-    console.log(pdfData?.substring(0, 100))
-    console.log('VOR SENDMAIL')
+    const pdfContent = pdfData.replace(
+      /^data:application\/pdf(?:;filename=[^;]+)?;base64,/,
+      ''
+    )
+    const filenameDate = deutschesDatum.replaceAll('.', '-')
+    const subject = `Sammelimpfbescheinigung für den Impftermin vom ${deutschesDatum} – Bitte um Prüfung und Unterzeichnung`
+
     const info = await transporter.sendMail({
       from: `"RGZV Hagen und Umgebung seit 1903 e.V." <${process.env.SMTP_USER}>`,
-      to: 't.von-oesen@rgzv-hagen-westfalen.de',
-      subject: 'Sammelimpfbescheinigung zur Prüfung und Unterschrift',
-attachments,
+      to: TEST_RECIPIENT,
+      subject,
+      attachments: [{
+        filename: `Sammelimpfbescheinigung_${filenameDate}.pdf`,
+        content: pdfContent,
+        encoding: 'base64'
+      }],
       html: `
-        <p>Sehr geehrte Frau Dinger,<br>
-sehr geehrte Damen und Herren,</p>
+        <p>Sehr geehrte Damen und Herren,</p>
 
         <p>
-          anbei übersenden wir Ihnen die Sammelimpfbescheinigung für den Impftermin vom <strong>${deutschesDatum}</strong>
-          mit der freundlichen Bitte um Prüfung und Unterzeichnung.
+          anbei übersenden wir Ihnen die Sammelimpfbescheinigung für den Impftermin vom
+          <strong>${deutschesDatum}</strong> mit der freundlichen Bitte um Prüfung und Unterzeichnung.
         </p>
 
         <p>
           Die Bescheinigung wurde auf Grundlage der für diesen Impftermin eingegangenen Anmeldungen erstellt
-          und enthält die gemeldeten Teilnehmerdaten einschließlich der relevanten Angaben für die Durchführung
-          der Impfung.
+          und enthält sämtliche gemeldeten Teilnehmerdaten sowie die für die Durchführung der Sammelimpfung
+          erforderlichen Angaben.
+        </p>
+
+        <p>Das Dokument ist dieser E-Mail als PDF-Datei beigefügt.</p>
+
+        <p>
+          Wir bitten Sie, die Sammelimpfbescheinigung nach Ihrer Prüfung zu unterschreiben und uns anschließend
+          wieder zukommen zu lassen. Sollten aus Ihrer Sicht Korrekturen, Ergänzungen oder sonstige Anpassungen
+          erforderlich sein, bitten wir um eine kurze Rückmeldung.
         </p>
 
         <p>
-          Das Dokument wird dieser E-Mail als PDF-Datei beigefügt.
+          Sofern möglich, wären wir Ihnen dankbar, wenn Sie Ihrer Rücksendung gleichzeitig auch die Rechnung für
+          die durchgeführte Sammelimpfung beifügen könnten. Dies erleichtert uns die weitere Bearbeitung und spart
+          beiden Seiten einen zusätzlichen Schriftwechsel.
         </p>
-
-        <p>
-  Wir bitten Sie, die Bescheinigung nach Prüfung zu unterschreiben und uns anschließend wieder zur
-  Verfügung zu stellen. Sofern aus Ihrer Sicht Korrekturen, Ergänzungen oder sonstige Anpassungen
-  erforderlich sein sollten, bitten wir um eine kurze Mitteilung.
-</p>
-
-<p>
-  Gleichzeitig bitten wir darum, uns mit der Rücksendung der unterschriebenen Bescheinigung auch
-  die entsprechende Rechnung für die durchgeführte Impfung zu übersenden.
-</p>
 
         <p>
           Mit Ihrer Unterstützung leisten Sie einen wichtigen Beitrag zur ordnungsgemäßen Durchführung der
-          Sammelimpfung sowie zur vollständigen Dokumentation gegenüber den teilnehmenden Geflügelhaltern
-          und den zuständigen Stellen.
+          Sammelimpfung sowie zur vollständigen Dokumentation gegenüber den teilnehmenden Geflügelhaltern und
+          den zuständigen Stellen.
         </p>
 
         <p>
-          Für die stets angenehme Zusammenarbeit und Ihre Unterstützung bedanken wir uns bereits im Voraus.
-          Bei Rückfragen oder weiteren Informationen stehen wir selbstverständlich jederzeit gerne zur Verfügung.
+          Für die stets angenehme Zusammenarbeit und Ihre Unterstützung bedanken wir uns bereits heute ganz
+          herzlich. Bei Rückfragen oder weiteren Informationen stehen wir Ihnen selbstverständlich jederzeit
+          gerne zur Verfügung.
         </p>
 
-        <p>
-          Mit freundlichen Grüßen
-        </p>
+        <p>Mit freundlichen Grüßen</p>
 
         <p>
           <strong>Rainer Koplin</strong><br>
           Impfwart<br>
-          RGZV Hagen und Umgebung seit 1903 e.V.
+          RGZV Hagen und Umgebung seit 1903 e. V.
         </p>
 
         <p>
-          Kontakt:<br>
+          Kontakt:<br><br>
           Thorsten von Oesen<br>
           E-Mail: t.von-oesen@rgzv-hagen-westfalen.de
         </p>
-
-        <hr>
-
-        <p style="font-size:12px;color:#666;">
-          Diese E-Mail wurde automatisch über das Anmeldesystem des
-          RGZV Hagen und Umgebung seit 1903 e.V. erstellt.
-        </p>
       `
     })
-    console.log('MESSAGE ID:', info.messageId)
-console.log('RESPONSE:', info.response)
-console.log('ACCEPTED:', info.accepted)
-console.log('REJECTED:', info.rejected)
-console.log('NACH SENDMAIL')
+
     return res.status(200).json({
       success: true,
-      message: 'E-Mail versendet'
+      message: 'Die Sammelimpfbescheinigung wurde erfolgreich versendet.',
+      messageId: info.messageId
     })
   } catch (error) {
-    console.error(error)
-
+    console.error('Tierarztversand fehlgeschlagen:', error)
     return res.status(500).json({
       success: false,
-      error: error.message
+      error: 'Die Sammelimpfbescheinigung konnte nicht versendet werden.'
     })
   }
 }

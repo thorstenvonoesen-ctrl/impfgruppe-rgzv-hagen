@@ -3769,6 +3769,8 @@ const [selectedDate, setSelectedDate] = useState(null)
 const [newDateNote, setNewDateNote] = useState('')
   const [newDateAddress, setNewDateAddress] = useState(emptyVaccinationAddress())
   const [editingVaccinationDate, setEditingVaccinationDate] = useState(null)
+  const [vetSendDate, setVetSendDate] = useState(null)
+  const [vetSending, setVetSending] = useState(false)
   const [dateFeedback, setDateFeedback] = useState('')
   const [clubs, setClubs] = useState([])
 const [selectedClub, setSelectedClub] = useState(null)
@@ -4002,6 +4004,85 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
   doc.save(`teilnehmerliste-${v.date}.pdf`)
 }
 
+  const formatGermanVaccinationDate = value => {
+    const [year, month, day] = String(value || '').split('-')
+    return year && month && day ? `${day}.${month}.${year}` : ''
+  }
+
+  const localDateKey = () => {
+    const now = new Date()
+    const year = now.getFullYear()
+    const month = String(now.getMonth() + 1).padStart(2, '0')
+    const day = String(now.getDate()).padStart(2, '0')
+    return `${year}-${month}-${day}`
+  }
+
+  const canSendVetCertificate = vaccinationDate =>
+    Boolean(vaccinationDate?.date) && vaccinationDate.date <= localDateKey()
+
+  async function sendVetCertificateForDate(vaccinationDate) {
+    if (!vaccinationDate || vetSending || !canSendVetCertificate(vaccinationDate)) return
+
+    setVetSending(true)
+    try {
+      const list = participants.filter(
+        participant => String(participant.vaccination_date_id) === String(vaccinationDate.id)
+      )
+      const doc = new jsPDF()
+
+      doc.setFontSize(16)
+      doc.text('Sammelimpfbescheinigung', 14, 15)
+      doc.setFontSize(10)
+      doc.text('Hiermit wird bescheinigt, dass die nachstehend aufgeführten', 14, 28)
+      doc.text('Geflügelbestände gegen die Newcastle-Krankheit', 14, 35)
+      doc.text('(atypische Geflügelpest) gemäß den geltenden', 14, 42)
+      doc.text('tierseuchenrechtlichen Vorschriften schutzgeimpft wurden.', 14, 49)
+      doc.setFontSize(11)
+      doc.text('Impfstoff: Nobilis ND Clone 30', 14, 65)
+      doc.text('Charge: ______________________', 14, 75)
+      doc.text('Verwendbar bis: ______________', 14, 85)
+      doc.text(`Impftermin: ${vaccinationDate.title || ''}`, 14, 100)
+      doc.text(`Datum: ${formatGermanVaccinationDate(vaccinationDate.date)}`, 14, 108)
+
+      autoTable(doc, {
+        startY: 120,
+        head: [['Name', 'Adresse', 'TSK Betriebsnummer', 'Tierart', 'Anzahl']],
+        body: list.map(participant => [
+          `${participant.firstname || ''} ${participant.lastname || ''}`.trim(),
+          `${participant.street || ''} ${participant.housenumber || ''}, ${participant.zipcode || ''} ${participant.city || ''}`.trim(),
+          participant.tsk_number || '',
+          participant.animal_type || '',
+          participant.animal_count || ''
+        ])
+      })
+
+      const signatureY = doc.lastAutoTable.finalY + 20
+      doc.text('Ort, Datum: ______________________', 14, signatureY)
+      doc.text('Tierarzt (Stempel / Unterschrift): ______________________', 14, signatureY + 15)
+
+      const response = await fetch('/api/send-vet-certificate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          pdfData: doc.output('datauristring'),
+          datum: vaccinationDate.date
+        })
+      })
+      const result = await response.json().catch(() => ({}))
+      if (!response.ok || !result.success) {
+        throw new Error(result.error || 'Die Sammelimpfbescheinigung konnte nicht versendet werden.')
+      }
+
+      setVetSendDate(null)
+      alert('Die Sammelimpfbescheinigung wurde erfolgreich versendet.')
+    } catch (error) {
+      console.error('Tierarztversand fehlgeschlagen:', error)
+      alert(error.message || 'Beim Versand der Sammelimpfbescheinigung ist ein Fehler aufgetreten.')
+    } finally {
+      setVetSending(false)
+    }
+  }
+
   function cashReportForVaccinationDate(v) {
     const list = participants.filter(
       participant => String(participant.vaccination_date_id) === String(v.id)
@@ -4174,6 +4255,26 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
     </div>
   )}
 
+  {vetSendDate && (
+    <div className="modal">
+      <section className="modal-card vet-send-modal" role="dialog" aria-modal="true" aria-labelledby="vet-send-title">
+        <h2 id="vet-send-title">Sammelimpfbescheinigung versenden</h2>
+        <p>
+          Sammelimpfbescheinigung für den Impftermin am{' '}
+          <strong>{formatGermanVaccinationDate(vetSendDate.date)}</strong> jetzt versenden?
+        </p>
+        <div className="vaccination-modal-actions">
+          <button type="button" className="ghost" onClick={() => setVetSendDate(null)} disabled={vetSending}>
+            Abbrechen
+          </button>
+          <button type="button" className="primary" onClick={() => sendVetCertificateForDate(vetSendDate)} disabled={vetSending}>
+            {vetSending ? 'Wird gesendet …' : 'Jetzt senden'}
+          </button>
+        </div>
+      </section>
+    </div>
+  )}
+
   {editingVaccinationDate && (
     <div className="modal">
       <section className="modal-card vaccination-edit-modal" role="dialog" aria-modal="true" aria-labelledby="edit-vaccination-title">
@@ -4316,6 +4417,15 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
 >
   E-Mail
 </button>
+
+  <button
+    className="small"
+    onClick={() => setVetSendDate(v)}
+    disabled={!canSendVetCertificate(v) || vetSending}
+    title={!canSendVetCertificate(v) ? 'Der Versand an den Tierarzt ist erst am Tag des Impftermins möglich.' : 'Sammelimpfbescheinigung an den Tierarzt senden'}
+  >
+    {vetSending && String(vetSendDate?.id) === String(v.id) ? 'Wird gesendet …' : 'Tierarzt'}
+  </button>
 
   <button
     className="small"
