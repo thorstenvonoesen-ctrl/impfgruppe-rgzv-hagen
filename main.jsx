@@ -891,7 +891,7 @@ function ClubSelect() {
           }
 
           .final-home-nav-card {
-            min-height: 152px;
+            min-height: 170px;
           }
         }
 
