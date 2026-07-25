@@ -840,7 +840,22 @@ body { background: #163a2f; }
 .checkin-status { padding: 4px 8px; border-radius: 999px; color: #ffe1c2; background: rgba(242,140,40,.16); font-size: 11px; font-weight: 800; }.checkin-status.done { color: #d1fae5; background: rgba(52,211,153,.16); }
 .checkin-scanner-wrap { display: grid; justify-items: center; gap: 12px; padding: 16px; border: 1px solid rgba(255,255,255,.13); border-radius: 18px; }.checkin-scanner-wrap #checkin-scanner { width: min(100%, 360px); overflow: hidden; border-radius: 14px; }
 .checkin-confirm { justify-content: space-between; padding: 14px; background: rgba(5,35,26,.46); border: 1px solid rgba(240,166,82,.25); border-radius: 16px; }.checkin-confirm img { width: 94px; height: 94px; padding: 5px; background: white; border-radius: 10px; }.checkin-confirm p,.checkin-feedback { margin: 4px 0 0; color: rgba(237,245,241,.72); }.checkin-confirm > div:last-child { display: flex; flex-wrap: wrap; gap: 8px; }
+.checkin-search-state { min-height: 20px; color: rgba(237,245,241,.68); font-size: 13px; }
+.checkin-search-state strong,.checkin-search-state span { display: block; }
+.checkin-result { align-items: stretch; padding: 14px 4px; }
+.checkin-result.other-date { padding-inline: 12px; background: rgba(242,140,40,.06); border-left: 3px solid rgba(242,140,40,.65); }
+.checkin-result-main { min-width: 240px; }
+.checkin-result-main > strong { font-size: 16px; }
+.checkin-other-date { display: inline-flex; margin: 5px 0; padding: 3px 7px; border-radius: 999px; color: #ffe1c2; background: rgba(242,140,40,.16); font-size: 11px; font-weight: 800; }
+.checkin-result-details { display: flex; flex-wrap: wrap; gap: 4px 12px; margin-top: 5px; color: rgba(237,245,241,.68); font-size: 12px; }
+.checkin-result-actions { display: grid; justify-items: end; gap: 9px; }
+.checkin-result-statuses,.checkin-result-buttons { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 7px; }
+.checkin-result-buttons button { min-height: 36px; }
+.checkin-result-buttons button:disabled { cursor: wait; opacity: .58; }
+.checkin-pay { background: #8a5800; }
+.checkin-combined { padding: 8px 12px; font-size: 13px; }
 @media (max-width: 700px) { .checkin-head,.checkin-actions,.checkin-person,.checkin-confirm { align-items: stretch; flex-direction: column; }.checkin-person > div:last-child { justify-content: flex-start; }.checkin-confirm img { width: 110px; height: 110px; }.checkin-confirm > div:last-child { flex-direction: column; }.checkin-confirm button { width: 100%; } }
+@media (max-width: 700px) { .checkin-result-actions { justify-items: stretch; }.checkin-result-statuses,.checkin-result-buttons { justify-content: flex-start; }.checkin-result-buttons button { flex: 1 1 100%; width: 100%; } }
 
 /* Premium-Startseite */
 .home-main { position: relative; padding: 18px 0 34px; }
