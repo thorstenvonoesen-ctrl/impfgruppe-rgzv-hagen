@@ -522,7 +522,7 @@ function ClubSelect() {
         .final-home-hero-copy h1 {
           margin: 0;
           color: #fff;
-          font-size: clamp(38px, 3.7vw, 58px);
+          font-size: clamp(32px, 2.4vw, 36px);
           line-height: .98;
           letter-spacing: -1.8px;
           white-space: nowrap;
