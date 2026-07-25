@@ -1,4 +1,5 @@
 import nodemailer from 'nodemailer'
+import { emailSignatureHtml } from './_email-signature.js'
 
 const TEST_RECIPIENT = 'thorsten-von-oesen@t-online.de'
 
@@ -89,19 +90,7 @@ export default async function handler(req, res) {
           gerne zur Verfügung.
         </p>
 
-        <p>Mit freundlichen Grüßen</p>
-
-        <p>
-          <strong>Rainer Koplin</strong><br>
-          Impfwart<br>
-          RGZV Hagen und Umgebung seit 1903 e. V.
-        </p>
-
-        <p>
-          Kontakt:<br><br>
-          Thorsten von Oesen<br>
-          E-Mail: t.von-oesen@rgzv-hagen-westfalen.de
-        </p>
+        ${emailSignatureHtml()}
       `
     })
 

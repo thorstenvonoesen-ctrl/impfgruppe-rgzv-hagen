@@ -3664,10 +3664,11 @@ value={form.vaccination_date_id}
           >
             <span className="participation-fee-notice-icon" aria-hidden="true">!</span>
             <p>
-              <strong>Hinweis:</strong> Mit Ihrer verbindlichen Anmeldung wird der
-              Impfstoff speziell für Sie bestellt. Bei einer Absage oder einem
-              unentschuldigten Nichterscheinen kann die bereits entrichtete
-              Teilnahmegebühr daher grundsätzlich nicht erstattet werden.
+              <strong>Hinweis:</strong> Mit Ihrer verbindlichen Anmeldung wird Ihr
+              Teilnahmeplatz fest reserviert und der Impftermin auf Grundlage
+              aller eingegangenen Anmeldungen organisiert. Bei einer Absage oder
+              einem unentschuldigten Nichterscheinen besteht kein Anspruch auf
+              Erstattung der bereits entrichteten Teilnahmegebühr.
             </p>
           </aside>
           <button disabled={loading} className="primary signup-submit">{loading ? 'Speichern...' : 'Anmelden & bezahlen'}</button>
@@ -3950,6 +3951,9 @@ const [newDateNote, setNewDateNote] = useState('')
   const [editingVaccinationDate, setEditingVaccinationDate] = useState(null)
   const [vetSendDate, setVetSendDate] = useState(null)
   const [vetSending, setVetSending] = useState(false)
+  const [seasonPrompt, setSeasonPrompt] = useState(null)
+  const [seasonMailBusy, setSeasonMailBusy] = useState(false)
+  const [seasonStatuses, setSeasonStatuses] = useState({})
   const [dateFeedback, setDateFeedback] = useState('')
   const [clubs, setClubs] = useState([])
 const [selectedClub, setSelectedClub] = useState(null)
@@ -3992,6 +3996,88 @@ if (result.sent === 0) {
     alert('Serverfehler beim Versenden der E-Mails.')
   }
 }
+  const isTestVaccinationDate = vaccinationDate =>
+    Object.values(vaccinationDate || {}).some(
+      value => typeof value === 'string' && value.toLowerCase().includes('test')
+    )
+
+  async function seasonMailRequest(action, payload = {}) {
+    const { data: { session } } = await supabase.auth.getSession()
+    const response = await fetch('/api/send-reminder-emails', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${session?.access_token || ''}`
+      },
+      body: JSON.stringify({ action, ...payload })
+    })
+    const result = await response.json().catch(() => ({}))
+    if (!response.ok) throw new Error(result.error || 'Saisonerinnerung konnte nicht verarbeitet werden.')
+    return result
+  }
+
+  async function loadSeasonStatuses() {
+    if (!adminClubId) return
+    try {
+      const result = await seasonMailRequest('season-status', { clubId: adminClubId })
+      setSeasonStatuses(Object.fromEntries(
+        (result.campaigns || []).map(campaign => [String(campaign.vaccination_date_id), campaign])
+      ))
+    } catch (error) {
+      console.error('Saisonstatus konnte nicht geladen werden:', error)
+    }
+  }
+
+  async function checkSeasonInvitation(vaccinationDate) {
+    if (!vaccinationDate || isTestVaccinationDate(vaccinationDate)) return
+    try {
+      const result = await seasonMailRequest('season-preview', {
+        vaccinationDateId: vaccinationDate.id
+      })
+      setSeasonStatuses(current => ({
+        ...current,
+        [String(vaccinationDate.id)]: { ...result, vaccination_date_id: vaccinationDate.id }
+      }))
+      if (result.eligible) setSeasonPrompt({ vaccinationDate, ...result })
+    } catch (error) {
+      if (!/nicht der erste reguläre/i.test(error.message)) {
+        setDateFeedback(error.message)
+      }
+    }
+  }
+
+  async function decideSeasonMail(action) {
+    if (!seasonPrompt || seasonMailBusy) return
+    setSeasonMailBusy(true)
+    try {
+      const result = await seasonMailRequest(action, {
+        vaccinationDateId: seasonPrompt.vaccinationDate.id
+      })
+      const status = result.status || (action === 'season-disable' ? 'disabled' : 'sent')
+      setSeasonStatuses(current => ({
+        ...current,
+        [String(seasonPrompt.vaccinationDate.id)]: {
+          ...current[String(seasonPrompt.vaccinationDate.id)],
+          status,
+          sent_count: result.sent || 0,
+          failed_count: result.failed || 0
+        }
+      }))
+      setSeasonPrompt(null)
+      setDateFeedback(
+        action === 'season-disable'
+          ? 'Saisonerinnerungen wurden für diese Saison deaktiviert.'
+          : result.failed
+            ? `${result.sent} Saisonerinnerungen versendet, ${result.failed} fehlgeschlagen.`
+            : `${result.sent} Saisonerinnerungen wurden erfolgreich versendet.`
+      )
+    } catch (error) {
+      setDateFeedback(error.message)
+    } finally {
+      setSeasonMailBusy(false)
+    }
+  }
+
   async function load() {
     setLoading(true)
     const { data: clubData } = await supabase
@@ -4016,6 +4102,7 @@ const { data, error } = await supabase
   .order('date', { ascending: true })
 
 setVaccinationDates(dates || [])
+      await loadSeasonStatuses()
       const nextDate = dates?.[0]?.date
 
 const today = new Date().toISOString().split('T')[0]
@@ -4030,7 +4117,7 @@ setIsVaccinationDay(
   if (!newDate || !newDateTitle) return
 
   setDateFeedback('')
-  const { error } = await supabase
+  const { data, error } = await supabase
     .from('vaccination_dates')
     .insert([
   {
@@ -4041,6 +4128,8 @@ setIsVaccinationDay(
     ...newDateAddress
   }
 ])
+    .select('*')
+    .single()
 
   if (error) {
     setDateFeedback('Impftermin konnte nicht gespeichert werden.')
@@ -4051,7 +4140,8 @@ setIsVaccinationDay(
 setNewDateNote('')
   setNewDateAddress(emptyVaccinationAddress())
   setDateFeedback('Impftermin wurde gespeichert.')
-  load()
+  await load()
+  await checkSeasonInvitation(data)
 }
   async function updateVaccinationDate() {
     if (!editingVaccinationDate?.date || !editingVaccinationDate?.title) return
@@ -4454,6 +4544,42 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
     </div>
   )}
 
+  {seasonPrompt && (
+    <div className="modal">
+      <section className="modal-card season-mail-modal" role="dialog" aria-modal="true" aria-labelledby="season-mail-title">
+        <span className="season-mail-eyebrow">Impfsaison {seasonPrompt.seasonYear}</span>
+        <h2 id="season-mail-title">Teilnehmer aus dem Vorjahr informieren?</h2>
+        <p>
+          Für den ersten regulären Impftermin der neuen Saison stehen frühere
+          Teilnehmer zur Einladung bereit. Es wird nichts ohne Ihre ausdrückliche
+          Bestätigung versendet.
+        </p>
+        <dl className="season-mail-summary">
+          <div><dt>Saison</dt><dd>{seasonPrompt.seasonYear}</dd></div>
+          <div><dt>Teilnehmer Vorjahr</dt><dd>{seasonPrompt.previousParticipants}</dd></div>
+          <div><dt>Versendbare E-Mail-Adressen</dt><dd>{seasonPrompt.deliverableEmails}</dd></div>
+          <div><dt>Teilnehmer ohne E-Mail</dt><dd>{seasonPrompt.withoutEmail}</dd></div>
+        </dl>
+        <div className="vaccination-modal-actions season-mail-actions">
+          <button
+            type="button"
+            className="primary"
+            onClick={() => decideSeasonMail('season-send')}
+            disabled={seasonMailBusy || seasonPrompt.deliverableEmails === 0}
+          >
+            {seasonMailBusy ? 'Versand läuft …' : 'Einladungen jetzt versenden'}
+          </button>
+          <button type="button" className="ghost" onClick={() => setSeasonPrompt(null)} disabled={seasonMailBusy}>
+            Später entscheiden
+          </button>
+          <button type="button" className="ghost season-mail-disable" onClick={() => decideSeasonMail('season-disable')} disabled={seasonMailBusy}>
+            Für diese Saison nicht versenden
+          </button>
+        </div>
+      </section>
+    </div>
+  )}
+
   {editingVaccinationDate && (
     <div className="modal">
       <section className="modal-card vaccination-edit-modal" role="dialog" aria-modal="true" aria-labelledby="edit-vaccination-title">
@@ -4552,6 +4678,18 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
           {formatVaccinationAddress(v).map(line => <small key={line}>{line}</small>)}
         </div>
       )}
+      {seasonStatuses[String(v.id)] && (
+        <div className={`season-mail-status season-mail-status-${seasonStatuses[String(v.id)].status}`}>
+          Saisonerinnerung:{' '}
+          {({
+            not_sent: 'noch nicht versendet',
+            sending: 'Versand läuft',
+            sent: 'erfolgreich versendet',
+            partial: 'teilweise versendet',
+            disabled: 'deaktiviert'
+          })[seasonStatuses[String(v.id)].status] || 'noch nicht versendet'}
+        </div>
+      )}
     </div>
 <div
   style={{
@@ -4596,6 +4734,12 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
 >
   E-Mail
 </button>
+
+  {seasonStatuses[String(v.id)]?.status === 'not_sent' && (
+    <button className="small" onClick={() => checkSeasonInvitation(v)}>
+      Saisonmail
+    </button>
+  )}
 
   <button
     className="small"

@@ -746,7 +746,20 @@ body { background: #163a2f; }
 .vaccination-edit-modal .vaccination-address-fields { margin: 0; padding-top: 4px; border-top: 1px solid rgba(255,255,255,.12); }
 .vaccination-modal-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 5px; }
 .vaccination-modal-actions .primary,.vaccination-modal-actions .ghost { width: auto; margin: 0; }
+.season-mail-modal { max-width: 720px; }
+.season-mail-eyebrow { display: inline-flex; margin-bottom: 12px; padding: 6px 10px; color: #fed7aa; font-size: 12px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; background: rgba(242,140,40,.14); border: 1px solid rgba(254,215,170,.24); border-radius: 999px; }
+.season-mail-summary { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 10px; margin: 22px 0; }
+.season-mail-summary div { padding: 14px; background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.12); border-radius: 12px; }
+.season-mail-summary dt { color: rgba(237,245,241,.7); font-size: 13px; }
+.season-mail-summary dd { margin: 5px 0 0; color: #fff3e5; font-size: 22px; font-weight: 800; }
+.season-mail-actions { align-items: center; }
+.season-mail-actions .season-mail-disable { color: #fecaca; border-color: rgba(248,113,113,.35); }
+.season-mail-status { display: inline-flex; margin-top: 10px; padding: 5px 9px; color: #dbeafe; font-size: 12px; font-weight: 700; background: rgba(59,130,246,.14); border: 1px solid rgba(147,197,253,.25); border-radius: 999px; }
+.season-mail-status-sent { color: #d1fae5; background: rgba(16,185,129,.14); border-color: rgba(110,231,183,.28); }
+.season-mail-status-partial { color: #fef3c7; background: rgba(245,158,11,.14); border-color: rgba(252,211,77,.28); }
+.season-mail-status-disabled { color: #e5e7eb; background: rgba(148,163,184,.14); border-color: rgba(203,213,225,.24); }
 @media (max-width: 700px) { .vaccination-address-fields .two { grid-template-columns: 1fr; } .vaccination-modal-actions { flex-direction: column; } .vaccination-modal-actions .primary,.vaccination-modal-actions .ghost { width: 100%; justify-content: center; } }
+@media (max-width: 560px) { .season-mail-summary { grid-template-columns: 1fr; } }
 
 /* Öffentliche und interne Google-Maps-Navigation */
 .vaccination-address-public { display: flex !important; align-items: center; gap: 9px !important; color: rgba(237,245,241,.78) !important; font-size: 12px !important; font-weight: 700 !important; }
