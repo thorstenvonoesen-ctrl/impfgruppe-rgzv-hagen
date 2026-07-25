@@ -2979,8 +2979,115 @@ function PublicSignup() {
   const [countdown, setCountdown] = useState('')
   const [showPaymentSuccess, setShowPaymentSuccess] = useState(false)
   const [confirmationEmailSent, setConfirmationEmailSent] = useState(false)
+  const [reuseLookup, setReuseLookup] = useState({ status: 'idle', email: '', token: '' })
+  const [reuseConfirmation, setReuseConfirmation] = useState('')
+  const checkedReuseEmailsRef = useRef(new Set())
+  const reuseRequestRef = useRef(0)
+  const reuseConfirmationTimerRef = useRef(null)
+  const formEmailRef = useRef(form.email)
+  formEmailRef.current = form.email
   
-  const update = e => setForm({ ...form, [e.target.name]: e.target.value })
+  const normalizeReuseEmail = value => String(value || '').trim().toLowerCase()
+  const isValidReuseEmail = value => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)
+
+  const update = e => {
+    const { name, value } = e.target
+    setForm(current => ({ ...current, [name]: value }))
+
+    if (name === 'email' && normalizeReuseEmail(value) !== reuseLookup.email) {
+      reuseRequestRef.current += 1
+      setReuseLookup({ status: 'idle', email: '', token: '' })
+      setReuseConfirmation('')
+    }
+  }
+
+  async function checkPreviousRegistration(event) {
+    const email = normalizeReuseEmail(event.target.value)
+    if (!isValidReuseEmail(email)) return
+    if (reuseLookup.status === 'found' && reuseLookup.email === email) return
+    if (checkedReuseEmailsRef.current.has(email)) return
+
+    const requestId = reuseRequestRef.current + 1
+    reuseRequestRef.current = requestId
+    setReuseLookup({ status: 'checking', email, token: '' })
+    setReuseConfirmation('')
+
+    try {
+      const response = await fetch('/api/lookup-participant', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'check', email, slug: getCurrentSlug() })
+      })
+      const result = await response.json().catch(() => ({}))
+      if (requestId !== reuseRequestRef.current) return
+      if (!response.ok) throw new Error('lookup unavailable')
+
+      checkedReuseEmailsRef.current.add(email)
+      setReuseLookup(result.found && result.lookupToken
+        ? { status: 'found', email, token: result.lookupToken }
+        : { status: 'idle', email, token: '' })
+    } catch {
+      if (requestId !== reuseRequestRef.current) return
+      setReuseLookup({ status: 'error', email, token: '' })
+    }
+  }
+
+  async function applyPreviousRegistration() {
+    if (reuseLookup.status !== 'found' || !reuseLookup.token) return
+
+    const lookupEmail = reuseLookup.email
+    setReuseLookup(current => ({ ...current, status: 'retrieving' }))
+    try {
+      const response = await fetch('/api/lookup-participant', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: 'retrieve',
+          email: lookupEmail,
+          slug: getCurrentSlug(),
+          lookupToken: reuseLookup.token
+        })
+      })
+      const result = await response.json().catch(() => ({}))
+      if (!response.ok || !result.profile) throw new Error('profile unavailable')
+      if (normalizeReuseEmail(formEmailRef.current) !== lookupEmail) return
+
+      const profile = result.profile
+      const availableAnimalTypes = new Set([
+        'Hühner',
+        'Zwerghühner',
+        'Puten',
+        'Tauben',
+        'Wachteln',
+        'Wassergeflügel',
+        'Sonstige'
+      ])
+      setForm(current => ({
+        ...current,
+        firstname: profile.firstname || '',
+        lastname: profile.lastname || '',
+        street: profile.street || '',
+        housenumber: profile.housenumber || '',
+        zipcode: profile.zipcode || '',
+        city: profile.city || '',
+        phone: profile.phone || '',
+        tsk_number: profile.tsk_number || '',
+        animal_type: availableAnimalTypes.has(profile.animal_type) ? profile.animal_type : current.animal_type
+      }))
+      setReuseLookup({ status: 'applied', email: lookupEmail, token: '' })
+      setReuseConfirmation('Ihre Stammdaten wurden übernommen. Bitte prüfen Sie die Angaben und ergänzen Sie Tierzahl, Impfstoff und Impftermin.')
+      window.clearTimeout(reuseConfirmationTimerRef.current)
+      reuseConfirmationTimerRef.current = window.setTimeout(() => setReuseConfirmation(''), 6500)
+    } catch {
+      setReuseLookup({ status: 'error', email: lookupEmail, token: '' })
+    }
+  }
+
+  function dismissPreviousRegistration() {
+    setReuseLookup(current => ({ status: 'dismissed', email: current.email, token: '' }))
+  }
+
+  useEffect(() => () => window.clearTimeout(reuseConfirmationTimerRef.current), [])
  
   async function loadDates() {
   const clubId = await getDefaultClubId()
@@ -3395,7 +3502,38 @@ if (!showForm) {
           <div className="two"><Input label="Vorname" name="firstname" value={form.firstname} onChange={update} required/><Input label="Nachname" name="lastname" value={form.lastname} onChange={update} required/></div>
           <div className="two"><Input label="Straße" name="street" value={form.street} onChange={update}/><Input label="Hausnummer" name="housenumber" value={form.housenumber} onChange={update}/></div>
           <div className="two"><Input label="PLZ" name="zipcode" value={form.zipcode} onChange={update}/><Input label="Ort" name="city" value={form.city} onChange={update}/></div>
-          <div className="two"><Input label="E-Mail" name="email" type="email" value={form.email} onChange={update} required/><Input label="Telefon" name="phone" value={form.phone} onChange={update}/></div>
+          <div className="two"><Input label="E-Mail" name="email" type="email" value={form.email} onChange={update} onBlur={checkPreviousRegistration} required/><Input label="Telefon" name="phone" value={form.phone} onChange={update}/></div>
+
+          {reuseLookup.status === 'checking' && (
+            <p className="signup-reuse-status" role="status">Frühere Anmeldung wird geprüft …</p>
+          )}
+
+          {(reuseLookup.status === 'found' || reuseLookup.status === 'retrieving') && (
+            <aside className="signup-reuse-card" aria-labelledby="signup-reuse-title">
+              <div>
+                <h3 id="signup-reuse-title">Frühere Anmeldung gefunden</h3>
+                <p>Für diese E-Mail-Adresse wurden bereits Anmeldedaten gefunden. Möchten Sie Ihre zuletzt verwendeten Stammdaten übernehmen?</p>
+              </div>
+              <div className="signup-reuse-actions">
+                <button type="button" className="primary" onClick={applyPreviousRegistration} disabled={reuseLookup.status === 'retrieving'}>
+                  {reuseLookup.status === 'retrieving' ? 'Stammdaten werden übernommen …' : 'Ja, Stammdaten übernehmen'}
+                </button>
+                <button type="button" className="ghost" onClick={dismissPreviousRegistration} disabled={reuseLookup.status === 'retrieving'}>
+                  Nein, neu eingeben
+                </button>
+              </div>
+            </aside>
+          )}
+
+          {reuseLookup.status === 'error' && (
+            <p className="signup-reuse-status signup-reuse-error" role="status">
+              Die automatische Datenübernahme ist derzeit nicht verfügbar. Bitte geben Sie Ihre Daten erneut ein.
+            </p>
+          )}
+
+          {reuseConfirmation && (
+            <p className="signup-reuse-confirmation" role="status">{reuseConfirmation}</p>
+          )}
      
           <div className="section-title signup-section-title">
   Tierhalterdaten
@@ -3520,6 +3658,9 @@ value={form.vaccination_date_id}
         setShowPaymentSuccess(false)
         setConfirmationEmailSent(false)
         setForm(emptyForm())
+        reuseRequestRef.current += 1
+        setReuseLookup({ status: 'idle', email: '', token: '' })
+        setReuseConfirmation('')
         setPrivacyAccepted(false)
         setPaymentMethod('paypal')
         setMessage('')
