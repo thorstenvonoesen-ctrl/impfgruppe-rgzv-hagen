@@ -872,6 +872,29 @@ function ClubSelect() {
           font-size: 12px !important;
         }
 
+        @media (min-width: 1081px) {
+          .final-home-hero {
+            min-height: 196px;
+          }
+
+          .final-home .home-dashboard-grid {
+            grid-template-rows: 290px !important;
+          }
+
+          .final-home .home-countdown-card {
+            min-height: 290px !important;
+            height: 290px !important;
+          }
+
+          .final-home .home-dashboard-support {
+            grid-template-rows: 94px 184px !important;
+          }
+
+          .final-home-nav-card {
+            min-height: 152px;
+          }
+        }
+
         @media (min-width: 1200px) and (min-height: 850px) {
           .final-home-page {
             height: 100vh;
