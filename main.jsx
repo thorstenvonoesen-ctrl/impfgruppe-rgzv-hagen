@@ -552,7 +552,7 @@ function ClubSelect() {
           justify-content: center;
           min-height: 36px;
           padding: 7px 14px;
-          color: #fff;
+          color: #f59e0b;
           font-size: 12px;
           font-weight: 800;
           text-decoration: none;
