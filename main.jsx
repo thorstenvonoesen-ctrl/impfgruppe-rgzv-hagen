@@ -3962,6 +3962,10 @@ const [newDateNote, setNewDateNote] = useState('')
   const [campaignDetailError, setCampaignDetailError] = useState('')
   const [campaignSearch, setCampaignSearch] = useState('')
   const [campaignFilter, setCampaignFilter] = useState('all')
+  const [smartAssistant, setSmartAssistant] = useState(null)
+  const [smartAssistantLoading, setSmartAssistantLoading] = useState(true)
+  const [smartAssistantError, setSmartAssistantError] = useState('')
+  const [smartAssistantOpen, setSmartAssistantOpen] = useState(false)
   const [dateFeedback, setDateFeedback] = useState('')
   const [clubs, setClubs] = useState([])
 const [selectedClub, setSelectedClub] = useState(null)
@@ -4054,6 +4058,48 @@ if (result.sent === 0) {
     }
   }
 
+  async function loadSmartAssistant(silent = false) {
+    if (!campaignClubId) return
+    if (!silent) {
+      setSmartAssistantLoading(true)
+      setSmartAssistantError('')
+    }
+    try {
+      const result = await seasonMailRequest('smart-assistant', { clubId: campaignClubId })
+      setSmartAssistant(result)
+    } catch (error) {
+      console.error('Vereins-Ampel konnte nicht geladen werden:', error)
+      setSmartAssistantError('Die Vereins-Ampel konnte derzeit nicht geladen werden.')
+    } finally {
+      if (!silent) setSmartAssistantLoading(false)
+    }
+  }
+
+  function openSmartAssistantTask(task) {
+    setSmartAssistantOpen(false)
+    if (task.action === 'participants') {
+      if (task.id === 'open-payments') setStatusFilter('open')
+      document.getElementById('participant-management')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      return
+    }
+    if (task.action === 'season') {
+      document.getElementById('season-campaign-dashboard')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      return
+    }
+    if (task.action === 'vet') {
+      const nextDate = vaccinationDates.find(date => !isTestVaccinationDate(date) && date.date >= new Date().toISOString().slice(0, 10))
+      if (nextDate && canSendVetCertificate(nextDate)) setVetSendDate(nextDate)
+      document.getElementById('appointment-management')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      return
+    }
+    const targetId = task.action === 'appointments'
+      ? 'appointment-management'
+      : task.action === 'club'
+        ? 'admin-dashboard-top'
+        : 'admin-dashboard-top'
+    document.getElementById(targetId)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }
+
   async function openCampaignDetail(campaign) {
     if (!campaign?.campaign_id || campaignDetailLoading) return
     setCampaignDetail(null)
@@ -4118,7 +4164,7 @@ if (result.sent === 0) {
             ? `${result.sent} Saisonerinnerungen versendet, ${result.failed} fehlgeschlagen.`
             : `${result.sent} Saisonerinnerungen wurden erfolgreich versendet.`
       )
-      await loadCampaignDashboard()
+      await Promise.all([loadCampaignDashboard(), loadSmartAssistant()])
     } catch (error) {
       setDateFeedback(error.message)
     } finally {
@@ -4150,7 +4196,7 @@ const { data, error } = await supabase
   .order('date', { ascending: true })
 
 setVaccinationDates(dates || [])
-      await Promise.all([loadSeasonStatuses(), loadCampaignDashboard()])
+      await Promise.all([loadSeasonStatuses(), loadCampaignDashboard(), loadSmartAssistant()])
       const nextDate = dates?.[0]?.date
 
 const today = new Date().toISOString().split('T')[0]
@@ -4212,7 +4258,10 @@ setNewDateNote('')
   useEffect(()=>{ load() }, [])
   useEffect(() => {
     if (!campaignClubId) return undefined
-    const intervalId = window.setInterval(() => loadCampaignDashboard(true), 30000)
+    const intervalId = window.setInterval(() => {
+      loadCampaignDashboard(true)
+      loadSmartAssistant(true)
+    }, 30000)
     return () => window.clearInterval(intervalId)
   }, [campaignClubId])
   async function markPaid(id, paid) {
@@ -4384,10 +4433,14 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
 
       const response = await fetch('/api/send-vet-certificate', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${(await supabase.auth.getSession()).data.session?.access_token || ''}`
+        },
         body: JSON.stringify({
           pdfData: doc.output('datauristring'),
-          datum: vaccinationDate.date
+          datum: vaccinationDate.date,
+          vaccinationDateId: vaccinationDate.id
         })
       })
       const result = await response.json().catch(() => ({}))
@@ -4397,6 +4450,7 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
 
       setVetSendDate(null)
       alert('Die Sammelimpfbescheinigung wurde erfolgreich versendet.')
+      load()
     } catch (error) {
       console.error('Tierarztversand fehlgeschlagen:', error)
       alert(error.message || 'Beim Versand der Sammelimpfbescheinigung ist ein Fehler aufgetreten.')
@@ -4592,10 +4646,56 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
     doc.save(`saisonkampagne-${summary.season_year}.pdf`)
   }
 
+  const assistantStatus = smartAssistant?.status || 'green'
+  const assistantHeadline = smartAssistantLoading
+    ? 'Vereinsstatus wird geprüft'
+    : smartAssistantError
+      ? 'Status derzeit nicht verfügbar'
+      : assistantStatus === 'red'
+        ? 'Sofortiger Handlungsbedarf'
+        : assistantStatus === 'yellow'
+          ? `Es gibt ${smartAssistant?.taskCount || 0} offene Aufgabe${smartAssistant?.taskCount === 1 ? '' : 'n'}`
+          : 'Alles in Ordnung'
+  const assistantIcon = assistantStatus === 'red' ? '🔴' : assistantStatus === 'yellow' ? '🟡' : '🟢'
 
 
 
   return <div className="page admin"><Header admin />
+
+  {smartAssistantOpen && (
+    <div className="modal">
+      <section className="modal-card smart-assistant-modal" role="dialog" aria-modal="true" aria-labelledby="smart-assistant-title">
+        <div className="campaign-detail-heading">
+          <div>
+            <span className="season-mail-eyebrow">Intelligente Vereins-Ampel</span>
+            <h2 id="smart-assistant-title">{assistantIcon} {assistantHeadline}</h2>
+          </div>
+          <button type="button" className="ghost" onClick={() => setSmartAssistantOpen(false)}>Schließen</button>
+        </div>
+        {smartAssistantError && <p className="campaign-load-error">{smartAssistantError}</p>}
+        {!smartAssistantError && !(smartAssistant?.tasks || []).length && (
+          <div className="smart-assistant-all-clear">
+            <ShieldCheck size={24} />
+            <div><strong>Keine offenen Aufgaben</strong><span>Alle automatisch geprüften Bereiche sind in Ordnung.</span></div>
+          </div>
+        )}
+        <div className="smart-assistant-tasks">
+          {(smartAssistant?.tasks || []).map(task => (
+            <article key={task.id} className={`smart-assistant-task smart-assistant-task-${task.priority}`}>
+              <span className="smart-assistant-task-dot" aria-hidden="true">{task.priority === 'red' ? '🔴' : '🟡'}</span>
+              <div>
+                <strong>{task.title}</strong>
+                <p>{task.detail}</p>
+              </div>
+              <button type="button" className="ghost" onClick={() => openSmartAssistantTask(task)}>
+                {task.actionLabel} →
+              </button>
+            </article>
+          ))}
+        </div>
+      </section>
+    </div>
+  )}
 
   {mailDialogOpen && (
     <div className="modal">
@@ -4814,14 +4914,33 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
 
   
     <main className="admin-wrap">
-      <div className="admin-top"><h1>Adminbereich</h1><button className="ghost" onClick={onLogout}><LogOut size={16}/> Logout</button></div>
+      <div id="admin-dashboard-top" className="admin-top"><h1>Adminbereich</h1><button className="ghost" onClick={onLogout}><LogOut size={16}/> Logout</button></div>
+      <button
+        type="button"
+        className={`smart-assistant-card smart-assistant-card-${smartAssistantError ? 'error' : assistantStatus}`}
+        onClick={() => setSmartAssistantOpen(true)}
+      >
+        <span className="smart-assistant-card-icon" aria-hidden="true">{smartAssistantError ? '⚪' : assistantIcon}</span>
+        <span className="smart-assistant-card-copy">
+          <small>Intelligente Vereins-Ampel</small>
+          <strong>{assistantHeadline}</strong>
+          <span>
+            {smartAssistantLoading
+              ? 'Teilnehmer, Termine, Kampagne, Tierarzt und System werden ausgewertet.'
+              : smartAssistantError || (assistantStatus === 'green'
+                ? 'Aktuell besteht kein Handlungsbedarf.'
+                : 'Aufgaben ansehen und direkt zum passenden Bereich wechseln.')}
+          </span>
+        </span>
+        <span className="smart-assistant-card-action">Aufgaben anzeigen →</span>
+      </button>
       <div className="stats admin-dashboard-stats">
         <InteractiveStatCard className="stat" icon={<Users/>} label="Teilnehmer" value={stats.total} loading={loading} tone="stat-participants" animationIndex={0} />
         <InteractiveStatCard className="stat" icon={<ShieldCheck/>} label="Tiere" value={stats.animals} loading={loading} tone="stat-animals" animationIndex={1} />
         <InteractiveStatCard className="stat" icon={<Euro/>} label="Einnahmen" value={stats.revenue} loading={loading} currency tone="stat-revenue" animationIndex={2} />
         <InteractiveStatCard className="stat" icon={<CalendarDays/>} label="Nächster Impftermin" loading={loading} appointmentDates={vaccinationDates} club={activeClub} isAppointment isAdmin tone="stat-date" animationIndex={3} />
       </div>
-      <section className={`card season-campaign-card season-campaign-${currentCampaign ? currentCampaignTone : 'empty'}`}>
+      <section id="season-campaign-dashboard" className={`card season-campaign-card season-campaign-${currentCampaign ? currentCampaignTone : 'empty'}`}>
         <div className="season-campaign-header">
           <div>
             <span className="season-mail-eyebrow">Automatische Auswertung</span>
@@ -4927,7 +5046,7 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
     </div>
   ))}
 </section>
-      <section className="card">
+      <section id="appointment-management" className="card">
   <h2>Impftermin anlegen</h2>
 
   <input
@@ -5077,7 +5196,7 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
 
 </section>
 
-    <section className="card">
+    <section id="participant-management" className="card">
   <div
     className="table-head"
     style={{

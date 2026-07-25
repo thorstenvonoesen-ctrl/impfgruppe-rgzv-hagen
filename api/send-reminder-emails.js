@@ -244,6 +244,142 @@ async function handleCampaignDetail(req, res, supabase) {
   return res.status(200).json({ campaign, recipients: data || [] })
 }
 
+async function handleSmartAssistant(req, res, supabase) {
+  const { clubId } = req.body || {}
+  if (!clubId) return res.status(400).json({ error: 'Verein fehlt.' })
+  const user = await authenticateAdmin(req, supabase, clubId)
+  if (!user) return res.status(403).json({ error: 'Keine Berechtigung für diesen Verein.' })
+
+  const [
+    { data: club, error: clubError },
+    { data: participants, error: participantsError },
+    { data: appointments, error: appointmentsError },
+    { data: campaignSummary, error: campaignError }
+  ] = await Promise.all([
+    supabase.from('clubs').select('*').eq('id', clubId).single(),
+    supabase.from('participants').select('id, firstname, lastname, email, phone, animal_type, animal_count, vaccine, payment_status, payment_method, vaccination_date_id').eq('club_id', clubId),
+    supabase.from('vaccination_dates').select('*').eq('club_id', clubId).order('date', { ascending: true }),
+    supabase.rpc('season_campaign_summary', { target_club_id: clubId })
+  ])
+  if (clubError || participantsError || appointmentsError || campaignError) {
+    throw clubError || participantsError || appointmentsError || campaignError
+  }
+
+  const tasks = []
+  const addTask = (priority, id, title, detail, action, actionLabel) => {
+    tasks.push({ priority, id, title, detail, action, actionLabel })
+  }
+  const now = new Date()
+  const todayKey = now.toISOString().slice(0, 10)
+  const regularAppointments = (appointments || []).filter(appointment => !isTestAppointment(appointment))
+  const futureAppointments = regularAppointments.filter(appointment => appointment.date >= todayKey)
+  const nextAppointment = futureAppointments[0] || null
+  const activeSeasonYear = nextAppointment
+    ? Number(String(nextAppointment.date).slice(0, 4))
+    : now.getFullYear()
+  const appointmentById = new Map(regularAppointments.map(appointment => [String(appointment.id), appointment]))
+  const seasonParticipants = (participants || []).filter(participant => {
+    const appointment = appointmentById.get(String(participant.vaccination_date_id))
+    return appointment && Number(String(appointment.date).slice(0, 4)) === activeSeasonYear
+  })
+
+  const openPayments = seasonParticipants.filter(participant => participant.payment_status !== 'bezahlt')
+  if (openPayments.length) {
+    addTask('yellow', 'open-payments', `${openPayments.length} Zahlung${openPayments.length === 1 ? '' : 'en'} offen`, 'Zahlungsstatus der aktuellen Saison prüfen.', 'participants', 'Teilnehmer anzeigen')
+  }
+  const missingEmail = seasonParticipants.filter(participant => !EMAIL_PATTERN.test(normalizeEmail(participant.email)))
+  if (missingEmail.length) {
+    addTask('yellow', 'missing-email', `${missingEmail.length} Teilnehmer ohne gültige E-Mail-Adresse`, 'Kontaktdaten vervollständigen.', 'participants', 'Teilnehmer anzeigen')
+  }
+  const missingPhone = seasonParticipants.filter(participant => !String(participant.phone || '').trim())
+  if (missingPhone.length) {
+    addTask('yellow', 'missing-phone', `${missingPhone.length} Teilnehmer ohne Telefonnummer`, 'Eine Telefonnummer erleichtert kurzfristige Rückfragen.', 'participants', 'Teilnehmer anzeigen')
+  }
+  const incomplete = seasonParticipants.filter(participant =>
+    !participant.firstname || !participant.lastname || !participant.animal_type ||
+    Number(participant.animal_count || 0) < 1 || !participant.vaccine || !participant.vaccination_date_id
+  )
+  if (incomplete.length) {
+    addTask('yellow', 'incomplete-participants', `${incomplete.length} unvollständige Teilnehmerdatensätze`, 'Pflichtangaben der Anmeldung kontrollieren.', 'participants', 'Datensätze prüfen')
+  }
+  const duplicateKeys = new Map()
+  for (const participant of seasonParticipants) {
+    const email = normalizeEmail(participant.email)
+    if (!EMAIL_PATTERN.test(email)) continue
+    const key = `${participant.vaccination_date_id}|${email}`
+    duplicateKeys.set(key, (duplicateKeys.get(key) || 0) + 1)
+  }
+  const duplicateCount = [...duplicateKeys.values()].filter(count => count > 1).length
+  if (duplicateCount) {
+    addTask('yellow', 'duplicate-participants', `${duplicateCount} mögliche Doppelanmeldung${duplicateCount === 1 ? '' : 'en'}`, 'Gleiche E-Mail-Adresse ist für denselben Termin mehrfach vorhanden.', 'participants', 'Doppelungen prüfen')
+  }
+
+  if (!nextAppointment) {
+    addTask('red', 'no-future-appointment', 'Kein zukünftiger Impftermin vorhanden', 'Bitte einen regulären Impftermin anlegen.', 'appointments', 'Impftermin anlegen')
+  } else {
+    const appointmentMoment = new Date(`${nextAppointment.date}T23:59:59`)
+    const hoursUntilAppointment = (appointmentMoment.getTime() - now.getTime()) / 3600000
+    const nextParticipants = seasonParticipants.filter(
+      participant => String(participant.vaccination_date_id) === String(nextAppointment.id)
+    )
+    if (!nextParticipants.length) {
+      addTask('red', 'appointment-without-participants', 'Nächster Termin hat noch keine Teilnehmer', `${nextAppointment.title || 'Impftermin'} am ${nextAppointment.date}.`, 'participants', 'Teilnehmer anzeigen')
+    }
+    if (hoursUntilAppointment <= 168 && hoursUntilAppointment > 48) {
+      addTask('yellow', 'appointment-soon', 'Impftermin in weniger als 7 Tagen', 'Organisation und Unterlagen jetzt abschließend prüfen.', 'appointments', 'Termin öffnen')
+    }
+    if (hoursUntilAppointment <= 168 && !nextAppointment.vet_certificate_generated_at) {
+      addTask(hoursUntilAppointment <= 48 ? 'red' : 'yellow', 'vet-certificate-missing', 'Sammelimpfbescheinigung noch nicht erstellt', 'Die Tierarztunterlagen für den nächsten Termin fehlen.', 'vet', 'Tierarztfunktion öffnen')
+    } else if (hoursUntilAppointment <= 168 && !nextAppointment.vet_certificate_sent_at) {
+      addTask(hoursUntilAppointment <= 48 ? 'red' : 'yellow', 'vet-certificate-unsent', 'Tierarzt-PDF noch nicht versendet', 'Die erstellten Unterlagen müssen noch an den Tierarzt gesendet werden.', 'vet', 'Tierarztfunktion öffnen')
+    }
+  }
+
+  const campaign = (campaignSummary || []).find(item => item.season_year === activeSeasonYear)
+  const previousYearDateIds = new Set(
+    regularAppointments
+      .filter(appointment => Number(String(appointment.date).slice(0, 4)) === activeSeasonYear - 1)
+      .map(appointment => String(appointment.id))
+  )
+  const hasPreviousParticipants = (participants || []).some(
+    participant => previousYearDateIds.has(String(participant.vaccination_date_id))
+  )
+  if (nextAppointment && hasPreviousParticipants && !campaign) {
+    addTask('yellow', 'season-not-started', 'Saisonkampagne noch nicht gestartet', 'Frühere Teilnehmer können zur neuen Saison eingeladen werden.', 'season', 'Erinnerungen versenden')
+  } else if (campaign?.campaign_status === 'sending') {
+    addTask('yellow', 'season-sending', 'Saisonkampagne wird derzeit versendet', 'Die Auswertung steht nach Abschluss des Versands bereit.', 'season', 'Kampagne öffnen')
+  } else if (campaign?.response_rate != null && Number(campaign.response_rate) < 25) {
+    addTask('yellow', 'season-low-response', 'Ungewöhnlich niedrige Rücklaufquote', `Aktuell haben sich ${Number(campaign.response_rate).toLocaleString('de-DE')} % erneut angemeldet.`, 'season', 'Kampagne prüfen')
+  }
+
+  const missingClubFields = ['name', 'slug'].filter(field => !String(club?.[field] || '').trim())
+  if (missingClubFields.length) {
+    addTask('red', 'club-data-missing', 'Kritische Vereinsdaten fehlen', 'Vereinsname oder Vereinskennung ist nicht vollständig hinterlegt.', 'club', 'Vereinsdaten öffnen')
+  }
+  if (!process.env.VET_RECIPIENT_EMAIL) {
+    addTask('yellow', 'vet-email-missing', 'Tierarzt-E-Mail nicht konfiguriert', 'Für den produktiven Versand muss VET_RECIPIENT_EMAIL hinterlegt werden.', 'system', 'Konfiguration prüfen')
+  }
+  const paypalConfigured = Boolean(process.env.PAYPAL_CLIENT_ID && process.env.PAYPAL_SECRET)
+  const stripeConfigured = Boolean(process.env.STRIPE_SECRET_KEY)
+  if (!paypalConfigured && !stripeConfigured) {
+    addTask('red', 'payment-missing', 'Keine Zahlungsart vollständig konfiguriert', 'PayPal oder Stripe muss serverseitig eingerichtet sein.', 'system', 'Konfiguration prüfen')
+  }
+
+  const priorityOrder = { red: 0, yellow: 1 }
+  tasks.sort((first, second) => priorityOrder[first.priority] - priorityOrder[second.priority])
+  const status = tasks.some(task => task.priority === 'red')
+    ? 'red'
+    : tasks.length
+      ? 'yellow'
+      : 'green'
+  return res.status(200).json({
+    status,
+    taskCount: tasks.length,
+    tasks,
+    checkedAt: new Date().toISOString()
+  })
+}
+
 async function handleSeasonDisable(req, res, supabase) {
   const context = await seasonContext(supabase, req.body?.vaccinationDateId)
   const user = await authenticateAdmin(req, supabase, context.appointment.club_id)
@@ -435,6 +571,7 @@ export default async function handler(req, res) {
     }
     if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' })
     const action = req.body?.action
+    if (action === 'smart-assistant') return await handleSmartAssistant(req, res, supabase)
     if (action === 'campaign-dashboard') return await handleCampaignDashboard(req, res, supabase)
     if (action === 'campaign-detail') return await handleCampaignDetail(req, res, supabase)
     if (action === 'season-status') return await handleSeasonStatuses(req, res, supabase)

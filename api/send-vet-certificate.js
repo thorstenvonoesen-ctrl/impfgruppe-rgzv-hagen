@@ -1,5 +1,6 @@
 import nodemailer from 'nodemailer'
 import { emailSignatureHtml } from './_email-signature.js'
+import { createAdminSupabase, getBearerToken } from './_supabase-admin.js'
 
 const TEST_RECIPIENT = 'thorsten-von-oesen@t-online.de'
 
@@ -24,15 +25,42 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { pdfData, datum } = req.body || {}
+    const { pdfData, datum, vaccinationDateId } = req.body || {}
     const deutschesDatum = formatGermanDate(datum)
 
-    if (!deutschesDatum || !pdfData || typeof pdfData !== 'string') {
+    if (!deutschesDatum || !vaccinationDateId || !pdfData || typeof pdfData !== 'string') {
       return res.status(400).json({
         success: false,
         error: 'Impftermin oder Sammelimpfbescheinigung fehlt.'
       })
     }
+    const supabase = createAdminSupabase()
+    const accessToken = getBearerToken(req)
+    const { data: userResult, error: userError } = await supabase.auth.getUser(accessToken)
+    if (userError || !userResult.user) {
+      return res.status(401).json({ success: false, error: 'Authentifizierung erforderlich.' })
+    }
+    const { data: appointment, error: appointmentError } = await supabase
+      .from('vaccination_dates')
+      .select('id, club_id, date')
+      .eq('id', vaccinationDateId)
+      .single()
+    if (appointmentError || !appointment || appointment.date !== datum) {
+      return res.status(404).json({ success: false, error: 'Impftermin nicht gefunden.' })
+    }
+    const { data: memberships } = await supabase
+      .from('club_admin_memberships')
+      .select('club_id, role')
+      .eq('user_id', userResult.user.id)
+      .eq('active', true)
+    const authorized = (memberships || []).some(
+      membership => membership.role === 'superadmin' || String(membership.club_id) === String(appointment.club_id)
+    )
+    if (!authorized) return res.status(403).json({ success: false, error: 'Keine Berechtigung für diesen Verein.' })
+    await supabase
+      .from('vaccination_dates')
+      .update({ vet_certificate_generated_at: new Date().toISOString() })
+      .eq('id', appointment.id)
 
     const pdfContent = pdfData.replace(
       /^data:application\/pdf(?:;filename=[^;]+)?;base64,/,
@@ -43,7 +71,7 @@ export default async function handler(req, res) {
 
     const info = await transporter.sendMail({
       from: `"RGZV Hagen und Umgebung seit 1903 e.V." <${process.env.SMTP_USER}>`,
-      to: TEST_RECIPIENT,
+      to: process.env.VET_RECIPIENT_EMAIL || TEST_RECIPIENT,
       subject,
       attachments: [{
         filename: `Sammelimpfbescheinigung_${filenameDate}.pdf`,
@@ -93,6 +121,10 @@ export default async function handler(req, res) {
         ${emailSignatureHtml()}
       `
     })
+    await supabase
+      .from('vaccination_dates')
+      .update({ vet_certificate_sent_at: new Date().toISOString() })
+      .eq('id', appointment.id)
 
     return res.status(200).json({
       success: true,
