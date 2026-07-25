@@ -3954,11 +3954,20 @@ const [newDateNote, setNewDateNote] = useState('')
   const [seasonPrompt, setSeasonPrompt] = useState(null)
   const [seasonMailBusy, setSeasonMailBusy] = useState(false)
   const [seasonStatuses, setSeasonStatuses] = useState({})
+  const [campaignDashboard, setCampaignDashboard] = useState(null)
+  const [campaignLoading, setCampaignLoading] = useState(true)
+  const [campaignError, setCampaignError] = useState('')
+  const [campaignDetail, setCampaignDetail] = useState(null)
+  const [campaignDetailLoading, setCampaignDetailLoading] = useState(false)
+  const [campaignDetailError, setCampaignDetailError] = useState('')
+  const [campaignSearch, setCampaignSearch] = useState('')
+  const [campaignFilter, setCampaignFilter] = useState('all')
   const [dateFeedback, setDateFeedback] = useState('')
   const [clubs, setClubs] = useState([])
 const [selectedClub, setSelectedClub] = useState(null)
   const adminClubId = adminContext?.club_id
   const activeClub = selectedClub || clubs.find(club => club.id === adminClubId) || null
+  const campaignClubId = activeClub?.id || adminClubId
   async function sendReminderMail() {
   if (!selectedDate) return
 
@@ -4017,14 +4026,52 @@ if (result.sent === 0) {
   }
 
   async function loadSeasonStatuses() {
-    if (!adminClubId) return
+    if (!campaignClubId) return
     try {
-      const result = await seasonMailRequest('season-status', { clubId: adminClubId })
+      const result = await seasonMailRequest('season-status', { clubId: campaignClubId })
       setSeasonStatuses(Object.fromEntries(
         (result.campaigns || []).map(campaign => [String(campaign.vaccination_date_id), campaign])
       ))
     } catch (error) {
       console.error('Saisonstatus konnte nicht geladen werden:', error)
+    }
+  }
+
+  async function loadCampaignDashboard(silent = false) {
+    if (!campaignClubId) return
+    if (!silent) {
+      setCampaignLoading(true)
+      setCampaignError('')
+    }
+    try {
+      const result = await seasonMailRequest('campaign-dashboard', { clubId: campaignClubId })
+      setCampaignDashboard(result)
+    } catch (error) {
+      console.error('Saisonkampagne konnte nicht geladen werden:', error)
+      setCampaignError('Die Saisonkampagne konnte derzeit nicht geladen werden.')
+    } finally {
+      if (!silent) setCampaignLoading(false)
+    }
+  }
+
+  async function openCampaignDetail(campaign) {
+    if (!campaign?.campaign_id || campaignDetailLoading) return
+    setCampaignDetail(null)
+    setCampaignDetailLoading(true)
+    setCampaignDetailError('')
+    setCampaignSearch('')
+    setCampaignFilter('all')
+    try {
+      const result = await seasonMailRequest('campaign-detail', {
+        clubId: campaignClubId,
+        campaignId: campaign.campaign_id
+      })
+      setCampaignDetail({ ...result, summary: campaign })
+    } catch (error) {
+      console.error('Kampagnendetails konnten nicht geladen werden:', error)
+      setCampaignDetailError('Die Kampagnendetails konnten derzeit nicht geladen werden.')
+    } finally {
+      setCampaignDetailLoading(false)
     }
   }
 
@@ -4071,6 +4118,7 @@ if (result.sent === 0) {
             ? `${result.sent} Saisonerinnerungen versendet, ${result.failed} fehlgeschlagen.`
             : `${result.sent} Saisonerinnerungen wurden erfolgreich versendet.`
       )
+      await loadCampaignDashboard()
     } catch (error) {
       setDateFeedback(error.message)
     } finally {
@@ -4102,7 +4150,7 @@ const { data, error } = await supabase
   .order('date', { ascending: true })
 
 setVaccinationDates(dates || [])
-      await loadSeasonStatuses()
+      await Promise.all([loadSeasonStatuses(), loadCampaignDashboard()])
       const nextDate = dates?.[0]?.date
 
 const today = new Date().toISOString().split('T')[0]
@@ -4162,6 +4210,11 @@ setNewDateNote('')
     load()
   }
   useEffect(()=>{ load() }, [])
+  useEffect(() => {
+    if (!campaignClubId) return undefined
+    const intervalId = window.setInterval(() => loadCampaignDashboard(true), 30000)
+    return () => window.clearInterval(intervalId)
+  }, [campaignClubId])
   async function markPaid(id, paid) {
   if (hasSupabase) {
     const { data: { session } } = await supabase.auth.getSession()
@@ -4467,6 +4520,78 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
     doc.save(`kassenbericht-${v.date}.pdf`)
   }
 
+  const campaignTone = rate => {
+    if (rate < 25) return 'red'
+    if (rate < 50) return 'orange'
+    if (rate < 75) return 'yellow'
+    return 'green'
+  }
+  const campaignToneLabel = rate => ({
+    red: 'Rot',
+    orange: 'Orange',
+    yellow: 'Gelb',
+    green: 'Grün'
+  })[campaignTone(rate)]
+  const formatCampaignRate = rate =>
+    Number(rate || 0).toLocaleString('de-DE', { minimumFractionDigits: 1, maximumFractionDigits: 1 })
+  const currentCampaign = campaignDashboard?.current || null
+  const currentCampaignRate = currentCampaign?.response_rate ?? 0
+  const currentCampaignTone = campaignTone(currentCampaignRate)
+  const filteredCampaignRecipients = (campaignDetail?.recipients || []).filter(recipient => {
+    const searchValue = `${recipient.firstname || ''} ${recipient.lastname || ''} ${recipient.email_normalized || ''}`.toLowerCase()
+    const matchesSearch = searchValue.includes(campaignSearch.trim().toLowerCase())
+    const matchesFilter =
+      campaignFilter === 'all' ||
+      (campaignFilter === 'returned' && recipient.returned_at) ||
+      (campaignFilter === 'open' && !recipient.returned_at)
+    return matchesSearch && matchesFilter
+  })
+  const returnedCampaignRecipients = filteredCampaignRecipients.filter(recipient => recipient.returned_at)
+  const openCampaignRecipients = filteredCampaignRecipients.filter(recipient => !recipient.returned_at)
+
+  function exportCampaignReport() {
+    if (!campaignDetail?.summary) return
+    const summary = campaignDetail.summary
+    const returned = (campaignDetail.recipients || []).filter(recipient => recipient.returned_at)
+    const open = (campaignDetail.recipients || []).filter(recipient => !recipient.returned_at)
+    const formatDate = value => value ? new Date(value).toLocaleDateString('de-DE') : '-'
+    const doc = new jsPDF()
+    doc.setFontSize(18)
+    doc.text(activeClub?.name || APP.clubName, 14, 16)
+    doc.setFontSize(15)
+    doc.text(`Kampagnenbericht · Saison ${summary.season_year}`, 14, 25)
+    doc.setFontSize(10)
+    doc.text(`Versanddatum: ${formatDate(summary.finished_at)}`, 14, 34)
+    doc.text(`Eindeutig angeschriebene Empfänger: ${summary.sent_count}`, 14, 41)
+    doc.text(`Bereits wieder angemeldet: ${summary.returned_count}`, 14, 48)
+    doc.text(`Noch ohne Anmeldung: ${summary.open_count}`, 14, 55)
+    doc.text(`Rücklaufquote: ${formatCampaignRate(summary.response_rate)} %`, 14, 62)
+    doc.text(`Statusstufe: ${campaignToneLabel(summary.response_rate || 0)}`, 14, 69)
+    autoTable(doc, {
+      startY: 78,
+      head: [['Bereits wieder angemeldet', 'E-Mail', 'Neue Anmeldung']],
+      body: returned.map(recipient => [
+        `${recipient.firstname || ''} ${recipient.lastname || ''}`.trim(),
+        recipient.email_normalized,
+        formatDate(recipient.returned_at)
+      ]),
+      theme: 'grid',
+      headStyles: { fillColor: [22, 58, 47], textColor: 255 }
+    })
+    autoTable(doc, {
+      startY: doc.lastAutoTable.finalY + 12,
+      head: [['Noch ohne neue Anmeldung', 'E-Mail', 'Letzte Teilnahme']],
+      body: open.map(recipient => [
+        `${recipient.firstname || ''} ${recipient.lastname || ''}`.trim(),
+        recipient.email_normalized,
+        recipient.last_participation_year || '-'
+      ]),
+      theme: 'grid',
+      headStyles: { fillColor: [242, 140, 40], textColor: 255 }
+    })
+    doc.save(`saisonkampagne-${summary.season_year}.pdf`)
+  }
+
 
 
 
@@ -4580,6 +4705,96 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
     </div>
   )}
 
+  {(campaignDetail || campaignDetailLoading || campaignDetailError) && (
+    <div className="modal">
+      <section className="modal-card campaign-detail-modal" role="dialog" aria-modal="true" aria-labelledby="campaign-detail-title">
+        <div className="campaign-detail-heading">
+          <div>
+            <span className="season-mail-eyebrow">Geschützte Adminansicht</span>
+            <h2 id="campaign-detail-title">
+              Saisonkampagne {campaignDetail?.campaign?.season_year || ''}
+            </h2>
+          </div>
+          <button
+            type="button"
+            className="ghost"
+            onClick={() => {
+              setCampaignDetail(null)
+              setCampaignDetailError('')
+            }}
+          >
+            Schließen
+          </button>
+        </div>
+        {campaignDetailLoading && <p>Kampagnendaten werden geladen …</p>}
+        {campaignDetailError && <p className="campaign-load-error">{campaignDetailError}</p>}
+        {campaignDetail && (
+          <>
+            <div className="campaign-detail-tools">
+              <div className="search">
+                <Search size={18} />
+                <input
+                  type="search"
+                  placeholder="Name oder E-Mail suchen"
+                  value={campaignSearch}
+                  onChange={event => setCampaignSearch(event.target.value)}
+                />
+              </div>
+              <select value={campaignFilter} onChange={event => setCampaignFilter(event.target.value)}>
+                <option value="all">Alle</option>
+                <option value="returned">Bereits angemeldet</option>
+                <option value="open">Noch ohne Anmeldung</option>
+              </select>
+              <button type="button" className="primary" onClick={exportCampaignReport}>
+                <Download size={16} /> Kampagnenbericht exportieren
+              </button>
+            </div>
+            {(campaignFilter === 'all' || campaignFilter === 'returned') && (
+              <section className="campaign-detail-section">
+                <h3>Bereits wieder angemeldet</h3>
+                <div className="table-scroll">
+                  <table>
+                    <thead><tr><th>Name</th><th>E-Mail</th><th>Neue Anmeldung</th></tr></thead>
+                    <tbody>
+                      {returnedCampaignRecipients.map(recipient => (
+                        <tr key={`returned-${recipient.email_normalized}`}>
+                          <td>{`${recipient.firstname || ''} ${recipient.lastname || ''}`.trim() || '-'}</td>
+                          <td>{recipient.email_normalized}</td>
+                          <td>{new Date(recipient.returned_at).toLocaleDateString('de-DE')}</td>
+                        </tr>
+                      ))}
+                      {!returnedCampaignRecipients.length && <tr><td colSpan="3">Keine passenden Einträge.</td></tr>}
+                    </tbody>
+                  </table>
+                </div>
+              </section>
+            )}
+            {(campaignFilter === 'all' || campaignFilter === 'open') && (
+              <section className="campaign-detail-section">
+                <h3>Noch ohne neue Anmeldung</h3>
+                <div className="table-scroll">
+                  <table>
+                    <thead><tr><th>Name</th><th>E-Mail</th><th>Letzte Teilnahme</th></tr></thead>
+                    <tbody>
+                      {openCampaignRecipients.map(recipient => (
+                        <tr key={`open-${recipient.email_normalized}`}>
+                          <td>{`${recipient.firstname || ''} ${recipient.lastname || ''}`.trim() || '-'}</td>
+                          <td>{recipient.email_normalized}</td>
+                          <td>{recipient.last_participation_year || '-'}</td>
+                        </tr>
+                      ))}
+                      {!openCampaignRecipients.length && <tr><td colSpan="3">Keine passenden Einträge.</td></tr>}
+                    </tbody>
+                  </table>
+                </div>
+              </section>
+            )}
+          </>
+        )}
+      </section>
+    </div>
+  )}
+
   {editingVaccinationDate && (
     <div className="modal">
       <section className="modal-card vaccination-edit-modal" role="dialog" aria-modal="true" aria-labelledby="edit-vaccination-title">
@@ -4606,6 +4821,96 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
         <InteractiveStatCard className="stat" icon={<Euro/>} label="Einnahmen" value={stats.revenue} loading={loading} currency tone="stat-revenue" animationIndex={2} />
         <InteractiveStatCard className="stat" icon={<CalendarDays/>} label="Nächster Impftermin" loading={loading} appointmentDates={vaccinationDates} club={activeClub} isAppointment isAdmin tone="stat-date" animationIndex={3} />
       </div>
+      <section className={`card season-campaign-card season-campaign-${currentCampaign ? currentCampaignTone : 'empty'}`}>
+        <div className="season-campaign-header">
+          <div>
+            <span className="season-mail-eyebrow">Automatische Auswertung</span>
+            <h2>Saisonkampagne{campaignDashboard?.currentYear ? ` ${campaignDashboard.currentYear}` : ''}</h2>
+          </div>
+          {currentCampaign && !['sending', 'disabled'].includes(currentCampaign.campaign_status) && (
+            <button type="button" className="ghost" onClick={() => openCampaignDetail(currentCampaign)} disabled={campaignDetailLoading}>
+              Details anzeigen
+            </button>
+          )}
+        </div>
+        {campaignLoading && <p>Saisonkampagne wird geladen …</p>}
+        {campaignError && <p className="campaign-load-error">{campaignError}</p>}
+        {!campaignLoading && !campaignError && !currentCampaign && (
+          <div className="season-campaign-empty">
+            <strong>Für die aktuelle Saison wurden noch keine Erinnerungen versendet.</strong>
+            <p>Die Saisonkampagne wird nach dem Versand der ersten Saisonerinnerungen automatisch ausgewertet.</p>
+          </div>
+        )}
+        {!campaignLoading && !campaignError && currentCampaign?.campaign_status === 'sending' && (
+          <div className="season-campaign-empty">
+            <strong>Saisonkampagne wird vorbereitet</strong>
+            <p>Die Erinnerungen werden derzeit versendet. Die Auswertung steht nach Abschluss des Versands zur Verfügung.</p>
+          </div>
+        )}
+        {!campaignLoading && !campaignError && currentCampaign?.campaign_status === 'disabled' && (
+          <div className="season-campaign-empty">
+            <strong>Für diese Saison wurden Erinnerungen deaktiviert.</strong>
+            <p>Es wird keine Rücklaufquote berechnet.</p>
+          </div>
+        )}
+        {!campaignLoading && !campaignError && currentCampaign && ['sent', 'partial'].includes(currentCampaign.campaign_status) && (
+          <>
+            <div className="season-campaign-metrics">
+              <div><span>Erinnerungen versendet</span><strong>{currentCampaign.sent_count}</strong></div>
+              <div><span>Bereits wieder angemeldet</span><strong>{currentCampaign.returned_count}</strong></div>
+              <div><span>Noch ohne Anmeldung</span><strong>{currentCampaign.open_count}</strong></div>
+              <div><span>Rücklaufquote</span><strong>{formatCampaignRate(currentCampaignRate)} %</strong></div>
+            </div>
+            {currentCampaign.campaign_status === 'partial' && (
+              <p className="season-campaign-partial">
+                Erfolgreich versendet: {currentCampaign.sent_count} · Fehlgeschlagen: {currentCampaign.failed_count}
+              </p>
+            )}
+            <div className="season-campaign-progress-row">
+              <div className="season-campaign-progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow={Math.max(0, Math.min(100, currentCampaignRate))}>
+                <span style={{ width: `${Math.max(0, Math.min(100, currentCampaignRate))}%` }} />
+              </div>
+              <strong>{formatCampaignRate(currentCampaignRate)} %</strong>
+            </div>
+            {currentCampaignRate === 100 && (
+              <div className="season-campaign-complete">
+                <strong>Saisonkampagne erfolgreich abgeschlossen</strong>
+                <span>Alle angeschriebenen Teilnehmer haben sich erneut angemeldet.</span>
+              </div>
+            )}
+          </>
+        )}
+        {!campaignLoading && !campaignError && (campaignDashboard?.history || []).length > 0 && (
+          <div className="season-campaign-history">
+            <h3>Saisonhistorie</h3>
+            <div className="table-scroll">
+              <table>
+                <thead><tr><th>Saison</th><th>Empfänger</th><th>Rückkehrer</th><th>Rücklaufquote</th></tr></thead>
+                <tbody>
+                  {campaignDashboard.history.map(campaign => (
+                    <tr
+                      key={campaign.campaign_id}
+                      className={campaign.campaign_status === 'sending' ? '' : 'campaign-history-row'}
+                      onClick={() => campaign.campaign_status !== 'sending' && openCampaignDetail(campaign)}
+                    >
+                      <td>{campaign.season_year}</td>
+                      <td>{campaign.sent_count}</td>
+                      <td>{campaign.returned_count}</td>
+                      <td>
+                        {campaign.response_rate == null ? '–' : (
+                          <span className={`campaign-rate campaign-rate-${campaignTone(campaign.response_rate)}`}>
+                            {formatCampaignRate(campaign.response_rate)} %
+                          </span>
+                        )}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+      </section>
       <CheckinPanel participants={participants} vaccinationDates={vaccinationDates} onChanged={load} />
       <section className="card admin-appointments-card">
   <h2>Anmeldungen pro Impftermin</h2>

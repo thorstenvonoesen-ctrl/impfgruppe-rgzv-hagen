@@ -198,6 +198,52 @@ async function handleSeasonStatuses(req, res, supabase) {
   return res.status(200).json({ campaigns })
 }
 
+async function handleCampaignDashboard(req, res, supabase) {
+  const { clubId } = req.body || {}
+  if (!clubId) return res.status(400).json({ error: 'Verein fehlt.' })
+  const user = await authenticateAdmin(req, supabase, clubId)
+  if (!user) return res.status(403).json({ error: 'Keine Berechtigung für diesen Verein.' })
+  const { data, error } = await supabase.rpc('season_campaign_summary', {
+    target_club_id: clubId
+  })
+  if (error) throw error
+  const campaigns = (data || []).map(campaign => ({
+    ...campaign,
+    sent_count: Number(campaign.sent_count || 0),
+    returned_count: Number(campaign.returned_count || 0),
+    open_count: Number(campaign.open_count || 0),
+    failed_count: Number(campaign.failed_count || 0),
+    response_rate: campaign.response_rate == null ? null : Number(campaign.response_rate)
+  }))
+  const calendarYear = new Date().getFullYear()
+  const currentYear = Math.max(calendarYear, ...campaigns.map(campaign => campaign.season_year))
+  return res.status(200).json({
+    currentYear,
+    current: campaigns.find(campaign => campaign.season_year === currentYear) || null,
+    history: campaigns
+  })
+}
+
+async function handleCampaignDetail(req, res, supabase) {
+  const { clubId, campaignId } = req.body || {}
+  if (!clubId || !campaignId) return res.status(400).json({ error: 'Kampagne fehlt.' })
+  const user = await authenticateAdmin(req, supabase, clubId)
+  if (!user) return res.status(403).json({ error: 'Keine Berechtigung für diesen Verein.' })
+  const { data: campaign, error: campaignError } = await supabase
+    .from('season_email_campaigns')
+    .select('id, club_id, season_year, status, finished_at')
+    .eq('id', campaignId)
+    .eq('club_id', clubId)
+    .single()
+  if (campaignError || !campaign) return res.status(404).json({ error: 'Kampagne nicht gefunden.' })
+  const { data, error } = await supabase.rpc('season_campaign_detail', {
+    target_campaign_id: campaignId,
+    target_club_id: clubId
+  })
+  if (error) throw error
+  return res.status(200).json({ campaign, recipients: data || [] })
+}
+
 async function handleSeasonDisable(req, res, supabase) {
   const context = await seasonContext(supabase, req.body?.vaccinationDateId)
   const user = await authenticateAdmin(req, supabase, context.appointment.club_id)
@@ -328,6 +374,10 @@ async function handleSeasonSend(req, res, supabase) {
     failed_count: totalFailed,
     finished_at: new Date().toISOString()
   }).eq('id', campaign.id).eq('status', 'sending')
+  const { error: syncError } = await supabase.rpc('sync_season_campaign_returns', {
+    target_campaign_id: campaign.id
+  })
+  if (syncError) throw syncError
   return res.status(200).json({ success: true, status, sent: totalSent, failed: totalFailed })
 }
 
@@ -385,6 +435,8 @@ export default async function handler(req, res) {
     }
     if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' })
     const action = req.body?.action
+    if (action === 'campaign-dashboard') return await handleCampaignDashboard(req, res, supabase)
+    if (action === 'campaign-detail') return await handleCampaignDetail(req, res, supabase)
     if (action === 'season-status') return await handleSeasonStatuses(req, res, supabase)
     if (action === 'season-preview') return await handleSeasonPreview(req, res, supabase)
     if (action === 'season-disable') return await handleSeasonDisable(req, res, supabase)

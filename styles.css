@@ -758,8 +758,46 @@ body { background: #163a2f; }
 .season-mail-status-sent { color: #d1fae5; background: rgba(16,185,129,.14); border-color: rgba(110,231,183,.28); }
 .season-mail-status-partial { color: #fef3c7; background: rgba(245,158,11,.14); border-color: rgba(252,211,77,.28); }
 .season-mail-status-disabled { color: #e5e7eb; background: rgba(148,163,184,.14); border-color: rgba(203,213,225,.24); }
+.season-campaign-card { --campaign-accent: #94a3b8; position: relative; overflow: hidden; border-color: color-mix(in srgb,var(--campaign-accent) 34%,transparent)!important; box-shadow: inset 4px 0 0 var(--campaign-accent),0 18px 44px rgba(0,0,0,.2)!important; transition: border-color .25s ease,box-shadow .25s ease; }
+.season-campaign-red { --campaign-accent: #ef4444; }
+.season-campaign-orange { --campaign-accent: #f28c28; }
+.season-campaign-yellow { --campaign-accent: #eab308; }
+.season-campaign-green { --campaign-accent: #22c55e; }
+.season-campaign-header,.campaign-detail-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 18px; }
+.season-campaign-header h2,.campaign-detail-heading h2 { margin: 0; }
+.season-campaign-empty { padding: 18px; background: rgba(255,255,255,.055); border: 1px solid rgba(255,255,255,.1); border-radius: 14px; }
+.season-campaign-empty p { margin-bottom: 0; color: rgba(237,245,241,.72); }
+.season-campaign-metrics { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 12px; margin-top: 18px; }
+.season-campaign-metrics > div { padding: 15px; background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.1); border-radius: 14px; }
+.season-campaign-metrics span { display: block; min-height: 34px; color: rgba(237,245,241,.7); font-size: 13px; line-height: 1.35; }
+.season-campaign-metrics strong { display: block; margin-top: 6px; color: #fff; font-size: clamp(22px,3vw,32px); }
+.season-campaign-partial { color: #fde68a; font-size: 13px; font-weight: 700; }
+.season-campaign-progress-row { display: grid; grid-template-columns: minmax(0,1fr) auto; align-items: center; gap: 14px; margin-top: 18px; color: #fff; }
+.season-campaign-progress { overflow: hidden; height: 12px; background: rgba(255,255,255,.1); border-radius: 999px; }
+.season-campaign-progress span { display: block; height: 100%; background: var(--campaign-accent); border-radius: inherit; transition: width .45s ease; }
+.season-campaign-complete { display: flex; flex-direction: column; gap: 4px; margin-top: 16px; padding: 13px 16px; color: #d1fae5; background: rgba(34,197,94,.12); border: 1px solid rgba(134,239,172,.25); border-radius: 12px; }
+.season-campaign-history { margin-top: 22px; padding-top: 18px; border-top: 1px solid rgba(255,255,255,.1); }
+.season-campaign-history h3 { margin: 0 0 10px; color: #fff3e5; }
+.season-campaign-history table,.campaign-detail-section table { width: 100%; border-collapse: collapse; }
+.season-campaign-history th,.season-campaign-history td,.campaign-detail-section th,.campaign-detail-section td { padding: 10px 12px; text-align: left; border-bottom: 1px solid rgba(255,255,255,.09); }
+.season-campaign-history th,.campaign-detail-section th { color: rgba(237,245,241,.65); font-size: 12px; text-transform: uppercase; }
+.campaign-history-row { cursor: pointer; transition: background .2s ease; }
+.campaign-history-row:hover { background: rgba(255,255,255,.055); }
+.campaign-rate { display: inline-flex; padding: 4px 8px; font-weight: 800; border-radius: 999px; }
+.campaign-rate-red { color: #fecaca; background: rgba(239,68,68,.15); }
+.campaign-rate-orange { color: #fed7aa; background: rgba(242,140,40,.15); }
+.campaign-rate-yellow { color: #fef08a; background: rgba(234,179,8,.15); }
+.campaign-rate-green { color: #bbf7d0; background: rgba(34,197,94,.15); }
+.campaign-load-error { padding: 12px 14px; color: #fecaca; background: rgba(239,68,68,.12); border: 1px solid rgba(248,113,113,.24); border-radius: 12px; }
+.campaign-detail-modal { width: min(1040px,100%)!important; max-height: min(88vh,900px); overflow-y: auto; }
+.campaign-detail-tools { display: grid; grid-template-columns: minmax(220px,1fr) auto auto; align-items: center; gap: 10px; margin: 20px 0; }
+.campaign-detail-tools .search { min-width: 0; }
+.campaign-detail-tools .primary { margin: 0!important; white-space: nowrap; }
+.campaign-detail-section + .campaign-detail-section { margin-top: 24px; }
+.campaign-detail-section h3 { color: #fff3e5; }
 @media (max-width: 700px) { .vaccination-address-fields .two { grid-template-columns: 1fr; } .vaccination-modal-actions { flex-direction: column; } .vaccination-modal-actions .primary,.vaccination-modal-actions .ghost { width: 100%; justify-content: center; } }
-@media (max-width: 560px) { .season-mail-summary { grid-template-columns: 1fr; } }
+@media (max-width: 900px) { .season-campaign-metrics { grid-template-columns: repeat(2,minmax(0,1fr)); } .campaign-detail-tools { grid-template-columns: 1fr; } .campaign-detail-tools .primary { justify-content: center; white-space: normal; } }
+@media (max-width: 560px) { .season-mail-summary,.season-campaign-metrics { grid-template-columns: 1fr; } .season-campaign-header,.campaign-detail-heading { flex-direction: column; } .season-campaign-header .ghost,.campaign-detail-heading .ghost { width: 100%; justify-content: center; } }
 
 /* Öffentliche und interne Google-Maps-Navigation */
 .vaccination-address-public { display: flex !important; align-items: center; gap: 9px !important; color: rgba(237,245,241,.78) !important; font-size: 12px !important; font-weight: 700 !important; }
