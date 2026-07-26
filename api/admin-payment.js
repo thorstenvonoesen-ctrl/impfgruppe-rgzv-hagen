@@ -9,7 +9,7 @@ export default async function handler(req, res) {
     const supabase = createAdminSupabase()
     const { data: userResult, error: userError } = await supabase.auth.getUser(accessToken)
     if (userError || !userResult.user) return res.status(401).json({ error: 'Ungültige Anmeldung.' })
-    if (action === 'list-admin-memberships') {
+    if (action === 'list-admin-memberships' || action === 'get-admin-membership-detail') {
       const { data: requesterMemberships, error: requesterError } = await supabase
         .from('club_admin_memberships')
         .select('role')
@@ -20,12 +20,6 @@ export default async function handler(req, res) {
         return res.status(403).json({ error: 'Keine Berechtigung für die Adminverwaltung.' })
       }
 
-      const { data: memberships, error: membershipsError } = await supabase
-        .from('club_admin_memberships')
-        .select('user_id, role, active, created_at, clubs(name)')
-        .order('created_at', { ascending: true })
-      if (membershipsError) throw membershipsError
-
       const users = []
       for (let page = 1; ; page += 1) {
         const { data: pageData, error: usersError } = await supabase.auth.admin.listUsers({ page, perPage: 1000 })
@@ -33,15 +27,53 @@ export default async function handler(req, res) {
         users.push(...(pageData?.users || []))
         if ((pageData?.users || []).length < 1000) break
       }
-      const emailByUserId = new Map(users.map(user => [user.id, user.email || '']))
+
+      if (action === 'get-admin-membership-detail') {
+        const email = String(req.body?.email || '').trim().toLowerCase()
+        const club = String(req.body?.club || '').trim()
+        const role = String(req.body?.role || '').trim()
+        const selectedUser = users.find(user => String(user.email || '').toLowerCase() === email)
+        if (!selectedUser) return res.status(404).json({ error: 'Der Administrator wurde nicht gefunden.' })
+        const { data: selectedMemberships, error: selectedMembershipsError } = await supabase
+          .from('club_admin_memberships')
+          .select('role, active, created_at, clubs(name)')
+          .eq('user_id', selectedUser.id)
+        if (selectedMembershipsError) throw selectedMembershipsError
+        const selectedMembership = (selectedMemberships || []).find(
+          membership => membership.role === role && (membership.clubs?.name || '') === club
+        )
+        if (!selectedMembership) return res.status(404).json({ error: 'Der Administrator wurde nicht gefunden.' })
+        return res.status(200).json({
+          administrator: {
+            firstName: selectedUser.user_metadata?.first_name || selectedUser.user_metadata?.firstname || '',
+            lastName: selectedUser.user_metadata?.last_name || selectedUser.user_metadata?.lastname || '',
+            email: selectedUser.email || '',
+            club: selectedMembership.clubs?.name || '',
+            role: selectedMembership.role,
+            active: Boolean(selectedMembership.active),
+            createdAt: selectedMembership.created_at,
+            lastSignInAt: selectedUser.last_sign_in_at || null
+          }
+        })
+      }
+
+      const { data: memberships, error: membershipsError } = await supabase
+        .from('club_admin_memberships')
+        .select('user_id, role, active, created_at, clubs(name)')
+        .order('created_at', { ascending: true })
+      if (membershipsError) throw membershipsError
+      const userById = new Map(users.map(user => [user.id, user]))
       return res.status(200).json({
-        administrators: (memberships || []).map(membership => ({
-          email: emailByUserId.get(membership.user_id) || '',
-          club: membership.clubs?.name || '',
-          role: membership.role,
-          active: Boolean(membership.active),
-          createdAt: membership.created_at
-        }))
+        administrators: (memberships || []).map(membership => {
+          const user = userById.get(membership.user_id)
+          return {
+            email: user?.email || '',
+            club: membership.clubs?.name || '',
+            role: membership.role,
+            active: Boolean(membership.active),
+            createdAt: membership.created_at
+          }
+        })
       })
     }
     const { participantId, paid } = req.body || {}
@@ -57,6 +89,9 @@ export default async function handler(req, res) {
   } catch (error) {
     if (action === 'list-admin-memberships') {
       return res.status(500).json({ error: 'Die Administratoren konnten nicht geladen werden.' })
+    }
+    if (action === 'get-admin-membership-detail') {
+      return res.status(500).json({ error: 'Die Administratordaten konnten nicht geladen werden.' })
     }
     return res.status(500).json({ error: 'Zahlungsstatus konnte nicht gespeichert werden.' })
   }

@@ -4185,6 +4185,9 @@ const [newDateNote, setNewDateNote] = useState('')
   const [administratorMemberships, setAdministratorMemberships] = useState([])
   const [administratorMembershipsLoading, setAdministratorMembershipsLoading] = useState(false)
   const [administratorMembershipsError, setAdministratorMembershipsError] = useState('')
+  const [selectedAdministrator, setSelectedAdministrator] = useState(null)
+  const [administratorDetailLoading, setAdministratorDetailLoading] = useState(false)
+  const [administratorDetailError, setAdministratorDetailError] = useState('')
   const [dateFeedback, setDateFeedback] = useState('')
   const [clubs, setClubs] = useState([])
 const [selectedClub, setSelectedClub] = useState(null)
@@ -4227,6 +4230,45 @@ const [selectedClub, setSelectedClub] = useState(null)
     if (role === 'clubadmin') return 'Vereinsadmin'
     if (role === 'checkin_admin') return 'Check-in-Admin'
     return role
+  }
+  async function openAdministratorDetail(membership) {
+    if (adminContext?.role !== 'superadmin') return
+    setSelectedAdministrator(null)
+    setAdministratorDetailLoading(true)
+    setAdministratorDetailError('')
+    try {
+      const { data: { session } } = await supabase.auth.getSession()
+      const response = await fetch('/api/admin-payment', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${session?.access_token || ''}`
+        },
+        body: JSON.stringify({
+          action: 'get-admin-membership-detail',
+          email: membership.email,
+          club: membership.club,
+          role: membership.role
+        })
+      })
+      const result = await response.json().catch(() => ({}))
+      if (!response.ok) {
+        setAdministratorDetailError(
+          response.status === 403
+            ? 'Keine Berechtigung für die Adminverwaltung.'
+            : response.status === 404
+              ? 'Der Administrator wurde nicht gefunden.'
+              : 'Die Administratordaten konnten nicht geladen werden.'
+        )
+        return
+      }
+      setSelectedAdministrator(result.administrator || null)
+      if (!result.administrator) setAdministratorDetailError('Der Administrator wurde nicht gefunden.')
+    } catch {
+      setAdministratorDetailError('Die Administratordaten konnten nicht geladen werden.')
+    } finally {
+      setAdministratorDetailLoading(false)
+    }
   }
   async function sendReminderMail() {
   if (!selectedDate) return
@@ -4918,6 +4960,49 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
 
   return <div className="page admin"><Header admin />
 
+  {(administratorDetailLoading || administratorDetailError || selectedAdministrator) && adminContext?.role === 'superadmin' && (
+    <div className="modal">
+      <section className="modal-card" role="dialog" aria-modal="true" aria-labelledby="administrator-detail-title">
+        <div className="campaign-detail-heading">
+          <h2 id="administrator-detail-title">Administratordetails</h2>
+          <button
+            type="button"
+            className="ghost"
+            onClick={() => {
+              setSelectedAdministrator(null)
+              setAdministratorDetailError('')
+              setAdministratorDetailLoading(false)
+            }}
+          >
+            Schließen
+          </button>
+        </div>
+        {administratorDetailLoading && <p>Administratordaten werden geladen …</p>}
+        {administratorDetailError && <p role="alert" className="campaign-load-error">{administratorDetailError}</p>}
+        {selectedAdministrator && !administratorDetailLoading && !administratorDetailError && (
+          <dl>
+            <dt>Vorname</dt>
+            <dd>{selectedAdministrator.firstName || 'Nicht hinterlegt'}</dd>
+            <dt>Nachname</dt>
+            <dd>{selectedAdministrator.lastName || 'Nicht hinterlegt'}</dd>
+            <dt>E-Mail-Adresse</dt>
+            <dd>{selectedAdministrator.email || 'Nicht hinterlegt'}</dd>
+            <dt>Rolle</dt>
+            <dd>{administratorRoleLabel(selectedAdministrator.role)}</dd>
+            <dt>Zugeordneter Verein</dt>
+            <dd>{selectedAdministrator.club || 'Nicht hinterlegt'}</dd>
+            <dt>Status</dt>
+            <dd>{selectedAdministrator.active ? 'Aktiv' : 'Gesperrt'}</dd>
+            <dt>Erstellungsdatum</dt>
+            <dd>{selectedAdministrator.createdAt ? new Date(selectedAdministrator.createdAt).toLocaleDateString('de-DE') : 'Nicht hinterlegt'}</dd>
+            <dt>Letzte Anmeldung</dt>
+            <dd>{selectedAdministrator.lastSignInAt ? new Date(selectedAdministrator.lastSignInAt).toLocaleString('de-DE') : 'Nicht hinterlegt'}</dd>
+          </dl>
+        )}
+      </section>
+    </div>
+  )}
+
   {adminManagementOpen && adminContext?.role === 'superadmin' && (
     <div className="modal">
       <section className="modal-card" role="dialog" aria-modal="true" aria-labelledby="admin-management-title">
@@ -4937,6 +5022,7 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
                   <th>Rolle</th>
                   <th>Status</th>
                   <th>Erstellungsdatum</th>
+                  <th></th>
                 </tr>
               </thead>
               <tbody>
@@ -4947,6 +5033,7 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
                     <td>{administratorRoleLabel(membership.role)}</td>
                     <td>{membership.active ? 'Aktiv' : 'Gesperrt'}</td>
                     <td>{membership.createdAt ? new Date(membership.createdAt).toLocaleDateString('de-DE') : '—'}</td>
+                    <td><button type="button" className="ghost" onClick={() => openAdministratorDetail(membership)}>Details anzeigen</button></td>
                   </tr>
                 ))}
               </tbody>
