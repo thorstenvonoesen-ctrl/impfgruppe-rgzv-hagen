@@ -1364,6 +1364,18 @@ function ImpfwartGrusswort() {
   )
 }
 
+function openInfoDetail(hash) {
+  window.location.hash = hash
+  window.requestAnimationFrame(() => {
+    window.requestAnimationFrame(() => {
+      document.getElementById("info-detail-start")?.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+      })
+    })
+  })
+}
+
 function InfoPage() {
   const [openCard, setOpenCard] = useState(null)
   return (
@@ -1521,14 +1533,14 @@ function InfoPage() {
       key={title}
       onClick={() => {
   if (title === "Schutz Ihrer Tiere") {
-    window.location.hash = "#info-newcastle"
+    openInfoDetail("#info-newcastle")
   } else if (title === "Gesetzliche Impfpflicht") {
-    window.location.hash = "#info-pflicht"
+    openInfoDetail("#info-pflicht")
   } else if (title === "Gemeinsame Sammelimpfung") {
-    window.location.hash = "#info-sammelimpfung"
+    openInfoDetail("#info-sammelimpfung")
   }
         else if (title === "QR-Check-in") {
-  window.location.hash = "#info-anmeldung"
+  openInfoDetail("#info-anmeldung")
 }
 }}
       style={{
@@ -1641,6 +1653,157 @@ minHeight: openCard === title ? "360px" : "230px",
   );
 }
 function InfoNewcastle() {
+  const warningSigns = [
+    ["Allgemeines Befinden", "Betroffene Tiere können matt wirken, weniger fressen oder einen deutlichen Leistungsabfall zeigen."],
+    ["Atmung und Nervensystem", "Je nach Verlauf sind Atemprobleme, ungewöhnliche Bewegungen oder Störungen der Koordination möglich."],
+    ["Bestandsverlauf", "Die Erkrankung kann sich schnell ausbreiten. Auffälligkeiten sollten deshalb niemals allein anhand einzelner Symptome bewertet werden."]
+  ]
+
+  return (
+    <div className="collective-info-page info-topic-page info-newcastle-page">
+      <main className="collective-info-shell">
+        <section className="collective-info-hero info-topic-hero">
+          <span className="collective-info-eyebrow">Schutz Ihrer Tiere</span>
+          <h1 id="info-detail-start" className="info-detail-anchor">
+            Warum gegen Newcastle impfen?
+          </h1>
+          <p>
+            Die Newcastle-Krankheit kann Geflügelbestände schwer treffen. Ein
+            verlässlich aufgebauter Impfschutz hilft, das Risiko zu begrenzen
+            und schützt nicht nur einzelne Tiere, sondern die gesamte
+            Geflügelgemeinschaft.
+          </p>
+        </section>
+
+        <section className="collective-info-section info-topic-lead">
+          <div>
+            <span className="collective-info-kicker">Die Krankheit verstehen</span>
+            <h2>Was hinter Newcastle steckt</h2>
+            <p>
+              Die Newcastle-Krankheit, auch als atypische Geflügelpest bekannt,
+              ist eine ansteckende Viruserkrankung. Sie betrifft vor allem
+              Geflügel und kann über direkten Tierkontakt, verunreinigte
+              Gegenstände, Kleidung oder andere indirekte Wege weitergetragen
+              werden.
+            </p>
+            <p>
+              Wie schwer ein Bestand betroffen ist, hängt unter anderem vom
+              Virusstamm, vom Immunstatus und von der Tierart ab. Gerade weil
+              der Verlauf unterschiedlich aussehen kann, ist Vorbeugung
+              wesentlich verlässlicher als eine Reaktion erst nach sichtbaren
+              Krankheitszeichen.
+            </p>
+          </div>
+          <aside className="info-topic-fact">
+            <span aria-hidden="true">🛡️</span>
+            <strong>Vorbeugen statt reagieren</strong>
+            <p>
+              Regelmäßige Impfungen helfen dem Immunsystem, sich auf den Erreger
+              vorzubereiten und bei einem Kontakt schneller zu reagieren.
+            </p>
+          </aside>
+        </section>
+
+        <section className="collective-info-section">
+          <div className="collective-info-heading">
+            <span className="collective-info-kicker">Aufmerksam bleiben</span>
+            <h2>Mögliche Anzeichen im Bestand</h2>
+            <p>
+              Krankheitszeichen können sehr verschieden sein und erlauben keine
+              sichere Eigendiagnose. Die folgenden Beobachtungen sind Beispiele,
+              bei denen fachlicher Rat wichtig ist.
+            </p>
+          </div>
+          <div className="info-topic-three-grid">
+            {warningSigns.map(([title, text], index) => (
+              <article className="collective-info-benefit" key={title}>
+                <span aria-hidden="true">{["🐔", "🫁", "🔎"][index]}</span>
+                <h3>{title}</h3>
+                <p>{text}</p>
+              </article>
+            ))}
+          </div>
+          <div className="info-topic-alert">
+            <span aria-hidden="true">!</span>
+            <p>
+              Bei einem konkreten Krankheitsverdacht wenden Sie sich bitte
+              unverzüglich an eine Tierärztin, einen Tierarzt oder die zuständige
+              Veterinärbehörde. Diese Informationsseite ersetzt keine
+              tierärztliche Beurteilung.
+            </p>
+          </div>
+        </section>
+
+        <section className="collective-info-section collective-info-process">
+          <div className="collective-info-heading">
+            <span className="collective-info-kicker">Schutz aufbauen</span>
+            <h2>Warum regelmäßiges Impfen zählt</h2>
+            <p>
+              Impfschutz ist kein einmaliger Zustand. Er wird durch einen
+              passenden Impfplan aufgebaut und durch Wiederholungen erhalten.
+            </p>
+          </div>
+          <div className="info-protection-flow">
+            <article><span>1</span><h3>Immunsystem vorbereiten</h3><p>Die Impfung macht den Organismus mit dem Erreger vertraut, ohne eine natürliche Erkrankung abwarten zu müssen.</p></article>
+            <article><span>2</span><h3>Schutz auffrischen</h3><p>Regelmäßige Wiederholungen unterstützen einen belastbaren Schutz über die Zeit.</p></article>
+            <article><span>3</span><h3>Bestände gemeinsam schützen</h3><p>Je verlässlicher die Tiere geschützt sind, desto kleiner wird das Risiko einer unbemerkten Weiterverbreitung.</p></article>
+          </div>
+        </section>
+
+        <section className="collective-info-section info-newcastle-practice">
+          <article className="collective-info-card">
+            <div className="collective-info-icon" aria-hidden="true">🏡</div>
+            <div>
+              <span className="collective-info-kicker">Im Alltag</span>
+              <h2>Impfung und gute Bestandshygiene gehören zusammen</h2>
+              <p>
+                Eine Impfung ist ein zentraler Schutzbaustein. Saubere
+                Tränke- und Futterbereiche, kontrollierte Kontakte zu fremden
+                Tieren sowie gereinigte Schuhe, Geräte und Transportbehälter
+                ergänzen diesen Schutz sinnvoll.
+              </p>
+              <p>
+                Neue oder zurückkehrende Tiere sollten besonders aufmerksam
+                beobachtet werden. So lassen sich Veränderungen früh erkennen
+                und unnötige Einträge in den Bestand vermeiden.
+              </p>
+            </div>
+          </article>
+          <article className="collective-info-card collective-info-card-accent">
+            <div className="collective-info-icon" aria-hidden="true">🤝</div>
+            <div>
+              <span className="collective-info-kicker">Gemeinsame Verantwortung</span>
+              <h2>Der eigene Schutz wirkt über den Zaun hinaus</h2>
+              <p>
+                Geflügelhaltungen sind durch Tierkontakte, Veranstaltungen,
+                Transporte und Personen miteinander verbunden. Vorsorge im
+                eigenen Bestand hilft deshalb auch benachbarten Haltungen und
+                der organisierten Geflügelzucht.
+              </p>
+            </div>
+          </article>
+        </section>
+
+        <section className="collective-info-summary">
+          <span className="collective-info-kicker">Kurz zusammengefasst</span>
+          <h2>Regelmäßiger Schutz schafft Sicherheit</h2>
+          <p>
+            Newcastle ist ansteckend und kann schwerwiegende Folgen haben.
+            Regelmäßige Impfungen, Aufmerksamkeit und gute Hygiene bilden
+            gemeinsam die beste Grundlage für einen gesunden Geflügelbestand.
+            Die Sammelimpfung macht diese Vorsorge einfach planbar.
+          </p>
+        </section>
+
+        <button className="collective-info-back" onClick={() => (window.location.hash = "#info")}>
+          ← Zurück
+        </button>
+      </main>
+    </div>
+  )
+}
+
+function InfoNewcastleLegacy() {
   return (
     <div className="min-h-screen bg-slate-100">
 
@@ -1654,6 +1817,8 @@ function InfoNewcastle() {
         <div style={{ maxWidth: "1100px", margin: "0 auto" }}>
 
           <h1
+            id="info-detail-start"
+            className="info-detail-anchor"
             style={{
               fontSize: "58px",
               margin: 0,
@@ -1854,6 +2019,142 @@ function InfoNewcastle() {
   )
 }
 function InfoPflicht() {
+  const responsibilities = [
+    ["Bestand kennen", "Behalten Sie Tierzahl, Impfungen und Veränderungen im Bestand im Blick."],
+    ["Termine einplanen", "Melden Sie sich rechtzeitig an, damit Wiederholungsimpfungen nicht aus dem Blick geraten."],
+    ["Nachweise aufbewahren", "Halten Sie die für Ihren Bestand vorgesehenen Unterlagen nachvollziehbar und griffbereit."],
+    ["Auffälligkeiten melden", "Bei einem Krankheitsverdacht ist schnelles, fachlich abgestimmtes Handeln entscheidend."]
+  ]
+
+  return (
+    <div className="collective-info-page info-topic-page info-duty-page">
+      <main className="collective-info-shell">
+        <section className="collective-info-hero info-duty-hero">
+          <span className="collective-info-eyebrow">Verantwortung mit gutem Grund</span>
+          <h1 id="info-detail-start" className="info-detail-anchor">
+            Gesetzliche Impfpflicht
+          </h1>
+          <p>
+            Die Impfpflicht gegen die Newcastle-Krankheit dient einem
+            gemeinsamen Ziel: Geflügelbestände schützen und eine schnelle
+            Ausbreitung der Tierseuche möglichst verhindern. Sie betrifft nicht
+            nur große Betriebe, sondern grundsätzlich auch private Haltungen.
+          </p>
+        </section>
+
+        <section className="collective-info-section info-duty-explainer">
+          <article>
+            <span className="collective-info-kicker">Der Hintergrund</span>
+            <h2>Warum eine gesetzliche Regelung notwendig ist</h2>
+            <p>
+              Ansteckende Tierkrankheiten machen an Grundstücks- oder
+              Vereinsgrenzen nicht halt. Ein einzelner ungeschützter Bestand
+              kann im ungünstigen Fall Auswirkungen auf viele weitere Haltungen
+              haben. Deshalb wird der Schutz nicht allein der persönlichen
+              Entscheidung überlassen.
+            </p>
+            <p>
+              Die Vorgaben schaffen einen gemeinsamen Mindeststandard. Sie
+              verbinden den Schutz der eigenen Tiere mit der Verantwortung
+              gegenüber anderen Geflügelhalterinnen und Geflügelhaltern.
+            </p>
+          </article>
+          <aside className="info-duty-quote">
+            <span aria-hidden="true">⚖️</span>
+            <p>
+              Impfpflicht bedeutet nicht Bürokratie um ihrer selbst willen,
+              sondern verlässliche Vorsorge in vielen kleinen und großen
+              Beständen.
+            </p>
+          </aside>
+        </section>
+
+        <section className="collective-info-section">
+          <div className="collective-info-heading">
+            <span className="collective-info-kicker">Für wen gilt sie?</span>
+            <h2>Auch kleine Hobbyhaltungen gehören dazu</h2>
+            <p>
+              Die Verantwortung hängt nicht davon ab, ob Tiere gewerblich, im
+              Verein oder als Hobby gehalten werden. Entscheidend ist die
+              Geflügelhaltung selbst. Die konkret erforderlichen Intervalle und
+              Nachweise richten sich nach den geltenden Vorgaben und dem
+              verwendeten Impfkonzept.
+            </p>
+          </div>
+          <div className="info-duty-responsibilities">
+            {responsibilities.map(([title, text], index) => (
+              <article key={title}>
+                <span aria-hidden="true">{["📋", "📅", "🗂️", "☎️"][index]}</span>
+                <div><h3>{title}</h3><p>{text}</p></div>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <section className="collective-info-section collective-info-process">
+          <div className="collective-info-heading">
+            <span className="collective-info-kicker">Praktisch umgesetzt</span>
+            <h2>So unterstützt die Sammelimpfung</h2>
+            <p>
+              Die gesetzlichen Anforderungen wirken zunächst komplex. Ein
+              organisierter Termin macht die praktische Umsetzung deutlich
+              übersichtlicher.
+            </p>
+          </div>
+          <div className="info-duty-path">
+            <article><span>01</span><div><h3>Termin finden</h3><p>Der Verein veröffentlicht einen vorbereiteten Sammeltermin mit den relevanten Informationen.</p></div></article>
+            <article><span>02</span><div><h3>Bestand anmelden</h3><p>Sie erfassen Ihre Tiere digital und schaffen damit eine verlässliche Planungsgrundlage.</p></div></article>
+            <article><span>03</span><div><h3>Teilnahme dokumentieren</h3><p>Bestätigung, Zahlung und Check-in werden geordnet dem Termin und Ihrer Anmeldung zugeordnet.</p></div></article>
+          </div>
+        </section>
+
+        <aside className="collective-info-notice info-duty-notice">
+          <span className="collective-info-notice-icon" aria-hidden="true">ℹ️</span>
+          <div>
+            <h2>Was diese Seite leisten kann</h2>
+            <p>
+              Sie vermittelt einen verständlichen Überblick, ersetzt jedoch
+              keine individuelle Rechts- oder tierärztliche Beratung. Für
+              verbindliche Anforderungen an Ihren konkreten Bestand sind die
+              aktuell geltenden Vorschriften sowie Auskünfte der zuständigen
+              Veterinärbehörde maßgeblich.
+            </p>
+          </div>
+        </aside>
+
+        <section className="collective-info-section info-duty-faq">
+          <div className="collective-info-heading">
+            <span className="collective-info-kicker">Häufige Fragen</span>
+            <h2>Impfpflicht verständlich beantwortet</h2>
+          </div>
+          <div className="collective-info-faq">
+            <details><summary>Gilt die Pflicht auch für wenige Tiere?<span aria-hidden="true">+</span></summary><p>Eine kleine Bestandsgröße hebt die grundsätzliche Verantwortung nicht automatisch auf. Klären Sie die konkreten Anforderungen für Ihre gehaltenen Geflügelarten im Zweifel mit der zuständigen Stelle.</p></details>
+            <details><summary>Reicht eine einmalige Impfung aus?<span aria-hidden="true">+</span></summary><p>Ein belastbarer Schutz muss nach dem vorgesehenen Impfplan aufgebaut und regelmäßig aufgefrischt werden. Das konkrete Vorgehen hängt vom Impfstoff und der fachlichen Vorgabe ab.</p></details>
+            <details><summary>Warum werden meine Daten bei der Anmeldung benötigt?<span aria-hidden="true">+</span></summary><p>Die Angaben dienen der Zuordnung zum Termin, der Bedarfsplanung, der Kommunikation und der nachvollziehbaren Organisation des Impftags.</p></details>
+            <details><summary>Wo erhalte ich verbindliche Auskünfte?<span aria-hidden="true">+</span></summary><p>Ihre Tierärztin oder Ihr Tierarzt sowie die zuständige Veterinärbehörde können die aktuell geltenden Anforderungen für Ihren konkreten Bestand einordnen.</p></details>
+          </div>
+        </section>
+
+        <section className="collective-info-summary info-duty-summary">
+          <span className="collective-info-kicker">Zusammenfassung</span>
+          <h2>Gemeinsamer Schutz braucht Verlässlichkeit</h2>
+          <p>
+            Die Impfpflicht sorgt dafür, dass Vorsorge nicht dem Zufall
+            überlassen bleibt. Mit einer rechtzeitigen Anmeldung und der
+            Teilnahme an der organisierten Sammelimpfung lässt sich diese
+            Verantwortung einfach, nachvollziehbar und gemeinschaftlich erfüllen.
+          </p>
+        </section>
+
+        <button className="collective-info-back" onClick={() => (window.location.hash = "#info")}>
+          ← Zurück
+        </button>
+      </main>
+    </div>
+  )
+}
+
+function InfoPflichtLegacy() {
   return (
     <div className="min-h-screen bg-slate-100">
 
@@ -1872,6 +2173,8 @@ function InfoPflicht() {
         >
 
           <h1
+            id="info-detail-start"
+            className="info-detail-anchor"
             style={{
               fontSize: "58px",
               fontWeight: "900",
@@ -2124,6 +2427,248 @@ impfen lassen können.
   )
 }
 function InfoSammelimpfung() {
+  const benefits = [
+    ["🗓️", "Gemeinsam geplant", "Ein zentral organisierter Termin bündelt Anmeldung, Impfstoffbedarf und Ausgabe. Das spart allen Beteiligten viele einzelne Abstimmungen."],
+    ["🤝", "Einfach teilnehmen", "Halterinnen und Halter können ihren Bestand bequem anmelden und erhalten alle wichtigen Informationen gebündelt für ihren Termin."],
+    ["📦", "Bedarfsgerecht vorbereitet", "Die Anzahl der angemeldeten Tiere bildet die Grundlage für Planung und Bereitstellung des Impfstoffs. So kann zuverlässig organisiert werden."],
+    ["⏱️", "Weniger Aufwand", "Klare Abläufe, digitale Teilnehmerdaten und ein schneller Check-in verkürzen Wartezeiten und entlasten die ehrenamtliche Organisation."]
+  ]
+
+  const processSteps = [
+    ["1", "Online anmelden", "Sie wählen den passenden Termin und erfassen Ihren Geflügelbestand mit den benötigten Kontaktdaten."],
+    ["2", "Teilnahme bestätigen", "Nach Abschluss der Anmeldung erhalten Sie eine Bestätigung. Bei erfolgreicher Zahlung kommt Ihr persönlicher QR-Code per E-Mail."],
+    ["3", "Termin vorbereiten", "Der Verein fasst die Meldungen zusammen und organisiert den Ablauf sowie den benötigten Impfstoff auf Basis aller Anmeldungen."],
+    ["4", "Vor Ort einchecken", "Am Impftag zeigen Sie Ihren QR-Code vor. Der Impfwart scannt ihn und kann Ihre Anmeldung sofort eindeutig zuordnen."],
+    ["5", "Impfung durchführen", "Die Ausgabe und Anwendung erfolgen nach den für den Termin mitgeteilten organisatorischen und fachlichen Vorgaben."]
+  ]
+
+  const faqs = [
+    ["Muss ich Vereinsmitglied sein?", "Nein. Sofern beim jeweiligen Termin nichts anderes angegeben ist, können auch Geflügelhalterinnen und Geflügelhalter teilnehmen, die nicht Mitglied im Verein sind."],
+    ["Warum muss ich die Tierzahl frühzeitig angeben?", "Die gemeldete Tierzahl ist für die Planung entscheidend. Sie hilft dabei, den Bedarf realistisch zu bestimmen und den Termin verlässlich vorzubereiten."],
+    ["Wann erhalte ich meinen QR-Code?", "Ihr persönlicher QR-Code wird nach erfolgreicher Zahlung automatisch mit der Zahlungsbestätigung per E-Mail versendet."],
+    ["Was mache ich, wenn ich die E-Mail nicht finde?", "Prüfen Sie bitte zunächst Ihren Spam-Ordner. Ist die Nachricht dort ebenfalls nicht vorhanden, wenden Sie sich rechtzeitig vor dem Termin an den Veranstalter."],
+    ["Kann eine andere Person meinen Bestand zum Termin bringen?", "Organisatorische Abweichungen sollten vorab mit dem Veranstalter abgestimmt werden. Wichtig ist, dass die Anmeldung eindeutig zugeordnet werden kann und der QR-Code vorliegt."],
+    ["Was passiert, wenn sich meine Tierzahl ändert?", "Teilen Sie größere Änderungen möglichst frühzeitig mit. Kurzfristige Abweichungen können die bereits abgeschlossene Impfstoff- und Ablaufplanung beeinflussen."]
+  ]
+
+  return (
+    <div className="collective-info-page">
+      <main className="collective-info-shell">
+        <section className="collective-info-hero">
+          <span className="collective-info-eyebrow">Gemeinsam vorsorgen</span>
+          <h1 id="info-detail-start" className="info-detail-anchor">
+            Gemeinsame Sammelimpfung
+          </h1>
+          <p>
+            Eine Sammelimpfung verbindet verantwortungsvolle Tierhaltung mit
+            einer gut organisierten, einfachen Teilnahme. Der Verein koordiniert
+            den Termin, bündelt die Anmeldungen und begleitet Sie digital vom
+            ersten Schritt bis zum Check-in am Impftag.
+          </p>
+        </section>
+
+        <section className="collective-info-section collective-info-intro-grid">
+          <article className="collective-info-card">
+            <div className="collective-info-icon" aria-hidden="true">🐔</div>
+            <div>
+              <span className="collective-info-kicker">Hintergrund</span>
+              <h2>Warum gibt es Sammelimpfungen?</h2>
+              <p>
+                Viele private Geflügelbestände benötigen regelmäßig Schutz gegen
+                die Newcastle-Krankheit. Für einzelne kleine Bestände wäre die
+                Organisation oft aufwendig. Bei einer Sammelimpfung werden viele
+                Halterinnen und Halter in einem gemeinsamen Ablauf
+                zusammengeführt.
+              </p>
+              <p>
+                Der Verein übernimmt die zentrale Terminplanung, erfasst den
+                Bedarf und sorgt dafür, dass alle Teilnehmenden rechtzeitig
+                wissen, wann und wie die Impfung stattfindet. So entsteht aus
+                vielen einzelnen Meldungen ein verlässlicher gemeinsamer Termin.
+              </p>
+            </div>
+          </article>
+
+          <article className="collective-info-card collective-info-card-accent">
+            <div className="collective-info-icon" aria-hidden="true">🛡️</div>
+            <div>
+              <span className="collective-info-kicker">Tiergesundheit</span>
+              <h2>Was ist die Newcastle-Krankheit?</h2>
+              <p>
+                Die Newcastle-Krankheit ist eine ansteckende Viruserkrankung des
+                Geflügels. Sie kann sich rasch zwischen Tieren und Beständen
+                verbreiten und je nach Verlauf schwere Erkrankungen sowie hohe
+                Tierverluste verursachen.
+              </p>
+              <p>
+                Weil eine Einschleppung nicht immer sofort erkennbar ist, spielt
+                die vorbeugende Impfung eine zentrale Rolle. Sie stärkt den
+                Schutz des eigenen Bestands und trägt zugleich dazu bei, das
+                Risiko einer weiteren Ausbreitung zu verringern.
+              </p>
+            </div>
+          </article>
+        </section>
+
+        <section className="collective-info-section">
+          <div className="collective-info-heading">
+            <span className="collective-info-kicker">Gute Gründe</span>
+            <h2>Warum die Impfung wichtig ist</h2>
+            <p>
+              Regelmäßiger Impfschutz ist ein wichtiger Teil verantwortungsvoller
+              Geflügelhaltung. Er hilft, die Tiere vorsorglich zu schützen und
+              schafft Sicherheit für alle Bestände, die über Ausstellungen,
+              Zukäufe oder alltägliche Kontakte miteinander verbunden sein können.
+            </p>
+          </div>
+          <div className="collective-info-benefits">
+            {benefits.map(([icon, title, text]) => (
+              <article className="collective-info-benefit" key={title}>
+                <span aria-hidden="true">{icon}</span>
+                <h3>{title}</h3>
+                <p>{text}</p>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <section className="collective-info-section collective-info-process">
+          <div className="collective-info-heading">
+            <span className="collective-info-kicker">Schritt für Schritt</span>
+            <h2>So läuft die Sammelimpfung ab</h2>
+            <p>
+              Vom Ausfüllen des Formulars bis zum Termin führt Sie die Anwendung
+              durch einen klaren Ablauf. Sie wissen jederzeit, was als Nächstes
+              passiert.
+            </p>
+          </div>
+          <div className="collective-info-timeline">
+            {processSteps.map(([number, title, text]) => (
+              <article className="collective-info-step" key={number}>
+                <span className="collective-info-step-number">{number}</span>
+                <div>
+                  <h3>{title}</h3>
+                  <p>{text}</p>
+                </div>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <section className="collective-info-section collective-info-after-grid">
+          <article className="collective-info-card">
+            <div className="collective-info-icon" aria-hidden="true">📧</div>
+            <div>
+              <span className="collective-info-kicker">Nach der Anmeldung</span>
+              <h2>Gut informiert bis zum Termin</h2>
+              <p>
+                Ihre Angaben werden dem gewählten Impftermin zugeordnet. Sie
+                erhalten die vorgesehenen Bestätigungen per E-Mail und nach
+                erfolgreicher Zahlung zusätzlich Ihren persönlichen QR-Code für
+                den Check-in.
+              </p>
+              <p>
+                Bewahren Sie diese Nachricht am besten auf Ihrem Smartphone auf.
+                So haben Sie die wichtigsten Angaben und den QR-Code am Impftag
+                direkt griffbereit.
+              </p>
+            </div>
+          </article>
+
+          <article className="collective-info-card">
+            <div className="collective-info-icon" aria-hidden="true">📱</div>
+            <div>
+              <span className="collective-info-kicker">Digitale Unterstützung</span>
+              <h2>Wie die App den Ablauf erleichtert</h2>
+              <p>
+                Die Anwendung verbindet Anmeldung, Terminzuordnung, Bezahlung,
+                E-Mail-Bestätigung und Check-in in einem durchgängigen Prozess.
+                Angaben müssen nicht mehrfach auf Papier übertragen werden.
+              </p>
+              <p>
+                Für Teilnehmende bleibt der Ablauf übersichtlich. Gleichzeitig
+                kann das Organisationsteam Anmeldungen schneller zuordnen,
+                Zahlungen nachvollziehen und den Impftag strukturiert vorbereiten.
+              </p>
+            </div>
+          </article>
+        </section>
+
+        <section className="collective-info-section collective-info-checklist">
+          <div className="collective-info-heading">
+            <span className="collective-info-kicker">Für den Impftag</span>
+            <h2>Das sollten Sie mitbringen</h2>
+            <p>
+              Mit wenigen Vorbereitungen helfen Sie dabei, dass der Termin für
+              alle Beteiligten zügig und geordnet abläuft.
+            </p>
+          </div>
+          <ul>
+            <li><span>✓</span><div><strong>Persönlichen QR-Code</strong><p>Digital auf dem Smartphone oder gut lesbar ausgedruckt.</p></div></li>
+            <li><span>✓</span><div><strong>Benötigte Behältnisse und Materialien</strong><p>Bitte beachten Sie dazu die konkreten Hinweise des Veranstalters für den gebuchten Termin.</p></div></li>
+            <li><span>✓</span><div><strong>Aktuelle Bestandsangaben</strong><p>Informieren Sie das Organisationsteam, falls es relevante Abweichungen zu Ihrer Anmeldung gibt.</p></div></li>
+            <li><span>✓</span><div><strong>Etwas Zeit für den geordneten Ablauf</strong><p>Folgen Sie vor Ort den Hinweisen des Impfwarts und halten Sie Zufahrten sowie Ausgabebereiche frei.</p></div></li>
+          </ul>
+        </section>
+
+        <aside className="collective-info-notice">
+          <span className="collective-info-notice-icon" aria-hidden="true">⏰</span>
+          <div>
+            <h2>Warum eine rechtzeitige Anmeldung wichtig ist</h2>
+            <p>
+              Die Sammelimpfung wird auf Grundlage der eingegangenen Anmeldungen
+              vorbereitet. Tierzahlen, Teilnehmeraufkommen und organisatorischer
+              Bedarf müssen vor dem Termin verlässlich feststehen. Eine frühe
+              Anmeldung hilft, ausreichend zu planen, Rückfragen rechtzeitig zu
+              klären und einen reibungslosen Ablauf für alle zu ermöglichen.
+            </p>
+          </div>
+        </aside>
+
+        <section className="collective-info-section">
+          <div className="collective-info-heading">
+            <span className="collective-info-kicker">Kurz erklärt</span>
+            <h2>Häufig gestellte Fragen</h2>
+            <p>
+              Hier finden Sie Antworten auf typische Fragen rund um Anmeldung,
+              Vorbereitung und Teilnahme.
+            </p>
+          </div>
+          <div className="collective-info-faq">
+            {faqs.map(([question, answer]) => (
+              <details key={question}>
+                <summary>{question}<span aria-hidden="true">+</span></summary>
+                <p>{answer}</p>
+              </details>
+            ))}
+          </div>
+        </section>
+
+        <section className="collective-info-summary">
+          <span className="collective-info-kicker">Zusammenfassung</span>
+          <h2>Gemeinsam gut vorbereitet</h2>
+          <p>
+            Die Sammelimpfung macht notwendigen Impfschutz für viele
+            Geflügelhalterinnen und Geflügelhalter planbar und zugänglich. Eine
+            rechtzeitige Online-Anmeldung, klare Informationen und der digitale
+            QR-Check-in sorgen dafür, dass vom ersten Klick bis zum Impftag alles
+            übersichtlich bleibt. So profitieren Tiere, Teilnehmende und das
+            ehrenamtliche Organisationsteam gleichermaßen.
+          </p>
+        </section>
+
+        <button
+          className="collective-info-back"
+          onClick={() => (window.location.hash = "#info")}
+        >
+          ← Zurück
+        </button>
+      </main>
+    </div>
+  )
+}
+
+function InfoSammelimpfungLegacy() {
   return (
     <div className="min-h-screen bg-slate-100">
       <section
@@ -2140,6 +2685,8 @@ function InfoSammelimpfung() {
           }}
         >
           <h1
+            id="info-detail-start"
+            className="info-detail-anchor"
             style={{
               fontSize: "58px",
               fontWeight: "900",
@@ -2157,7 +2704,7 @@ function InfoSammelimpfung() {
             }}
           >
             <h2 style={{ color: "#fff", fontSize: "34px" }}>
-              Diese Informationsseite wird als Nächstes aufgebaut.
+              Wissenswertes zur gemeinsamen Sammelimpfung
             </h2>
 
             <h2
@@ -2681,6 +3228,155 @@ Impftag deutlich reduziert.
   )
 }
 function InfoAnmeldung() {
+  const qrSteps = [
+    ["📝", "Anmeldung abschließen", "Sie erfassen Ihren Bestand und wählen den vorgesehenen Impftermin."],
+    ["💳", "Zahlung bestätigen", "Nach erfolgreicher Zahlung wird die Anmeldung für den digitalen Check-in vorbereitet."],
+    ["📧", "QR-Code erhalten", "Der persönliche QR-Code kommt automatisch eingebettet in Ihrer Zahlungsbestätigungs-E-Mail."],
+    ["📱", "Am Impftag vorzeigen", "Öffnen Sie die E-Mail auf dem Smartphone oder bringen Sie einen gut lesbaren Ausdruck mit."],
+    ["✅", "Schnell einchecken", "Der Impfwart scannt den Code und ordnet Ihre Anmeldung direkt dem richtigen Termin zu."]
+  ]
+
+  return (
+    <div className="collective-info-page info-topic-page info-qr-page">
+      <main className="collective-info-shell">
+        <section className="collective-info-hero info-qr-hero">
+          <span className="collective-info-eyebrow">Digital und unkompliziert</span>
+          <h1 id="info-detail-start" className="info-detail-anchor">
+            QR-Check-in am Impftag
+          </h1>
+          <p>
+            Nach Anmeldung und erfolgreicher Zahlung erhalten Sie Ihren
+            persönlichen QR-Code automatisch per E-Mail. Ein kurzer Scan genügt,
+            damit der Impfwart Ihre Anmeldung findet und den Check-in sicher
+            dokumentiert.
+          </p>
+        </section>
+
+        <section className="collective-info-section info-qr-intro">
+          <article>
+            <span className="collective-info-kicker">Einfach erklärt</span>
+            <h2>Was ist ein QR-Check-in?</h2>
+            <p>
+              Der QR-Code ist Ihr digitaler Schlüssel zur bereits vorhandenen
+              Anmeldung. Statt Namen in langen Listen zu suchen oder Angaben
+              erneut aufzuschreiben, scannt der Impfwart den Code und erhält
+              sofort die passende Teilnehmerzuordnung.
+            </p>
+            <p>
+              Der Vorgang dauert nur wenige Sekunden. Dadurch bleibt mehr Zeit
+              für den eigentlichen Termin, Warteschlangen werden kürzer und
+              Verwechslungen lassen sich vermeiden.
+            </p>
+          </article>
+          <div className="info-qr-visual" aria-hidden="true">
+            <div className="info-qr-symbol">▦</div>
+            <span>Persönlich zugeordnet</span>
+            <small>Ein Code · eine Anmeldung</small>
+          </div>
+        </section>
+
+        <section className="collective-info-section">
+          <div className="collective-info-heading">
+            <span className="collective-info-kicker">Der komplette Ablauf</span>
+            <h2>Vom Formular bis zum Check-in</h2>
+            <p>
+              Alle Schritte greifen ineinander. Sie müssen keine zusätzliche App
+              installieren und am Impftag keine Daten erneut eingeben.
+            </p>
+          </div>
+          <div className="info-qr-journey">
+            {qrSteps.map(([icon, title, text], index) => (
+              <article key={title}>
+                <span className="info-qr-journey-index">{index + 1}</span>
+                <div className="info-qr-journey-icon" aria-hidden="true">{icon}</div>
+                <h3>{title}</h3>
+                <p>{text}</p>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <section className="collective-info-section info-qr-security">
+          <div className="collective-info-heading">
+            <span className="collective-info-kicker">Datensparsam aufgebaut</span>
+            <h2>Was im QR-Code enthalten ist</h2>
+            <p>
+              Der Code enthält ausschließlich den technisch benötigten
+              Check-in-Token. Namen, E-Mail-Adressen, Zahlungsdaten und andere
+              personenbezogene Angaben werden nicht direkt in den QR-Code
+              geschrieben.
+            </p>
+          </div>
+          <div className="info-qr-security-grid">
+            <article><span aria-hidden="true">✓</span><div><h3>Enthalten</h3><p>Nur der persönliche Check-in-Token zur sicheren Zuordnung durch das System.</p></div></article>
+            <article><span aria-hidden="true">–</span><div><h3>Nicht enthalten</h3><p>Keine Namen, Kontaktdaten, Tierangaben, Zahlungsinformationen oder Termindetails.</p></div></article>
+          </div>
+        </section>
+
+        <section className="collective-info-section collective-info-checklist info-qr-checklist">
+          <div className="collective-info-heading">
+            <span className="collective-info-kicker">Gut vorbereitet</span>
+            <h2>So klappt der Scan zuverlässig</h2>
+            <p>
+              Ein paar einfache Vorbereitungen sorgen dafür, dass der Code vor
+              Ort sofort lesbar ist.
+            </p>
+          </div>
+          <ul>
+            <li><span>✓</span><div><strong>E-Mail vorher öffnen</strong><p>Laden Sie die Nachricht nach Möglichkeit bereits zu Hause auf Ihr Smartphone.</p></div></li>
+            <li><span>✓</span><div><strong>Display gut lesbar halten</strong><p>Erhöhen Sie bei Bedarf die Bildschirmhelligkeit und vermeiden Sie starke Spiegelungen.</p></div></li>
+            <li><span>✓</span><div><strong>Alternativ ausdrucken</strong><p>Ein sauberer, unverknickter Ausdruck funktioniert ebenfalls.</p></div></li>
+            <li><span>✓</span><div><strong>Code nicht bearbeiten</strong><p>Schneiden Sie den QR-Code nicht ab und überdecken Sie keine Bereiche.</p></div></li>
+          </ul>
+        </section>
+
+        <section className="collective-info-section info-qr-fallback">
+          <div className="collective-info-icon" aria-hidden="true">🧭</div>
+          <div>
+            <span className="collective-info-kicker">Wenn etwas nicht klappt</span>
+            <h2>Auch ohne erfolgreichen Scan bleibt Hilfe möglich</h2>
+            <p>
+              Ist das Smartphone leer, die E-Mail nicht auffindbar oder der
+              Ausdruck beschädigt, wenden Sie sich an den Impfwart. Die
+              Anmeldung kann über die vorhandene Teilnehmersuche geprüft werden.
+              Planen Sie dafür etwas zusätzliche Zeit ein.
+            </p>
+          </div>
+        </section>
+
+        <section className="collective-info-section">
+          <div className="collective-info-heading">
+            <span className="collective-info-kicker">Häufige Fragen</span>
+            <h2>Alles Wichtige zum QR-Code</h2>
+          </div>
+          <div className="collective-info-faq">
+            <details><summary>Brauche ich eine besondere App?<span aria-hidden="true">+</span></summary><p>Nein. Sie müssen den Code lediglich in der E-Mail anzeigen oder ausdrucken. Gescannt wird er vom berechtigten Impfwart.</p></details>
+            <details><summary>Kann ich einen Screenshot verwenden?<span aria-hidden="true">+</span></summary><p>Ein vollständiger und scharfer Screenshot ist grundsätzlich lesbar. Die Original-E-Mail ist dennoch die beste Sicherung, falls der Screenshot versehentlich zugeschnitten wurde.</p></details>
+            <details><summary>Kann derselbe Code mehrfach verwendet werden?<span aria-hidden="true">+</span></summary><p>Der Check-in-Status wird gespeichert. Ein erneuter Scan wird deshalb erkannt und führt nicht unbemerkt zu einem zweiten Check-in.</p></details>
+            <details><summary>Darf ich meinen QR-Code weitergeben?<span aria-hidden="true">+</span></summary><p>Der Code gehört zu Ihrer persönlichen Anmeldung und sollte nicht öffentlich geteilt werden. Zeigen Sie ihn nur dem berechtigten Personal am Impftag.</p></details>
+            <details><summary>Was passiert bei einem falschen Termin?<span aria-hidden="true">+</span></summary><p>Der Check-in prüft die Zuordnung zum ausgewählten Impftermin. Ein Code für einen anderen Termin kann nicht einfach als passender Check-in übernommen werden.</p></details>
+          </div>
+        </section>
+
+        <section className="collective-info-summary info-qr-summary">
+          <span className="collective-info-kicker">Zusammenfassung</span>
+          <h2>Weniger Papier, schneller am Ziel</h2>
+          <p>
+            Der persönliche QR-Code verbindet Ihre bestätigte Anmeldung mit
+            einem schnellen und nachvollziehbaren Check-in. Sie bringen nur die
+            E-Mail oder einen Ausdruck mit – den Rest übernimmt das System.
+          </p>
+        </section>
+
+        <button className="collective-info-back" onClick={() => (window.location.hash = "#info")}>
+          ← Zurück
+        </button>
+      </main>
+    </div>
+  )
+}
+
+function InfoAnmeldungLegacy() {
   return (
     <div className="min-h-screen bg-slate-100">
       <section
@@ -2693,6 +3389,8 @@ function InfoAnmeldung() {
         <div style={{ maxWidth: "1100px", margin: "0 auto" }}>
 
           <h1
+            id="info-detail-start"
+            className="info-detail-anchor"
             style={{
               fontSize: "58px",
               fontWeight: "900",
