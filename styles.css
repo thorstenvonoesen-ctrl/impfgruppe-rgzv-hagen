@@ -372,6 +372,58 @@ td .paid {
 .admin .modal { background: rgba(15,23,42,.66); backdrop-filter: blur(7px); }
 .admin .admin-create-modal { z-index: 10000; }
 .admin .modal-card { width: min(680px,100%); padding: 30px; border: 1px solid rgba(255,255,255,.7); border-radius: 24px; box-shadow: 0 25px 80px rgba(0,0,0,.35); }
+.admin .admin-management-modal {
+  width: min(1100px, calc(100vw - 48px));
+  max-width: calc(100vw - 48px);
+  overflow-x: hidden;
+}
+.admin .admin-management-modal .campaign-detail-heading {
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.admin .admin-management-modal .campaign-detail-heading > div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.admin .admin-management-table-wrap {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+.admin .admin-management-table {
+  width: 100%;
+  min-width: 0;
+  table-layout: fixed;
+}
+.admin .admin-management-table th,
+.admin .admin-management-table td {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+.admin .admin-management-table th:nth-child(1) { width: 23%; }
+.admin .admin-management-table th:nth-child(2) { width: 22%; }
+.admin .admin-management-table th:nth-child(3) { width: 13%; }
+.admin .admin-management-table th:nth-child(4) { width: 11%; }
+.admin .admin-management-table th:nth-child(5) { width: 15%; }
+.admin .admin-management-table th:nth-child(6) { width: 16%; }
+.admin .admin-management-table td button {
+  width: 100%;
+  white-space: normal;
+}
+@media (max-width: 700px) {
+  .admin .admin-management-modal {
+    width: calc(100vw - 24px);
+    max-width: calc(100vw - 24px);
+    padding: 20px 14px;
+  }
+  .admin .admin-management-table th,
+  .admin .admin-management-table td {
+    padding: 10px 6px;
+    font-size: 12px;
+  }
+}
 .admin .modal-card h2 { margin-top: 0; color: #163a2f; }
 .admin .modal-card button { margin: 6px 8px 0 0; }
 @media (max-width: 1050px) { .admin .stats { grid-template-columns: repeat(2,minmax(0,1fr)); } }

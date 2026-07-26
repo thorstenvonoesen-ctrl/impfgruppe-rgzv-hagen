@@ -5182,7 +5182,7 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
 
   {adminManagementOpen && adminContext?.role === 'superadmin' && (
     <div className="modal">
-      <section className="modal-card" role="dialog" aria-modal="true" aria-labelledby="admin-management-title">
+      <section className="modal-card admin-management-modal" role="dialog" aria-modal="true" aria-labelledby="admin-management-title">
         <div className="campaign-detail-heading">
           <h2 id="admin-management-title">Adminverwaltung</h2>
           <div>
@@ -5194,8 +5194,8 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
         {administratorMembershipsLoading && <p>Administratoren werden geladen …</p>}
         {administratorMembershipsError && <p role="alert" className="campaign-load-error">{administratorMembershipsError}</p>}
         {!administratorMembershipsLoading && !administratorMembershipsError && (
-          <div className="table-wrap">
-            <table>
+          <div className="table-wrap admin-management-table-wrap">
+            <table className="admin-management-table">
               <thead>
                 <tr>
                   <th>E-Mail-Adresse</th>
