@@ -1,5 +1,16 @@
 import { createAdminSupabase, getBearerToken } from './_supabase-admin.js'
 
+function getAdminInviteRedirectUrl() {
+  const configuredUrl =
+    process.env.APP_URL ||
+    process.env.PUBLIC_APP_URL ||
+    process.env.VERCEL_PROJECT_PRODUCTION_URL ||
+    process.env.VERCEL_URL
+  if (!configuredUrl) return null
+  const baseUrl = /^https?:\/\//i.test(configuredUrl) ? configuredUrl : `https://${configuredUrl}`
+  return new URL('/admin-invite', baseUrl).toString()
+}
+
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' })
   const action = req.body?.action
@@ -9,7 +20,11 @@ export default async function handler(req, res) {
     const supabase = createAdminSupabase()
     const { data: userResult, error: userError } = await supabase.auth.getUser(accessToken)
     if (userError || !userResult.user) return res.status(401).json({ error: 'Ungültige Anmeldung.' })
-    if (action === 'list-admin-memberships' || action === 'get-admin-membership-detail') {
+    if (
+      action === 'list-admin-memberships' ||
+      action === 'get-admin-membership-detail' ||
+      action === 'invite-administrator'
+    ) {
       const { data: requesterMemberships, error: requesterError } = await supabase
         .from('club_admin_memberships')
         .select('role')
@@ -18,6 +33,77 @@ export default async function handler(req, res) {
       if (requesterError) throw requesterError
       if (!(requesterMemberships || []).some(membership => membership.role === 'superadmin')) {
         return res.status(403).json({ error: 'Keine Berechtigung für die Adminverwaltung.' })
+      }
+
+      if (action === 'invite-administrator') {
+        const firstName = String(req.body?.firstName || '').trim()
+        const lastName = String(req.body?.lastName || '').trim()
+        const email = String(req.body?.email || '').trim().toLowerCase()
+        const clubId = String(req.body?.clubId || '').trim()
+        const role = String(req.body?.role || '').trim()
+        if (!firstName || !lastName || !email || !clubId || !role) {
+          return res.status(400).json({ error: 'Bitte füllen Sie alle Pflichtfelder aus.' })
+        }
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+          return res.status(400).json({ error: 'Bitte geben Sie eine gültige E-Mail-Adresse ein.' })
+        }
+        if (!['clubadmin', 'checkin_admin'].includes(role)) {
+          return res.status(400).json({ error: 'Der Administrator konnte nicht angelegt werden.' })
+        }
+        const { data: club, error: clubError } = await supabase
+          .from('clubs')
+          .select('id')
+          .eq('id', clubId)
+          .maybeSingle()
+        if (clubError || !club) {
+          return res.status(400).json({ error: 'Der Administrator konnte nicht angelegt werden.' })
+        }
+
+        const users = []
+        for (let page = 1; ; page += 1) {
+          const { data: pageData, error: usersError } = await supabase.auth.admin.listUsers({ page, perPage: 1000 })
+          if (usersError) throw usersError
+          users.push(...(pageData?.users || []))
+          if ((pageData?.users || []).length < 1000) break
+        }
+        const existingUser = users.find(user => String(user.email || '').toLowerCase() === email)
+        if (existingUser) {
+          const { data: existingMemberships, error: existingMembershipsError } = await supabase
+            .from('club_admin_memberships')
+            .select('user_id')
+            .eq('user_id', existingUser.id)
+            .limit(1)
+          if (existingMembershipsError) throw existingMembershipsError
+          if (existingMemberships?.length) {
+            return res.status(409).json({ error: 'Diese E-Mail-Adresse ist bereits als Administrator vorhanden.' })
+          }
+        }
+
+        const redirectTo = getAdminInviteRedirectUrl()
+        if (!redirectTo) {
+          return res.status(500).json({ error: 'Die Einladung konnte nicht gesendet werden. Bitte erneut versuchen.' })
+        }
+        const { data: inviteData, error: inviteError } = await supabase.auth.admin.inviteUserByEmail(email, {
+          redirectTo,
+          data: { first_name: firstName, last_name: lastName }
+        })
+        if (inviteError || !inviteData?.user) {
+          return res.status(500).json({ error: 'Die Einladung konnte nicht gesendet werden. Bitte erneut versuchen.' })
+        }
+
+        const { error: membershipError } = await supabase
+          .from('club_admin_memberships')
+          .insert({
+            user_id: inviteData.user.id,
+            club_id: club.id,
+            role,
+            active: true
+          })
+        if (membershipError) {
+          await supabase.auth.admin.deleteUser(inviteData.user.id)
+          return res.status(500).json({ error: 'Der Administrator konnte nicht angelegt werden.' })
+        }
+        return res.status(201).json({ success: true })
       }
 
       const users = []
@@ -92,6 +178,9 @@ export default async function handler(req, res) {
     }
     if (action === 'get-admin-membership-detail') {
       return res.status(500).json({ error: 'Die Administratordaten konnten nicht geladen werden.' })
+    }
+    if (action === 'invite-administrator') {
+      return res.status(500).json({ error: 'Der Administrator konnte nicht angelegt werden.' })
     }
     return res.status(500).json({ error: 'Zahlungsstatus konnte nicht gespeichert werden.' })
   }

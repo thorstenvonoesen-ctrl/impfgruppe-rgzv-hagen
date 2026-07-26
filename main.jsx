@@ -119,6 +119,7 @@ const [showForm, setShowForm] = useState(false)
     return () =>
       removeEventListener('hashchange', onHash)
   }, [])
+  if (location.pathname === '/admin-invite') return <AdminInvitePassword />
   if (page === '#info') return <InfoPage />
   if (page === '#info-newcastle') return <InfoNewcastle />
   if (page === '#info-pflicht') return <InfoPflicht />
@@ -136,6 +137,74 @@ if (page === '#register') return <ClubRegistration />
   if (page === '#club-dashboard') return <ClubDashboard />
   if (page === '#') return <ClubSelect />
 return <PublicSignup />
+}
+
+function AdminInvitePassword() {
+  const [password, setPassword] = useState('')
+  const [passwordConfirmation, setPasswordConfirmation] = useState('')
+  const [sessionReady, setSessionReady] = useState(false)
+  const [loading, setLoading] = useState(true)
+  const [saving, setSaving] = useState(false)
+  const [message, setMessage] = useState('')
+  const [success, setSuccess] = useState(false)
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSessionReady(Boolean(session))
+      if (!session) setMessage('Der Einladungslink ist ungültig oder abgelaufen.')
+    }).finally(() => setLoading(false))
+  }, [])
+
+  async function savePassword() {
+    setMessage('')
+    if (!password || password !== passwordConfirmation) {
+      setMessage('Bitte geben Sie das Passwort in beiden Feldern identisch ein.')
+      return
+    }
+    setSaving(true)
+    const { error } = await supabase.auth.updateUser({ password })
+    if (error) {
+      setMessage('Das Passwort konnte nicht gespeichert werden. Bitte erneut versuchen.')
+      setSaving(false)
+      return
+    }
+    await supabase.auth.signOut()
+    setPassword('')
+    setPasswordConfirmation('')
+    setSuccess(true)
+    setSaving(false)
+  }
+
+  return (
+    <div className="page admin-login-page">
+      <Header />
+      <main className="admin-login-shell">
+        <section className="card admin-login-card">
+          <div className="admin-login-icon"><Lock size={28}/></div>
+          <div className="admin-login-heading">
+            <span>RGZV Hagen</span>
+            <h2>Persönliches Passwort festlegen</h2>
+          </div>
+          {loading && <p>Einladung wird geprüft …</p>}
+          {!loading && success && (
+            <>
+              <p>Ihr Passwort wurde gespeichert. Sie können sich jetzt im Adminbereich anmelden.</p>
+              <a className="primary admin-login-submit" href="/#admin">Zum Admin-Login</a>
+            </>
+          )}
+          {!loading && !success && sessionReady && (
+            <>
+              <label className="admin-login-field"><span>Passwort</span><input value={password} onChange={event => setPassword(event.target.value)} type="password" autoComplete="new-password" /></label>
+              <label className="admin-login-field"><span>Passwort bestätigen</span><input value={passwordConfirmation} onChange={event => setPasswordConfirmation(event.target.value)} type="password" autoComplete="new-password" /></label>
+              <button className="primary admin-login-submit" onClick={savePassword} disabled={saving}>{saving ? 'Passwort wird gespeichert …' : 'Passwort speichern'}</button>
+            </>
+          )}
+          {message && <p role="alert" className="admin-login-error">{message}</p>}
+        </section>
+      </main>
+      <Footer />
+    </div>
+  )
 }
 
 
@@ -4188,6 +4257,11 @@ const [newDateNote, setNewDateNote] = useState('')
   const [selectedAdministrator, setSelectedAdministrator] = useState(null)
   const [administratorDetailLoading, setAdministratorDetailLoading] = useState(false)
   const [administratorDetailError, setAdministratorDetailError] = useState('')
+  const [adminCreateOpen, setAdminCreateOpen] = useState(false)
+  const [adminCreateForm, setAdminCreateForm] = useState({ firstName: '', lastName: '', email: '', clubId: '', role: '' })
+  const [adminCreateBusy, setAdminCreateBusy] = useState(false)
+  const [adminCreateError, setAdminCreateError] = useState('')
+  const [adminCreateSuccess, setAdminCreateSuccess] = useState('')
   const [dateFeedback, setDateFeedback] = useState('')
   const [clubs, setClubs] = useState([])
 const [selectedClub, setSelectedClub] = useState(null)
@@ -4230,6 +4304,76 @@ const [selectedClub, setSelectedClub] = useState(null)
     if (role === 'clubadmin') return 'Vereinsadmin'
     if (role === 'checkin_admin') return 'Check-in-Admin'
     return role
+  }
+  function openAdminCreate() {
+    if (adminContext?.role !== 'superadmin') return
+    setAdminCreateForm({
+      firstName: '',
+      lastName: '',
+      email: '',
+      clubId: activeClub?.id || adminClubId || '',
+      role: ''
+    })
+    setAdminCreateError('')
+    setAdminCreateSuccess('')
+    setAdminCreateOpen(true)
+  }
+  async function createAdministrator() {
+    if (adminContext?.role !== 'superadmin') return
+    const { firstName, lastName, email, clubId, role } = adminCreateForm
+    if (![firstName, lastName, email, clubId, role].every(value => String(value || '').trim())) {
+      setAdminCreateError('Bitte füllen Sie alle Pflichtfelder aus.')
+      return
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
+      setAdminCreateError('Bitte geben Sie eine gültige E-Mail-Adresse ein.')
+      return
+    }
+    setAdminCreateBusy(true)
+    setAdminCreateError('')
+    try {
+      const { data: { session } } = await supabase.auth.getSession()
+      const response = await fetch('/api/admin-payment', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${session?.access_token || ''}`
+        },
+        body: JSON.stringify({
+          action: 'invite-administrator',
+          firstName: firstName.trim(),
+          lastName: lastName.trim(),
+          email: email.trim(),
+          clubId,
+          role
+        })
+      })
+      const result = await response.json().catch(() => ({}))
+      if (!response.ok) {
+        const allowedMessages = [
+          'Bitte füllen Sie alle Pflichtfelder aus.',
+          'Bitte geben Sie eine gültige E-Mail-Adresse ein.',
+          'Diese E-Mail-Adresse ist bereits als Administrator vorhanden.',
+          'Die Einladung konnte nicht gesendet werden. Bitte erneut versuchen.',
+          'Der Administrator konnte nicht angelegt werden.',
+          'Keine Berechtigung für die Adminverwaltung.'
+        ]
+        setAdminCreateError(
+          allowedMessages.includes(result.error)
+            ? result.error
+            : 'Der Administrator konnte nicht angelegt werden.'
+        )
+        return
+      }
+      setAdminCreateOpen(false)
+      setAdminCreateForm({ firstName: '', lastName: '', email: '', clubId: '', role: '' })
+      setAdminCreateSuccess('Der Administrator wurde angelegt und per E-Mail eingeladen.')
+      await openAdminManagement()
+    } catch {
+      setAdminCreateError('Der Administrator konnte nicht angelegt werden.')
+    } finally {
+      setAdminCreateBusy(false)
+    }
   }
   async function openAdministratorDetail(membership) {
     if (adminContext?.role !== 'superadmin') return
@@ -4960,6 +5104,39 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
 
   return <div className="page admin"><Header admin />
 
+  {adminCreateOpen && adminContext?.role === 'superadmin' && (
+    <div className="modal">
+      <section className="modal-card" role="dialog" aria-modal="true" aria-labelledby="admin-create-title">
+        <div className="campaign-detail-heading">
+          <h2 id="admin-create-title">Neuen Administrator anlegen</h2>
+          <button type="button" className="ghost" onClick={() => setAdminCreateOpen(false)}>Schließen</button>
+        </div>
+        <label>Vorname *<input value={adminCreateForm.firstName} onChange={event => setAdminCreateForm({ ...adminCreateForm, firstName: event.target.value })} /></label>
+        <label>Nachname *<input value={adminCreateForm.lastName} onChange={event => setAdminCreateForm({ ...adminCreateForm, lastName: event.target.value })} /></label>
+        <label>E-Mail-Adresse *<input type="email" value={adminCreateForm.email} onChange={event => setAdminCreateForm({ ...adminCreateForm, email: event.target.value })} /></label>
+        <label>
+          Verein *
+          <select value={adminCreateForm.clubId} onChange={event => setAdminCreateForm({ ...adminCreateForm, clubId: event.target.value })}>
+            <option value="">Bitte auswählen</option>
+            {clubs.map(club => <option key={club.id} value={club.id}>{club.name}</option>)}
+          </select>
+        </label>
+        <label>
+          Rolle *
+          <select value={adminCreateForm.role} onChange={event => setAdminCreateForm({ ...adminCreateForm, role: event.target.value })}>
+            <option value="">Bitte auswählen</option>
+            <option value="clubadmin">Vereinsadmin</option>
+            <option value="checkin_admin">Check-in-Admin</option>
+          </select>
+        </label>
+        {adminCreateError && <p role="alert" className="campaign-load-error">{adminCreateError}</p>}
+        <button type="button" className="primary" onClick={createAdministrator} disabled={adminCreateBusy}>
+          {adminCreateBusy ? 'Einladung wird gesendet …' : 'Administrator anlegen'}
+        </button>
+      </section>
+    </div>
+  )}
+
   {(administratorDetailLoading || administratorDetailError || selectedAdministrator) && adminContext?.role === 'superadmin' && (
     <div className="modal">
       <section className="modal-card" role="dialog" aria-modal="true" aria-labelledby="administrator-detail-title">
@@ -5008,8 +5185,12 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
       <section className="modal-card" role="dialog" aria-modal="true" aria-labelledby="admin-management-title">
         <div className="campaign-detail-heading">
           <h2 id="admin-management-title">Adminverwaltung</h2>
-          <button type="button" className="ghost" onClick={() => setAdminManagementOpen(false)}>Schließen</button>
+          <div>
+            <button type="button" className="primary" onClick={openAdminCreate}>Neuen Administrator anlegen</button>
+            <button type="button" className="ghost" onClick={() => setAdminManagementOpen(false)}>Schließen</button>
+          </div>
         </div>
+        {adminCreateSuccess && <p role="status">{adminCreateSuccess}</p>}
         {administratorMembershipsLoading && <p>Administratoren werden geladen …</p>}
         {administratorMembershipsError && <p role="alert" className="campaign-load-error">{administratorMembershipsError}</p>}
         {!administratorMembershipsLoading && !administratorMembershipsError && (
