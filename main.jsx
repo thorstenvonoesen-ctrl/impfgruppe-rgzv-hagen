@@ -8083,6 +8083,7 @@ function PoultryQuiz() {
 }
 
 function Header({ admin = false }) {
+  const showAdminLogin = !admin && window.location.hash !== '#admin'
   return (
     <header
       style={{
@@ -8106,7 +8107,7 @@ function Header({ admin = false }) {
 {!admin && (
   <nav className="public-header-links" aria-label="Öffentliche Bereiche">
     <a href="#quiz" className="public-quiz-link">🧠 Geflügel-Quiz</a>
-    <a
+    {showAdminLogin && <a
       href="#admin"
       style={{
         paddingRight: '32px',
@@ -8117,7 +8118,7 @@ function Header({ admin = false }) {
       }}
     >
       Admin-Login
-    </a>
+    </a>}
   </nav>
 )}
       </div>
