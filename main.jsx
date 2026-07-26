@@ -35,7 +35,6 @@ import './styles.css'
 import logo from './public/Logoklein.jpg'
 import { APP } from './config'
 const vaccines = ['Newcastle', 'IB', 'ILT', 'Marek', 'Kokzidiose', 'Salmonellen']
-const ADMIN_PIN = import.meta.env.VITE_ADMIN_PIN?.trim() || ''
 const PAYMENT_URL = import.meta.env.VITE_PAYMENT_URL || ''
 const MEMBER_CODE = 'RGZV2026'
 const weatherPreviewCache = new Map()
@@ -4169,7 +4168,6 @@ function isMissingAdminMembershipSchema(error) {
 
 function Admin() {
   const [logged, setLogged] = useState(false)
-  const [pin, setPin] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [adminContext, setAdminContext] = useState(null)
@@ -4192,8 +4190,6 @@ function Admin() {
   async function login() {
     setLoginError('')
     if (!hasSupabase) return setLoginError(supabaseConfigMessage)
-    if (!ADMIN_PIN) return setLoginError('Der Adminzugang ist noch nicht vollständig konfiguriert.')
-    if (pin !== ADMIN_PIN) return setLoginError('Die Admin-PIN ist nicht korrekt.')
     const normalizedEmail = email.trim()
 
 const { data, error } = await supabase.auth.signInWithPassword({
@@ -4233,7 +4229,6 @@ if (!data.session) {
       setLogoutError('Abmeldung fehlgeschlagen. Bitte erneut versuchen.')
       return
     }
-    setPin('')
     setEmail('')
     setPassword('')
     setLoginError('')
@@ -4256,17 +4251,12 @@ if (!data.session) {
           <div className="admin-login-heading">
             <span>RGZV Hagen</span>
             <h2>Willkommen zurück</h2>
-            <p>Bitte bestätigen Sie Ihre PIN und melden Sie sich mit Ihrem Admin-Konto an.</p>
+            <p>Bitte melden Sie sich mit Ihrem Admin-Konto an.</p>
           </div>
-          <label className="admin-login-field">
-            <span>Admin-PIN</span>
-            <input placeholder="Admin-PIN" value={pin} onChange={e=>setPin(e.target.value)} type="password"/>
-          </label>
           <label className="admin-login-field"><span>E-Mail</span><input placeholder="admin@verein.de" value={email} onChange={e=>setEmail(e.target.value)} type="email" autoComplete="username" /></label>
           <label className="admin-login-field"><span>Passwort</span><input placeholder="Passwort" value={password} onChange={e=>setPassword(e.target.value)} type="password" autoComplete="current-password" /></label>
-          {!ADMIN_PIN && <p role="alert" className="admin-login-error">Der Adminzugang ist noch nicht vollständig konfiguriert.</p>}
           {loginError && <p role="alert" className="admin-login-error">{loginError}</p>}
-          <button className="primary admin-login-submit" onClick={login} disabled={!ADMIN_PIN}>Einloggen</button>
+          <button className="primary admin-login-submit" onClick={login}>Einloggen</button>
           <a className="admin-login-back" href="#">← Zur Anmeldung</a>
         </section>
       </main>

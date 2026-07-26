@@ -344,7 +344,7 @@ def build_story():
             [31 * mm, 81 * mm, 54 * mm],
         ),
         heading("Anmeldung und Schutz", 2),
-        p("Der Admin-Login besteht aus einer zusätzlichen Admin-PIN, E-Mail und Passwort. Nach erfolgreicher Supabase-Anmeldung muss für das Konto eine aktive Rolle in der Vereinszuordnung hinterlegt sein. Ohne gültige Rolle wird das Dashboard nicht geöffnet."),
+        p("Der Admin-Login besteht aus E-Mail und Passwort. Nach erfolgreicher Supabase-Anmeldung muss für das Konto eine aktive Rolle in der Vereinszuordnung hinterlegt sein. Ohne gültige Rolle wird das Dashboard nicht geöffnet."),
         *bullets([
             "Teilnehmerdaten sind durch vereinsbezogene Datenbankregeln geschützt.",
             "Zahlungsstatus, QR-Check-in und sensible Mailvorgänge werden serverseitig verarbeitet.",
@@ -456,7 +456,6 @@ def build_story():
         heading("Anmelden", 2),
         *steps([
             "Auf der Startseite „Admin-Login“ öffnen.",
-            "Admin-PIN eingeben.",
             "E-Mail und Passwort des Supabase-Administratorkontos eingeben.",
             "„Einloggen“ wählen. Die aktive Vereinsrolle wird anschließend geprüft.",
         ]),
@@ -603,7 +602,6 @@ def build_story():
             ["Problem", "Prüfschritte"],
             [
                 ["E-Mail oder Passwort falsch", "Schreibweise prüfen, bestätigtes Konto verwenden, aktive Vereinsrolle kontrollieren."],
-                ["Admin-PIN wird abgewiesen", "Aktuelle PIN verwenden; bei fehlender Konfiguration Betreiber informieren."],
                 ["Zahlung abgebrochen", "Teilnehmerdatensatz bleibt offen. Zahlung klären oder Adminstatus nach Prüfung setzen."],
                 ["Teilnehmer nicht bezahlt", "Zahlungsanbieter-Rückkehr prüfen; danach Webhook beziehungsweise Adminstatus kontrollieren."],
                 ["Mail nicht empfangen", "E-Mail-Adresse und Spamordner prüfen; Mailanbieter- und Resend-/SMTP-Konfiguration kontrollieren."],
