@@ -3369,3 +3369,238 @@ body { background: #163a2f; }
     min-width: min(240px, 82vw);
   }
 }
+
+/* Strukturiertes, kompaktes Admin-Dashboard */
+.admin .admin-dashboard-layout {
+  width: min(100% - 36px, 1680px);
+  display: grid;
+  grid-template-columns: repeat(12,minmax(0,1fr));
+  gap: 17px;
+  align-items: start;
+  padding: 24px 0 48px;
+}
+
+.admin .admin-dashboard-layout > .admin-top {
+  grid-column: span 8;
+  width: 100%;
+  min-height: 112px;
+  margin: 0;
+  padding: 20px 24px;
+  border-radius: 22px;
+}
+
+.admin .admin-dashboard-layout > .admin-top h1 {
+  font-size: clamp(31px,3.5vw,43px);
+}
+
+.admin .admin-dashboard-layout > .admin-top > div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.admin .admin-dashboard-layout > .admin-top .ghost {
+  margin: 0;
+}
+
+.admin .admin-dashboard-layout > .admin-presence {
+  grid-column: span 4;
+  width: 100%;
+  min-height: 112px;
+  margin: 0;
+  padding: 13px;
+  grid-template-columns: 1fr;
+  gap: 9px;
+  border-radius: 18px;
+}
+
+.admin .admin-dashboard-layout > .admin-presence ul {
+  display: grid;
+  grid-template-columns: repeat(auto-fit,minmax(170px,1fr));
+  max-height: 94px;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.admin .admin-dashboard-layout > .admin-presence li {
+  min-width: 0;
+  max-width: none;
+  padding: 7px 9px;
+}
+
+.admin .admin-dashboard-layout > .admin-dashboard-stats {
+  grid-column: 1 / -1;
+  width: 100%;
+  margin: 0;
+  gap: 14px;
+}
+
+.admin .admin-dashboard-layout > .admin-dashboard-stats .stat.dashboard-stat-card {
+  min-height: 116px;
+  padding: 17px 19px;
+}
+
+.admin .admin-dashboard-layout > .smart-assistant-card {
+  grid-column: span 5;
+  width: 100%;
+  min-height: 100%;
+  margin: 0;
+  padding: 19px 21px;
+  grid-template-columns: auto minmax(0,1fr);
+  gap: 14px;
+  border-radius: 20px;
+}
+
+.admin .admin-dashboard-layout > .smart-assistant-card .smart-assistant-card-icon {
+  font-size: 32px;
+}
+
+.admin .admin-dashboard-layout > .smart-assistant-card .smart-assistant-card-copy strong {
+  font-size: clamp(20px,2.2vw,28px);
+}
+
+.admin .admin-dashboard-layout > .smart-assistant-card .smart-assistant-card-action {
+  grid-column: 2;
+  white-space: normal;
+}
+
+.admin .admin-dashboard-layout > .season-campaign-card {
+  grid-column: span 7;
+  width: 100%;
+  margin: 0;
+}
+
+.admin .admin-dashboard-layout > .checkin-panel {
+  grid-column: span 8;
+  width: 100%;
+  margin: 0;
+}
+
+.admin .admin-dashboard-layout > .admin-appointments-card {
+  grid-column: span 4;
+  width: 100%;
+  margin: 0;
+}
+
+.admin .admin-dashboard-layout > .admin-appointment-management-card,
+.admin .admin-dashboard-layout > .admin-participant-management-card {
+  grid-column: 1 / -1;
+  width: 100%;
+  margin: 0;
+}
+
+.admin .admin-dashboard-layout > .card {
+  padding: clamp(20px,2.2vw,28px);
+}
+
+.admin .admin-dashboard-layout > .card h2 {
+  margin-bottom: 17px;
+  padding-bottom: 10px;
+  font-size: clamp(21px,2.3vw,27px);
+}
+
+.admin .admin-dashboard-layout .date-stat {
+  margin-top: 9px;
+  padding: 12px 14px;
+}
+
+.admin .admin-dashboard-layout .date-card {
+  margin-top: 11px;
+  padding: 14px 16px;
+}
+
+.admin .admin-dashboard-layout .season-campaign-metrics {
+  gap: 9px;
+  margin-top: 14px;
+}
+
+.admin .admin-dashboard-layout .season-campaign-metrics > div {
+  padding: 12px;
+}
+
+.admin .admin-dashboard-layout .season-campaign-history {
+  margin-top: 16px;
+  padding-top: 14px;
+}
+
+.admin .admin-dashboard-layout .season-campaign-history table {
+  min-width: 0;
+  table-layout: fixed;
+}
+
+.admin .admin-dashboard-layout .season-campaign-history th,
+.admin .admin-dashboard-layout .season-campaign-history td {
+  padding: 8px;
+  overflow-wrap: anywhere;
+}
+
+.admin .admin-dashboard-layout > .admin-participant-management-card .table-head {
+  margin-bottom: 15px !important;
+  padding-bottom: 15px;
+}
+
+.admin .admin-dashboard-layout > .modal {
+  position: fixed;
+}
+
+@media (max-width: 1200px) {
+  .admin .admin-dashboard-layout {
+    grid-template-columns: repeat(2,minmax(0,1fr));
+  }
+  .admin .admin-dashboard-layout > .admin-top,
+  .admin .admin-dashboard-layout > .admin-presence,
+  .admin .admin-dashboard-layout > .admin-dashboard-stats,
+  .admin .admin-dashboard-layout > .admin-appointment-management-card,
+  .admin .admin-dashboard-layout > .admin-participant-management-card {
+    grid-column: 1 / -1;
+  }
+  .admin .admin-dashboard-layout > .smart-assistant-card,
+  .admin .admin-dashboard-layout > .season-campaign-card,
+  .admin .admin-dashboard-layout > .checkin-panel,
+  .admin .admin-dashboard-layout > .admin-appointments-card {
+    grid-column: span 1;
+  }
+  .admin .admin-dashboard-layout .season-campaign-metrics {
+    grid-template-columns: repeat(2,minmax(0,1fr));
+  }
+}
+
+@media (max-width: 900px) {
+  .admin .admin-dashboard-layout > .smart-assistant-card,
+  .admin .admin-dashboard-layout > .season-campaign-card,
+  .admin .admin-dashboard-layout > .checkin-panel,
+  .admin .admin-dashboard-layout > .admin-appointments-card {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 700px) {
+  .admin .admin-dashboard-layout {
+    width: min(100% - 24px,1680px);
+    grid-template-columns: minmax(0,1fr);
+    gap: 13px;
+    padding: 16px 0 36px;
+  }
+  .admin .admin-dashboard-layout > .admin-top {
+    min-height: 0;
+    padding: 19px;
+  }
+  .admin .admin-dashboard-layout > .admin-top > div {
+    justify-content: flex-start;
+  }
+  .admin .admin-dashboard-layout > .admin-presence {
+    min-height: 0;
+  }
+  .admin .admin-dashboard-layout > .admin-presence ul {
+    grid-template-columns: 1fr;
+    max-height: 150px;
+  }
+  .admin .admin-dashboard-layout > .admin-dashboard-stats {
+    grid-template-columns: 1fr;
+  }
+  .admin .admin-dashboard-layout > .card {
+    padding: 19px 16px;
+  }
+}

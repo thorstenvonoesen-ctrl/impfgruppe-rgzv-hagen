@@ -6907,7 +6907,7 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
   )}
 
   
-    <main className="admin-wrap">
+    <main className="admin-wrap admin-dashboard-layout">
       <div id="admin-dashboard-top" className="admin-top">
         <h1>Adminbereich</h1>
         <div>
@@ -6919,6 +6919,11 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
         </div>
       </div>
       <AdminPresence />
+      <div className="stats admin-dashboard-stats">
+        <InteractiveStatCard className="stat" icon={<Users/>} label="Teilnehmer" value={stats.total} loading={loading} tone="stat-participants" animationIndex={0} />
+        <InteractiveStatCard className="stat" icon={<ShieldCheck/>} label="Tiere" value={stats.animals} loading={loading} tone="stat-animals" animationIndex={1} />
+        <InteractiveStatCard className="stat" icon={<Euro/>} label="Einnahmen" value={stats.revenue} loading={loading} currency tone="stat-revenue" animationIndex={2} />
+      </div>
       <button
         type="button"
         className={`smart-assistant-card smart-assistant-card-${smartAssistantError ? 'error' : assistantStatus}`}
@@ -6938,11 +6943,6 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
         </span>
         <span className="smart-assistant-card-action">Aufgaben anzeigen →</span>
       </button>
-      <div className="stats admin-dashboard-stats">
-        <InteractiveStatCard className="stat" icon={<Users/>} label="Teilnehmer" value={stats.total} loading={loading} tone="stat-participants" animationIndex={0} />
-        <InteractiveStatCard className="stat" icon={<ShieldCheck/>} label="Tiere" value={stats.animals} loading={loading} tone="stat-animals" animationIndex={1} />
-        <InteractiveStatCard className="stat" icon={<Euro/>} label="Einnahmen" value={stats.revenue} loading={loading} currency tone="stat-revenue" animationIndex={2} />
-      </div>
       <section id="season-campaign-dashboard" className={`card season-campaign-card season-campaign-${currentCampaign ? currentCampaignTone : 'empty'}`}>
         <div className="season-campaign-header">
           <div>
@@ -7049,7 +7049,7 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
     </div>
   ))}
 </section>
-      <section id="appointment-management" className="card">
+      <section id="appointment-management" className="card admin-appointment-management-card">
   <h2>Impftermin anlegen</h2>
 
   <input
@@ -7199,7 +7199,7 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
 
 </section>
 
-    <section id="participant-management" className="card">
+    <section id="participant-management" className="card admin-participant-management-card">
   <div
     className="table-head"
     style={{
