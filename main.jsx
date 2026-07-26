@@ -4044,6 +4044,7 @@ function Admin() {
   const [password, setPassword] = useState('')
   const [adminContext, setAdminContext] = useState(null)
   const [loginError, setLoginError] = useState('')
+  const [logoutError, setLogoutError] = useState('')
   const [authLoading, setAuthLoading] = useState(true)
   useEffect(() => {
     let active = true
@@ -4095,6 +4096,20 @@ if (!data.session) {
     if (!memberships?.[0]) { await supabase.auth.signOut(); return setLoginError('Für dieses Konto ist keine aktive Vereinsrolle hinterlegt.') }
     setAdminContext(memberships[0]); setLogged(true)
   }
+  async function logout() {
+    setLogoutError('')
+    const { error } = await supabase.auth.signOut()
+    if (error) {
+      setLogoutError('Abmeldung fehlgeschlagen. Bitte erneut versuchen.')
+      return
+    }
+    setPin('')
+    setEmail('')
+    setPassword('')
+    setLoginError('')
+    setAdminContext(null)
+    setLogged(false)
+  }
   if (authLoading) return null
   if (!logged) return (
     <div className="page admin-login-page">
@@ -4128,10 +4143,10 @@ if (!data.session) {
       <Footer />
     </div>
   )
-  return <AdminDashboard adminContext={adminContext} onLogout={async()=>{ await supabase.auth.signOut(); setAdminContext(null); setLogged(false) }} />
+  return <AdminDashboard adminContext={adminContext} onLogout={logout} logoutError={logoutError} />
 }
 
-function AdminDashboard({ onLogout, adminContext }) {
+function AdminDashboard({ onLogout, logoutError, adminContext }) {
   const [participants, setParticipants] = useState([])
   const [isVaccinationDay, setIsVaccinationDay] = useState(false)
   const [q, setQ] = useState('')
@@ -5114,7 +5129,13 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
 
   
     <main className="admin-wrap">
-      <div id="admin-dashboard-top" className="admin-top"><h1>Adminbereich</h1><button className="ghost" onClick={onLogout}><LogOut size={16}/> Logout</button></div>
+      <div id="admin-dashboard-top" className="admin-top">
+        <h1>Adminbereich</h1>
+        <div>
+          {logoutError && <span role="alert">{logoutError}</span>}
+          <button className="ghost" onClick={onLogout}><LogOut size={16}/> Abmelden</button>
+        </div>
+      </div>
       <button
         type="button"
         className={`smart-assistant-card smart-assistant-card-${smartAssistantError ? 'error' : assistantStatus}`}
