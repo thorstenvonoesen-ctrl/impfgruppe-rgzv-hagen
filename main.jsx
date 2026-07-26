@@ -5177,6 +5177,94 @@ function isMissingAdminMembershipSchema(error) {
   return error?.code === '42P01' || error?.code === 'PGRST205' || /club_admin_memberships/i.test(error?.message || '')
 }
 
+function AdminPresence() {
+  const [administrators, setAdministrators] = useState([])
+  const [presenceError, setPresenceError] = useState('')
+  const lastTouchRef = useRef(0)
+
+  useEffect(() => {
+    let active = true
+
+    async function loadPresence() {
+      const { data, error } = await supabase.rpc('get_admin_presence')
+      if (!active) return
+      if (error) {
+        console.error('Admin-Präsenz konnte nicht geladen werden:', error)
+        setPresenceError('Online-Status nicht verfügbar.')
+        return
+      }
+      setPresenceError('')
+      setAdministrators(Array.isArray(data) ? data : [])
+    }
+
+    async function touchPresence(force = false) {
+      const now = Date.now()
+      if (!force && now - lastTouchRef.current < 15000) return
+      lastTouchRef.current = now
+      const { error } = await supabase.rpc('touch_admin_presence', { p_online: true })
+      if (error) {
+        console.error('Admin-Aktivität konnte nicht aktualisiert werden:', error)
+        if (active) setPresenceError('Online-Status nicht verfügbar.')
+        return
+      }
+      await loadPresence()
+    }
+
+    const registerActivity = () => {
+      void touchPresence(false)
+    }
+    const handleVisibility = () => {
+      if (document.visibilityState === 'visible') void touchPresence(true)
+    }
+
+    void touchPresence(true)
+    const polling = window.setInterval(() => void touchPresence(true), 45000)
+    window.addEventListener('pointerdown', registerActivity, { passive: true })
+    window.addEventListener('keydown', registerActivity)
+    window.addEventListener('focus', registerActivity)
+    document.addEventListener('visibilitychange', handleVisibility)
+
+    return () => {
+      active = false
+      window.clearInterval(polling)
+      window.removeEventListener('pointerdown', registerActivity)
+      window.removeEventListener('keydown', registerActivity)
+      window.removeEventListener('focus', registerActivity)
+      document.removeEventListener('visibilitychange', handleVisibility)
+    }
+  }, [])
+
+  return (
+    <aside className="admin-presence" aria-label="Administratorstatus">
+      <div className="admin-presence-heading">
+        <span className="admin-presence-live" aria-hidden="true" />
+        <strong>Administratoren</strong>
+      </div>
+      {presenceError ? (
+        <p className="admin-presence-error" role="status">{presenceError}</p>
+      ) : (
+        <ul aria-live="polite">
+          {administrators.map(administrator => (
+            <li key={administrator.admin_email}>
+              <span
+                className={`admin-presence-dot ${administrator.online ? 'admin-presence-dot-online' : ''}`}
+                aria-hidden="true"
+              />
+              <span className="admin-presence-person">
+                <strong>{administrator.admin_name || 'Administrator'}</strong>
+                <small>{administrator.admin_email}</small>
+              </span>
+              <span className={administrator.online ? 'admin-presence-status-online' : 'admin-presence-status-offline'}>
+                {administrator.online ? 'online' : 'offline'}
+              </span>
+            </li>
+          ))}
+        </ul>
+      )}
+    </aside>
+  )
+}
+
 function Admin() {
   const [logged, setLogged] = useState(false)
   const [email, setEmail] = useState('')
@@ -5235,8 +5323,11 @@ if (!data.session) {
   }
   async function logout() {
     setLogoutError('')
+    const { error: presenceError } = await supabase.rpc('touch_admin_presence', { p_online: false })
+    if (presenceError) console.error('Admin-Präsenz konnte beim Abmelden nicht beendet werden:', presenceError)
     const { error } = await supabase.auth.signOut()
     if (error) {
+      await supabase.rpc('touch_admin_presence', { p_online: true })
       setLogoutError('Abmeldung fehlgeschlagen. Bitte erneut versuchen.')
       return
     }
@@ -6825,6 +6916,7 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
           <button className="ghost" onClick={onLogout}><LogOut size={16}/> Abmelden</button>
         </div>
       </div>
+      <AdminPresence />
       <button
         type="button"
         className={`smart-assistant-card smart-assistant-card-${smartAssistantError ? 'error' : assistantStatus}`}
