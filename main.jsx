@@ -3243,10 +3243,11 @@ const response = await fetch(endpoint, {
   headers: {
     'Content-Type': 'application/json'
   },
-  body: JSON.stringify({
-    participantId,
-    amount: paymentAmount
-  })
+  body: JSON.stringify(
+    paymentMethod === 'stripe'
+      ? { participantId }
+      : { participantId, amount: paymentAmount }
+  )
 })
 
 const result = await response.json()
