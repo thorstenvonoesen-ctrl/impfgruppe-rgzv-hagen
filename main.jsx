@@ -5105,7 +5105,7 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
   return <div className="page admin"><Header admin />
 
   {adminCreateOpen && adminContext?.role === 'superadmin' && (
-    <div className="modal">
+    <div className="modal admin-create-modal">
       <section className="modal-card" role="dialog" aria-modal="true" aria-labelledby="admin-create-title">
         <div className="campaign-detail-heading">
           <h2 id="admin-create-title">Neuen Administrator anlegen</h2>

@@ -370,6 +370,7 @@ td .paid {
 .admin tbody tr:hover { background: #fff8f1; }
 .admin .status-badge { min-width: 88px; }
 .admin .modal { background: rgba(15,23,42,.66); backdrop-filter: blur(7px); }
+.admin .admin-create-modal { z-index: 10000; }
 .admin .modal-card { width: min(680px,100%); padding: 30px; border: 1px solid rgba(255,255,255,.7); border-radius: 24px; box-shadow: 0 25px 80px rgba(0,0,0,.35); }
 .admin .modal-card h2 { margin-top: 0; color: #163a2f; }
 .admin .modal-card button { margin: 6px 8px 0 0; }
