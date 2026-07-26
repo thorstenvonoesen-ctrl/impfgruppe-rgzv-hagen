@@ -79,46 +79,67 @@ export default async function handler(req, res) {
         encoding: 'base64'
       }],
       html: `
-        <p>Sehr geehrte Damen und Herren,</p>
+        <p>Sehr geehrte Frau Dinger,</p>
 
         <p>
-          anbei übersenden wir Ihnen die Sammelimpfbescheinigung für den Impftermin vom
-          <strong>${deutschesDatum}</strong> mit der freundlichen Bitte um Prüfung und Unterzeichnung.
+          anbei übersenden wir Ihnen die Sammelimpfbescheinigung für den Impftermin vom <strong>${deutschesDatum}</strong>
+          mit der freundlichen Bitte um Prüfung und Unterzeichnung.
         </p>
 
         <p>
           Die Bescheinigung wurde auf Grundlage der für diesen Impftermin eingegangenen Anmeldungen erstellt
-          und enthält sämtliche gemeldeten Teilnehmerdaten sowie die für die Durchführung der Sammelimpfung
-          erforderlichen Angaben.
-        </p>
-
-        <p>Das Dokument ist dieser E-Mail als PDF-Datei beigefügt.</p>
-
-        <p>
-          Wir bitten Sie, die Sammelimpfbescheinigung nach Ihrer Prüfung zu unterschreiben und uns anschließend
-          wieder zukommen zu lassen. Sollten aus Ihrer Sicht Korrekturen, Ergänzungen oder sonstige Anpassungen
-          erforderlich sein, bitten wir um eine kurze Rückmeldung.
+          und enthält die gemeldeten Teilnehmerdaten einschließlich der relevanten Angaben für die Durchführung
+          der Impfung.
         </p>
 
         <p>
-          Sofern möglich, wären wir Ihnen dankbar, wenn Sie Ihrer Rücksendung gleichzeitig auch die Rechnung für
-          die durchgeführte Sammelimpfung beifügen könnten. Dies erleichtert uns die weitere Bearbeitung und spart
-          beiden Seiten einen zusätzlichen Schriftwechsel.
+          Das Dokument wird dieser E-Mail als PDF-Datei beigefügt.
         </p>
+
+        <p>
+  Wir bitten Sie, die Bescheinigung nach Prüfung zu unterschreiben und uns anschließend wieder zur
+  Verfügung zu stellen. Sofern aus Ihrer Sicht Korrekturen, Ergänzungen oder sonstige Anpassungen
+  erforderlich sein sollten, bitten wir um eine kurze Mitteilung.
+</p>
+
+<p>
+  Gleichzeitig bitten wir darum, uns mit der Rücksendung der unterschriebenen Bescheinigung auch
+  die entsprechende Rechnung für die durchgeführte Impfung zu übersenden.
+</p>
 
         <p>
           Mit Ihrer Unterstützung leisten Sie einen wichtigen Beitrag zur ordnungsgemäßen Durchführung der
-          Sammelimpfung sowie zur vollständigen Dokumentation gegenüber den teilnehmenden Geflügelhaltern und
-          den zuständigen Stellen.
+          Sammelimpfung sowie zur vollständigen Dokumentation gegenüber den teilnehmenden Geflügelhaltern
+          und den zuständigen Stellen.
         </p>
 
         <p>
-          Für die stets angenehme Zusammenarbeit und Ihre Unterstützung bedanken wir uns bereits heute ganz
-          herzlich. Bei Rückfragen oder weiteren Informationen stehen wir Ihnen selbstverständlich jederzeit
-          gerne zur Verfügung.
+          Für die stets angenehme Zusammenarbeit und Ihre Unterstützung bedanken wir uns bereits im Voraus.
+          Bei Rückfragen oder weiteren Informationen stehen wir selbstverständlich jederzeit gerne zur Verfügung.
         </p>
 
-        ${emailSignatureHtml()}
+        <p>
+          Mit freundlichen Grüßen
+        </p>
+
+        <p>
+          <strong>Rainer Koplin</strong><br>
+          Impfwart<br>
+          RGZV Hagen und Umgebung seit 1903 e.V.
+        </p>
+
+        <p>
+          Kontakt:<br>
+          Thorsten von Oesen<br>
+          E-Mail: t.von-oesen@rgzv-hagen-westfalen.de
+        </p>
+
+        <hr>
+
+        <p style="font-size:12px;color:#666;">
+          Diese E-Mail wurde automatisch über das Anmeldesystem des
+          RGZV Hagen und Umgebung seit 1903 e.V. erstellt.
+        </p>
       `
     })
     await supabase
