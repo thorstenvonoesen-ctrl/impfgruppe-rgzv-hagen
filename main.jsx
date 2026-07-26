@@ -648,10 +648,14 @@ function ClubSelect() {
       <style>{`
         .final-home-page {
           min-height: 100vh !important;
+          min-height: 100dvh !important;
+          display: flex;
+          flex-direction: column;
           background: transparent !important;
         }
 
         .final-home {
+          flex: 1 0 auto;
           width: min(calc(100% - 32px), 1440px);
           margin: 12px auto 0;
           display: grid;
@@ -1057,83 +1061,85 @@ function ClubSelect() {
 
         @media (min-width: 1081px) {
           .final-home {
-            margin-top: 8px;
-            gap: 10px;
+            margin-top: 12px;
+            gap: 16px;
+            align-content: space-evenly;
           }
 
           .final-home-hero {
-            min-height: 164px;
-            padding-top: 14px;
-            padding-bottom: 14px;
+            min-height: 184px;
+            padding-top: 22px;
+            padding-bottom: 22px;
           }
 
           .final-home-hero-actions {
-            margin-top: 9px;
+            margin-top: 14px;
           }
 
           .final-home-logo-stage {
-            width: 132px;
-            height: 132px;
+            width: 146px;
+            height: 146px;
           }
 
           .final-home-logo-stage img {
-            width: 112px;
-            height: 112px;
+            width: 126px;
+            height: 126px;
           }
 
           .final-home .home-dashboard-grid {
-            grid-template-rows: 250px !important;
-            gap: 10px !important;
+            grid-template-rows: 280px !important;
+            gap: 16px !important;
           }
 
           .final-home .home-countdown-card {
-            min-height: 250px !important;
-            height: 250px !important;
+            min-height: 280px !important;
+            height: 280px !important;
           }
 
           .final-home .home-countdown-card.dashboard-stat-card {
-            padding-top: 10px !important;
-            padding-bottom: 10px !important;
+            padding-top: 16px !important;
+            padding-bottom: 16px !important;
           }
 
           .final-home .home-countdown-card .appointment-countdown {
-            gap: 0;
+            gap: 2px;
           }
 
           .final-home .home-countdown-card .appointment-countdown-units {
-            margin-top: 2px !important;
+            margin-top: 4px !important;
           }
 
           .final-home .appointment-action-buttons {
-            margin-top: -1px;
+            margin-top: 0;
           }
 
           .final-home .home-dashboard-support {
-            grid-template-rows: 80px 160px !important;
-            gap: 10px !important;
+            grid-template-rows: 92px 172px !important;
+            gap: 16px !important;
           }
 
           .final-home .home-community-card {
-            padding-top: 4px !important;
-            padding-bottom: 4px !important;
+            padding-top: 7px !important;
+            padding-bottom: 7px !important;
           }
 
           .final-home .home-benefits-card {
-            padding-top: 7px !important;
-            padding-bottom: 7px !important;
-            gap: 3px !important;
+            padding-top: 10px !important;
+            padding-bottom: 10px !important;
+            gap: 5px !important;
           }
 
           .final-home-nav-card {
-            min-height: 94px;
-            padding-top: 11px;
-            padding-bottom: 11px;
+            min-height: 118px;
+            padding-top: 16px;
+            padding-bottom: 16px;
           }
 
           .final-home-page > footer {
-            margin-top: 6px;
-            padding-top: 10px !important;
-            padding-bottom: 10px !important;
+            flex: 0 0 auto;
+            margin-top: 12px;
+            padding-top: 16px !important;
+            padding-bottom: 16px !important;
           }
         }
 
