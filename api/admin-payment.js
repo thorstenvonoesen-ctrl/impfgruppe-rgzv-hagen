@@ -23,7 +23,8 @@ export default async function handler(req, res) {
     if (
       action === 'list-admin-memberships' ||
       action === 'get-admin-membership-detail' ||
-      action === 'invite-administrator'
+      action === 'invite-administrator' ||
+      action === 'set-admin-membership-active'
     ) {
       const { data: requesterMemberships, error: requesterError } = await supabase
         .from('club_admin_memberships')
@@ -33,6 +34,46 @@ export default async function handler(req, res) {
       if (requesterError) throw requesterError
       if (!(requesterMemberships || []).some(membership => membership.role === 'superadmin')) {
         return res.status(403).json({ error: 'Keine Berechtigung für die Adminverwaltung.' })
+      }
+
+      if (action === 'set-admin-membership-active') {
+        const email = String(req.body?.email || '').trim().toLowerCase()
+        const club = String(req.body?.club || '').trim()
+        const role = String(req.body?.role || '').trim()
+        const active = req.body?.active
+        if (!email || !club || !role || typeof active !== 'boolean') {
+          return res.status(400).json({ error: 'Der Status des Administrators konnte nicht geändert werden.' })
+        }
+        const users = []
+        for (let page = 1; ; page += 1) {
+          const { data: pageData, error: usersError } = await supabase.auth.admin.listUsers({ page, perPage: 1000 })
+          if (usersError) throw usersError
+          users.push(...(pageData?.users || []))
+          if ((pageData?.users || []).length < 1000) break
+        }
+        const selectedUser = users.find(user => String(user.email || '').toLowerCase() === email)
+        if (!selectedUser) return res.status(404).json({ error: 'Der Administrator wurde nicht gefunden.' })
+        const { data: selectedMemberships, error: selectedMembershipsError } = await supabase
+          .from('club_admin_memberships')
+          .select('id, role, clubs(name)')
+          .eq('user_id', selectedUser.id)
+        if (selectedMembershipsError) throw selectedMembershipsError
+        const clubMembership = (selectedMemberships || []).find(
+          membership => (membership.clubs?.name || '') === club
+        )
+        if (!clubMembership) return res.status(404).json({ error: 'Der Administrator wurde nicht gefunden.' })
+        if (selectedUser.id === userResult.user.id || clubMembership.role === 'superadmin') {
+          return res.status(400).json({ error: 'Ein Superadmin kann über diese Funktion nicht gesperrt werden.' })
+        }
+        if (clubMembership.role !== role || !['clubadmin', 'checkin_admin'].includes(role)) {
+          return res.status(404).json({ error: 'Der Administrator wurde nicht gefunden.' })
+        }
+        const { error: updateMembershipError } = await supabase
+          .from('club_admin_memberships')
+          .update({ active })
+          .eq('id', clubMembership.id)
+        if (updateMembershipError) throw updateMembershipError
+        return res.status(200).json({ success: true })
       }
 
       if (action === 'invite-administrator') {
@@ -181,6 +222,9 @@ export default async function handler(req, res) {
     }
     if (action === 'invite-administrator') {
       return res.status(500).json({ error: 'Der Administrator konnte nicht angelegt werden.' })
+    }
+    if (action === 'set-admin-membership-active') {
+      return res.status(500).json({ error: 'Der Status des Administrators konnte nicht geändert werden.' })
     }
     return res.status(500).json({ error: 'Zahlungsstatus konnte nicht gespeichert werden.' })
   }

@@ -4262,6 +4262,10 @@ const [newDateNote, setNewDateNote] = useState('')
   const [adminCreateBusy, setAdminCreateBusy] = useState(false)
   const [adminCreateError, setAdminCreateError] = useState('')
   const [adminCreateSuccess, setAdminCreateSuccess] = useState('')
+  const [adminStatusTarget, setAdminStatusTarget] = useState(null)
+  const [adminStatusBusy, setAdminStatusBusy] = useState(false)
+  const [adminStatusError, setAdminStatusError] = useState('')
+  const [adminStatusSuccess, setAdminStatusSuccess] = useState('')
   const [dateFeedback, setDateFeedback] = useState('')
   const [clubs, setClubs] = useState([])
 const [selectedClub, setSelectedClub] = useState(null)
@@ -4373,6 +4377,68 @@ const [selectedClub, setSelectedClub] = useState(null)
       setAdminCreateError('Der Administrator konnte nicht angelegt werden.')
     } finally {
       setAdminCreateBusy(false)
+    }
+  }
+  function confirmAdministratorStatus(membership) {
+    if (adminContext?.role !== 'superadmin' || membership.role === 'superadmin') return
+    setAdminStatusError('')
+    setAdminStatusTarget({ ...membership, nextActive: !membership.active })
+  }
+  async function updateAdministratorStatus() {
+    if (adminContext?.role !== 'superadmin' || !adminStatusTarget || adminStatusTarget.role === 'superadmin') return
+    setAdminStatusBusy(true)
+    setAdminStatusError('')
+    try {
+      const { data: { session } } = await supabase.auth.getSession()
+      const response = await fetch('/api/admin-payment', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${session?.access_token || ''}`
+        },
+        body: JSON.stringify({
+          action: 'set-admin-membership-active',
+          email: adminStatusTarget.email,
+          club: adminStatusTarget.club,
+          role: adminStatusTarget.role,
+          active: adminStatusTarget.nextActive
+        })
+      })
+      const result = await response.json().catch(() => ({}))
+      if (!response.ok) {
+        const allowedMessages = [
+          'Keine Berechtigung für die Adminverwaltung.',
+          'Der Administrator wurde nicht gefunden.',
+          'Ein Superadmin kann über diese Funktion nicht gesperrt werden.',
+          'Der Status des Administrators konnte nicht geändert werden.'
+        ]
+        setAdminStatusError(
+          allowedMessages.includes(result.error)
+            ? result.error
+            : 'Der Status des Administrators konnte nicht geändert werden.'
+        )
+        return
+      }
+      const changedAdministrator = adminStatusTarget
+      setAdminStatusTarget(null)
+      setAdminStatusSuccess(
+        changedAdministrator.nextActive
+          ? 'Der Administrator wurde freigeschaltet.'
+          : 'Der Administrator wurde gesperrt.'
+      )
+      setSelectedAdministrator(current =>
+        current &&
+        current.email === changedAdministrator.email &&
+        current.club === changedAdministrator.club &&
+        current.role === changedAdministrator.role
+          ? { ...current, active: changedAdministrator.nextActive }
+          : current
+      )
+      await openAdminManagement()
+    } catch {
+      setAdminStatusError('Der Status des Administrators konnte nicht geändert werden.')
+    } finally {
+      setAdminStatusBusy(false)
     }
   }
   async function openAdministratorDetail(membership) {
@@ -5104,6 +5170,23 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
 
   return <div className="page admin"><Header admin />
 
+  {adminStatusTarget && adminContext?.role === 'superadmin' && (
+    <div className="modal admin-status-modal">
+      <section className="modal-card" role="dialog" aria-modal="true">
+        <p>
+          {adminStatusTarget.nextActive
+            ? 'Soll dieser Administrator wieder freigeschaltet werden?'
+            : 'Soll dieser Administrator wirklich gesperrt werden? Er kann sich anschließend nicht mehr im Adminbereich anmelden.'}
+        </p>
+        {adminStatusError && <p role="alert" className="campaign-load-error">{adminStatusError}</p>}
+        <button type="button" className="ghost" onClick={() => setAdminStatusTarget(null)} disabled={adminStatusBusy}>Abbrechen</button>
+        <button type="button" className="primary" onClick={updateAdministratorStatus} disabled={adminStatusBusy}>
+          {adminStatusTarget.nextActive ? 'Administrator freischalten' : 'Administrator sperren'}
+        </button>
+      </section>
+    </div>
+  )}
+
   {adminCreateOpen && adminContext?.role === 'superadmin' && (
     <div className="modal admin-create-modal">
       <section className="modal-card" role="dialog" aria-modal="true" aria-labelledby="admin-create-title">
@@ -5191,6 +5274,7 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
           </div>
         </div>
         {adminCreateSuccess && <p role="status">{adminCreateSuccess}</p>}
+        {adminStatusSuccess && <p role="status">{adminStatusSuccess}</p>}
         {administratorMembershipsLoading && <p>Administratoren werden geladen …</p>}
         {administratorMembershipsError && <p role="alert" className="campaign-load-error">{administratorMembershipsError}</p>}
         {!administratorMembershipsLoading && !administratorMembershipsError && (
@@ -5214,7 +5298,14 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
                     <td>{administratorRoleLabel(membership.role)}</td>
                     <td>{membership.active ? 'Aktiv' : 'Gesperrt'}</td>
                     <td>{membership.createdAt ? new Date(membership.createdAt).toLocaleDateString('de-DE') : '—'}</td>
-                    <td><button type="button" className="ghost" onClick={() => openAdministratorDetail(membership)}>Details anzeigen</button></td>
+                    <td>
+                      <button type="button" className="ghost" onClick={() => openAdministratorDetail(membership)}>Details anzeigen</button>
+                      {membership.role !== 'superadmin' && (
+                        <button type="button" className="ghost" onClick={() => confirmAdministratorStatus(membership)}>
+                          {membership.active ? 'Sperren' : 'Freischalten'}
+                        </button>
+                      )}
+                    </td>
                   </tr>
                 ))}
               </tbody>
