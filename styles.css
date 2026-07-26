@@ -411,12 +411,12 @@ td .paid {
   overflow-wrap: anywhere;
   word-break: break-word;
 }
-.admin .admin-management-table th:nth-child(1) { width: 20%; }
-.admin .admin-management-table th:nth-child(2) { width: 18%; }
-.admin .admin-management-table th:nth-child(3) { width: 12%; }
-.admin .admin-management-table th:nth-child(4) { width: 9%; }
-.admin .admin-management-table th:nth-child(5) { width: 13%; }
-.admin .admin-management-table th:nth-child(6) { width: 28%; }
+.admin .admin-management-table th:nth-child(1) { width: 17%; }
+.admin .admin-management-table th:nth-child(2) { width: 15%; }
+.admin .admin-management-table th:nth-child(3) { width: 9%; }
+.admin .admin-management-table th:nth-child(4) { width: 7%; }
+.admin .admin-management-table th:nth-child(5) { width: 10%; }
+.admin .admin-management-table th:nth-child(6) { width: 42%; }
 .admin .admin-management-table td button {
   width: 100%;
   min-height: 38px;
@@ -426,9 +426,14 @@ td .paid {
 }
 .admin .admin-management-actions {
   display: grid;
-  grid-template-columns: repeat(2,minmax(0,1fr));
+  grid-template-columns: repeat(4,minmax(0,1fr));
   gap: 7px;
   align-items: stretch;
+}
+@media (max-width: 1050px) {
+  .admin .admin-management-actions {
+    grid-template-columns: repeat(2,minmax(0,1fr));
+  }
 }
 @media (max-width: 700px) {
   .admin .admin-management-modal {
@@ -440,6 +445,9 @@ td .paid {
   .admin .admin-management-table td {
     padding: 10px 6px;
     font-size: 12px;
+  }
+  .admin .admin-management-actions {
+    grid-template-columns: 1fr;
   }
 }
 .admin .modal-card h2 { margin-top: 0; color: #163a2f; }

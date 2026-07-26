@@ -6637,10 +6637,10 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
                       <button type="button" className="ghost" onClick={() => openAdministratorDetail(membership)}>Details anzeigen</button>
                       {membership.role !== 'superadmin' && (
                         <>
+                          <button type="button" className="ghost" onClick={() => openAdministratorRole(membership)}>Rolle ändern</button>
                           <button type="button" className="ghost" onClick={() => confirmAdministratorStatus(membership)}>
                             {membership.active ? 'Sperren' : 'Freischalten'}
                           </button>
-                          <button type="button" className="ghost" onClick={() => openAdministratorRole(membership)}>Rolle ändern</button>
                           <button type="button" className="ghost" onClick={() => confirmAdministratorDelete(membership)}>Löschen</button>
                         </>
                       )}
