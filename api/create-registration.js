@@ -1,15 +1,48 @@
 import { createHmac, timingSafeEqual } from 'node:crypto'
 import { createAdminSupabase } from './_supabase-admin.js'
 
-const fields = ['firstname', 'lastname', 'street', 'housenumber', 'zipcode', 'city', 'email', 'phone', 'tsk_number', 'animal_type']
+const fields = ['firstname', 'lastname', 'street', 'housenumber', 'zipcode', 'city', 'email', 'phone', 'tsk_number']
 const REGISTRATION_VACCINE = 'Newcastle'
-const ALLOWED_ANIMAL_TYPES = new Set(['Hühner', 'Zwerghühner', 'Puten'])
+const ANIMAL_COUNT_FIELDS = [
+  { field: 'chicken_count', label: 'Hühner' },
+  { field: 'bantam_count', label: 'Zwerghühner' },
+  { field: 'turkey_count', label: 'Puten' }
+]
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 const TOKEN_LIFETIME_MS = 10 * 60 * 1000
 const PROFILE_FIELDS = 'firstname, lastname, street, housenumber, zipcode, city, phone, tsk_number, animal_type'
 
 function normalizeEmail(value) {
   return String(value || '').trim().toLowerCase()
+}
+
+function parseAnimalCount(value) {
+  if (value === '' || value === null || value === undefined) return 0
+  if (typeof value === 'number') return Number.isSafeInteger(value) && value >= 0 ? value : null
+  if (typeof value !== 'string' || !/^\d+$/.test(value.trim())) return null
+  const count = Number(value)
+  return Number.isSafeInteger(count) && count >= 0 ? count : null
+}
+
+export function buildAnimalRegistration(input = {}) {
+  const counts = Object.fromEntries(
+    ANIMAL_COUNT_FIELDS.map(({ field }) => [field, parseAnimalCount(input[field])])
+  )
+  if (Object.values(counts).some(count => count === null)) {
+    return { error: 'Die Tierzahlen sind ungültig.' }
+  }
+
+  const total = Object.values(counts).reduce((sum, count) => sum + count, 0)
+  if (total < 1) {
+    return { error: 'Bitte geben Sie für mindestens eine Tierart eine Anzahl ein.' }
+  }
+
+  const animalType = ANIMAL_COUNT_FIELDS
+    .filter(({ field }) => counts[field] > 0)
+    .map(({ label }) => label)
+    .join(', ')
+
+  return { counts, total, animalType }
 }
 
 function tokenSecret() {
@@ -112,13 +145,19 @@ export default async function handler(req, res) {
   if (req.body?.action === 'lookup-participant') return handleParticipantLookup(req, res)
 
   try {
-    const { vaccination_date_id: vaccinationDateId, animal_count: animalCount, member_code: memberCode, ...input } = req.body || {}
-    if (!vaccinationDateId || !input.firstname || !input.lastname || !input.email || !input.tsk_number || !animalCount) {
+    const { vaccination_date_id: vaccinationDateId, member_code: memberCode, ...input } = req.body || {}
+    if (!vaccinationDateId || !input.firstname || !input.lastname || !input.email || !input.tsk_number) {
       return res.status(400).json({ error: 'Bitte alle Pflichtfelder ausfüllen.' })
     }
-    if (!ALLOWED_ANIMAL_TYPES.has(String(input.animal_type || '').trim())) {
-      return res.status(400).json({ error: 'Die ausgewählte Tierart ist nicht zulässig.' })
+    const animalRegistration = buildAnimalRegistration(input)
+    if (animalRegistration.error) {
+      return res.status(400).json({ error: animalRegistration.error })
     }
+    const {
+      counts: animalCounts,
+      total: animalCount,
+      animalType
+    } = animalRegistration
     const supabase = createAdminSupabase()
     const { data: appointment, error: appointmentError } = await supabase
       .from('vaccination_dates').select('club_id').eq('id', vaccinationDateId).single()
@@ -129,7 +168,9 @@ export default async function handler(req, res) {
     const { data, error } = await supabase.from('participants').insert({
       ...participant,
       vaccine: REGISTRATION_VACCINE,
-      animal_count: Number(animalCount),
+      animal_type: animalType,
+      animal_count: animalCount,
+      ...animalCounts,
       vaccination_date_id: vaccinationDateId,
       club_id: appointment.club_id,
       is_member: isMember,

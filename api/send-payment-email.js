@@ -4,6 +4,25 @@ import { createAdminSupabase } from './_supabase-admin.js'
 
 const resend = new Resend(process.env.RESEND_API_KEY)
 const qrCodeContentId = 'participant-checkin-qr'
+const participantAnimalCountFields = [
+  ['chicken_count', 'Hühner'],
+  ['bantam_count', 'Zwerghühner'],
+  ['turkey_count', 'Puten']
+]
+
+function getParticipantAnimalSummary(participant) {
+  const hasStructuredCounts = participantAnimalCountFields.some(([field]) => participant?.[field] != null)
+  const animals = hasStructuredCounts
+    ? participantAnimalCountFields
+        .map(([field, label]) => ({ label, count: Number(participant?.[field] || 0) }))
+        .filter(({ count }) => count > 0)
+    : participant?.animal_type && Number(participant?.animal_count || 0) > 0
+      ? [{ label: participant.animal_type, count: Number(participant.animal_count) }]
+      : []
+  const total = Number(participant?.animal_count || animals.reduce((sum, animal) => sum + animal.count, 0))
+
+  return { animals, total }
+}
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -19,7 +38,7 @@ export default async function handler(req, res) {
     const supabase = createAdminSupabase()
     const { data: participant, error: participantError } = await supabase
       .from('participants')
-      .select('email, firstname, lastname, checkin_token')
+      .select('email, firstname, lastname, checkin_token, animal_type, animal_count, chicken_count, bantam_count, turkey_count')
       .eq('id', participantId)
       .single()
 
@@ -38,6 +57,10 @@ export default async function handler(req, res) {
       margin: 2,
       errorCorrectionLevel: 'M'
     })
+    const animalSummary = getParticipantAnimalSummary(participant)
+    const animalDetailsHtml = animalSummary.animals
+      .map(({ label, count }) => `${label}: ${count}`)
+      .join('<br>')
 
     const result = await resend.emails.send({
       from: 'RGZV Hagen <onboarding@resend.dev>',
@@ -60,6 +83,12 @@ export default async function handler(req, res) {
 <p>
   Ihre Anmeldung wurde erfolgreich erfasst und Ihre Zahlung ist
   erfolgreich eingegangen.
+</p>
+
+<p>
+  <strong>Angemeldete Tiere:</strong><br>
+  ${animalDetailsHtml}${animalDetailsHtml ? '<br>' : ''}
+  <strong>Gesamtzahl: ${animalSummary.total}</strong>
 </p>
 
 <p>

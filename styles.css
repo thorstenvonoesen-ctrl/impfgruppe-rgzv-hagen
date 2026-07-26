@@ -291,9 +291,14 @@ td .paid {
 .participation-fee-notice p + p { margin-top: 8px; }
 .participation-fee-notice-compact { margin: 0; padding: 14px 16px; }
 .participation-fee-notice-compact p { align-self: center; }
+.signup-animal-counts { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 14px; }
+.signup-animal-counts label { min-width: 0; }
+.signup-animal-total { margin: -4px 0 4px; color: #d1fae5; font-weight: 700; }
+.signup-animal-total strong { color: #fff3e5; font-size: 18px; }
 .signup-submit { justify-content: center; width: 100%; min-height: 54px; margin-top: 4px; font-size: 17px; white-space: normal; text-align: center; background: #f28c28; box-shadow: 0 12px 24px rgba(194, 93, 13, .25); }
 .signup-submit:hover:not(:disabled) { background: #dc741d; box-shadow: 0 16px 28px rgba(194, 93, 13, .32); }
 .signup-submit:disabled { cursor: wait; opacity: .7; }
+@media (max-width: 700px) { .signup-animal-counts { grid-template-columns: 1fr; gap: 8px; } }
 .signup-card .message { margin: 0; border: 1px solid #a7f3d0; }
 .signup-page > .ghost { display: block; margin: -46px auto 28px; color: #fff; background: transparent; border-color: rgba(255,255,255,.35); }
 .signup-page > .ghost:hover { background: rgba(255,255,255,.12); }

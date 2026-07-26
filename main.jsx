@@ -96,13 +96,42 @@ function emptyForm() {
   city:'',
   email:'',
   phone:'',
-  tsk_number:'',
-animal_type:'',
-animal_count:'',
+tsk_number:'',
+chicken_count:'',
+bantam_count:'',
+turkey_count:'',
 vaccine:'Newcastle',
   vaccination_date_id:'',
 member_code:''
 }
+}
+
+const participantAnimalCountFields = [
+  { field: 'chicken_count', label: 'Hühner' },
+  { field: 'bantam_count', label: 'Zwerghühner' },
+  { field: 'turkey_count', label: 'Puten' }
+]
+
+function participantAnimalBreakdown(participant) {
+  const hasStructuredCounts = participantAnimalCountFields.some(
+    ({ field }) => participant?.[field] !== null && participant?.[field] !== undefined
+  )
+  if (hasStructuredCounts) {
+    return participantAnimalCountFields
+      .map(({ field, label }) => ({ label, count: Number(participant?.[field] || 0) }))
+      .filter(item => item.count > 0)
+  }
+  const legacyCount = Number(participant?.animal_count || 0)
+  return legacyCount > 0
+    ? [{ label: participant?.animal_type || 'Tiere', count: legacyCount }]
+    : []
+}
+
+function formatParticipantAnimals(participant) {
+  const breakdown = participantAnimalBreakdown(participant)
+  const total = Number(participant?.animal_count || breakdown.reduce((sum, item) => sum + item.count, 0))
+  const details = breakdown.map(item => `${item.count} ${item.label}`).join(', ')
+  return details ? `${details} – Gesamt: ${total}` : `Gesamt: ${total}`
 }
 
 function App() {
@@ -3081,12 +3110,17 @@ function PublicSignup() {
   const reuseConfirmationTimerRef = useRef(null)
   const formEmailRef = useRef(form.email)
   formEmailRef.current = form.email
+  const animalTotal = participantAnimalCountFields.reduce(
+    (sum, { field }) => sum + (Number.isSafeInteger(Number(form[field])) && Number(form[field]) >= 0 ? Number(form[field]) : 0),
+    0
+  )
   
   const normalizeReuseEmail = value => String(value || '').trim().toLowerCase()
   const isValidReuseEmail = value => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)
 
   const update = e => {
     const { name, value } = e.target
+    if (participantAnimalCountFields.some(item => item.field === name) && value !== '' && !/^\d+$/.test(value)) return
     setForm(current => ({ ...current, [name]: value }))
 
     if (name === 'email' && normalizeReuseEmail(value) !== reuseLookup.email) {
@@ -3154,11 +3188,6 @@ function PublicSignup() {
       if (normalizeReuseEmail(formEmailRef.current) !== lookupEmail) return
 
       const profile = result.profile
-      const availableAnimalTypes = new Set([
-        'Hühner',
-        'Zwerghühner',
-        'Puten'
-      ])
       setForm(current => ({
         ...current,
         firstname: profile.firstname || '',
@@ -3168,8 +3197,7 @@ function PublicSignup() {
         zipcode: profile.zipcode || '',
         city: profile.city || '',
         phone: profile.phone || '',
-        tsk_number: profile.tsk_number || '',
-        animal_type: availableAnimalTypes.has(profile.animal_type) ? profile.animal_type : current.animal_type
+        tsk_number: profile.tsk_number || ''
       }))
       setReuseLookup({ status: 'applied', email: lookupEmail, token: '' })
       setReuseConfirmation('Ihre Stammdaten wurden übernommen. Bitte prüfen Sie die Angaben und ergänzen Sie Tierzahl, Impfstoff und Impftermin.')
@@ -3309,6 +3337,11 @@ useEffect(() => {
   setLoading(false)
   return
 }
+    if (animalTotal < 1) {
+      setMessage('Bitte geben Sie für mindestens eine Tierart eine Anzahl ein.')
+      setLoading(false)
+      return
+    }
     const { member_code, ...formData } = form
     try {
       let participantId = null
@@ -3317,7 +3350,7 @@ useEffect(() => {
         const response = await fetch('/api/create-registration', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ ...formData, member_code, animal_count: Number(form.animal_count), vaccination_date_id: form.vaccination_date_id })
+          body: JSON.stringify({ ...formData, member_code, vaccination_date_id: form.vaccination_date_id })
         })
         const result = await response.json()
         if (!response.ok) throw new Error(result.error || 'Anmeldung konnte nicht gespeichert werden.')
@@ -3325,7 +3358,11 @@ useEffect(() => {
         paymentAmount = Number(result.paymentAmount || 10)
       } else {
         paymentAmount = 10
-        const payload = { ...formData, club_id: await getDefaultClubId(), animal_count: Number(form.animal_count), vaccination_date_id: form.vaccination_date_id, payment_status: 'offen', payment_amount: paymentAmount, is_member: false }
+        const animalType = participantAnimalCountFields
+          .filter(({ field }) => Number(form[field] || 0) > 0)
+          .map(({ label }) => label)
+          .join(', ')
+        const payload = { ...formData, animal_type: animalType, animal_count: animalTotal, club_id: await getDefaultClubId(), vaccination_date_id: form.vaccination_date_id, payment_status: 'offen', payment_amount: paymentAmount, is_member: false }
         const list = JSON.parse(localStorage.getItem('participants') || '[]')
         list.push({ id: crypto.randomUUID(), ...payload, created_at: new Date().toISOString() })
         localStorage.setItem('participants', JSON.stringify(list))
@@ -3674,21 +3711,13 @@ if (!showForm) {
   Optional: Mitglieder Ihres Vereins erhalten bei Eingabe eines gültigen Mitgliedscodes automatisch den vergünstigten Preis.
 </p>
 
-<label>
-  Tierart
-  <select
-    name="animal_type"
-    value={form.animal_type}
-    onChange={update}
-    required
-  >
-    <option value="">Bitte wählen</option>
-    <option value="Hühner">Hühner</option>
-    <option value="Zwerghühner">Zwerghühner</option>
-    <option value="Puten">Puten</option>
-  </select>
-</label>
-          <div className="two"><Input label="Anzahl Tiere" name="animal_count" type="number" min="1" value={form.animal_count} onChange={update} required/><label>Impfstoff<input value="Newcastle-Impfung" readOnly aria-readonly="true" /></label></div>
+          <div className="signup-animal-counts">
+            <Input label="Anzahl Hühner" name="chicken_count" type="number" min="0" step="1" value={form.chicken_count} onChange={update}/>
+            <Input label="Anzahl Zwerghühner" name="bantam_count" type="number" min="0" step="1" value={form.bantam_count} onChange={update}/>
+            <Input label="Anzahl Puten" name="turkey_count" type="number" min="0" step="1" value={form.turkey_count} onChange={update}/>
+          </div>
+          <p className="signup-animal-total" aria-live="polite">Gesamtzahl Tiere: <strong>{animalTotal}</strong></p>
+          <label>Impfstoff<input value="Newcastle-Impfung" readOnly aria-readonly="true" /></label>
           <div className="section-title signup-section-title">
   Impfung
 </div>
@@ -3757,7 +3786,13 @@ value={form.vaccination_date_id}
               Erstattung der bereits entrichteten Teilnahmegebühr.
             </p>
           </aside>
-          <button disabled={loading} className="primary signup-submit">{loading ? 'Speichern...' : 'Hühner, Zwerghühner oder Puten zur Newcastle-Impfung anmelden & bezahlen'}</button>
+          <button disabled={loading} className="primary signup-submit">
+            {loading
+              ? 'Speichern...'
+              : animalTotal > 0
+                ? `${animalTotal} Tiere zur Newcastle-Impfung anmelden & bezahlen`
+                : 'Zur Newcastle-Impfung anmelden & bezahlen'}
+          </button>
           {message && <p className="message">{message}</p>}
         </form>
   </div>
@@ -5021,7 +5056,7 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
       `${p.street || ''} ${p.housenumber || ''}, ${p.zipcode || ''} ${p.city || ''}`,
       p.email || '',
       p.tsk_number || '',
-      p.animal_count || '',
+      formatParticipantAnimals(p),
       p.vaccine || '',
       p.payment_status || 'offen'
     ])
@@ -5077,7 +5112,7 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
           `${participant.firstname || ''} ${participant.lastname || ''}`.trim(),
           `${participant.street || ''} ${participant.housenumber || ''}, ${participant.zipcode || ''} ${participant.city || ''}`.trim(),
           participant.tsk_number || '',
-          participant.animal_type || '',
+          formatParticipantAnimals(participant),
           participant.animal_count || ''
         ])
       })
@@ -5185,7 +5220,7 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
         participant.lastname || '',
         participant.firstname || '',
         participant.is_member ? 'Ja' : 'Nein',
-        participant.animal_type || '',
+        formatParticipantAnimals(participant),
         participant.animal_count || 0,
         participant.vaccine || '',
         paymentMethodLabel(participant),
@@ -6122,7 +6157,7 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
 <td>{p.phone}</td>
 <td>{p.tsk_number}</td>
               <td>{p.is_member ? 'Ja' : 'Nein'}</td>
-              <td>{p.animal_count}</td>
+              <td>{formatParticipantAnimals(p)}</td>
               <td>{p.vaccine}</td>
               <td>
   {
@@ -6232,6 +6267,8 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
       placeholder="TSK Betriebsnummer"
     />
 
+    <p><strong>Tierarten:</strong> {formatParticipantAnimals(editingParticipant)}</p>
+
     <input
       type="number"
       value={editingParticipant.animal_count || 0}
@@ -6273,7 +6310,7 @@ function ExportButtons({ participants, vaccinationDates }) {
   const isVaccinationDay = nextDate === today
   function csv() {
     const h=['Vorname','Nachname','Adresse','PLZ','Ort','E-Mail','Telefon','TSK Betriebsnummer.','Tiere','Impfung','Zahlung']
-    const rows=participants.map(p=>[p.firstname,p.lastname,`${p.street||''} ${p.housenumber||''}`.trim(),p.zipcode,p.city,p.email,p.phone,p.tsk_number,p.animal_count,p.vaccine,p.payment_status])
+    const rows=participants.map(p=>[p.firstname,p.lastname,`${p.street||''} ${p.housenumber||''}`.trim(),p.zipcode,p.city,p.email,p.phone,p.tsk_number,formatParticipantAnimals(p),p.vaccine,p.payment_status])
     const out=[h,...rows].map(r=>r.map(v=>`"${String(v??'').replaceAll('"','""')}"`).join(';')).join('\n')
     const blob=new Blob([out],{type:'text/csv;charset=utf-8'})
     const a=document.createElement('a')
@@ -6291,7 +6328,7 @@ function ExportButtons({ participants, vaccinationDates }) {
         `${p.street||''} ${p.housenumber||''}, ${p.zipcode||''} ${p.city||''}`,
         p.email || '',
         p.tsk_number || '',
-        p.animal_count || '',
+        formatParticipantAnimals(p),
         p.vaccine || '',
         p.payment_status || ''
       ])
@@ -6327,7 +6364,7 @@ function ExportButtons({ participants, vaccinationDates }) {
         `${p.firstname} ${p.lastname}`,
         `${p.street||''} ${p.housenumber||''}, ${p.zipcode||''} ${p.city||''}`,
         p.tsk_number || '',
-        p.animal_type || '',
+        formatParticipantAnimals(p),
         p.animal_count || ''
       ])
     })
@@ -6371,7 +6408,7 @@ function ExportButtons({ participants, vaccinationDates }) {
         `${p.firstname} ${p.lastname}`,
         `${p.street||''} ${p.housenumber||''}, ${p.zipcode||''} ${p.city||''}`,
         p.tsk_number || '',
-        p.animal_type || '',
+        formatParticipantAnimals(p),
         p.animal_count || ''
       ])
     })
