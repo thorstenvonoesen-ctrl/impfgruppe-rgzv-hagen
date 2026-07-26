@@ -1,5 +1,6 @@
 import Stripe from 'stripe'
 import { createAdminSupabase } from './_supabase-admin.js'
+import { createPaymentMailProof } from './_email-signature.js'
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY)
 
@@ -135,15 +136,24 @@ export default async function handler(req, res) {
       return res.status(409).json({ error: 'Die Zahlung konnte nicht eindeutig verbucht werden.' })
     }
 
+    const authorization = createPaymentMailProof({
+      participantId: participant.id,
+      paymentMethod: 'stripe',
+      paymentId
+    })
     const emailResponse = participant.email
       ? await fetch(`https://${req.headers.host}/api/send-payment-email`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ participantId: participant.id })
+          body: JSON.stringify({ authorization })
         })
       : null
 
-    return res.status(200).json({ success: true, emailSent: Boolean(emailResponse?.ok) })
+    const emailResult = emailResponse ? await emailResponse.json().catch(() => ({})) : {}
+    return res.status(200).json({
+      success: true,
+      emailSent: Boolean(emailResponse?.ok && emailResult.emailSent)
+    })
   } catch {
     return res.status(500).json({ error: 'Stripe-Zahlung konnte nicht bestätigt werden.' })
   }

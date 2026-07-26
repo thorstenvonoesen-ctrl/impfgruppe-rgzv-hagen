@@ -1,10 +1,12 @@
-import { createHmac, timingSafeEqual } from 'node:crypto'
+import { createHash, createHmac, timingSafeEqual } from 'node:crypto'
 import { Resend } from 'resend'
 import { createAdminSupabase, getBearerToken } from './_supabase-admin.js'
 import { emailSignatureHtml } from './_email-signature.js'
 
 const resend = new Resend(process.env.RESEND_API_KEY)
-const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+const EMAIL_PATTERN = /^[^\s@,;]+@[^\s@,;]+\.[^\s@,;]+$/
+const MAX_REQUEST_BYTES = 65536
+const MAX_CHANGE_TEXT_LENGTH = 200
 const normalizeEmail = value => String(value || '').trim().toLowerCase()
 const escapeHtml = value => String(value || '').replace(/[&<>"']/g, character => ({
   '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;'
@@ -51,7 +53,9 @@ async function authenticateAdmin(req, supabase, clubId) {
     .eq('user_id', userResult.user.id)
     .eq('active', true)
   const authorized = (memberships || []).some(
-    membership => membership.role === 'superadmin' || String(membership.club_id) === String(clubId)
+    membership =>
+      membership.role === 'superadmin' ||
+      (membership.role === 'clubadmin' && String(membership.club_id) === String(clubId))
   )
   return authorized ? userResult.user : null
 }
@@ -533,33 +537,116 @@ async function handleUnsubscribe(req, res, supabase) {
 
 async function handleExistingReminder(req, res, supabase) {
   const { vaccinationDateId, type, newTime, newMeetingPoint } = req.body || {}
+  if (!vaccinationDateId || !['time', 'location'].includes(type)) {
+    return res.status(400).json({ error: 'Ungültige Terminänderung.' })
+  }
+  const detailValue = String(type === 'time' ? newTime : newMeetingPoint).trim()
+  if (
+    !detailValue ||
+    detailValue.length > MAX_CHANGE_TEXT_LENGTH ||
+    /[\r\n]/.test(detailValue)
+  ) {
+    return res.status(400).json({ error: 'Die Terminänderung ist ungültig oder zu lang.' })
+  }
+
+  const { data: appointment, error: appointmentError } = await supabase
+    .from('vaccination_dates')
+    .select('id, club_id, title, date, note')
+    .eq('id', vaccinationDateId)
+    .single()
+  if (appointmentError || !appointment) {
+    return res.status(404).json({ error: 'Impftermin nicht gefunden.' })
+  }
+  if (isTestAppointment(appointment)) {
+    return res.status(400).json({ error: 'Für Testtermine werden keine E-Mails versendet.' })
+  }
+
+  const user = await authenticateAdmin(req, supabase, appointment.club_id)
+  if (!user) {
+    return res.status(403).json({ error: 'Keine Berechtigung für diesen Verein.' })
+  }
+
   const { data: participants, error } = await supabase
     .from('participants')
-    .select('*')
+    .select('id, firstname, lastname, email')
+    .eq('club_id', appointment.club_id)
     .eq('vaccination_date_id', vaccinationDateId)
     .eq('payment_status', 'bezahlt')
-  if (error) return res.status(500).json({ error: error.message })
-  let sent = 0
+  if (error) throw error
+
+  const recipients = new Map()
   for (const participant of participants || []) {
+    const email = normalizeEmail(participant.email)
+    if (!EMAIL_PATTERN.test(email) || /[\r\n]/.test(email) || email.length > 254) continue
+    if (!recipients.has(email)) recipients.set(email, { ...participant, email })
+  }
+
+  const tenMinuteBucket = Math.floor(Date.now() / (10 * 60 * 1000))
+  const eventKey = createHash('sha256')
+    .update([
+      appointment.club_id,
+      appointment.id,
+      type,
+      detailValue.toLocaleLowerCase('de-DE'),
+      tenMinuteBucket
+    ].join('|'))
+    .digest('hex')
+  const { data: dispatchEvent, error: dispatchError } = await supabase
+    .from('mail_dispatch_events')
+    .insert({
+      club_id: appointment.club_id,
+      vaccination_date_id: appointment.id,
+      event_type: type === 'time' ? 'appointment-time' : 'appointment-meeting-point',
+      event_key: eventKey,
+      created_by: user.id,
+      status: 'sending'
+    })
+    .select('id')
+    .single()
+  if (dispatchError?.code === '23505') {
+    return res.status(200).json({ success: true, alreadyProcessed: true, sent: 0 })
+  }
+  if (dispatchError) throw dispatchError
+
+  let sent = 0
+  let failed = 0
+  for (const participant of recipients.values()) {
     const isTimeChange = type === 'time'
     const subject = isTimeChange
       ? 'Änderung der Uhrzeit Ihres Impftermins'
       : 'Änderung des Treffpunkts Ihres Impftermins'
     const detail = isTimeChange
-      ? `<p><strong>Neue Uhrzeit:</strong> ${escapeHtml(newTime)}</p>`
-      : `<p><strong>Neuer Treffpunkt:</strong> ${escapeHtml(newMeetingPoint)}</p>`
-    await resend.emails.send({
-      from: 'RGZV Hagen <onboarding@resend.dev>',
-      to: participant.email,
-      subject,
-      html: `<h2>${isTimeChange ? 'Änderung der Uhrzeit' : 'Änderung des Treffpunkts'}</h2>
-        <p>Hallo ${escapeHtml(participant.firstname)} ${escapeHtml(participant.lastname)},</p>
-        <p>${isTimeChange ? 'Die Uhrzeit' : 'Der Treffpunkt'} Ihres Impftermins wurde geändert.</p>
-        ${detail}
-        <p>Mit freundlichen Grüßen<br>RGZV Hagen und Umgebung seit 1903 e.V.</p>`
-    })
-    sent += 1
+      ? `<p><strong>Neue Uhrzeit:</strong> ${escapeHtml(detailValue)}</p>`
+      : `<p><strong>Neuer Treffpunkt:</strong> ${escapeHtml(detailValue)}</p>`
+    try {
+      const result = await resend.emails.send({
+        from: 'RGZV Hagen <onboarding@resend.dev>',
+        to: participant.email,
+        subject,
+        html: `<h2>${isTimeChange ? 'Änderung der Uhrzeit' : 'Änderung des Treffpunkts'}</h2>
+          <p>Hallo ${escapeHtml(participant.firstname)} ${escapeHtml(participant.lastname)},</p>
+          <p>${isTimeChange ? 'Die Uhrzeit' : 'Der Treffpunkt'} Ihres Impftermins wurde geändert.</p>
+          ${detail}
+          <p>Mit freundlichen Grüßen<br>RGZV Hagen und Umgebung seit 1903 e.V.</p>`
+      }, { idempotencyKey: `appointment/${dispatchEvent.id}/${participant.id}` })
+      if (result.error) throw new Error('Mail provider rejected request.')
+      sent += 1
+    } catch {
+      failed += 1
+    }
   }
+
+  await supabase
+    .from('mail_dispatch_events')
+    .update({
+      status: failed ? 'partial' : 'completed',
+      sent_count: sent,
+      failed_count: failed,
+      completed_at: new Date().toISOString()
+    })
+    .eq('id', dispatchEvent.id)
+    .eq('status', 'sending')
+
   return res.status(200).json({ success: true, sent })
 }
 
@@ -570,6 +657,10 @@ export default async function handler(req, res) {
       return await handleUnsubscribe(req, res, supabase)
     }
     if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' })
+    const contentLength = Number(req.headers['content-length'] || 0)
+    if (contentLength > MAX_REQUEST_BYTES) {
+      return res.status(413).json({ error: 'Anfrage ist zu groß.' })
+    }
     const action = req.body?.action
     if (action === 'smart-assistant') return await handleSmartAssistant(req, res, supabase)
     if (action === 'campaign-dashboard') return await handleCampaignDashboard(req, res, supabase)
@@ -581,6 +672,7 @@ export default async function handler(req, res) {
     return await handleExistingReminder(req, res, supabase)
   } catch (error) {
     const status = error.code === 'TEST_APPOINTMENT' ? 400 : error.code === 'NOT_FIRST_REGULAR' ? 409 : 500
-    return res.status(status).json({ error: error.message || 'Saisonerinnerung konnte nicht verarbeitet werden.' })
+    const safeMessage = status < 500 ? error.message : 'E-Mail-Anfrage konnte nicht verarbeitet werden.'
+    return res.status(status).json({ error: safeMessage })
   }
 }

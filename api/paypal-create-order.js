@@ -1,4 +1,5 @@
 import { createAdminSupabase } from './_supabase-admin.js'
+import { createPaymentMailProof } from './_email-signature.js'
 
 const PAYPAL_API_BASE = 'https://api-m.paypal.com'
 
@@ -86,14 +87,20 @@ function isSameProcessedPayment(participant, captureId) {
   )
 }
 
-async function sendPaymentEmail(req, participant) {
+async function sendPaymentEmail(req, participant, paymentId) {
   if (!participant.email) return false
+  const authorization = createPaymentMailProof({
+    participantId: participant.id,
+    paymentMethod: 'paypal',
+    paymentId
+  })
   const response = await fetch(`https://${req.headers.host}/api/send-payment-email`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ participantId: participant.id })
+    body: JSON.stringify({ authorization })
   })
-  return response.ok
+  const result = await response.json().catch(() => ({}))
+  return Boolean(response.ok && result.emailSent)
 }
 
 export default async function handler(req, res) {
@@ -230,7 +237,7 @@ export default async function handler(req, res) {
         return res.status(409).json({ error: 'Die PayPal-Zahlung konnte nicht eindeutig verbucht werden.' })
       }
 
-      const emailSent = await sendPaymentEmail(req, participant)
+      const emailSent = await sendPaymentEmail(req, participant, completedCapture.id)
       return res.status(200).json({ success: true, emailSent })
     }
 

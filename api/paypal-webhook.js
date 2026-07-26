@@ -1,4 +1,5 @@
 import { createAdminSupabase } from './_supabase-admin.js'
+import { createPaymentMailProof } from './_email-signature.js'
 
 const PAYPAL_API_BASE = 'https://api-m.paypal.com'
 
@@ -229,12 +230,18 @@ export default async function handler(req, res) {
 
     let emailSent = false
     if (participant.email) {
+      const authorization = createPaymentMailProof({
+        participantId: participant.id,
+        paymentMethod: 'paypal',
+        paymentId: completedCapture.id
+      })
       const emailResponse = await fetch(`https://${req.headers.host}/api/send-payment-email`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ participantId: participant.id })
+        body: JSON.stringify({ authorization })
       })
-      emailSent = emailResponse.ok
+      const emailResult = await emailResponse.json().catch(() => ({}))
+      emailSent = Boolean(emailResponse.ok && emailResult.emailSent)
     }
 
     return res.status(200).json({ success: true, emailSent })
