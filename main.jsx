@@ -6097,7 +6097,7 @@ function Impressum() {
     </div>
   )
 }
-function Header() {
+function Header({ admin = false }) {
   return (
     <header
       style={{
@@ -6118,7 +6118,7 @@ function Header() {
 
   
 
-<a
+{!admin && <a
   href="#admin"
   style={{
     marginLeft: 'auto',
@@ -6130,7 +6130,7 @@ function Header() {
   }}
 >
   Admin-Login
-</a>
+</a>}
       </div>
     </header>
   )
