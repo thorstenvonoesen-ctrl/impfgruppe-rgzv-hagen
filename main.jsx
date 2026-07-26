@@ -2447,7 +2447,7 @@ function InfoSammelimpfung() {
     ["Warum muss ich die Tierzahl frühzeitig angeben?", "Die gemeldete Tierzahl ist für die Planung entscheidend. Sie hilft dabei, den Bedarf realistisch zu bestimmen und den Termin verlässlich vorzubereiten."],
     ["Wann erhalte ich meinen QR-Code?", "Ihr persönlicher QR-Code wird nach erfolgreicher Zahlung automatisch mit der Zahlungsbestätigung per E-Mail versendet."],
     ["Was mache ich, wenn ich die E-Mail nicht finde?", "Prüfen Sie bitte zunächst Ihren Spam-Ordner. Ist die Nachricht dort ebenfalls nicht vorhanden, wenden Sie sich rechtzeitig vor dem Termin an den Veranstalter."],
-    ["Kann eine andere Person meinen Bestand zum Termin bringen?", "Organisatorische Abweichungen sollten vorab mit dem Veranstalter abgestimmt werden. Wichtig ist, dass die Anmeldung eindeutig zugeordnet werden kann und der QR-Code vorliegt."],
+    ["Kann eine andere Person die Impfung für mich abholen?", "Ja. Eine andere Person kann den Impfstoff für Sie abholen. Voraussetzung ist, dass die Anmeldung eindeutig zugeordnet werden kann und der QR-Code bzw. die Anmeldebestätigung vorliegt. Bei Unsicherheiten oder besonderen Fällen empfehlen wir, den Veranstalter vorab zu informieren."],
     ["Was passiert, wenn sich meine Tierzahl ändert?", "Teilen Sie größere Änderungen möglichst frühzeitig mit. Kurzfristige Abweichungen können die bereits abgeschlossene Impfstoff- und Ablaufplanung beeinflussen."]
   ]
 
