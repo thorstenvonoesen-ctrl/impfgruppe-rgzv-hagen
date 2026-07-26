@@ -149,10 +149,59 @@ function AdminInvitePassword() {
   const [success, setSuccess] = useState(false)
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSessionReady(Boolean(session))
-      if (!session) setMessage('Der Einladungslink ist ungültig oder abgelaufen.')
-    }).finally(() => setLoading(false))
+    let active = true
+    const { data: authListener } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (active && session?.user?.invited_at) setSessionReady(true)
+    })
+
+    async function establishInviteSession() {
+      try {
+        const inviteUrl = new URL(window.location.href)
+        const authorizationCode = inviteUrl.searchParams.get('code')
+        const hashParameters = new URLSearchParams(inviteUrl.hash.replace(/^#/, ''))
+        const accessToken = hashParameters.get('access_token')
+        const refreshToken = hashParameters.get('refresh_token')
+
+        let session = null
+        if (authorizationCode) {
+          const { data, error } = await supabase.auth.exchangeCodeForSession(authorizationCode)
+          if (error) throw error
+          session = data.session
+        } else if (accessToken && refreshToken) {
+          const { data, error } = await supabase.auth.setSession({
+            access_token: accessToken,
+            refresh_token: refreshToken
+          })
+          if (error) throw error
+          session = data.session
+        } else {
+          const { data, error } = await supabase.auth.getSession()
+          if (error) throw error
+          session = data.session
+        }
+
+        if (!session) throw new Error('Invite session is missing.')
+        const { data: userData, error: userError } = await supabase.auth.getUser(session.access_token)
+        if (userError || !userData.user?.invited_at) throw userError || new Error('Invite user is missing.')
+        if (!active) return
+        window.history.replaceState({}, '', '/admin-invite')
+        setSessionReady(true)
+      } catch (error) {
+        console.error('Admin-Einladung: Sitzung konnte nicht übernommen werden.', error)
+        if (active) {
+          setSessionReady(false)
+          setMessage('Der Einladungslink ist ungültig oder abgelaufen.')
+        }
+      } finally {
+        if (active) setLoading(false)
+      }
+    }
+
+    establishInviteSession()
+    return () => {
+      active = false
+      authListener?.subscription?.unsubscribe()
+    }
   }, [])
 
   async function savePassword() {
@@ -162,8 +211,20 @@ function AdminInvitePassword() {
       return
     }
     setSaving(true)
+    const { data: sessionData, error: sessionError } = await supabase.auth.getSession()
+    const session = sessionData?.session
+    const { data: userData, error: userError } = session
+      ? await supabase.auth.getUser(session.access_token)
+      : { data: { user: null }, error: sessionError }
+    if (sessionError || userError || !session || !userData.user?.invited_at) {
+      console.error('Admin-Einladung: Keine gültige Invite-Sitzung beim Passwortspeichern.', sessionError || userError)
+      setMessage('Das Passwort konnte nicht gespeichert werden. Bitte erneut versuchen.')
+      setSaving(false)
+      return
+    }
     const { error } = await supabase.auth.updateUser({ password })
     if (error) {
+      console.error('Admin-Einladung: Passwort konnte nicht gespeichert werden.', error)
       setMessage('Das Passwort konnte nicht gespeichert werden. Bitte erneut versuchen.')
       setSaving(false)
       return
