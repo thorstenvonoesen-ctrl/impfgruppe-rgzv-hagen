@@ -6553,7 +6553,7 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
   )}
 
   {(administratorDetailLoading || administratorDetailError || selectedAdministrator) && adminContext?.role === 'superadmin' && (
-    <div className="modal">
+    <div className="modal admin-detail-modal">
       <section className="modal-card" role="dialog" aria-modal="true" aria-labelledby="administrator-detail-title">
         <div className="campaign-detail-heading">
           <h2 id="administrator-detail-title">Administratordetails</h2>
@@ -6633,6 +6633,7 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
                     <td>{membership.active ? 'Aktiv' : 'Gesperrt'}</td>
                     <td>{membership.createdAt ? new Date(membership.createdAt).toLocaleDateString('de-DE') : '—'}</td>
                     <td>
+                      <div className="admin-management-actions">
                       <button type="button" className="ghost" onClick={() => openAdministratorDetail(membership)}>Details anzeigen</button>
                       {membership.role !== 'superadmin' && (
                         <>
@@ -6643,6 +6644,7 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
                           <button type="button" className="ghost" onClick={() => confirmAdministratorDelete(membership)}>Löschen</button>
                         </>
                       )}
+                      </div>
                     </td>
                   </tr>
                 ))}
