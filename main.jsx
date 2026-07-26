@@ -4331,6 +4331,10 @@ const [newDateNote, setNewDateNote] = useState('')
   const [adminRoleBusy, setAdminRoleBusy] = useState(false)
   const [adminRoleError, setAdminRoleError] = useState('')
   const [adminRoleSuccess, setAdminRoleSuccess] = useState('')
+  const [adminDeleteTarget, setAdminDeleteTarget] = useState(null)
+  const [adminDeleteBusy, setAdminDeleteBusy] = useState(false)
+  const [adminDeleteError, setAdminDeleteError] = useState('')
+  const [adminDeleteSuccess, setAdminDeleteSuccess] = useState('')
   const [dateFeedback, setDateFeedback] = useState('')
   const [clubs, setClubs] = useState([])
 const [selectedClub, setSelectedClub] = useState(null)
@@ -4569,6 +4573,63 @@ const [selectedClub, setSelectedClub] = useState(null)
       setAdminRoleError('Die Rolle des Administrators konnte nicht geändert werden.')
     } finally {
       setAdminRoleBusy(false)
+    }
+  }
+  function confirmAdministratorDelete(membership) {
+    if (adminContext?.role !== 'superadmin' || membership.role === 'superadmin') return
+    setAdminDeleteError('')
+    setAdminDeleteTarget(membership)
+  }
+  async function deleteAdministrator() {
+    if (adminContext?.role !== 'superadmin' || !adminDeleteTarget || adminDeleteTarget.role === 'superadmin') return
+    setAdminDeleteBusy(true)
+    setAdminDeleteError('')
+    try {
+      const { data: { session } } = await supabase.auth.getSession()
+      const response = await fetch('/api/admin-payment', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${session?.access_token || ''}`
+        },
+        body: JSON.stringify({
+          action: 'delete-administrator',
+          email: adminDeleteTarget.email,
+          club: adminDeleteTarget.club,
+          role: adminDeleteTarget.role
+        })
+      })
+      const result = await response.json().catch(() => ({}))
+      if (!response.ok) {
+        const allowedMessages = [
+          'Keine Berechtigung für die Adminverwaltung.',
+          'Der Administrator wurde nicht gefunden.',
+          'Ein Superadmin kann über diese Funktion nicht gelöscht werden.',
+          'Der Administrator konnte nicht gelöscht werden.'
+        ]
+        setAdminDeleteError(
+          allowedMessages.includes(result.error)
+            ? result.error
+            : 'Der Administrator konnte nicht gelöscht werden.'
+        )
+        return
+      }
+      const deletedAdministrator = adminDeleteTarget
+      setAdminDeleteTarget(null)
+      setAdminDeleteSuccess('Der Administrator wurde gelöscht.')
+      setSelectedAdministrator(current =>
+        current &&
+        current.email === deletedAdministrator.email &&
+        current.club === deletedAdministrator.club &&
+        current.role === deletedAdministrator.role
+          ? null
+          : current
+      )
+      await openAdminManagement()
+    } catch {
+      setAdminDeleteError('Der Administrator konnte nicht gelöscht werden.')
+    } finally {
+      setAdminDeleteBusy(false)
     }
   }
   async function openAdministratorDetail(membership) {
@@ -5300,6 +5361,17 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
 
   return <div className="page admin"><Header admin />
 
+  {adminDeleteTarget && adminContext?.role === 'superadmin' && (
+    <div className="modal admin-delete-modal">
+      <section className="modal-card" role="dialog" aria-modal="true">
+        <p>Soll dieser Administrator wirklich endgültig gelöscht werden? Der Zugang kann danach nicht mehr verwendet werden.</p>
+        {adminDeleteError && <p role="alert" className="campaign-load-error">{adminDeleteError}</p>}
+        <button type="button" className="ghost" onClick={() => setAdminDeleteTarget(null)} disabled={adminDeleteBusy}>Abbrechen</button>
+        <button type="button" className="primary" onClick={deleteAdministrator} disabled={adminDeleteBusy}>Administrator endgültig löschen</button>
+      </section>
+    </div>
+  )}
+
   {adminRoleTarget && adminContext?.role === 'superadmin' && (
     <div className="modal admin-role-modal">
       <section className="modal-card" role="dialog" aria-modal="true">
@@ -5439,6 +5511,7 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
         {adminCreateSuccess && <p role="status">{adminCreateSuccess}</p>}
         {adminStatusSuccess && <p role="status">{adminStatusSuccess}</p>}
         {adminRoleSuccess && <p role="status">{adminRoleSuccess}</p>}
+        {adminDeleteSuccess && <p role="status">{adminDeleteSuccess}</p>}
         {administratorMembershipsLoading && <p>Administratoren werden geladen …</p>}
         {administratorMembershipsError && <p role="alert" className="campaign-load-error">{administratorMembershipsError}</p>}
         {!administratorMembershipsLoading && !administratorMembershipsError && (
@@ -5470,6 +5543,7 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
                             {membership.active ? 'Sperren' : 'Freischalten'}
                           </button>
                           <button type="button" className="ghost" onClick={() => openAdministratorRole(membership)}>Rolle ändern</button>
+                          <button type="button" className="ghost" onClick={() => confirmAdministratorDelete(membership)}>Löschen</button>
                         </>
                       )}
                     </td>
