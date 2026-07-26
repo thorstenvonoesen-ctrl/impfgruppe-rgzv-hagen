@@ -1056,25 +1056,84 @@ function ClubSelect() {
         }
 
         @media (min-width: 1081px) {
+          .final-home {
+            margin-top: 8px;
+            gap: 10px;
+          }
+
           .final-home-hero {
-            min-height: 184px;
+            min-height: 164px;
+            padding-top: 14px;
+            padding-bottom: 14px;
+          }
+
+          .final-home-hero-actions {
+            margin-top: 9px;
+          }
+
+          .final-home-logo-stage {
+            width: 132px;
+            height: 132px;
+          }
+
+          .final-home-logo-stage img {
+            width: 112px;
+            height: 112px;
           }
 
           .final-home .home-dashboard-grid {
-            grid-template-rows: 280px !important;
+            grid-template-rows: 250px !important;
+            gap: 10px !important;
           }
 
           .final-home .home-countdown-card {
-            min-height: 280px !important;
-            height: 280px !important;
+            min-height: 250px !important;
+            height: 250px !important;
+          }
+
+          .final-home .home-countdown-card.dashboard-stat-card {
+            padding-top: 10px !important;
+            padding-bottom: 10px !important;
+          }
+
+          .final-home .home-countdown-card .appointment-countdown {
+            gap: 0;
+          }
+
+          .final-home .home-countdown-card .appointment-countdown-units {
+            margin-top: 2px !important;
+          }
+
+          .final-home .appointment-action-buttons {
+            margin-top: -1px;
           }
 
           .final-home .home-dashboard-support {
-            grid-template-rows: 92px 172px !important;
+            grid-template-rows: 80px 160px !important;
+            gap: 10px !important;
+          }
+
+          .final-home .home-community-card {
+            padding-top: 4px !important;
+            padding-bottom: 4px !important;
+          }
+
+          .final-home .home-benefits-card {
+            padding-top: 7px !important;
+            padding-bottom: 7px !important;
+            gap: 3px !important;
           }
 
           .final-home-nav-card {
-            min-height: 118px;
+            min-height: 94px;
+            padding-top: 11px;
+            padding-bottom: 11px;
+          }
+
+          .final-home-page > footer {
+            margin-top: 6px;
+            padding-top: 10px !important;
+            padding-bottom: 10px !important;
           }
         }
 
