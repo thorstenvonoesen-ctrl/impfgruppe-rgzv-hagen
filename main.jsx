@@ -3778,6 +3778,7 @@ function CheckinPanel({ participants, vaccinationDates, onChanged, adminRole }) 
   const [query, setQuery] = useState('')
   const [searchResults, setSearchResults] = useState([])
   const [searching, setSearching] = useState(false)
+  const [quickFilter, setQuickFilter] = useState('')
   const [actionId, setActionId] = useState('')
   const [participantOverrides, setParticipantOverrides] = useState({})
   const [candidate, setCandidate] = useState(null)
@@ -3791,14 +3792,48 @@ function CheckinPanel({ participants, vaccinationDates, onChanged, adminRole }) 
   const checkedIn = selectedParticipants.filter(item => item.checked_in).length
   const paid = selectedParticipants.filter(item => item.payment_status === 'bezahlt').length
   const liveStats = [
-    { label: 'Angemeldet', value: selectedParticipants.length, tone: 'neutral' },
-    { label: 'Eingecheckt', value: checkedIn, tone: 'positive' },
-    { label: 'Noch erwartet', value: Math.max(0, selectedParticipants.length - checkedIn), tone: 'warning' },
-    { label: 'Bezahlt', value: paid, tone: 'positive' },
-    { label: 'Offen', value: Math.max(0, selectedParticipants.length - paid), tone: 'warning' },
-    { label: 'Tiere', value: selectedParticipants.reduce((sum, item) => sum + Number(item.animal_count || 0), 0), tone: 'neutral' }
+    { label: 'Angemeldet', icon: '👥', value: selectedParticipants.length, tone: 'neutral', filter: 'all' },
+    { label: 'Eingecheckt', icon: '✅', value: checkedIn, tone: 'positive', filter: 'checked-in' },
+    { label: 'Noch erwartet', icon: '⏳', value: Math.max(0, selectedParticipants.length - checkedIn), tone: 'warning', filter: 'expected' },
+    { label: 'Bezahlt', icon: '💶', value: paid, tone: 'positive', filter: 'paid' },
+    { label: 'Offen', icon: '⚠️', value: Math.max(0, selectedParticipants.length - paid), tone: 'warning', filter: 'open' },
+    { label: 'Tiere', icon: '🐔', value: selectedParticipants.reduce((sum, item) => sum + Number(item.animal_count || 0), 0), tone: 'neutral', filter: 'animals' }
   ]
   const canManagePayments = adminRole === 'clubadmin' || adminRole === 'superadmin'
+  const selectedVaccinationDate = vaccinationDates.find(date => String(date.id) === String(dateId))
+
+  function maskParticipantEmail(value) {
+    const [localPart = '', domain = ''] = String(value || '').split('@')
+    if (!domain) return ''
+    return `${localPart.slice(0, 2)}${localPart.length > 2 ? '***' : ''}@${domain}`
+  }
+
+  function participantPhoneSuffix(value) {
+    return String(value || '').replace(/\D/g, '').slice(-4)
+  }
+
+  const filterParticipants = selectedParticipants.map(item => ({
+    ...item,
+    email_masked: maskParticipantEmail(item.email),
+    phone_suffix: participantPhoneSuffix(item.phone),
+    vaccination_date: selectedVaccinationDate?.date || '',
+    vaccination_title: selectedVaccinationDate?.title || 'Impftermin',
+    other_appointment: false
+  }))
+  const quickFilterResults = quickFilter
+    ? filterParticipants
+      .filter(item => {
+        if (quickFilter === 'checked-in') return item.checked_in
+        if (quickFilter === 'expected') return !item.checked_in
+        if (quickFilter === 'paid') return item.payment_status === 'bezahlt'
+        if (quickFilter === 'open') return item.payment_status !== 'bezahlt'
+        return true
+      })
+      .sort((left, right) => quickFilter === 'animals'
+        ? Number(right.animal_count || 0) - Number(left.animal_count || 0)
+        : `${left.lastname} ${left.firstname}`.localeCompare(`${right.lastname} ${right.firstname}`, 'de'))
+    : []
+  const displayedResults = query.trim().length >= 2 ? searchResults : quickFilterResults
 
   useEffect(() => () => { scannerRef.current?.stop?.().catch(() => {}) }, [])
   useEffect(() => {
@@ -3904,8 +3939,8 @@ function CheckinPanel({ participants, vaccinationDates, onChanged, adminRole }) 
     if (actionId || (checkIn && participant.checked_in)) return
     if (markPaid) {
       const question = checkIn
-        ? 'Vor-Ort-Zahlung verbuchen und Teilnehmer einchecken?'
-        : 'Vor-Ort-Zahlung wirklich als erhalten verbuchen?'
+        ? 'Zahlung verbuchen und Teilnehmer gleichzeitig einchecken?'
+        : 'Vor-Ort-Zahlung wirklich verbuchen?'
       if (!window.confirm(question)) return
     }
     setActionId(participant.id)
@@ -3945,18 +3980,22 @@ function CheckinPanel({ participants, vaccinationDates, onChanged, adminRole }) 
   }
 
   return <section className="card checkin-panel">
-    <div className="checkin-head"><div><span>QR-CHECK-IN</span><h2>Einlass am Impftermin</h2></div>{dateId && <strong>{checkedIn}/{selectedParticipants.length} eingecheckt</strong>}</div>
-    <select value={dateId} onChange={event => { setDateId(event.target.value); setCandidate(null); setQrImage(''); setFeedback('') }}><option value="">Impftermin auswählen</option>{vaccinationDates.map(date => <option key={date.id} value={date.id}>{date.title} · {date.date}</option>)}</select>
+    <div className="checkin-head"><div><span>QR-CHECK-IN</span><h2>Einlass am Impftermin</h2></div></div>
+    <select value={dateId} onChange={event => { setDateId(event.target.value); setQuery(''); setQuickFilter(''); setSearchResults([]); setCandidate(null); setQrImage(''); setFeedback('') }}><option value="">Impftermin auswählen</option>{vaccinationDates.map(date => <option key={date.id} value={date.id}>{date.title} · {date.date}</option>)}</select>
     {dateId && <>
       <div className="checkin-live-stats" aria-label="Live-Statistik des ausgewählten Impftermins">
-        {liveStats.map(stat => <div key={stat.label} className={`checkin-live-stat ${stat.tone}`}>
-          <span>{stat.label}</span>
+        {liveStats.map(stat => <button type="button" key={stat.label} className={`checkin-live-stat ${stat.tone}${quickFilter === stat.filter ? ' active' : ''}`} aria-pressed={quickFilter === stat.filter} onClick={() => { setQuickFilter(stat.filter); setQuery(''); setSearchResults([]); setCandidate(null); setQrImage('') }}>
+          <span><b aria-hidden="true">{stat.icon}</b>{stat.label}</span>
           <strong>{Number(stat.value).toLocaleString('de-DE')}</strong>
-        </div>)}
+        </button>)}
       </div>
+      {quickFilter && quickFilter !== 'all' && <div className="checkin-filter-bar">
+        <span>{liveStats.find(stat => stat.filter === quickFilter)?.label}: {displayedResults.length} Teilnehmer</span>
+        <button type="button" className="ghost small" onClick={() => setQuickFilter('all')}>Alle Teilnehmer anzeigen</button>
+      </div>}
       <div className="checkin-actions">
         <button className="primary" type="button" onClick={startScanner}>QR-Code scannen</button>
-        <input value={query} onChange={event => setQuery(event.target.value)} placeholder="Name, E-Mail, Telefon oder TSK suchen" />
+        <input value={query} onChange={event => { setQuery(event.target.value); setQuickFilter('') }} placeholder="Name, E-Mail, Telefon oder TSK suchen..." />
       </div>
       <div className="checkin-search-state" aria-live="polite">
         {query.trim().length === 1 && 'Bitte mindestens zwei Zeichen eingeben.'}
@@ -3967,7 +4006,7 @@ function CheckinPanel({ participants, vaccinationDates, onChanged, adminRole }) 
         </>}
       </div>
       <div className="checkin-candidates">
-        {searchResults.map(item => <article key={item.id} className={`checkin-person checkin-result${item.other_appointment ? ' other-date' : ''}`}>
+        {displayedResults.map(item => <article key={item.id} className={`checkin-person checkin-result${item.other_appointment ? ' other-date' : ''}`}>
           <div className="checkin-result-main">
             <strong>{item.firstname} {item.lastname}</strong>
             {item.other_appointment && <span className="checkin-other-date">Anderer Impftermin: {formatDate(item.vaccination_date)}</span>}
@@ -3982,16 +4021,16 @@ function CheckinPanel({ participants, vaccinationDates, onChanged, adminRole }) 
           <div className="checkin-result-actions">
             <div className="checkin-result-statuses">
               <span className={item.payment_status === 'bezahlt' ? 'checkin-status done' : 'checkin-status'}>
-                Zahlung: {item.payment_status === 'bezahlt' ? 'Bezahlt' : 'Offen'}
+                {item.payment_status === 'bezahlt' ? '💶 Zahlung: Bezahlt' : '⚠️ Zahlung: Offen'}
               </span>
               <span className={item.checked_in ? 'checkin-status done' : 'checkin-status'}>
-                {item.checked_in ? `Bereits eingecheckt um ${formatCheckinTime(item.checked_in_at)} Uhr` : 'Noch nicht eingecheckt'}
+                {item.checked_in ? `✅ Bereits eingecheckt${item.checked_in_at ? ` um ${formatCheckinTime(item.checked_in_at)} Uhr` : ''}` : '⏳ Noch nicht eingecheckt'}
               </span>
             </div>
             <div className="checkin-result-buttons">
-              {!item.checked_in && <button type="button" className="small" disabled={actionId === item.id} onClick={() => runManualAction(item, { checkIn: true })}>Manuell einchecken</button>}
-              {canManagePayments && item.payment_status !== 'bezahlt' && <button type="button" className="small checkin-pay" disabled={actionId === item.id} onClick={() => runManualAction(item, { markPaid: true })}>Vor Ort bezahlt</button>}
-              {canManagePayments && !item.checked_in && item.payment_status !== 'bezahlt' && <button type="button" className="primary checkin-combined" disabled={actionId === item.id} onClick={() => runManualAction(item, { markPaid: true, checkIn: true })}>Vor Ort bezahlt &amp; eingecheckt</button>}
+              {!item.checked_in && <button type="button" className="small" disabled={actionId === item.id} onClick={() => runManualAction(item, { checkIn: true })}>✅ Manuell einchecken</button>}
+              {canManagePayments && item.payment_status !== 'bezahlt' && <button type="button" className="small checkin-pay" disabled={actionId === item.id} onClick={() => runManualAction(item, { markPaid: true })}>💶 Vor Ort bezahlt</button>}
+              {canManagePayments && !item.checked_in && item.payment_status !== 'bezahlt' && <button type="button" className="primary checkin-combined" disabled={actionId === item.id} onClick={() => runManualAction(item, { markPaid: true, checkIn: true })}>💶✅ Vor Ort bezahlt &amp; eingecheckt</button>}
             </div>
           </div>
         </article>)}
