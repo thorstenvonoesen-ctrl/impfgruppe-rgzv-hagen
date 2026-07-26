@@ -5842,7 +5842,6 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
         <InteractiveStatCard className="stat" icon={<Users/>} label="Teilnehmer" value={stats.total} loading={loading} tone="stat-participants" animationIndex={0} />
         <InteractiveStatCard className="stat" icon={<ShieldCheck/>} label="Tiere" value={stats.animals} loading={loading} tone="stat-animals" animationIndex={1} />
         <InteractiveStatCard className="stat" icon={<Euro/>} label="Einnahmen" value={stats.revenue} loading={loading} currency tone="stat-revenue" animationIndex={2} />
-        <InteractiveStatCard className="stat" icon={<CalendarDays/>} label="Nächster Impftermin" loading={loading} appointmentDates={vaccinationDates} club={activeClub} isAppointment isAdmin tone="stat-date" animationIndex={3} />
       </div>
       <section id="season-campaign-dashboard" className={`card season-campaign-card season-campaign-${currentCampaign ? currentCampaignTone : 'empty'}`}>
         <div className="season-campaign-header">
