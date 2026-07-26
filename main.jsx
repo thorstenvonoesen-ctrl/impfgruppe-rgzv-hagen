@@ -34,7 +34,6 @@ function getCurrentSlug() {
 import './styles.css'
 import logo from './public/Logoklein.jpg'
 import { APP } from './config'
-const vaccines = ['Newcastle', 'IB', 'ILT', 'Marek', 'Kokzidiose', 'Salmonellen']
 const PAYMENT_URL = import.meta.env.VITE_PAYMENT_URL || ''
 const MEMBER_CODE = 'RGZV2026'
 const weatherPreviewCache = new Map()
@@ -3722,7 +3721,7 @@ if (!showForm) {
     <option value="Sonstige">Sonstige</option>
   </select>
 </label>
-          <div className="two"><Input label="Anzahl Tiere" name="animal_count" type="number" min="1" value={form.animal_count} onChange={update} required/><label>Impfstoff<select name="vaccine" value={form.vaccine} onChange={update}>{vaccines.map(v=><option key={v}>{v}</option>)}</select></label></div>
+          <div className="two"><Input label="Anzahl Tiere" name="animal_count" type="number" min="1" value={form.animal_count} onChange={update} required/><label>Impfstoff<input value="Newcastle-Impfung" readOnly aria-readonly="true" /></label></div>
           <div className="section-title signup-section-title">
   Impfung
 </div>
@@ -3791,7 +3790,7 @@ value={form.vaccination_date_id}
               Erstattung der bereits entrichteten Teilnahmegebühr.
             </p>
           </aside>
-          <button disabled={loading} className="primary signup-submit">{loading ? 'Speichern...' : 'Anmelden & bezahlen'}</button>
+          <button disabled={loading} className="primary signup-submit">{loading ? 'Speichern...' : 'Zur Newcastle-Impfung anmelden & bezahlen'}</button>
           {message && <p className="message">{message}</p>}
         </form>
   </div>

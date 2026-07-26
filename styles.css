@@ -291,7 +291,7 @@ td .paid {
 .participation-fee-notice p + p { margin-top: 8px; }
 .participation-fee-notice-compact { margin: 0; padding: 14px 16px; }
 .participation-fee-notice-compact p { align-self: center; }
-.signup-submit { justify-content: center; width: 100%; min-height: 54px; margin-top: 4px; font-size: 17px; background: #f28c28; box-shadow: 0 12px 24px rgba(194, 93, 13, .25); }
+.signup-submit { justify-content: center; width: 100%; min-height: 54px; margin-top: 4px; font-size: 17px; white-space: normal; text-align: center; background: #f28c28; box-shadow: 0 12px 24px rgba(194, 93, 13, .25); }
 .signup-submit:hover:not(:disabled) { background: #dc741d; box-shadow: 0 16px 28px rgba(194, 93, 13, .32); }
 .signup-submit:disabled { cursor: wait; opacity: .7; }
 .signup-card .message { margin: 0; border: 1px solid #a7f3d0; }

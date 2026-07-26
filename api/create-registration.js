@@ -1,7 +1,8 @@
 import { createHmac, timingSafeEqual } from 'node:crypto'
 import { createAdminSupabase } from './_supabase-admin.js'
 
-const fields = ['firstname', 'lastname', 'street', 'housenumber', 'zipcode', 'city', 'email', 'phone', 'tsk_number', 'animal_type', 'vaccine']
+const fields = ['firstname', 'lastname', 'street', 'housenumber', 'zipcode', 'city', 'email', 'phone', 'tsk_number', 'animal_type']
+const REGISTRATION_VACCINE = 'Newcastle'
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 const TOKEN_LIFETIME_MS = 10 * 60 * 1000
 const PROFILE_FIELDS = 'firstname, lastname, street, housenumber, zipcode, city, phone, tsk_number, animal_type'
@@ -111,7 +112,7 @@ export default async function handler(req, res) {
 
   try {
     const { vaccination_date_id: vaccinationDateId, animal_count: animalCount, member_code: memberCode, ...input } = req.body || {}
-    if (!vaccinationDateId || !input.firstname || !input.lastname || !input.email || !input.tsk_number || !input.vaccine || !animalCount) {
+    if (!vaccinationDateId || !input.firstname || !input.lastname || !input.email || !input.tsk_number || !animalCount) {
       return res.status(400).json({ error: 'Bitte alle Pflichtfelder ausfüllen.' })
     }
     const supabase = createAdminSupabase()
@@ -123,6 +124,7 @@ export default async function handler(req, res) {
     const participant = Object.fromEntries(fields.map(field => [field, typeof input[field] === 'string' ? input[field].trim() : input[field]]))
     const { data, error } = await supabase.from('participants').insert({
       ...participant,
+      vaccine: REGISTRATION_VACCINE,
       animal_count: Number(animalCount),
       vaccination_date_id: vaccinationDateId,
       club_id: appointment.club_id,
