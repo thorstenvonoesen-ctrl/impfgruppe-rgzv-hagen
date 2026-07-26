@@ -3,6 +3,7 @@ import { createAdminSupabase } from './_supabase-admin.js'
 
 const fields = ['firstname', 'lastname', 'street', 'housenumber', 'zipcode', 'city', 'email', 'phone', 'tsk_number', 'animal_type']
 const REGISTRATION_VACCINE = 'Newcastle'
+const ALLOWED_ANIMAL_TYPES = new Set(['Hühner', 'Zwerghühner', 'Puten'])
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 const TOKEN_LIFETIME_MS = 10 * 60 * 1000
 const PROFILE_FIELDS = 'firstname, lastname, street, housenumber, zipcode, city, phone, tsk_number, animal_type'
@@ -114,6 +115,9 @@ export default async function handler(req, res) {
     const { vaccination_date_id: vaccinationDateId, animal_count: animalCount, member_code: memberCode, ...input } = req.body || {}
     if (!vaccinationDateId || !input.firstname || !input.lastname || !input.email || !input.tsk_number || !animalCount) {
       return res.status(400).json({ error: 'Bitte alle Pflichtfelder ausfüllen.' })
+    }
+    if (!ALLOWED_ANIMAL_TYPES.has(String(input.animal_type || '').trim())) {
+      return res.status(400).json({ error: 'Die ausgewählte Tierart ist nicht zulässig.' })
     }
     const supabase = createAdminSupabase()
     const { data: appointment, error: appointmentError } = await supabase

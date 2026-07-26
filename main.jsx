@@ -3182,11 +3182,7 @@ function PublicSignup() {
       const availableAnimalTypes = new Set([
         'Hühner',
         'Zwerghühner',
-        'Puten',
-        'Tauben',
-        'Wachteln',
-        'Wassergeflügel',
-        'Sonstige'
+        'Puten'
       ])
       setForm(current => ({
         ...current,
@@ -3715,10 +3711,6 @@ if (!showForm) {
     <option value="Hühner">Hühner</option>
     <option value="Zwerghühner">Zwerghühner</option>
     <option value="Puten">Puten</option>
-    <option value="Tauben">Tauben</option>
-    <option value="Wachteln">Wachteln</option>
-    <option value="Wassergeflügel">Wassergeflügel</option>
-    <option value="Sonstige">Sonstige</option>
   </select>
 </label>
           <div className="two"><Input label="Anzahl Tiere" name="animal_count" type="number" min="1" value={form.animal_count} onChange={update} required/><label>Impfstoff<input value="Newcastle-Impfung" readOnly aria-readonly="true" /></label></div>
@@ -3790,7 +3782,7 @@ value={form.vaccination_date_id}
               Erstattung der bereits entrichteten Teilnahmegebühr.
             </p>
           </aside>
-          <button disabled={loading} className="primary signup-submit">{loading ? 'Speichern...' : 'Zur Newcastle-Impfung anmelden & bezahlen'}</button>
+          <button disabled={loading} className="primary signup-submit">{loading ? 'Speichern...' : 'Hühner, Zwerghühner oder Puten zur Newcastle-Impfung anmelden & bezahlen'}</button>
           {message && <p className="message">{message}</p>}
         </form>
   </div>
