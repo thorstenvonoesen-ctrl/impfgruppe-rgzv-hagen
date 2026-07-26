@@ -4181,12 +4181,53 @@ const [newDateNote, setNewDateNote] = useState('')
   const [smartAssistantLoading, setSmartAssistantLoading] = useState(true)
   const [smartAssistantError, setSmartAssistantError] = useState('')
   const [smartAssistantOpen, setSmartAssistantOpen] = useState(false)
+  const [adminManagementOpen, setAdminManagementOpen] = useState(false)
+  const [administratorMemberships, setAdministratorMemberships] = useState([])
+  const [administratorMembershipsLoading, setAdministratorMembershipsLoading] = useState(false)
+  const [administratorMembershipsError, setAdministratorMembershipsError] = useState('')
   const [dateFeedback, setDateFeedback] = useState('')
   const [clubs, setClubs] = useState([])
 const [selectedClub, setSelectedClub] = useState(null)
   const adminClubId = adminContext?.club_id
   const activeClub = selectedClub || clubs.find(club => club.id === adminClubId) || null
   const campaignClubId = activeClub?.id || adminClubId
+  async function openAdminManagement() {
+    if (adminContext?.role !== 'superadmin') return
+    setAdminManagementOpen(true)
+    setAdministratorMembershipsLoading(true)
+    setAdministratorMembershipsError('')
+    try {
+      const { data: { session } } = await supabase.auth.getSession()
+      const response = await fetch('/api/admin-payment', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${session?.access_token || ''}`
+        },
+        body: JSON.stringify({ action: 'list-admin-memberships' })
+      })
+      const result = await response.json().catch(() => ({}))
+      if (!response.ok) {
+        setAdministratorMembershipsError(
+          response.status === 403
+            ? 'Keine Berechtigung für die Adminverwaltung.'
+            : 'Die Administratoren konnten nicht geladen werden.'
+        )
+        return
+      }
+      setAdministratorMemberships(result.administrators || [])
+    } catch {
+      setAdministratorMembershipsError('Die Administratoren konnten nicht geladen werden.')
+    } finally {
+      setAdministratorMembershipsLoading(false)
+    }
+  }
+  function administratorRoleLabel(role) {
+    if (role === 'superadmin') return 'Superadmin'
+    if (role === 'clubadmin') return 'Vereinsadmin'
+    if (role === 'checkin_admin') return 'Check-in-Admin'
+    return role
+  }
   async function sendReminderMail() {
   if (!selectedDate) return
 
@@ -4877,6 +4918,45 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
 
   return <div className="page admin"><Header admin />
 
+  {adminManagementOpen && adminContext?.role === 'superadmin' && (
+    <div className="modal">
+      <section className="modal-card" role="dialog" aria-modal="true" aria-labelledby="admin-management-title">
+        <div className="campaign-detail-heading">
+          <h2 id="admin-management-title">Adminverwaltung</h2>
+          <button type="button" className="ghost" onClick={() => setAdminManagementOpen(false)}>Schließen</button>
+        </div>
+        {administratorMembershipsLoading && <p>Administratoren werden geladen …</p>}
+        {administratorMembershipsError && <p role="alert" className="campaign-load-error">{administratorMembershipsError}</p>}
+        {!administratorMembershipsLoading && !administratorMembershipsError && (
+          <div className="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>E-Mail-Adresse</th>
+                  <th>Verein</th>
+                  <th>Rolle</th>
+                  <th>Status</th>
+                  <th>Erstellungsdatum</th>
+                </tr>
+              </thead>
+              <tbody>
+                {administratorMemberships.map((membership, index) => (
+                  <tr key={`${membership.email}-${membership.club}-${index}`}>
+                    <td>{membership.email || '—'}</td>
+                    <td>{membership.club || '—'}</td>
+                    <td>{administratorRoleLabel(membership.role)}</td>
+                    <td>{membership.active ? 'Aktiv' : 'Gesperrt'}</td>
+                    <td>{membership.createdAt ? new Date(membership.createdAt).toLocaleDateString('de-DE') : '—'}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </section>
+    </div>
+  )}
+
   {smartAssistantOpen && (
     <div className="modal">
       <section className="modal-card smart-assistant-modal" role="dialog" aria-modal="true" aria-labelledby="smart-assistant-title">
@@ -5133,6 +5213,9 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
         <h1>Adminbereich</h1>
         <div>
           {logoutError && <span role="alert">{logoutError}</span>}
+          {adminContext?.role === 'superadmin' && (
+            <button className="ghost" onClick={openAdminManagement}>Adminverwaltung</button>
+          )}
           <button className="ghost" onClick={onLogout}><LogOut size={16}/> Abmelden</button>
         </div>
       </div>
