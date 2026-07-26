@@ -48,6 +48,22 @@ function formatSearchResult(participant, appointments, selectedVaccinationDateId
   }
 }
 
+function formatQrParticipant(participant, appointment) {
+  return {
+    id: participant.id,
+    firstname: participant.firstname,
+    lastname: participant.lastname,
+    payment_status: participant.payment_status,
+    payment_method: participant.payment_method,
+    payment_amount: Number(participant.payment_amount || 0),
+    checked_in: participant.checked_in,
+    checked_in_at: participant.checked_in_at,
+    vaccination_date_id: participant.vaccination_date_id,
+    vaccination_date: appointment.date,
+    vaccination_title: appointment.title || 'Impftermin'
+  }
+}
+
 async function authenticateAdmin(req, supabase) {
   const accessToken = getBearerToken(req)
   if (!accessToken) return { error: 'Authentifizierung erforderlich.', status: 401 }
@@ -151,6 +167,39 @@ export default async function handler(req, res) {
     const { user, memberships } = authentication
     const { action = 'qr-checkin' } = req.body || {}
 
+    if (action === 'qr-preview') {
+      const { token, vaccinationDateId } = req.body || {}
+      if (!token || !vaccinationDateId) {
+        return res.status(400).json({ error: 'Die Teilnehmerdaten konnten nicht geladen werden.' })
+      }
+      const authorization = await getAuthorizedAppointment(supabase, memberships, vaccinationDateId)
+      if (authorization.error) {
+        const error = authorization.status === 403
+          ? 'Keine Berechtigung für diesen Check-in.'
+          : 'Der Teilnehmer gehört nicht zu diesem Impftermin.'
+        return res.status(authorization.status).json({ error })
+      }
+      const { appointment } = authorization
+      const { data: participant, error: participantError } = await supabase
+        .from('participants')
+        .select('id, firstname, lastname, club_id, vaccination_date_id, payment_status, payment_method, payment_amount, checked_in, checked_in_at')
+        .eq('checkin_token', token)
+        .maybeSingle()
+      if (participantError) {
+        return res.status(500).json({ error: 'Die Teilnehmerdaten konnten nicht geladen werden.' })
+      }
+      if (!participant) return res.status(404).json({ error: 'Der Teilnehmer wurde nicht gefunden.' })
+      if (
+        String(participant.club_id) !== String(appointment.club_id) ||
+        String(participant.vaccination_date_id) !== String(appointment.id)
+      ) {
+        return res.status(403).json({ error: 'Der Teilnehmer gehört nicht zu diesem Impftermin.' })
+      }
+      return res.status(200).json({
+        participant: formatQrParticipant(participant, appointment)
+      })
+    }
+
     if (action === 'search-participants') {
       const { vaccinationDateId, query } = req.body || {}
       if (!vaccinationDateId || cleanSearchTerm(query).length < 2) {
@@ -176,7 +225,7 @@ export default async function handler(req, res) {
       if (authorization.error) return res.status(authorization.status).json({ error: authorization.error })
       const { data: participant, error: participantError } = await supabase
         .from('participants')
-        .select('id, club_id, vaccination_date_id, checked_in, payment_status, email')
+        .select('id, firstname, lastname, club_id, vaccination_date_id, checked_in, checked_in_at, payment_status, payment_method, payment_amount, email')
         .eq('id', participantId)
         .single()
       if (participantError || !participant) return res.status(404).json({ error: 'Teilnehmer nicht gefunden.' })
@@ -190,10 +239,16 @@ export default async function handler(req, res) {
         return res.status(403).json({ error: 'Keine Berechtigung zum Ändern des Zahlungsstatus.' })
       }
       if (markPaid && participant.payment_status === 'bezahlt') {
-        return res.status(409).json({ error: 'Diese Zahlung wurde bereits verbucht.' })
+        return res.status(409).json({
+          error: 'Diese Zahlung wurde bereits verbucht.',
+          participant: formatQrParticipant(participant, authorization.appointment)
+        })
       }
       if (checkIn && participant.checked_in) {
-        return res.status(409).json({ error: 'Dieser Teilnehmer ist bereits eingecheckt.' })
+        return res.status(409).json({
+          error: 'Dieser Teilnehmer wurde bereits eingecheckt.',
+          participant: formatQrParticipant(participant, authorization.appointment)
+        })
       }
       if (checkIn && !markPaid && participant.payment_status !== 'bezahlt') {
         return res.status(409).json({ error: 'Eine offene Zahlung muss vor dem Check-in verbucht werden.' })
@@ -225,7 +280,19 @@ export default async function handler(req, res) {
         .maybeSingle()
       if (updateError) throw updateError
       if (!updated) {
-        return res.status(409).json({ error: 'Die Aktion wurde bereits ausgeführt. Bitte Status aktualisieren.' })
+        const { data: currentParticipant } = await supabase
+          .from('participants')
+          .select('id, firstname, lastname, vaccination_date_id, payment_status, payment_method, payment_amount, checked_in, checked_in_at')
+          .eq('id', participant.id)
+          .eq('club_id', participant.club_id)
+          .eq('vaccination_date_id', authorization.appointment.id)
+          .maybeSingle()
+        return res.status(409).json({
+          error: 'Die Aktion wurde bereits ausgeführt. Bitte Status aktualisieren.',
+          participant: currentParticipant
+            ? formatQrParticipant(currentParticipant, authorization.appointment)
+            : undefined
+        })
       }
 
       if (markPaid && participant.payment_status !== 'bezahlt' && participant.email) {
@@ -238,8 +305,8 @@ export default async function handler(req, res) {
       return res.status(200).json({ success: true, participant: updated })
     }
 
-    const { token, vaccinationDateId, checkedIn = true } = req.body || {}
-    if (!token || !vaccinationDateId || typeof checkedIn !== 'boolean') {
+    const { token, vaccinationDateId, checkedIn = true, allowOpenPayment = false } = req.body || {}
+    if (!token || !vaccinationDateId || typeof checkedIn !== 'boolean' || typeof allowOpenPayment !== 'boolean') {
       return res.status(400).json({ error: 'Ungültige Check-in-Anfrage.' })
     }
 
@@ -249,7 +316,7 @@ export default async function handler(req, res) {
 
     const { data: participant, error: participantError } = await supabase
       .from('participants')
-      .select('id, club_id, vaccination_date_id, checked_in')
+      .select('id, club_id, vaccination_date_id, checked_in, checked_in_at, payment_status, payment_method, payment_amount')
       .eq('checkin_token', token)
       .single()
     if (participantError || !participant) return res.status(404).json({ error: 'QR-Code nicht gefunden.' })
@@ -257,7 +324,16 @@ export default async function handler(req, res) {
       return res.status(403).json({ error: 'QR-Code gehört nicht zu diesem Impftermin.' })
     }
     if (checkedIn && participant.checked_in) {
-      return res.status(409).json({ error: 'Dieser Teilnehmer ist bereits eingecheckt.' })
+      return res.status(409).json({
+        error: 'Dieser Teilnehmer wurde bereits eingecheckt.',
+        participant: formatQrParticipant(participant, appointment)
+      })
+    }
+    if (checkedIn && participant.payment_status !== 'bezahlt' && !allowOpenPayment) {
+      return res.status(409).json({
+        error: 'Achtung: Die Teilnahmegebühr dieses Teilnehmers ist noch offen.',
+        participant: formatQrParticipant(participant, appointment)
+      })
     }
 
     let checkinUpdate = supabase
@@ -273,11 +349,14 @@ export default async function handler(req, res) {
       .eq('vaccination_date_id', appointment.id)
     if (checkedIn) checkinUpdate = checkinUpdate.eq('checked_in', false)
     const { data: updated, error: updateError } = await checkinUpdate
-      .select('id, checked_in, checked_in_at')
+      .select('id, firstname, lastname, vaccination_date_id, payment_status, payment_method, payment_amount, checked_in, checked_in_at')
       .maybeSingle()
     if (updateError) throw updateError
     if (!updated) return res.status(409).json({ error: 'Dieser Teilnehmer ist bereits eingecheckt.' })
-    return res.status(200).json({ success: true, participant: updated })
+    return res.status(200).json({
+      success: true,
+      participant: formatQrParticipant(updated, appointment)
+    })
   } catch (error) {
     console.error('Check-in request failed:', error)
     return res.status(500).json({ error: 'Check-in konnte nicht verarbeitet werden.' })

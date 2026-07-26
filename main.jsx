@@ -4045,6 +4045,7 @@ function CheckinPanel({ participants, vaccinationDates, onChanged, adminRole }) 
   const [feedback, setFeedback] = useState('')
   const [scannerActive, setScannerActive] = useState(false)
   const scannerRef = useRef(null)
+  const scannerBusyRef = useRef(false)
   const selectedParticipants = participants
     .filter(item => String(item.vaccination_date_id) === String(dateId))
     .map(item => ({ ...item, ...(participantOverrides[item.id] || {}) }))
@@ -4152,6 +4153,20 @@ function CheckinPanel({ participants, vaccinationDates, onChanged, adminRole }) 
     return new Intl.DateTimeFormat('de-DE', { hour: '2-digit', minute: '2-digit' }).format(new Date(value))
   }
 
+  function checkinPaymentMethodLabel(value) {
+    if (value === 'bar') return 'Barzahlung vor Ort'
+    if (value === 'paypal') return 'PayPal'
+    if (value === 'stripe') return 'Kreditkarte / Apple Pay / Google Pay'
+    return 'Noch nicht festgelegt'
+  }
+
+  function formatPaymentAmount(value) {
+    return `${Number(value || 0).toLocaleString('de-DE', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    })} €`
+  }
+
   async function showQr(participant) {
     setCandidate(participant)
     setFeedback('')
@@ -4159,6 +4174,10 @@ function CheckinPanel({ participants, vaccinationDates, onChanged, adminRole }) 
   }
   async function startScanner() {
     if (!dateId) return setFeedback('Bitte wählen Sie zuerst einen Impftermin.')
+    if (scannerActive || (candidate && candidate.payment_status !== 'bezahlt' && !candidate.checked_in)) return
+    setCandidate(null)
+    setQrImage('')
+    scannerBusyRef.current = false
     setScannerActive(true)
     setFeedback('')
     requestAnimationFrame(async () => {
@@ -4166,32 +4185,165 @@ function CheckinPanel({ participants, vaccinationDates, onChanged, adminRole }) 
       const scanner = new Html5Qrcode('checkin-scanner')
       scannerRef.current = scanner
       await scanner.start({ facingMode: 'environment' }, { fps: 8, qrbox: { width: 230, height: 230 } }, async token => {
-        const match = selectedParticipants.find(item => item.checkin_token === token)
+        if (scannerBusyRef.current) return
+        scannerBusyRef.current = true
         await scanner.stop().catch(() => {})
         scannerRef.current = null
         setScannerActive(false)
-        if (match) { setCandidate(match); setFeedback('QR-Code erkannt. Bitte Check-in bestätigen.') }
-        else setFeedback('Dieser QR-Code gehört nicht zum ausgewählten Impftermin.')
+        await loadScannedParticipant(token)
       }, () => {})
     })
   }
-  async function confirmCheckin(checkedInValue) {
-    if (!candidate || !dateId) return
-    const { data: { session } } = await supabase.auth.getSession()
-    const response = await fetch('/api/checkin', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${session?.access_token || ''}` },
-      body: JSON.stringify({ token: candidate.checkin_token, vaccinationDateId: dateId, checkedIn: checkedInValue })
-    })
-    const result = await response.json()
-    if (!response.ok) return setFeedback(result.error || 'Check-in konnte nicht gespeichert werden.')
-    setFeedback(checkedInValue ? 'Check-in erfolgreich gespeichert.' : 'Check-in wurde zurückgesetzt.')
-    setCandidate({ ...candidate, ...result.participant })
-    setParticipantOverrides(current => ({
-      ...current,
-      [candidate.id]: { ...(current[candidate.id] || {}), ...result.participant }
-    }))
-    await onChanged()
+
+  async function loadScannedParticipant(token) {
+    try {
+      const { data: { session } } = await supabase.auth.getSession()
+      const response = await fetch('/api/checkin', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${session?.access_token || ''}` },
+        body: JSON.stringify({ action: 'qr-preview', token, vaccinationDateId: dateId })
+      })
+      const result = await response.json().catch(() => ({}))
+      if (!response.ok || !result.participant) {
+        setCandidate(null)
+        setFeedback(
+          result.error === 'Der Teilnehmer gehört nicht zu diesem Impftermin.'
+            ? result.error
+            : response.status === 401 || response.status === 403
+              ? 'Keine Berechtigung für diesen Check-in.'
+            : result.error || 'Die Teilnehmerdaten konnten nicht geladen werden.'
+        )
+        return
+      }
+      const scannedParticipant = { ...result.participant, checkin_token: token }
+      setCandidate(scannedParticipant)
+      if (scannedParticipant.checked_in) {
+        setFeedback(
+          scannedParticipant.payment_status === 'bezahlt'
+            ? 'Dieser Teilnehmer wurde bereits eingecheckt.'
+            : 'Dieser Teilnehmer wurde bereits eingecheckt. Die Teilnahmegebühr ist weiterhin offen.'
+        )
+        return
+      }
+      if (scannedParticipant.payment_status === 'bezahlt') {
+        await saveQrCheckin(scannedParticipant, false, 'Check-in erfolgreich gespeichert.')
+        return
+      }
+      setFeedback('Achtung: Die Teilnahmegebühr dieses Teilnehmers ist noch offen.')
+    } catch {
+      setCandidate(null)
+      setFeedback('Die Teilnehmerdaten konnten nicht geladen werden.')
+    }
+  }
+
+  async function saveQrCheckin(participant, allowOpenPayment, successMessage, checkedInValue = true) {
+    if (!participant || !dateId || actionId) return false
+    setActionId(participant.id)
+    try {
+      const { data: { session } } = await supabase.auth.getSession()
+      const response = await fetch('/api/checkin', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${session?.access_token || ''}` },
+        body: JSON.stringify({
+          action: 'qr-checkin',
+          token: participant.checkin_token,
+          vaccinationDateId: dateId,
+          checkedIn: checkedInValue,
+          allowOpenPayment
+        })
+      })
+      const result = await response.json().catch(() => ({}))
+      if (!response.ok) {
+        if (result.participant) setCandidate({ ...participant, ...result.participant })
+        const knownStatusMessage = [
+          'Dieser Teilnehmer wurde bereits eingecheckt.',
+          'Achtung: Die Teilnahmegebühr dieses Teilnehmers ist noch offen.'
+        ].includes(result.error)
+        setFeedback(
+          response.status === 401 || response.status === 403
+            ? 'Keine Berechtigung für diesen Check-in.'
+            : knownStatusMessage
+              ? result.error
+              : 'Der Teilnehmer konnte nicht eingecheckt werden.'
+        )
+        return false
+      }
+      setFeedback(checkedInValue ? successMessage : 'Check-in wurde zurückgesetzt.')
+      setCandidate({ ...participant, ...result.participant })
+      setParticipantOverrides(current => ({
+        ...current,
+        [participant.id]: { ...(current[participant.id] || {}), ...result.participant }
+      }))
+      await onChanged()
+      return true
+    } catch {
+      setFeedback('Der Teilnehmer konnte nicht eingecheckt werden.')
+      return false
+    } finally {
+      setActionId('')
+      scannerBusyRef.current = false
+    }
+  }
+
+  async function saveCashPaymentAndCheckin(participant) {
+    if (!participant || !dateId || actionId || !canManagePayments) return
+    setActionId(participant.id)
+    try {
+      const { data: { session } } = await supabase.auth.getSession()
+      const response = await fetch('/api/checkin', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${session?.access_token || ''}` },
+        body: JSON.stringify({
+          action: 'manual-update',
+          participantId: participant.id,
+          vaccinationDateId: dateId,
+          markPaid: true,
+          checkIn: true
+        })
+      })
+      const result = await response.json().catch(() => ({}))
+      if (!response.ok) {
+        if (result.participant) {
+          setCandidate({ ...participant, ...result.participant })
+          setParticipantOverrides(current => ({
+            ...current,
+            [participant.id]: { ...(current[participant.id] || {}), ...result.participant }
+          }))
+        }
+        const knownStatusMessage = [
+          'Diese Zahlung wurde bereits verbucht.',
+          'Dieser Teilnehmer wurde bereits eingecheckt.',
+          'Die Aktion wurde bereits ausgeführt. Bitte Status aktualisieren.'
+        ].includes(result.error)
+        setFeedback(
+          response.status === 401 || response.status === 403
+            ? 'Keine Berechtigung für diesen Check-in.'
+            : knownStatusMessage
+              ? result.error
+              : 'Die Zahlung und der Check-in konnten nicht gespeichert werden.'
+        )
+        return
+      }
+      setCandidate({ ...participant, ...result.participant })
+      setParticipantOverrides(current => ({
+        ...current,
+        [participant.id]: { ...(current[participant.id] || {}), ...result.participant }
+      }))
+      setFeedback('Die Barzahlung wurde erfasst und der Teilnehmer wurde eingecheckt.')
+      await onChanged()
+    } catch {
+      setFeedback('Die Zahlung und der Check-in konnten nicht gespeichert werden.')
+    } finally {
+      setActionId('')
+      scannerBusyRef.current = false
+    }
+  }
+
+  function cancelQrDecision() {
+    setCandidate(null)
+    setQrImage('')
+    setFeedback('')
+    scannerBusyRef.current = false
   }
 
   async function runManualAction(participant, { markPaid = false, checkIn = false }) {
@@ -4240,7 +4392,7 @@ function CheckinPanel({ participants, vaccinationDates, onChanged, adminRole }) 
 
   return <section className="card checkin-panel">
     <div className="checkin-head"><div><span>QR-CHECK-IN</span><h2>Teilnehmer-Check-in am Impftermin</h2></div></div>
-    <select value={dateId} onChange={event => { setDateId(event.target.value); setQuery(''); setQuickFilter(''); setSearchResults([]); setCandidate(null); setQrImage(''); setFeedback('') }}><option value="">Impftermin auswählen</option>{vaccinationDates.map(date => <option key={date.id} value={date.id}>{date.title} · {date.date}</option>)}</select>
+    <select value={dateId} onChange={event => { setDateId(event.target.value); setQuery(''); setQuickFilter(''); setSearchResults([]); setCandidate(null); setQrImage(''); setFeedback(''); scannerBusyRef.current = false }}><option value="">Impftermin auswählen</option>{vaccinationDates.map(date => <option key={date.id} value={date.id}>{date.title} · {date.date}</option>)}</select>
     {dateId && <>
       <div className="checkin-live-stats" aria-label="Live-Statistik des ausgewählten Impftermins">
         {liveStats.map(stat => <button type="button" key={stat.label} className={`checkin-live-stat ${stat.tone}${quickFilter === stat.filter ? ' active' : ''}`} aria-pressed={quickFilter === stat.filter} onClick={() => { setQuickFilter(stat.filter); setQuery(''); setSearchResults([]); setCandidate(null); setQrImage('') }}>
@@ -4295,8 +4447,28 @@ function CheckinPanel({ participants, vaccinationDates, onChanged, adminRole }) 
         </article>)}
       </div>
     </>}
-    {scannerActive && <div className="checkin-scanner-wrap"><div id="checkin-scanner" /><button className="ghost" type="button" onClick={async () => { await scannerRef.current?.stop?.().catch(() => {}); scannerRef.current = null; setScannerActive(false) }}>Scanner schließen</button></div>}
-    {candidate && <div className="checkin-confirm"><div>{qrImage && <img src={qrImage} alt={`QR-Code für ${candidate.firstname} ${candidate.lastname}`} />}<div><strong>{candidate.firstname} {candidate.lastname}</strong><p>{candidate.checked_in ? `Bereits eingecheckt${candidate.checked_in_at ? ` um ${formatCheckinTime(candidate.checked_in_at)} Uhr` : ''}.` : 'Noch nicht eingecheckt.'}</p></div></div><div>{!candidate.checked_in && <button className="primary" type="button" onClick={() => confirmCheckin(true)}>Check-in bestätigen</button>}{candidate.checked_in && <button className="ghost" type="button" onClick={() => confirmCheckin(false)}>Zurücksetzen</button>}</div></div>}
+    {scannerActive && <div className="checkin-scanner-wrap"><div id="checkin-scanner" /><button className="ghost" type="button" onClick={async () => { await scannerRef.current?.stop?.().catch(() => {}); scannerRef.current = null; scannerBusyRef.current = false; setScannerActive(false) }}>Scanner schließen</button></div>}
+    {candidate && candidate.payment_status !== 'bezahlt' && !candidate.checked_in && (
+      <div className="checkin-payment-warning" role="dialog" aria-modal="true" aria-labelledby="checkin-payment-warning-title">
+        <div>
+          <span className="checkin-payment-warning-label">Zahlung offen</span>
+          <h3 id="checkin-payment-warning-title">Achtung: Die Teilnahmegebühr dieses Teilnehmers ist noch offen.</h3>
+          <p>Bitte bestätigen Sie, ob die Zahlung jetzt vor Ort erfolgt ist.</p>
+        </div>
+        <dl>
+          <div><dt>Teilnehmer</dt><dd>{candidate.firstname} {candidate.lastname}</dd></div>
+          <div><dt>Zahlungsart</dt><dd>{checkinPaymentMethodLabel(candidate.payment_method)}</dd></div>
+          <div><dt>Offener Betrag</dt><dd>{formatPaymentAmount(candidate.payment_amount)}</dd></div>
+          <div><dt>Impftermin</dt><dd>{candidate.vaccination_title} · {formatDate(candidate.vaccination_date)}</dd></div>
+        </dl>
+        <div className="checkin-payment-warning-actions">
+          <button type="button" className="ghost" disabled={actionId === candidate.id} onClick={cancelQrDecision}>Abbrechen</button>
+          <button type="button" className="small" disabled={actionId === candidate.id} onClick={() => saveQrCheckin(candidate, true, 'Der Teilnehmer wurde eingecheckt. Die Teilnahmegebühr bleibt offen.')}>Nur einchecken</button>
+          <button type="button" className="primary" disabled={actionId === candidate.id || !canManagePayments} title={!canManagePayments ? 'Keine Berechtigung zum Erfassen einer Zahlung.' : undefined} onClick={() => saveCashPaymentAndCheckin(candidate)}>Vor Ort bezahlt &amp; einchecken</button>
+        </div>
+      </div>
+    )}
+    {candidate && (candidate.payment_status === 'bezahlt' || candidate.checked_in) && <div className="checkin-confirm"><div>{qrImage && <img src={qrImage} alt={`QR-Code für ${candidate.firstname} ${candidate.lastname}`} />}<div><strong>{candidate.firstname} {candidate.lastname}</strong><p>{candidate.checked_in ? `Bereits eingecheckt${candidate.checked_in_at ? ` um ${formatCheckinTime(candidate.checked_in_at)} Uhr` : ''}.${candidate.payment_status !== 'bezahlt' ? ' Die Teilnahmegebühr ist weiterhin offen.' : ''}` : 'Noch nicht eingecheckt.'}</p></div></div><div>{candidate.checked_in && <button className="ghost" type="button" disabled={actionId === candidate.id} onClick={() => saveQrCheckin(candidate, false, '', false)}>Zurücksetzen</button>}<button className="ghost" type="button" disabled={actionId === candidate.id} onClick={cancelQrDecision}>Schließen</button></div></div>}
     {feedback && <p className="checkin-feedback" role="status">{feedback}</p>}
   </section>
 }
