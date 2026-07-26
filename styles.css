@@ -3347,9 +3347,13 @@ body { background: #163a2f; }
   color: #86efac;
   font-size: 10px;
   font-weight: 750;
+  line-height: 1.35;
+  text-align: right;
+  white-space: normal;
 }
 
 .admin-presence-status-offline {
+  max-width: 132px;
   color: #94a3b8;
 }
 

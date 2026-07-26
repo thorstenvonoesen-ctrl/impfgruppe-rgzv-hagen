@@ -5177,6 +5177,52 @@ function isMissingAdminMembershipSchema(error) {
   return error?.code === '42P01' || error?.code === 'PGRST205' || /club_admin_memberships/i.test(error?.message || '')
 }
 
+function formatAdministratorLastActivity(value) {
+  if (!value) return 'zuletzt online unbekannt'
+  const lastActivity = new Date(value)
+  if (Number.isNaN(lastActivity.getTime())) return 'zuletzt online unbekannt'
+
+  const now = new Date()
+  const elapsedMilliseconds = Math.max(0, now.getTime() - lastActivity.getTime())
+  const elapsedMinutes = Math.floor(elapsedMilliseconds / 60000)
+  if (elapsedMinutes < 1) return 'zuletzt online gerade eben'
+  if (elapsedMinutes < 60) return `zuletzt online vor ${elapsedMinutes} Minuten`
+
+  const localPartsFormatter = new Intl.DateTimeFormat('de-DE', {
+    timeZone: 'Europe/Berlin',
+    year: 'numeric',
+    month: 'numeric',
+    day: 'numeric'
+  })
+  const localDay = date => {
+    const parts = Object.fromEntries(
+      localPartsFormatter
+        .formatToParts(date)
+        .filter(part => part.type !== 'literal')
+        .map(part => [part.type, Number(part.value)])
+    )
+    return Date.UTC(parts.year, parts.month - 1, parts.day) / 86400000
+  }
+  const dayDifference = localDay(now) - localDay(lastActivity)
+  const time = new Intl.DateTimeFormat('de-DE', {
+    timeZone: 'Europe/Berlin',
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false
+  }).format(lastActivity)
+
+  if (dayDifference === 0) return `zuletzt online heute um ${time} Uhr`
+  if (dayDifference === 1) return `zuletzt online gestern um ${time} Uhr`
+
+  const date = new Intl.DateTimeFormat('de-DE', {
+    timeZone: 'Europe/Berlin',
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric'
+  }).format(lastActivity)
+  return `zuletzt online ${date} um ${time} Uhr`
+}
+
 function AdminPresence() {
   const [administrators, setAdministrators] = useState([])
   const [presenceError, setPresenceError] = useState('')
@@ -5255,7 +5301,7 @@ function AdminPresence() {
                 <small>{administrator.admin_email}</small>
               </span>
               <span className={administrator.online ? 'admin-presence-status-online' : 'admin-presence-status-offline'}>
-                {administrator.online ? 'online' : 'offline'}
+                {administrator.online ? 'online' : formatAdministratorLastActivity(administrator.last_activity)}
               </span>
             </li>
           ))}
