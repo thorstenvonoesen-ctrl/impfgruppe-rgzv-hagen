@@ -5,6 +5,7 @@ import jsPDF from 'jspdf'
 import autoTable from 'jspdf-autotable'
 import QRCode from 'qrcode'
 import { supabase, hasSupabase, supabaseConfigMessage } from './supabase.js'
+import { createPoultryQuizRound, poultryQuizMeta } from './quizQuestions.js'
 async function getDefaultClubId() {
   if (!hasSupabase) return null
 
@@ -162,6 +163,7 @@ const [showForm, setShowForm] = useState(false)
   if (page === '#info-sammelimpfung') return <InfoSammelimpfung />
   if (page === '#info-anmeldung') return <InfoAnmeldung />
   if (page === '#impfwart-grusswort') return <ImpfwartGrusswort />
+  if (page === '#quiz') return <PoultryQuiz />
 if (page === '#signup') return <PublicSignup />
   if (page === '#admin') return <Admin />
   if (page === '#datenschutz') return <Datenschutz />
@@ -7810,6 +7812,182 @@ function Impressum() {
     </div>
   )
 }
+function PoultryQuiz() {
+  const [questions, setQuestions] = useState(() => createPoultryQuizRound())
+  const [questionIndex, setQuestionIndex] = useState(0)
+  const [selectedAnswer, setSelectedAnswer] = useState('')
+  const [results, setResults] = useState([])
+  const [finished, setFinished] = useState(false)
+
+  const currentQuestion = questions[questionIndex]
+  const correctCount = results.filter(result => result.correct).length
+  const percentage = questions.length ? Math.round((correctCount / questions.length) * 100) : 0
+
+  const certificate = percentage >= 95
+    ? { icon: '👑', title: 'Geflügelmeister' }
+    : percentage >= 80
+      ? { icon: '🏆', title: 'Geflügel-Profi' }
+      : percentage >= 60
+        ? { icon: '🥚', title: 'Erfahrener Geflügelhalter' }
+        : percentage >= 40
+          ? { icon: '🐔', title: 'Hobbyhalter' }
+          : { icon: '🐣', title: 'Geflügel-Einsteiger' }
+
+  function chooseAnswer(answer) {
+    if (selectedAnswer) return
+    setSelectedAnswer(answer)
+    setResults(previous => [
+      ...previous,
+      {
+        questionId: currentQuestion.id,
+        selected: answer,
+        correct: answer === currentQuestion.correct
+      }
+    ])
+  }
+
+  function continueQuiz() {
+    if (!selectedAnswer) return
+    if (questionIndex === questions.length - 1) {
+      setFinished(true)
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+      return
+    }
+    setQuestionIndex(previous => previous + 1)
+    setSelectedAnswer('')
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
+
+  function startNewQuiz() {
+    setQuestions(createPoultryQuizRound())
+    setQuestionIndex(0)
+    setSelectedAnswer('')
+    setResults([])
+    setFinished(false)
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
+
+  const motivation = percentage >= 95
+    ? 'Herzlichen Glückwunsch! Sie gehören zu unseren Geflügelmeistern.'
+    : percentage >= 80
+      ? 'Ausgezeichnet! Ihr Geflügelwissen ist auf Profi-Niveau.'
+      : percentage >= 60
+        ? 'Sehr gut! Beim nächsten Mal schaffen Sie bestimmt den Geflügel-Profi.'
+        : percentage >= 40
+          ? 'Eine gute Grundlage – mit jedem Durchlauf wächst Ihr Geflügelwissen.'
+          : 'Ein gelungener Einstieg. Starten Sie ein neues Quiz und entdecken Sie noch mehr Geflügelwissen.'
+
+  return (
+    <div className="page poultry-quiz-page">
+      <PremiumBackground />
+      <Header />
+      <main className="poultry-quiz-shell">
+        {!finished ? (
+          <>
+            <section className="poultry-quiz-heading">
+              <div>
+                <span className="poultry-quiz-eyebrow">Geflügelwissen entdecken</span>
+                <h1>🧠 Geflügel-Quiz</h1>
+                <p>10 zufällige Fragen aus {poultryQuizMeta.topics.length} Themenbereichen – unterhaltsam lernen und direkt erfahren, warum eine Antwort richtig ist.</p>
+              </div>
+              <div className="poultry-quiz-progress-copy">
+                <strong>{questionIndex + 1}</strong>
+                <span>von {questions.length}</span>
+              </div>
+            </section>
+
+            <div className="poultry-quiz-progress" aria-label={`Frage ${questionIndex + 1} von ${questions.length}`}>
+              <span style={{ width: `${((questionIndex + 1) / questions.length) * 100}%` }} />
+            </div>
+
+            <section className="poultry-question-card">
+              <div className="poultry-question-meta">
+                <span>{currentQuestion.topic}</span>
+                <span className={`poultry-difficulty poultry-difficulty-${currentQuestion.difficulty}`}>{currentQuestion.difficulty}</span>
+              </div>
+              <h2>{currentQuestion.question}</h2>
+              <div className="poultry-answer-grid">
+                {currentQuestion.answers.map((answer, index) => {
+                  const isSelected = selectedAnswer === answer
+                  const isCorrect = selectedAnswer && answer === currentQuestion.correct
+                  const isIncorrect = isSelected && answer !== currentQuestion.correct
+                  return (
+                    <button
+                      key={answer}
+                      type="button"
+                      className={[
+                        'poultry-answer',
+                        isCorrect ? 'poultry-answer-correct' : '',
+                        isIncorrect ? 'poultry-answer-incorrect' : '',
+                        selectedAnswer && !isSelected && !isCorrect ? 'poultry-answer-muted' : ''
+                      ].filter(Boolean).join(' ')}
+                      onClick={() => chooseAnswer(answer)}
+                      disabled={Boolean(selectedAnswer)}
+                    >
+                      <span>{String.fromCharCode(65 + index)}</span>
+                      {answer}
+                    </button>
+                  )
+                })}
+              </div>
+
+              {selectedAnswer && (
+                <div className={`poultry-feedback ${selectedAnswer === currentQuestion.correct ? 'poultry-feedback-correct' : 'poultry-feedback-incorrect'}`}>
+                  <div className="poultry-feedback-title">
+                    <span>{selectedAnswer === currentQuestion.correct ? '✓' : '!'}</span>
+                    <strong>{selectedAnswer === currentQuestion.correct ? 'Richtig beantwortet' : 'Die richtige Antwort'}</strong>
+                  </div>
+                  {selectedAnswer !== currentQuestion.correct && <p className="poultry-correct-answer">{currentQuestion.correct}</p>}
+                  <p>{currentQuestion.explanation}</p>
+                </div>
+              )}
+
+              <div className="poultry-question-actions">
+                <a href="#" className="poultry-quiz-back">← Zur Startseite</a>
+                <button type="button" className="primary poultry-next-button" onClick={continueQuiz} disabled={!selectedAnswer}>
+                  {questionIndex === questions.length - 1 ? 'Auswertung anzeigen' : 'Nächste Frage →'}
+                </button>
+              </div>
+            </section>
+          </>
+        ) : (
+          <section className="poultry-result">
+            <div className="poultry-result-heading">
+              <span className="poultry-quiz-eyebrow">Quiz abgeschlossen</span>
+              <h1>Ihre Auswertung</h1>
+              <p>{motivation}</p>
+            </div>
+
+            <div className="poultry-result-stats">
+              <article><strong>{correctCount}/{questions.length}</strong><span>Punkte</span></article>
+              <article><strong>{percentage}%</strong><span>Ergebnis</span></article>
+              <article><strong>{correctCount}</strong><span>Richtig</span></article>
+              <article><strong>{questions.length - correctCount}</strong><span>Falsch</span></article>
+            </div>
+
+            <article className="poultry-certificate">
+              <div className="poultry-certificate-border">
+                <span className="poultry-certificate-label">Digitale Urkunde</span>
+                <div className="poultry-certificate-icon" aria-hidden="true">{certificate.icon}</div>
+                <h2>{certificate.title}</h2>
+                <p>Herzlichen Glückwunsch zu Ihrem Ergebnis im Geflügel-Quiz!</p>
+                <strong>{correctCount} von {questions.length} Punkten · {percentage}%</strong>
+                <time>{new Intl.DateTimeFormat('de-DE', { dateStyle: 'long' }).format(new Date())}</time>
+              </div>
+            </article>
+
+            <div className="poultry-result-actions">
+              <a href="#" className="poultry-quiz-back">← Zur Startseite</a>
+              <button type="button" className="primary" onClick={startNewQuiz}>Neues Quiz starten</button>
+            </div>
+          </section>
+        )}
+      </main>
+      <Footer />
+    </div>
+  )
+}
+
 function Header({ admin = false }) {
   return (
     <header
@@ -7831,19 +8009,23 @@ function Header({ admin = false }) {
 
   
 
-{!admin && <a
-  href="#admin"
-  style={{
-    marginLeft: 'auto',
-    paddingRight: '32px',
-    color: '#ffffff',
-    textDecoration: 'none',
-    fontSize: '18px',
-    fontWeight: '700'
-  }}
->
-  Admin-Login
-</a>}
+{!admin && (
+  <nav className="public-header-links" aria-label="Öffentliche Bereiche">
+    <a href="#quiz" className="public-quiz-link">🧠 Geflügel-Quiz</a>
+    <a
+      href="#admin"
+      style={{
+        paddingRight: '32px',
+        color: '#ffffff',
+        textDecoration: 'none',
+        fontSize: '18px',
+        fontWeight: '700'
+      }}
+    >
+      Admin-Login
+    </a>
+  </nav>
+)}
       </div>
     </header>
   )
