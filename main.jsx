@@ -4239,7 +4239,7 @@ function CheckinPanel({ participants, vaccinationDates, onChanged, adminRole }) 
   }
 
   return <section className="card checkin-panel">
-    <div className="checkin-head"><div><span>QR-CHECK-IN</span><h2>Einlass am Impftermin</h2></div></div>
+    <div className="checkin-head"><div><span>QR-CHECK-IN</span><h2>Teilnehmer-Check-in am Impftermin</h2></div></div>
     <select value={dateId} onChange={event => { setDateId(event.target.value); setQuery(''); setQuickFilter(''); setSearchResults([]); setCandidate(null); setQrImage(''); setFeedback('') }}><option value="">Impftermin auswählen</option>{vaccinationDates.map(date => <option key={date.id} value={date.id}>{date.title} · {date.date}</option>)}</select>
     {dateId && <>
       <div className="checkin-live-stats" aria-label="Live-Statistik des ausgewählten Impftermins">
