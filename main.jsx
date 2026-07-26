@@ -4266,6 +4266,10 @@ const [newDateNote, setNewDateNote] = useState('')
   const [adminStatusBusy, setAdminStatusBusy] = useState(false)
   const [adminStatusError, setAdminStatusError] = useState('')
   const [adminStatusSuccess, setAdminStatusSuccess] = useState('')
+  const [adminRoleTarget, setAdminRoleTarget] = useState(null)
+  const [adminRoleBusy, setAdminRoleBusy] = useState(false)
+  const [adminRoleError, setAdminRoleError] = useState('')
+  const [adminRoleSuccess, setAdminRoleSuccess] = useState('')
   const [dateFeedback, setDateFeedback] = useState('')
   const [clubs, setClubs] = useState([])
 const [selectedClub, setSelectedClub] = useState(null)
@@ -4439,6 +4443,71 @@ const [selectedClub, setSelectedClub] = useState(null)
       setAdminStatusError('Der Status des Administrators konnte nicht geändert werden.')
     } finally {
       setAdminStatusBusy(false)
+    }
+  }
+  function openAdministratorRole(membership) {
+    if (adminContext?.role !== 'superadmin' || membership.role === 'superadmin') return
+    setAdminRoleError('')
+    setAdminRoleTarget({ membership, newRole: membership.role })
+  }
+  async function updateAdministratorRole() {
+    if (
+      adminContext?.role !== 'superadmin' ||
+      !adminRoleTarget ||
+      adminRoleTarget.membership.role === 'superadmin' ||
+      !['clubadmin', 'checkin_admin'].includes(adminRoleTarget.newRole)
+    ) return
+    setAdminRoleBusy(true)
+    setAdminRoleError('')
+    try {
+      const { data: { session } } = await supabase.auth.getSession()
+      const response = await fetch('/api/admin-payment', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${session?.access_token || ''}`
+        },
+        body: JSON.stringify({
+          action: 'set-admin-membership-role',
+          email: adminRoleTarget.membership.email,
+          club: adminRoleTarget.membership.club,
+          currentRole: adminRoleTarget.membership.role,
+          newRole: adminRoleTarget.newRole
+        })
+      })
+      const result = await response.json().catch(() => ({}))
+      if (!response.ok) {
+        const allowedMessages = [
+          'Keine Berechtigung für die Adminverwaltung.',
+          'Der Administrator wurde nicht gefunden.',
+          'Die ausgewählte Rolle ist nicht zulässig.',
+          'Die Superadmin-Rolle kann über diese Funktion nicht geändert werden.',
+          'Die Rolle des Administrators konnte nicht geändert werden.'
+        ]
+        setAdminRoleError(
+          allowedMessages.includes(result.error)
+            ? result.error
+            : 'Die Rolle des Administrators konnte nicht geändert werden.'
+        )
+        return
+      }
+      const changedAdministrator = adminRoleTarget.membership
+      const newRole = adminRoleTarget.newRole
+      setAdminRoleTarget(null)
+      setAdminRoleSuccess('Die Rolle des Administrators wurde geändert.')
+      setSelectedAdministrator(current =>
+        current &&
+        current.email === changedAdministrator.email &&
+        current.club === changedAdministrator.club &&
+        current.role === changedAdministrator.role
+          ? { ...current, role: newRole }
+          : current
+      )
+      await openAdminManagement()
+    } catch {
+      setAdminRoleError('Die Rolle des Administrators konnte nicht geändert werden.')
+    } finally {
+      setAdminRoleBusy(false)
     }
   }
   async function openAdministratorDetail(membership) {
@@ -5170,6 +5239,39 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
 
   return <div className="page admin"><Header admin />
 
+  {adminRoleTarget && adminContext?.role === 'superadmin' && (
+    <div className="modal admin-role-modal">
+      <section className="modal-card" role="dialog" aria-modal="true">
+        <p>Soll die Rolle dieses Administrators wirklich geändert werden?</p>
+        <p>
+          {administratorRoleLabel(adminRoleTarget.membership.role)}
+          {' → '}
+          {administratorRoleLabel(adminRoleTarget.newRole)}
+        </p>
+        <label>
+          Rolle
+          <select
+            value={adminRoleTarget.newRole}
+            onChange={event => setAdminRoleTarget({ ...adminRoleTarget, newRole: event.target.value })}
+          >
+            <option value="clubadmin">Vereinsadmin</option>
+            <option value="checkin_admin">Check-in-Admin</option>
+          </select>
+        </label>
+        {adminRoleError && <p role="alert" className="campaign-load-error">{adminRoleError}</p>}
+        <button type="button" className="ghost" onClick={() => setAdminRoleTarget(null)} disabled={adminRoleBusy}>Abbrechen</button>
+        <button
+          type="button"
+          className="primary"
+          onClick={updateAdministratorRole}
+          disabled={adminRoleBusy || adminRoleTarget.newRole === adminRoleTarget.membership.role}
+        >
+          Rolle speichern
+        </button>
+      </section>
+    </div>
+  )}
+
   {adminStatusTarget && adminContext?.role === 'superadmin' && (
     <div className="modal admin-status-modal">
       <section className="modal-card" role="dialog" aria-modal="true">
@@ -5275,6 +5377,7 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
         </div>
         {adminCreateSuccess && <p role="status">{adminCreateSuccess}</p>}
         {adminStatusSuccess && <p role="status">{adminStatusSuccess}</p>}
+        {adminRoleSuccess && <p role="status">{adminRoleSuccess}</p>}
         {administratorMembershipsLoading && <p>Administratoren werden geladen …</p>}
         {administratorMembershipsError && <p role="alert" className="campaign-load-error">{administratorMembershipsError}</p>}
         {!administratorMembershipsLoading && !administratorMembershipsError && (
@@ -5301,9 +5404,12 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
                     <td>
                       <button type="button" className="ghost" onClick={() => openAdministratorDetail(membership)}>Details anzeigen</button>
                       {membership.role !== 'superadmin' && (
-                        <button type="button" className="ghost" onClick={() => confirmAdministratorStatus(membership)}>
-                          {membership.active ? 'Sperren' : 'Freischalten'}
-                        </button>
+                        <>
+                          <button type="button" className="ghost" onClick={() => confirmAdministratorStatus(membership)}>
+                            {membership.active ? 'Sperren' : 'Freischalten'}
+                          </button>
+                          <button type="button" className="ghost" onClick={() => openAdministratorRole(membership)}>Rolle ändern</button>
+                        </>
                       )}
                     </td>
                   </tr>
