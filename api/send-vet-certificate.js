@@ -79,7 +79,8 @@ export default async function handler(req, res) {
         encoding: 'base64'
       }],
       html: `
-        <p>Sehr geehrte Frau Dinger,</p>
+        <p>Sehr geehrte Frau Dinger,<br>
+sehr geehrte Damen und Herren,</p>
 
         <p>
           anbei übersenden wir Ihnen die Sammelimpfbescheinigung für den Impftermin vom <strong>${deutschesDatum}</strong>
