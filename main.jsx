@@ -913,7 +913,7 @@ function ClubSelect() {
 
         .final-home-nav {
           display: grid;
-          grid-template-columns: repeat(3, minmax(0,1fr));
+          grid-template-columns: minmax(0,1fr);
           gap: 12px;
         }
 
@@ -1164,31 +1164,6 @@ function ClubSelect() {
               <small>Direkt zur Anmeldung Ihrer Tiere für den nächsten Impftermin des RGZV Hagen.</small>
             </span>
             <span className="final-home-nav-action">Zur Impfanmeldung →</span>
-          </button>
-
-          <button
-            type="button"
-            className="final-home-nav-card premium-home-surface"
-            onClick={() => { window.location.hash = '#club-login-info' }}
-          >
-            <span className="final-home-nav-icon" aria-hidden="true">🔒</span>
-            <span className="final-home-nav-text">
-              <strong>Vereinslogin</strong>
-              <small>Impftermine, Teilnehmer, Zahlungen und Vereinseinstellungen verwalten.</small>
-            </span>
-          </button>
-
-          <button
-            type="button"
-            className="final-home-nav-card premium-home-surface"
-            onClick={() => { window.location.hash = '#register-info' }}
-          >
-            <span className="final-home-nav-icon" aria-hidden="true">🗓️</span>
-            <span className="final-home-nav-text">
-              <strong>Verein registrieren</strong>
-              <small>Eigenen Verein registrieren und nach erfolgreicher Prüfung freischalten lassen.</small>
-              <em>Freischaltung und Nutzung kostenpflichtig.</em>
-            </span>
           </button>
         </section>
       </main>
