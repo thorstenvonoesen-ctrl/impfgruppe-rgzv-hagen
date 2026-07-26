@@ -3449,7 +3449,12 @@ useEffect(() => {
         const response = await fetch('/api/create-registration', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ ...formData, member_code, vaccination_date_id: form.vaccination_date_id })
+          body: JSON.stringify({
+            ...formData,
+            member_code,
+            vaccination_date_id: form.vaccination_date_id,
+            payment_method: paymentMethod
+          })
         })
         const result = await response.json()
         if (!response.ok) throw new Error(result.error || 'Anmeldung konnte nicht gespeichert werden.')
@@ -3461,10 +3466,15 @@ useEffect(() => {
           .filter(({ field }) => Number(form[field] || 0) > 0)
           .map(({ label }) => label)
           .join(', ')
-        const payload = { ...formData, animal_type: animalType, animal_count: animalTotal, club_id: await getDefaultClubId(), vaccination_date_id: form.vaccination_date_id, payment_status: 'offen', payment_amount: paymentAmount, is_member: false }
+        const payload = { ...formData, animal_type: animalType, animal_count: animalTotal, club_id: await getDefaultClubId(), vaccination_date_id: form.vaccination_date_id, payment_status: 'offen', payment_amount: paymentAmount, payment_method: paymentMethod === 'bar' ? 'bar' : null, is_member: false }
         const list = JSON.parse(localStorage.getItem('participants') || '[]')
         list.push({ id: crypto.randomUUID(), ...payload, created_at: new Date().toISOString() })
         localStorage.setItem('participants', JSON.stringify(list))
+      }
+      if (paymentMethod === 'bar') {
+        setMessage('Anmeldung erfolgreich gespeichert. Die Teilnahmegebühr wird am Impftag vor Ort in bar bezahlt.')
+        setForm(emptyForm())
+        return
       }
       setMessage('Anmeldung gespeichert. Du wirst jetzt zur Bezahlung weitergeleitet.')
       setForm(emptyForm())
@@ -3871,6 +3881,25 @@ value={form.vaccination_date_id}
       Kreditkarte / Apple Pay / Google Pay
     </span>
   </div>
+
+  <div className="payment-option" style={{ marginTop: '10px' }}>
+    <input
+      type="radio"
+      name="paymentMethod"
+      value="bar"
+      checked={paymentMethod === 'bar'}
+      onChange={(e) => setPaymentMethod(e.target.value)}
+    />
+    <span style={{ marginLeft: '8px' }}>Barzahlung vor Ort</span>
+  </div>
+
+  <p style={{ margin: '12px 0 0', color: '#6b7280', fontSize: '14px', lineHeight: '1.5' }}>
+    {paymentMethod === 'bar'
+      ? 'Die Teilnahmegebühr bezahlen Sie am Impftag vor Ort in bar. Es erfolgt keine Weiterleitung zu einem Zahlungsdienstleister.'
+      : paymentMethod === 'stripe'
+        ? 'Nach der Anmeldung werden Sie zur sicheren Zahlung per Kreditkarte, Apple Pay oder Google Pay weitergeleitet.'
+        : 'Nach der Anmeldung werden Sie zur sicheren Zahlung mit PayPal weitergeleitet.'}
+  </p>
 </div>
           <aside
             className="participation-fee-notice participation-fee-notice-compact"
@@ -3888,9 +3917,13 @@ value={form.vaccination_date_id}
           <button disabled={loading} className="primary signup-submit">
             {loading
               ? 'Speichern...'
-              : animalTotal > 0
-                ? `${animalTotal} Tiere zur Newcastle-Impfung anmelden & bezahlen`
-                : 'Zur Newcastle-Impfung anmelden & bezahlen'}
+              : paymentMethod === 'bar'
+                ? animalTotal > 0
+                  ? `${animalTotal} Tiere verbindlich zur Newcastle-Impfung anmelden`
+                  : 'Verbindlich zur Newcastle-Impfung anmelden'
+                : animalTotal > 0
+                  ? `${animalTotal} Tiere zur Newcastle-Impfung anmelden & bezahlen`
+                  : 'Zur Newcastle-Impfung anmelden & bezahlen'}
           </button>
           {message && <p className="message">{message}</p>}
         </form>
@@ -5278,6 +5311,7 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
     const paymentMethodLabel = participant => {
       if (isPaymentMethod(participant, 'paypal')) return 'PayPal'
       if (isPaymentMethod(participant, 'stripe')) return 'Stripe'
+      if (isPaymentMethod(participant, 'bar')) return 'Barzahlung vor Ort'
       if (participant.payment_status === 'bezahlt') return 'Barzahlung'
       return '-'
     }
@@ -6272,7 +6306,7 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
 </td>
               <td>
                 <span className={`status-badge ${p.payment_status === 'bezahlt' ? 'paid' : 'open'}`}>
-                  {p.payment_status}
+                  {p.payment_status}{p.payment_method === 'bar' ? ' · Barzahlung vor Ort' : ''}
                 </span>
               </td>
               <td>

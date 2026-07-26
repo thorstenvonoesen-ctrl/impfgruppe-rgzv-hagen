@@ -11,6 +11,7 @@ const ANIMAL_COUNT_FIELDS = [
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 const TOKEN_LIFETIME_MS = 10 * 60 * 1000
 const PROFILE_FIELDS = 'firstname, lastname, street, housenumber, zipcode, city, phone, tsk_number, animal_type'
+const REGISTRATION_PAYMENT_METHODS = new Set(['paypal', 'stripe', 'bar'])
 
 function normalizeEmail(value) {
   return String(value || '').trim().toLowerCase()
@@ -43,6 +44,11 @@ export function buildAnimalRegistration(input = {}) {
     .join(', ')
 
   return { counts, total, animalType }
+}
+
+export function normalizeRegistrationPaymentMethod(value) {
+  const paymentMethod = String(value || 'paypal').trim().toLowerCase()
+  return REGISTRATION_PAYMENT_METHODS.has(paymentMethod) ? paymentMethod : null
 }
 
 function tokenSecret() {
@@ -153,6 +159,10 @@ export default async function handler(req, res) {
     if (animalRegistration.error) {
       return res.status(400).json({ error: animalRegistration.error })
     }
+    const paymentMethod = normalizeRegistrationPaymentMethod(input.payment_method)
+    if (!paymentMethod) {
+      return res.status(400).json({ error: 'Die ausgewählte Zahlungsart ist nicht zulässig.' })
+    }
     const {
       counts: animalCounts,
       total: animalCount,
@@ -175,7 +185,8 @@ export default async function handler(req, res) {
       club_id: appointment.club_id,
       is_member: isMember,
       payment_status: 'offen',
-      payment_amount: isMember ? 5 : 10
+      payment_amount: isMember ? 5 : 10,
+      payment_method: paymentMethod === 'bar' ? 'bar' : null
     }).select('id, payment_amount').single()
     if (error) throw error
     return res.status(201).json({ participantId: data.id, paymentAmount: Number(data.payment_amount) })
