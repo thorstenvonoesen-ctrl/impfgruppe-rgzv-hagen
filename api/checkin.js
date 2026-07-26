@@ -97,6 +97,7 @@ async function searchParticipants(supabase, clubId, selectedVaccinationDateId, r
       .from('participants')
       .select('id, firstname, lastname, city, email, phone, tsk_number, animal_count, payment_status, payment_method, payment_date, checked_in, checked_in_at, vaccination_date_id')
       .eq('club_id', clubId)
+      .eq('vaccination_date_id', selectedVaccinationDateId)
       .or(filters)
       .limit(75)
   }))
@@ -182,8 +183,14 @@ export default async function handler(req, res) {
       if (participant.club_id !== authorization.appointment.club_id) {
         return res.status(403).json({ error: 'Teilnehmer gehört nicht zum ausgewählten Verein.' })
       }
+      if (String(participant.vaccination_date_id) !== String(authorization.appointment.id)) {
+        return res.status(403).json({ error: 'Teilnehmer gehört nicht zum ausgewählten Impftermin.' })
+      }
       if (markPaid && !canManagePayments(memberships, participant.club_id)) {
         return res.status(403).json({ error: 'Keine Berechtigung zum Ändern des Zahlungsstatus.' })
+      }
+      if (markPaid && participant.payment_status === 'bezahlt') {
+        return res.status(409).json({ error: 'Diese Zahlung wurde bereits verbucht.' })
       }
       if (checkIn && participant.checked_in) {
         return res.status(409).json({ error: 'Dieser Teilnehmer ist bereits eingecheckt.' })
@@ -202,14 +209,21 @@ export default async function handler(req, res) {
         update.checked_in_by = user.id
         update.checkin_method = 'manual'
       }
-      const { data: updated, error: updateError } = await supabase
+      let updateQuery = supabase
         .from('participants')
         .update(update)
         .eq('id', participant.id)
         .eq('club_id', participant.club_id)
+        .eq('vaccination_date_id', authorization.appointment.id)
+      if (markPaid) updateQuery = updateQuery.eq('payment_status', 'offen')
+      if (checkIn) updateQuery = updateQuery.eq('checked_in', false)
+      const { data: updated, error: updateError } = await updateQuery
         .select('id, payment_status, payment_method, payment_date, checked_in, checked_in_at')
-        .single()
+        .maybeSingle()
       if (updateError) throw updateError
+      if (!updated) {
+        return res.status(409).json({ error: 'Die Aktion wurde bereits ausgeführt. Bitte Status aktualisieren.' })
+      }
 
       if (markPaid && participant.payment_status !== 'bezahlt' && participant.email) {
         await fetch(`https://${req.headers.host}/api/send-payment-email`, {
@@ -239,8 +253,11 @@ export default async function handler(req, res) {
     if (participant.club_id !== appointment.club_id || participant.vaccination_date_id !== appointment.id) {
       return res.status(403).json({ error: 'QR-Code gehört nicht zu diesem Impftermin.' })
     }
+    if (checkedIn && participant.checked_in) {
+      return res.status(409).json({ error: 'Dieser Teilnehmer ist bereits eingecheckt.' })
+    }
 
-    const { data: updated, error: updateError } = await supabase
+    let checkinUpdate = supabase
       .from('participants')
       .update({
         checked_in: checkedIn,
@@ -249,9 +266,14 @@ export default async function handler(req, res) {
         checkin_method: checkedIn ? 'qr' : null
       })
       .eq('id', participant.id)
+      .eq('club_id', appointment.club_id)
+      .eq('vaccination_date_id', appointment.id)
+    if (checkedIn) checkinUpdate = checkinUpdate.eq('checked_in', false)
+    const { data: updated, error: updateError } = await checkinUpdate
       .select('id, checked_in, checked_in_at')
-      .single()
+      .maybeSingle()
     if (updateError) throw updateError
+    if (!updated) return res.status(409).json({ error: 'Dieser Teilnehmer ist bereits eingecheckt.' })
     return res.status(200).json({ success: true, participant: updated })
   } catch (error) {
     console.error('Check-in request failed:', error)
