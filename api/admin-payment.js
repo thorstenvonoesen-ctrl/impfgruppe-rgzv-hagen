@@ -1,4 +1,25 @@
+import nodemailer from 'nodemailer'
+import { emailSignatureHtml } from './_email-signature.js'
 import { createAdminSupabase, getBearerToken } from './_supabase-admin.js'
+
+const clubMailTransporter = nodemailer.createTransport({
+  host: process.env.SMTP_HOST,
+  port: Number(process.env.SMTP_PORT),
+  secure: true,
+  auth: {
+    user: process.env.SMTP_USER,
+    pass: process.env.SMTP_PASS
+  }
+})
+
+function escapeHtml(value) {
+  return String(value || '')
+    .replaceAll('&', '&amp;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;')
+    .replaceAll('"', '&quot;')
+    .replaceAll("'", '&#039;')
+}
 
 function getAdminInviteRedirectUrl() {
   const configuredUrl =
@@ -137,7 +158,7 @@ export default async function handler(req, res) {
         }
         const { data: club, error: clubError } = await supabase
           .from('clubs')
-          .select('id')
+          .select('id, name')
           .eq('id', clubId)
           .maybeSingle()
         if (clubError || !club) {
@@ -168,25 +189,72 @@ export default async function handler(req, res) {
         if (!redirectTo) {
           return res.status(500).json({ error: 'Die Einladung konnte nicht gesendet werden. Bitte erneut versuchen.' })
         }
-        const { data: inviteData, error: inviteError } = await supabase.auth.admin.inviteUserByEmail(email, {
-          redirectTo,
-          data: { first_name: firstName, last_name: lastName }
+        const { data: inviteData, error: inviteError } = await supabase.auth.admin.generateLink({
+          type: 'invite',
+          email,
+          options: {
+            redirectTo,
+            data: { first_name: firstName, last_name: lastName }
+          }
         })
-        if (inviteError || !inviteData?.user) {
+        const invitedUser = inviteData?.user
+        const invitationLink = inviteData?.properties?.action_link
+        if (inviteError || !invitedUser || !invitationLink) {
           return res.status(500).json({ error: 'Die Einladung konnte nicht gesendet werden. Bitte erneut versuchen.' })
         }
 
         const { error: membershipError } = await supabase
           .from('club_admin_memberships')
           .insert({
-            user_id: inviteData.user.id,
+            user_id: invitedUser.id,
             club_id: club.id,
             role,
             active: true
           })
         if (membershipError) {
-          await supabase.auth.admin.deleteUser(inviteData.user.id)
+          await supabase.auth.admin.deleteUser(invitedUser.id)
           return res.status(500).json({ error: 'Der Administrator konnte nicht angelegt werden.' })
+        }
+        try {
+          await clubMailTransporter.sendMail({
+            from: `"RGZV Hagen und Umgebung seit 1903 e.V." <${process.env.SMTP_USER}>`,
+            to: email,
+            subject: 'Einladung zum Adminbereich des Impfgruppenmanagers',
+            html: `
+              <p>Guten Tag ${escapeHtml(firstName)} ${escapeHtml(lastName)},</p>
+
+              <p>
+                Sie wurden als Administrator für den Impfgruppenmanager des Vereins
+                <strong>${escapeHtml(club.name)}</strong> angelegt.
+              </p>
+
+              <p>Über den folgenden Link können Sie Ihr persönliches Passwort festlegen:</p>
+
+              <p><a href="${escapeHtml(invitationLink)}">Persönliches Passwort festlegen</a></p>
+
+              <p>
+                Nach der Passwortvergabe können Sie sich über den bestehenden Admin-Login
+                mit Ihrer E-Mail-Adresse und Ihrem persönlichen Passwort anmelden.
+              </p>
+
+              ${emailSignatureHtml()}
+
+              <hr>
+
+              <p style="font-size:12px;color:#666;">
+                Diese E-Mail wurde automatisch über das Anmeldesystem des
+                RGZV Hagen und Umgebung seit 1903 e.V. erstellt.
+              </p>
+            `
+          })
+        } catch {
+          await supabase
+            .from('club_admin_memberships')
+            .delete()
+            .eq('user_id', invitedUser.id)
+            .eq('club_id', club.id)
+          await supabase.auth.admin.deleteUser(invitedUser.id)
+          return res.status(500).json({ error: 'Die Einladung konnte nicht gesendet werden. Bitte erneut versuchen.' })
         }
         return res.status(201).json({ success: true })
       }
