@@ -134,6 +134,15 @@ function formatParticipantAnimals(participant) {
   return details ? `${details} – Gesamt: ${total}` : `Gesamt: ${total}`
 }
 
+function checkedInParticipantsForVaccinationDate(participants, vaccinationDate) {
+  if (!vaccinationDate?.id) return []
+  return participants.filter(participant =>
+    participant.checked_in === true &&
+    String(participant.vaccination_date_id) === String(vaccinationDate.id) &&
+    (!vaccinationDate.club_id || String(participant.club_id) === String(vaccinationDate.club_id))
+  )
+}
+
 function App() {
   const [page, setPage] = useState(location.hash || '#')
 const [showForm, setShowForm] = useState(false)
@@ -5084,11 +5093,14 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
   async function sendVetCertificateForDate(vaccinationDate) {
     if (!vaccinationDate || vetSending || !canSendVetCertificate(vaccinationDate)) return
 
+    const list = checkedInParticipantsForVaccinationDate(participants, vaccinationDate)
+    if (list.length === 0) {
+      alert('Für diesen Impftermin wurden noch keine Teilnehmer eingecheckt.')
+      return
+    }
+
     setVetSending(true)
     try {
-      const list = participants.filter(
-        participant => String(participant.vaccination_date_id) === String(vaccinationDate.id)
-      )
       const doc = new jsPDF()
 
       doc.setFontSize(16)
@@ -5130,7 +5142,8 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
         body: JSON.stringify({
           pdfData: doc.output('datauristring'),
           datum: vaccinationDate.date,
-          vaccinationDateId: vaccinationDate.id
+          vaccinationDateId: vaccinationDate.id,
+          participantIds: list.map(participant => participant.id)
         })
       })
       const result = await response.json().catch(() => ({}))
@@ -6121,6 +6134,7 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
 
     <ExportButtons
       participants={filtered}
+      certificateParticipants={participants}
       vaccinationDates={vaccinationDates}
     />
   </div>
@@ -6304,7 +6318,7 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
 
 
 
-function ExportButtons({ participants, vaccinationDates }) {
+function ExportButtons({ participants, certificateParticipants, vaccinationDates }) {
   const nextDate = vaccinationDates?.[0]?.date
   const today = new Date().toISOString().slice(0, 10)
   const isVaccinationDay = nextDate === today
@@ -6338,6 +6352,13 @@ function ExportButtons({ participants, vaccinationDates }) {
 
 
   async function sendVetCertificate() {
+    const vaccinationDate = vaccinationDates?.[0]
+    const checkedParticipants = checkedInParticipantsForVaccinationDate(certificateParticipants, vaccinationDate)
+    if (checkedParticipants.length === 0) {
+      alert('Für diesen Impftermin wurden noch keine Teilnehmer eingecheckt.')
+      return
+    }
+
     const doc = new jsPDF()
 
     doc.setFontSize(16)
@@ -6360,7 +6381,7 @@ function ExportButtons({ participants, vaccinationDates }) {
     autoTable(doc, {
       startY: 120,
       head:[['Name','Adresse','TSK Betriebsnummer','Tierart','Anzahl']],
-      body: participants.map(p => [
+      body: checkedParticipants.map(p => [
         `${p.firstname} ${p.lastname}`,
         `${p.street||''} ${p.housenumber||''}, ${p.zipcode||''} ${p.city||''}`,
         p.tsk_number || '',
@@ -6369,19 +6390,36 @@ function ExportButtons({ participants, vaccinationDates }) {
       ])
     })
 
-    await fetch('/api/send-vet-certificate', {
+    const response = await fetch('/api/send-vet-certificate', {
       method: 'POST',
-      headers: {'Content-Type':'application/json'},
+      headers: {
+        'Content-Type':'application/json',
+        Authorization: `Bearer ${(await supabase.auth.getSession()).data.session?.access_token || ''}`
+      },
       body: JSON.stringify({
   pdfData: doc.output('datauristring'),
-  datum: vaccinationDates?.[0]?.date || ''
+  datum: vaccinationDate?.date || '',
+  vaccinationDateId: vaccinationDate?.id,
+  participantIds: checkedParticipants.map(participant => participant.id)
 })
     })
+    const result = await response.json().catch(() => ({}))
+    if (!response.ok || !result.success) {
+      alert(result.error || 'Die Sammelimpfbescheinigung konnte nicht versendet werden.')
+      return
+    }
 
     alert('Bescheinigung an Tierarzt versendet')
   }
 
   async function vaccinationCertificate() {
+    const vaccinationDate = vaccinationDates?.[0]
+    const checkedParticipants = checkedInParticipantsForVaccinationDate(certificateParticipants, vaccinationDate)
+    if (checkedParticipants.length === 0) {
+      alert('Für diesen Impftermin wurden noch keine Teilnehmer eingecheckt.')
+      return
+    }
+
     const doc = new jsPDF()
 
     doc.setFontSize(16)
@@ -6404,7 +6442,7 @@ function ExportButtons({ participants, vaccinationDates }) {
     autoTable(doc, {
       startY: 120,
       head:[['Name','Adresse','TSK Betriebsnummer','Tierart','Anzahl']],
-      body: participants.map(p => [
+      body: checkedParticipants.map(p => [
         `${p.firstname} ${p.lastname}`,
         `${p.street||''} ${p.housenumber||''}, ${p.zipcode||''} ${p.city||''}`,
         p.tsk_number || '',

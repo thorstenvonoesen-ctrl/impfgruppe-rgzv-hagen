@@ -25,7 +25,7 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { pdfData, datum, vaccinationDateId } = req.body || {}
+    const { pdfData, datum, vaccinationDateId, participantIds } = req.body || {}
     const deutschesDatum = formatGermanDate(datum)
 
     if (!deutschesDatum || !vaccinationDateId || !pdfData || typeof pdfData !== 'string') {
@@ -57,6 +57,32 @@ export default async function handler(req, res) {
       membership => membership.role === 'superadmin' || String(membership.club_id) === String(appointment.club_id)
     )
     if (!authorized) return res.status(403).json({ success: false, error: 'Keine Berechtigung für diesen Verein.' })
+    const { data: checkedInParticipants, error: participantsError } = await supabase
+      .from('participants')
+      .select('id')
+      .eq('club_id', appointment.club_id)
+      .eq('vaccination_date_id', appointment.id)
+      .eq('checked_in', true)
+    if (participantsError) throw participantsError
+    if (!checkedInParticipants?.length) {
+      return res.status(400).json({
+        success: false,
+        error: 'Für diesen Impftermin wurden noch keine Teilnehmer eingecheckt.'
+      })
+    }
+    const expectedParticipantIds = checkedInParticipants.map(participant => String(participant.id)).sort()
+    const providedParticipantIds = Array.isArray(participantIds)
+      ? [...new Set(participantIds.map(participantId => String(participantId)))].sort()
+      : []
+    if (
+      providedParticipantIds.length !== expectedParticipantIds.length ||
+      providedParticipantIds.some((participantId, index) => participantId !== expectedParticipantIds[index])
+    ) {
+      return res.status(400).json({
+        success: false,
+        error: 'Die Teilnehmerauswahl der Sammelimpfbescheinigung ist nicht mehr aktuell.'
+      })
+    }
     await supabase
       .from('vaccination_dates')
       .update({ vet_certificate_generated_at: new Date().toISOString() })
