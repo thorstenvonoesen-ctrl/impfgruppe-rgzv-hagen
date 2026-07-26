@@ -31,17 +31,6 @@ function getCurrentSlug() {
 
   return APP.slug
 }
-async function getMemberCode() {
-  if (!hasSupabase) return null
-
-  const { data } = await supabase
-    .from('clubs')
-    .select('member_code')
-    .eq('slug', getCurrentSlug())
-    .maybeSingle()
-
-  return data?.member_code ?? null
-}
 import './styles.css'
 import logo from './public/Logoklein.jpg'
 import { APP } from './config'
@@ -476,7 +465,10 @@ function ClubSelect() {
   useEffect(() => {
     async function loadClubs() {
       if (!hasSupabase) return
-      const { data } = await supabase.from('clubs').select('*').order('name')
+      const { data } = await supabase
+        .from('clubs')
+        .select('id,name,slug,guest_price,member_price')
+        .order('name')
       setClubs(data || [])
     }
 
@@ -3099,7 +3091,7 @@ function PublicSignup() {
   const clubId = await getDefaultClubId()
     const { data: clubData } = await supabase
   .from('clubs')
-  .select('*')
+  .select('id,name,slug,guest_price,member_price')
   .eq('id', clubId)
   .single()
 
@@ -3233,10 +3225,8 @@ useEffect(() => {
         participantId = result.participantId
         paymentAmount = Number(result.paymentAmount || 10)
       } else {
-        const currentMemberCode = await getMemberCode()
-        const isMember = form.member_code?.trim().toUpperCase() === currentMemberCode?.trim().toUpperCase()
-        paymentAmount = isMember ? 5 : 10
-        const payload = { ...formData, club_id: await getDefaultClubId(), animal_count: Number(form.animal_count), vaccination_date_id: form.vaccination_date_id, payment_status: 'offen', payment_amount: paymentAmount, is_member: isMember }
+        paymentAmount = 10
+        const payload = { ...formData, club_id: await getDefaultClubId(), animal_count: Number(form.animal_count), vaccination_date_id: form.vaccination_date_id, payment_status: 'offen', payment_amount: paymentAmount, is_member: false }
         const list = JSON.parse(localStorage.getItem('participants') || '[]')
         list.push({ id: crypto.randomUUID(), ...payload, created_at: new Date().toISOString() })
         localStorage.setItem('participants', JSON.stringify(list))

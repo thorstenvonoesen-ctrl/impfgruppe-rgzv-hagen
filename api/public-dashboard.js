@@ -6,7 +6,11 @@ export default async function handler(req, res) {
     const slug = String(req.query?.slug || '').trim()
     if (!slug) return res.status(400).json({ error: 'Verein fehlt.' })
     const supabase = createAdminSupabase()
-    const { data: club } = await supabase.from('clubs').select('*').eq('slug', slug).maybeSingle()
+    const { data: club } = await supabase
+      .from('clubs')
+      .select('id,name,slug')
+      .eq('slug', slug)
+      .maybeSingle()
     if (!club) return res.status(404).json({ error: 'Verein nicht gefunden.' })
     const [{ data: participants, error: participantsError }, { data: dates, error: datesError }] = await Promise.all([
       supabase.from('participants').select('animal_count').eq('club_id', club.id),
@@ -14,7 +18,11 @@ export default async function handler(req, res) {
     ])
     if (participantsError || datesError) throw participantsError || datesError
     return res.status(200).json({
-      club,
+      club: {
+        id: club.id,
+        name: club.name,
+        slug: club.slug
+      },
       participants: participants?.length || 0,
       animals: (participants || []).reduce((sum, item) => sum + Number(item.animal_count || 0), 0),
       dates: dates || []
