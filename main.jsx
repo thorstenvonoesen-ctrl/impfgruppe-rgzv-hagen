@@ -3246,7 +3246,7 @@ const response = await fetch(endpoint, {
   body: JSON.stringify(
     paymentMethod === 'stripe'
       ? { participantId }
-      : { participantId, amount: paymentAmount }
+      : { participantId }
   )
 })
 
