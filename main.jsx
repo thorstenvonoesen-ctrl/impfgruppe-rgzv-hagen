@@ -4021,16 +4021,16 @@ function CheckinPanel({ participants, vaccinationDates, onChanged, adminRole }) 
           <div className="checkin-result-actions">
             <div className="checkin-result-statuses">
               <span className={item.payment_status === 'bezahlt' ? 'checkin-status done' : 'checkin-status'}>
-                {item.payment_status === 'bezahlt' ? '💶 Zahlung: Bezahlt' : '⚠️ Zahlung: Offen'}
+                {item.payment_status === 'bezahlt' ? 'Zahlung: Bezahlt' : 'Zahlung: Offen'}
               </span>
               <span className={item.checked_in ? 'checkin-status done' : 'checkin-status'}>
-                {item.checked_in ? `✅ Bereits eingecheckt${item.checked_in_at ? ` um ${formatCheckinTime(item.checked_in_at)} Uhr` : ''}` : '⏳ Noch nicht eingecheckt'}
+                {item.checked_in ? `Bereits eingecheckt${item.checked_in_at ? ` um ${formatCheckinTime(item.checked_in_at)} Uhr` : ''}` : 'Noch nicht eingecheckt'}
               </span>
             </div>
             <div className="checkin-result-buttons">
-              {!item.checked_in && <button type="button" className="small" disabled={actionId === item.id} onClick={() => runManualAction(item, { checkIn: true })}>✅ Manuell einchecken</button>}
-              {canManagePayments && item.payment_status !== 'bezahlt' && <button type="button" className="small checkin-pay" disabled={actionId === item.id} onClick={() => runManualAction(item, { markPaid: true })}>💶 Vor Ort bezahlt</button>}
-              {canManagePayments && !item.checked_in && item.payment_status !== 'bezahlt' && <button type="button" className="primary checkin-combined" disabled={actionId === item.id} onClick={() => runManualAction(item, { markPaid: true, checkIn: true })}>💶✅ Vor Ort bezahlt &amp; eingecheckt</button>}
+              {!item.checked_in && item.payment_status === 'bezahlt' && <button type="button" className="small" disabled={actionId === item.id} onClick={() => runManualAction(item, { checkIn: true })}>Manuell einchecken</button>}
+              {canManagePayments && item.payment_status !== 'bezahlt' && <button type="button" className="small checkin-pay" disabled={actionId === item.id} onClick={() => runManualAction(item, { markPaid: true })}>Vor Ort bezahlt</button>}
+              {canManagePayments && !item.checked_in && item.payment_status !== 'bezahlt' && <button type="button" className="primary checkin-combined" disabled={actionId === item.id} onClick={() => runManualAction(item, { markPaid: true, checkIn: true })}>Vor Ort bezahlt &amp; eingecheckt</button>}
             </div>
           </div>
         </article>)}

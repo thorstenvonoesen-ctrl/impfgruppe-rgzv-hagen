@@ -195,6 +195,9 @@ export default async function handler(req, res) {
       if (checkIn && participant.checked_in) {
         return res.status(409).json({ error: 'Dieser Teilnehmer ist bereits eingecheckt.' })
       }
+      if (checkIn && !markPaid && participant.payment_status !== 'bezahlt') {
+        return res.status(409).json({ error: 'Eine offene Zahlung muss vor dem Check-in verbucht werden.' })
+      }
 
       const update = {}
       const now = new Date().toISOString()

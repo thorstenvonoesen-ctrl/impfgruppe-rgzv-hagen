@@ -862,7 +862,7 @@ body { background: #163a2f; }
 .checkin-result-details { display: flex; flex-wrap: wrap; gap: 4px 12px; margin-top: 5px; color: rgba(237,245,241,.68); font-size: 12px; }
 .checkin-result-actions { display: grid; justify-items: end; gap: 9px; }
 .checkin-result-statuses,.checkin-result-buttons { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 7px; }
-.checkin-result-buttons button { min-height: 36px; }
+.checkin-result-buttons button { min-height: 36px; white-space: nowrap; }
 .checkin-result-buttons button:disabled { cursor: wait; opacity: .58; }
 .checkin-pay { background: #8a5800; }
 .checkin-combined { padding: 8px 12px; font-size: 13px; }
