@@ -1,6 +1,4 @@
-import { randomUUID } from 'node:crypto'
 import { createAdminSupabase, getBearerToken } from './_supabase-admin.js'
-import { createPaymentMailProof } from './_email-signature.js'
 
 const SEARCH_FIELDS = ['firstname', 'lastname', 'email', 'phone', 'tsk_number']
 
@@ -207,7 +205,6 @@ export default async function handler(req, res) {
         update.payment_status = 'bezahlt'
         update.payment_method = 'bar'
         update.payment_date = now
-        update.payment_id = `checkin-bar-${randomUUID()}`
       }
       if (checkIn) {
         update.checked_in = true
@@ -221,12 +218,7 @@ export default async function handler(req, res) {
         .eq('id', participant.id)
         .eq('club_id', participant.club_id)
         .eq('vaccination_date_id', authorization.appointment.id)
-      if (markPaid) {
-        updateQuery = updateQuery
-          .eq('payment_status', 'offen')
-          .is('payment_method', null)
-          .is('payment_id', null)
-      }
+      if (markPaid) updateQuery = updateQuery.eq('payment_status', 'offen')
       if (checkIn) updateQuery = updateQuery.eq('checked_in', false)
       const { data: updated, error: updateError } = await updateQuery
         .select('id, payment_status, payment_method, payment_date, checked_in, checked_in_at')
@@ -237,15 +229,10 @@ export default async function handler(req, res) {
       }
 
       if (markPaid && participant.payment_status !== 'bezahlt' && participant.email) {
-        const authorization = createPaymentMailProof({
-          participantId: participant.id,
-          paymentMethod: 'bar',
-          paymentId: update.payment_id
-        })
         await fetch(`https://${req.headers.host}/api/send-payment-email`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ authorization })
+          body: JSON.stringify({ participantId: participant.id })
         }).catch(() => null)
       }
       return res.status(200).json({ success: true, participant: updated })

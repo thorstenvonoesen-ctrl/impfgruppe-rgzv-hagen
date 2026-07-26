@@ -1,6 +1,5 @@
 import Stripe from 'stripe'
 import { createAdminSupabase } from './_supabase-admin.js'
-import { createPaymentMailProof } from './_email-signature.js'
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY)
 
@@ -131,18 +130,12 @@ async function processSuccessfulSession(session, req) {
 
   let emailSent = false
   if (participant.email) {
-    const authorization = createPaymentMailProof({
-      participantId: participant.id,
-      paymentMethod: 'stripe',
-      paymentId
-    })
     const emailResponse = await fetch(`https://${req.headers.host}/api/send-payment-email`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ authorization })
+      body: JSON.stringify({ participantId: participant.id })
     })
-    const emailResult = await emailResponse.json().catch(() => ({}))
-    emailSent = Boolean(emailResponse.ok && emailResult.emailSent)
+    emailSent = emailResponse.ok
   }
 
   return { processed: true, emailSent }
