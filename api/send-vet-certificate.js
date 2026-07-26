@@ -4,6 +4,7 @@ import { createAdminSupabase, getBearerToken } from './_supabase-admin.js'
 
 const MAX_PDF_BYTES = 5 * 1024 * 1024
 const EMAIL_PATTERN = /^[^\s@,;]+@[^\s@,;]+\.[^\s@,;]+$/
+const VET_RECIPIENT_EMAIL = 'thorsten-von-oesen@t-online.de'
 
 export const config = {
   api: {
@@ -76,7 +77,7 @@ export default async function handler(req, res) {
       })
     }
 
-    const recipient = validSingleEmail(process.env.VET_RECIPIENT_EMAIL)
+    const recipient = validSingleEmail(VET_RECIPIENT_EMAIL)
     if (!recipient) {
       return res.status(503).json({
         success: false,
