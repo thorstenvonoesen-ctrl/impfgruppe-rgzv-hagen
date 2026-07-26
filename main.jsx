@@ -653,18 +653,18 @@ function ClubSelect() {
 
         .final-home {
           width: min(calc(100% - 32px), 1440px);
-          margin: 8px auto 0;
+          margin: 12px auto 0;
           display: grid;
-          gap: 12px;
+          gap: 16px;
         }
 
         .final-home-hero {
-          min-height: 176px;
+          min-height: 184px;
           display: grid;
-          grid-template-columns: minmax(0, 1fr) 176px;
+          grid-template-columns: minmax(0, 1fr) 166px;
           align-items: center;
-          gap: 28px;
-          padding: 18px 34px;
+          gap: 24px;
+          padding: 22px 32px;
           color: #fff;
           overflow: hidden;
           border-radius: 24px;
@@ -676,9 +676,12 @@ function ClubSelect() {
 
         .final-home-hero-copy {
           min-width: 0;
+          display: grid;
+          align-content: center;
         }
 
         .final-home-hero-copy h1 {
+          max-width: 1040px;
           margin: 0;
           color: #fff;
           font-size: clamp(32px, 2.4vw, 36px);
@@ -688,7 +691,7 @@ function ClubSelect() {
         }
 
         .final-home-hero-copy h2 {
-          margin: 13px 0 0;
+          margin: 10px 0 0;
           color: rgba(255,255,255,.94);
           font-size: clamp(22px, 2vw, 30px);
           line-height: 1.15;
@@ -696,7 +699,8 @@ function ClubSelect() {
         }
 
         .final-home-hero-copy p {
-          margin: 9px 0 0;
+          max-width: 920px;
+          margin: 8px 0 0;
           color: rgba(237,245,241,.78);
           font-size: 14px;
           line-height: 1.35;
@@ -708,8 +712,8 @@ function ClubSelect() {
           flex: 1 1 220px;
           align-items: center;
           justify-content: center;
-          min-height: 36px;
-          padding: 7px 14px;
+          min-height: 38px;
+          padding: 8px 15px;
           color: #f59e0b;
           font-size: 12px;
           font-weight: 800;
@@ -724,9 +728,9 @@ function ClubSelect() {
         .final-home-hero-actions {
           display: flex;
           flex-wrap: wrap;
-          width: min(100%, 500px);
-          gap: 10px;
-          margin-top: 12px;
+          width: min(100%, 520px);
+          gap: 12px;
+          margin-top: 14px;
         }
 
         .final-home-club-link:hover {
@@ -744,6 +748,7 @@ function ClubSelect() {
           border: 1px solid rgba(255,255,255,.12);
           border-radius: 50%;
           background: radial-gradient(circle, rgba(242,140,40,.15), rgba(255,255,255,.025) 68%);
+          box-shadow: inset 0 1px 0 rgba(255,255,255,.12), 0 16px 34px rgba(0,0,0,.18);
         }
 
         .final-home-logo-stage img {
@@ -757,16 +762,16 @@ function ClubSelect() {
           margin: 0 !important;
           display: grid !important;
           grid-template-columns: minmax(0, 1.78fr) minmax(330px, .92fr) !important;
-          grid-template-rows: 270px !important;
-          gap: 12px !important;
+          grid-template-rows: 280px !important;
+          gap: 16px !important;
           align-items: stretch;
         }
 
         .final-home .home-countdown-card {
           grid-column: 1 !important;
           grid-row: 1 !important;
-          min-height: 270px !important;
-          height: 270px !important;
+          min-height: 280px !important;
+          height: 280px !important;
         }
 
         .final-home .home-countdown-card.dashboard-stat-card {
@@ -774,7 +779,7 @@ function ClubSelect() {
           grid-template-columns: 52px minmax(0,1fr) !important;
           align-items: center !important;
           gap: 12px !important;
-          padding: 13px 22px !important;
+          padding: 16px 24px !important;
         }
 
         .final-home .home-countdown-card .dashboard-stat-icon {
@@ -840,14 +845,14 @@ function ClubSelect() {
         .final-home .appointment-action-buttons {
           width: min(100%, 400px) !important;
           margin-top: 0;
-          gap: 8px !important;
+          gap: 10px !important;
         }
 
         .final-home .appointment-action-buttons .appointment-route-button,
         .final-home .appointment-weather-button {
           min-height: 33px !important;
           margin-top: 3px !important;
-          padding: 6px 11px !important;
+          padding: 6px 14px !important;
           font-size: 10px !important;
           border-radius: 10px !important;
         }
@@ -857,8 +862,8 @@ function ClubSelect() {
           grid-row: 1 !important;
           display: grid !important;
           grid-template-columns: 1fr !important;
-          grid-template-rows: 84px 174px !important;
-          gap: 12px !important;
+          grid-template-rows: 92px 172px !important;
+          gap: 16px !important;
           min-width: 0;
         }
 
@@ -866,7 +871,7 @@ function ClubSelect() {
           grid-column: auto !important;
           grid-row: auto !important;
           min-height: 0 !important;
-          padding: 5px 8px !important;
+          padding: 7px 11px !important;
         }
 
         .final-home .home-community-heading h2 {
@@ -907,8 +912,8 @@ function ClubSelect() {
           grid-column: auto !important;
           grid-row: auto !important;
           min-height: 0 !important;
-          padding: 9px 13px !important;
-          gap: 4px !important;
+          padding: 10px 14px !important;
+          gap: 5px !important;
         }
 
         .final-home .home-benefits-heading > span {
@@ -952,17 +957,17 @@ function ClubSelect() {
         .final-home-nav {
           display: grid;
           grid-template-columns: minmax(0,1fr);
-          gap: 12px;
+          gap: 16px;
         }
 
         .final-home-nav-card {
-          min-height: 132px;
+          min-height: 118px;
           display: grid;
-          grid-template-columns: 36px minmax(0,1fr);
-          grid-template-rows: 1fr auto;
-          gap: 7px 11px;
-          align-items: start;
-          padding: 12px 15px;
+          grid-template-columns: 42px minmax(0,1fr) auto;
+          grid-template-rows: 1fr;
+          gap: 12px 16px;
+          align-items: center;
+          padding: 16px 20px;
           color: #fff;
           text-align: left;
           border-radius: 19px;
@@ -987,7 +992,7 @@ function ClubSelect() {
         .final-home-nav-icon {
           grid-column: 1;
           grid-row: 1;
-          font-size: 26px;
+          font-size: 30px;
           line-height: 1;
         }
 
@@ -1001,14 +1006,14 @@ function ClubSelect() {
           display: block;
           margin-bottom: 7px;
           color: #fff;
-          font-size: 16px;
+          font-size: 18px;
           line-height: 1.15;
         }
 
         .final-home-nav-text small {
           display: block;
           color: rgba(237,245,241,.76);
-          font-size: 10px;
+          font-size: 12px;
           line-height: 1.38;
         }
 
@@ -1022,50 +1027,61 @@ function ClubSelect() {
         }
 
         .final-home-nav-action {
-          grid-column: 1 / -1;
-          grid-row: 2;
-          justify-self: start;
-          padding: 6px 10px;
+          grid-column: 3;
+          grid-row: 1;
+          justify-self: end;
+          padding: 11px 16px;
           color: #fff;
-          font-size: 10px;
+          font-size: 12px;
           font-weight: 800;
           border-radius: 9px;
           background: #f28c28;
         }
 
         .final-home-page > footer {
-          padding-top: 7px !important;
-          padding-bottom: 9px !important;
+          margin-top: 12px;
+          padding-top: 16px !important;
+          padding-bottom: 16px !important;
           font-size: 12px !important;
+        }
+
+        .final-home-page > footer .footer-content {
+          width: min(100%, 1100px);
+          margin: 0 auto;
+          line-height: 1.65;
+        }
+
+        .final-home-page > footer .footer-signature {
+          margin-top: 5px;
         }
 
         @media (min-width: 1081px) {
           .final-home-hero {
-            min-height: 196px;
+            min-height: 184px;
           }
 
           .final-home .home-dashboard-grid {
-            grid-template-rows: 290px !important;
+            grid-template-rows: 280px !important;
           }
 
           .final-home .home-countdown-card {
-            min-height: 290px !important;
-            height: 290px !important;
+            min-height: 280px !important;
+            height: 280px !important;
           }
 
           .final-home .home-dashboard-support {
-            grid-template-rows: 94px 184px !important;
+            grid-template-rows: 92px 172px !important;
           }
 
           .final-home-nav-card {
-            min-height: 170px;
+            min-height: 118px;
           }
         }
 
         @media (min-width: 1200px) and (min-height: 850px) {
           .final-home-page {
-            height: 100vh;
-            overflow: hidden;
+            min-height: 100vh;
+            overflow: visible;
           }
         }
 
@@ -1155,6 +1171,21 @@ function ClubSelect() {
 
           .final-home .home-dashboard-support {
             grid-template-columns: 1fr !important;
+          }
+
+          .final-home-nav-card {
+            min-height: 0;
+            grid-template-columns: 38px minmax(0,1fr);
+            grid-template-rows: auto auto;
+            padding: 16px;
+          }
+
+          .final-home-nav-action {
+            grid-column: 1 / -1;
+            grid-row: 2;
+            width: 100%;
+            justify-self: stretch;
+            text-align: center;
           }
         }
       `}</style>
