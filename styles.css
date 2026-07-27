@@ -3409,6 +3409,24 @@ body { background: #163a2f; }
   margin: 0;
 }
 
+.admin .admin-dashboard-layout > .admin-top .admin-manual-download {
+  display: inline-flex;
+  gap: 7px;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 16px;
+  border: 1px solid rgba(255,255,255,.32);
+  border-radius: 12px;
+  color: #fff;
+  background: rgba(255,255,255,.1);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.admin .admin-dashboard-layout > .admin-top .admin-manual-download:hover {
+  background: rgba(255,255,255,.2);
+}
+
 .admin .admin-dashboard-layout > .admin-presence {
   grid-column: span 4;
   width: 100%;

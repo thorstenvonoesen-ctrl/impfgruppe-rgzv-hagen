@@ -4151,6 +4151,7 @@ useEffect(() => {
     try {
       let participantId = null
       let paymentAmount = 10
+      let registrationEmailSent = false
       if (hasSupabase) {
         const response = await fetch('/api/create-registration', {
           method: 'POST',
@@ -4166,6 +4167,7 @@ useEffect(() => {
         if (!response.ok) throw new Error(result.error || 'Anmeldung konnte nicht gespeichert werden.')
         participantId = result.participantId
         paymentAmount = Number(result.paymentAmount || 10)
+        registrationEmailSent = Boolean(result.emailSent)
       } else {
         paymentAmount = 10
         const animalType = participantAnimalCountFields
@@ -4178,7 +4180,13 @@ useEffect(() => {
         localStorage.setItem('participants', JSON.stringify(list))
       }
       if (paymentMethod === 'bar') {
-        setMessage('Anmeldung erfolgreich gespeichert. Die Teilnahmegebühr wird am Impftag vor Ort in bar bezahlt.')
+        setMessage(
+          registrationEmailSent
+            ? 'Anmeldung erfolgreich gespeichert. Die Bestätigungs-E-Mail wurde versendet. Die Teilnahmegebühr wird am Impftag vor Ort in bar bezahlt.'
+            : 'Anmeldung erfolgreich gespeichert. Die Bestätigungs-E-Mail konnte möglicherweise nicht versendet werden. Die Teilnahmegebühr wird am Impftag vor Ort in bar bezahlt.'
+        )
+        setConfirmationEmailSent(registrationEmailSent)
+        setShowPaymentSuccess(true)
         setForm(emptyForm())
         return
       }
@@ -6961,6 +6969,13 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
           {adminContext?.role === 'superadmin' && (
             <button className="ghost" onClick={openAdminManagement}>Adminverwaltung</button>
           )}
+          <a
+            className="ghost admin-manual-download"
+            href="/Bedienungsanleitung-Impfgruppenmanager.pdf"
+            download
+          >
+            <Download size={16}/> Bedienungsanleitung herunterladen
+          </a>
           <button className="ghost" onClick={onLogout}><LogOut size={16}/> Abmelden</button>
         </div>
       </div>

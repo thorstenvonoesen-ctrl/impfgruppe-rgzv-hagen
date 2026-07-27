@@ -1,5 +1,6 @@
 import { createHmac, timingSafeEqual } from 'node:crypto'
 import { createAdminSupabase } from './_supabase-admin.js'
+import { sendParticipantEmail } from './send-payment-email.js'
 
 const fields = ['firstname', 'lastname', 'street', 'housenumber', 'zipcode', 'city', 'email', 'phone', 'tsk_number']
 const REGISTRATION_VACCINE = 'Newcastle'
@@ -189,7 +190,26 @@ export default async function handler(req, res) {
       payment_method: paymentMethod === 'bar' ? 'bar' : null
     }).select('id, payment_amount').single()
     if (error) throw error
-    return res.status(201).json({ participantId: data.id, paymentAmount: Number(data.payment_amount) })
+
+    let emailSent
+    if (paymentMethod === 'bar') {
+      try {
+        const emailResult = await sendParticipantEmail({
+          participantId: data.id,
+          emailType: 'bar-registration'
+        })
+        emailSent = Boolean(emailResult?.success)
+      } catch (emailError) {
+        emailSent = false
+        console.error('Anmeldebestätigung für Barzahlung konnte nicht versendet werden:', emailError)
+      }
+    }
+
+    return res.status(201).json({
+      participantId: data.id,
+      paymentAmount: Number(data.payment_amount),
+      ...(paymentMethod === 'bar' ? { emailSent } : {})
+    })
   } catch (error) {
     return res.status(500).json({ error: 'Anmeldung konnte nicht gespeichert werden.' })
   }
