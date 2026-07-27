@@ -4096,6 +4096,7 @@ function PublicSignup() {
   const [countdown, setCountdown] = useState('')
   const [showPaymentSuccess, setShowPaymentSuccess] = useState(false)
   const [confirmationEmailSent, setConfirmationEmailSent] = useState(false)
+  const [showMembershipInvitation, setShowMembershipInvitation] = useState(false)
   const [reuseLookup, setReuseLookup] = useState({ status: 'idle', email: '', token: '' })
   const [reuseConfirmation, setReuseConfirmation] = useState('')
   const checkedReuseEmailsRef = useRef(new Set())
@@ -4110,6 +4111,40 @@ function PublicSignup() {
   
   const normalizeReuseEmail = value => String(value || '').trim().toLowerCase()
   const isValidReuseEmail = value => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)
+  const membershipInvitationStorageKey = 'rgzv-membership-invitation'
+
+  const isMarkedTestRegistration = registration => {
+    const name = `${registration?.firstname || ''} ${registration?.lastname || ''}`.trim().toLowerCase()
+    return /(^|\s)(test|testdatensatz)(\s|$)/.test(name)
+  }
+
+  const rememberMembershipInvitation = ({ participantId, paymentAmount, registration, method }) => {
+    const amountInCents = Math.round(Number(paymentAmount) * 100)
+    const eligible = (
+      amountInCents === 1000 &&
+      (method === 'paypal' || method === 'stripe') &&
+      !isMarkedTestRegistration(registration)
+    )
+    sessionStorage.setItem(
+      membershipInvitationStorageKey,
+      JSON.stringify({ participantId: String(participantId), eligible })
+    )
+  }
+
+  const consumeMembershipInvitation = (participantId, emailSent) => {
+    try {
+      const stored = JSON.parse(sessionStorage.getItem(membershipInvitationStorageKey) || '{}')
+      sessionStorage.removeItem(membershipInvitationStorageKey)
+      return Boolean(
+        emailSent &&
+        stored.eligible === true &&
+        stored.participantId === String(participantId)
+      )
+    } catch {
+      sessionStorage.removeItem(membershipInvitationStorageKey)
+      return false
+    }
+  }
 
   const update = e => {
     const { name, value } = e.target
@@ -4282,7 +4317,9 @@ if (stripe === 'success') {
   if (!response.ok || !result.success) throw new Error(result.error || 'Stripe-Zahlung konnte nicht bestätigt werden.')
 setMessage('Stripe-Zahlung erfolgreich bestätigt.')
   if (hasSupabase) {
-    setConfirmationEmailSent(Boolean(result.emailSent))
+    const emailWasSent = Boolean(result.emailSent)
+    setConfirmationEmailSent(emailWasSent)
+    setShowMembershipInvitation(consumeMembershipInvitation(participantId, emailWasSent))
     setShowPaymentSuccess(true)
   }
   setLoading(false)
@@ -4306,6 +4343,7 @@ setMessage('Stripe-Zahlung erfolgreich bestätigt.')
       setMessage('Zahlung erfolgreich bestätigt. Vielen Dank!')
       if (hasSupabase) {
         setConfirmationEmailSent(emailWasSent)
+        setShowMembershipInvitation(consumeMembershipInvitation(participantId, emailWasSent))
         setShowPaymentSuccess(true)
       }
       window.history.replaceState({}, document.title, window.location.pathname)
@@ -4374,6 +4412,7 @@ useEffect(() => {
             : 'Anmeldung erfolgreich gespeichert. Die Bestätigungs-E-Mail konnte möglicherweise nicht versendet werden. Die Teilnahmegebühr wird am Impftag vor Ort in bar bezahlt.'
         )
         setConfirmationEmailSent(registrationEmailSent)
+        setShowMembershipInvitation(false)
         setShowPaymentSuccess(true)
         setForm(emptyForm())
         return
@@ -4400,6 +4439,12 @@ const response = await fetch(endpoint, {
 const result = await response.json()
 
 if (result.url) {
+  rememberMembershipInvitation({
+    participantId,
+    paymentAmount,
+    registration: formData,
+    method: paymentMethod
+  })
   window.location.href = result.url
 } else {
   setMessage(
@@ -4844,13 +4889,16 @@ value={form.vaccination_date_id}
   {showPaymentSuccess && (
     <SignupSuccessOverlay
       emailSent={confirmationEmailSent}
+      showMembershipInvitation={showMembershipInvitation}
       onHome={() => {
         setShowPaymentSuccess(false)
+        setShowMembershipInvitation(false)
         window.location.hash = '#'
       }}
       onAnother={() => {
         setShowPaymentSuccess(false)
         setConfirmationEmailSent(false)
+        setShowMembershipInvitation(false)
         setForm(emptyForm())
         reuseRequestRef.current += 1
         setReuseLookup({ status: 'idle', email: '', token: '' })
@@ -4865,7 +4913,71 @@ value={form.vaccination_date_id}
 )
 }
 
-function SignupSuccessOverlay({ emailSent, onHome, onAnother }) {
+function MembershipInvitationCard() {
+  return (
+    <aside className="membership-invitation-card" aria-labelledby="membership-invitation-title">
+      <h3 id="membership-invitation-title">Schön, dass Sie dabei sind!</h3>
+      <div className="membership-invitation-intro">
+        <p>Vielen Dank für Ihre Anmeldung!</p>
+        <p>Wir freuen uns sehr, Sie bei unserer Newcastle-Sammelimpfung begrüßen zu dürfen.</p>
+        <p>Vielleicht haben Sie ja Lust, unseren Verein auch einmal abseits des Impftages kennenzulernen.</p>
+        <p>Der <strong>RGZV Hagen und Umgebung seit 1903 e. V.</strong> lebt von Menschen, die Freude an Geflügel, der Gemeinschaft und dem Austausch mit Gleichgesinnten haben.</p>
+        <p>Ganz gleich, ob Sie bereits Rassegeflügel züchten, Hobbyhalter sind oder einfach einmal unverbindlich vorbeischauen möchten – Sie sind bei uns jederzeit herzlich willkommen.</p>
+      </div>
+
+      <div className="membership-invitation-questions">
+        <section>
+          <h4>Wann treffen wir uns?</h4>
+          <p>Unsere Vereinsabende finden regelmäßig <strong>an jedem ersten Mittwoch im Monat</strong> statt.</p>
+          <p>Der genaue Veranstaltungsort kann gelegentlich wechseln und wird deshalb immer aktuell auf unserer Homepage im Laufband bekanntgegeben.</p>
+          <p>So wissen Sie jederzeit, wo wir uns treffen.</p>
+        </section>
+        <section>
+          <h4>Muss ich Mitglied sein?</h4>
+          <p>Nein.</p>
+          <p>Ganz im Gegenteil!</p>
+          <p>Wir freuen uns immer über Gäste, die unseren Verein ganz unverbindlich kennenlernen möchten.</p>
+          <p>Schauen Sie einfach vorbei und machen Sie sich selbst ein Bild.</p>
+        </section>
+        <section>
+          <h4>Kann ich einfach vorbeikommen?</h4>
+          <p>Ja, selbstverständlich!</p>
+          <p>Eine Anmeldung ist nicht erforderlich.</p>
+          <p>Kommen Sie einfach vorbei – wir freuen uns darauf, Sie persönlich kennenzulernen.</p>
+        </section>
+        <section>
+          <h4>Was erwartet mich?</h4>
+          <p>Vor allem eine bunt gemischte Gemeinschaft von Menschen, die eines verbindet:</p>
+          <p>Die Freude am schönen Rassegeflügel.</p>
+          <p>Bei unseren Vereinsabenden wird gefachsimpelt, gelacht, Erfahrungen werden ausgetauscht und natürlich geht es auch um Zucht, Haltung, Ausstellungen und alles, was unser gemeinsames Hobby so besonders macht.</p>
+          <p>Ganz egal, ob Sie gerade erst anfangen oder schon viele Jahre Geflügel halten – bei uns findet jeder ein offenes Ohr und nette Gesprächspartner.</p>
+        </section>
+        <section>
+          <h4>Wie werde ich Mitglied?</h4>
+          <p>Ganz unkompliziert.</p>
+          <p>Sprechen Sie uns einfach bei einem Vereinsabend an.</p>
+          <p>Wir beantworten gerne alle Ihre Fragen und freuen uns, wenn wir Sie vielleicht schon bald als neues Mitglied in unserem Verein begrüßen dürfen.</p>
+        </section>
+      </div>
+
+      <div className="membership-invitation-closing">
+        <p>Wir würden uns sehr freuen, Sie auch einmal persönlich außerhalb eines Impftermins begrüßen zu dürfen.</p>
+        <p>Vielleicht ist Ihr erster Besuch ja der Beginn eines neuen gemeinsamen Hobbys.</p>
+      </div>
+
+      <a
+        className="membership-invitation-link"
+        href="https://www.rgzv-hagen-westfalen.com"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        🏠 Mehr über unseren Verein erfahren
+      </a>
+    </aside>
+  )
+}
+
+function SignupSuccessOverlay({ emailSent, showMembershipInvitation, onHome, onAnother }) {
   const homeButtonRef = useRef(null)
   const onHomeRef = useRef(onHome)
   const leaveTimerRef = useRef(null)
@@ -4890,18 +5002,20 @@ function SignupSuccessOverlay({ emailSent, onHome, onAnother }) {
   }
 
   useEffect(() => {
-    const timer = window.setTimeout(() => leave(onHomeRef.current), 8000)
+    const timer = showMembershipInvitation
+      ? null
+      : window.setTimeout(() => leave(onHomeRef.current), 8000)
     homeButtonRef.current?.focus()
 
     return () => {
-      window.clearTimeout(timer)
+      if (timer) window.clearTimeout(timer)
       window.clearTimeout(leaveTimerRef.current)
     }
-  }, [])
+  }, [showMembershipInvitation])
 
   return (
     <div className={`signup-success-overlay${isLeaving ? ' is-leaving' : ''}`} role="dialog" aria-modal="true" aria-labelledby="signup-success-title">
-      <section className="signup-success-card" role="status" aria-live="polite">
+      <section className={`signup-success-card${showMembershipInvitation ? ' has-membership-invitation' : ''}`} role="status" aria-live="polite">
         <div className="signup-success-confetti" aria-hidden="true">
           {confetti.map(piece => (
             <i
@@ -4919,6 +5033,7 @@ function SignupSuccessOverlay({ emailSent, onHome, onAnother }) {
         <h2 id="signup-success-title">Anmeldung erfolgreich!</h2>
         <p>Vielen Dank für Ihre Anmeldung.<br />Ihre Daten wurden erfolgreich gespeichert.</p>
         {emailSent && <p className="signup-success-email">Eine Bestätigungs-E-Mail wurde an Ihre E-Mail-Adresse versendet.</p>}
+        {showMembershipInvitation && <MembershipInvitationCard />}
         <div className="signup-success-actions">
           <button ref={homeButtonRef} type="button" className="signup-success-home" onClick={() => leave(onHome)}>Zur Startseite</button>
           <button type="button" className="signup-success-another" onClick={() => leave(onAnother)}>Weitere Anmeldung erfassen</button>
