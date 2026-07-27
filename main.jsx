@@ -35,9 +35,51 @@ function getCurrentSlug() {
 }
 import './styles.css'
 import logo from './public/Logoklein.jpg'
+import pdfWatermarkLogo from './public/LogoTransparent.png'
 import { APP } from './config'
 const PAYMENT_URL = import.meta.env.VITE_PAYMENT_URL || ''
 const MEMBER_CODE = 'RGZV2026'
+const PDF_WATERMARK_OPACITY = 0.1
+const PDF_WATERMARK_WIDTH_RATIO = 0.62
+const PDF_WATERMARK_ASPECT_RATIO = 1772 / 748
+let pdfWatermarkImagePromise
+
+function loadPdfWatermarkImage() {
+  if (!pdfWatermarkImagePromise) {
+    pdfWatermarkImagePromise = new Promise((resolve, reject) => {
+      const image = new Image()
+      image.onload = () => resolve(image)
+      image.onerror = () => reject(new Error('Das PDF-Wasserzeichen konnte nicht geladen werden.'))
+      image.src = pdfWatermarkLogo
+    })
+  }
+  return pdfWatermarkImagePromise
+}
+
+async function addPdfWatermark(doc) {
+  const image = await loadPdfWatermarkImage()
+  const pageCount = doc.getNumberOfPages()
+
+  for (let pageNumber = 1; pageNumber <= pageCount; pageNumber += 1) {
+    doc.setPage(pageNumber)
+
+    const pageWidth = doc.internal.pageSize.getWidth()
+    const pageHeight = doc.internal.pageSize.getHeight()
+    const watermarkWidth = pageWidth * PDF_WATERMARK_WIDTH_RATIO
+    const watermarkHeight = watermarkWidth / PDF_WATERMARK_ASPECT_RATIO
+    const x = (pageWidth - watermarkWidth) / 2
+    const y = (pageHeight - watermarkHeight) / 2
+    const pageContent = doc.internal.pages[pageNumber]
+    const originalCommandCount = pageContent.length
+
+    doc.setGState(new doc.GState({ opacity: PDF_WATERMARK_OPACITY }))
+    doc.addImage(image, 'PNG', x, y, watermarkWidth, watermarkHeight, undefined, 'FAST')
+    doc.setGState(new doc.GState({ opacity: 1 }))
+
+    const watermarkCommands = pageContent.splice(originalCommandCount)
+    pageContent.unshift(...watermarkCommands)
+  }
+}
 const weatherPreviewCache = new Map()
 
 function PremiumBackground() {
@@ -6610,7 +6652,7 @@ const clubId = adminClubId
   ...v,
   count: participants.filter(p => p.vaccination_date_id === v.id).length
 }))
-  function pdfForVaccinationDate(v) {
+  async function pdfForVaccinationDate(v) {
   const list = participants.filter(
     p => String(p.vaccination_date_id) === String(v.id)
   )
@@ -6644,6 +6686,7 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
     ])
   })
 
+  await addPdfWatermark(doc)
   doc.save(`teilnehmerliste-${v.date}.pdf`)
 }
 
@@ -6706,6 +6749,7 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
       doc.text('Ort, Datum: ______________________', 14, signatureY)
       doc.text('Tierarzt (Stempel / Unterschrift): ______________________', 14, signatureY + 15)
 
+      await addPdfWatermark(doc)
       const response = await fetch('/api/send-vet-certificate', {
         method: 'POST',
         headers: {
@@ -6735,7 +6779,7 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
     }
   }
 
-  function cashReportForVaccinationDate(v) {
+  async function cashReportForVaccinationDate(v) {
     const list = participants.filter(
       participant => String(participant.vaccination_date_id) === String(v.id)
     )
@@ -6848,6 +6892,7 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
     doc.text('____________________________', 115, finalY + 28)
     doc.text('Datum / Unterschrift', 115, finalY + 34)
 
+    await addPdfWatermark(doc)
     doc.save(`kassenbericht-${v.date}.pdf`)
   }
 
@@ -6880,7 +6925,7 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
   const returnedCampaignRecipients = filteredCampaignRecipients.filter(recipient => recipient.returned_at)
   const openCampaignRecipients = filteredCampaignRecipients.filter(recipient => !recipient.returned_at)
 
-  function exportCampaignReport() {
+  async function exportCampaignReport() {
     if (!campaignDetail?.summary) return
     const summary = campaignDetail.summary
     const returned = (campaignDetail.recipients || []).filter(recipient => recipient.returned_at)
@@ -6920,6 +6965,7 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
       theme: 'grid',
       headStyles: { fillColor: [242, 140, 40], textColor: 255 }
     })
+    await addPdfWatermark(doc)
     doc.save(`saisonkampagne-${summary.season_year}.pdf`)
   }
 
@@ -7917,7 +7963,7 @@ function ExportButtons({ participants, certificateParticipants, vaccinationDates
     a.click()
   }
 
-  function pdf() {
+  async function pdf() {
     const doc = new jsPDF()
     autoTable(doc, {
       head:[['Name','Adresse','E-Mail','TSK','Tiere','Impfung','Zahlung']],
@@ -7931,6 +7977,7 @@ function ExportButtons({ participants, certificateParticipants, vaccinationDates
         p.payment_status || ''
       ])
     })
+    await addPdfWatermark(doc)
     doc.save('teilnehmerliste.pdf')
   }
 
@@ -7974,6 +8021,7 @@ function ExportButtons({ participants, certificateParticipants, vaccinationDates
       ])
     })
 
+    await addPdfWatermark(doc)
     const response = await fetch('/api/send-vet-certificate', {
       method: 'POST',
       headers: {
@@ -8039,6 +8087,7 @@ function ExportButtons({ participants, certificateParticipants, vaccinationDates
     doc.text('Ort, Datum: ______________________',14,y)
     doc.text('Tierarzt (Stempel / Unterschrift): ______________________',14,y+15)
 
+    await addPdfWatermark(doc)
     doc.save('sammelimpfbescheinigung.pdf')
 
     

@@ -28,6 +28,9 @@ PDF = OUTPUT / "Bedienungsanleitung-Impfgruppenmanager.pdf"
 PUBLIC_PDF = PUBLIC / PDF.name
 MD = OUTPUT / "Bedienungsanleitung-Impfgruppenmanager.md"
 CREATED = date(2026, 7, 26)
+WATERMARK_LOGO = PUBLIC / "LogoTransparent.png"
+WATERMARK_OPACITY = 0.10
+WATERMARK_WIDTH = 130 * mm
 
 DARK = colors.HexColor("#12382d")
 DARKER = colors.HexColor("#0b2921")
@@ -127,8 +130,27 @@ class ManualDoc(BaseDocTemplate):
             self.notify("TOCEntry", (0, text, self.page, key))
 
     def decorate(self, canvas, doc):
+        canvas.saveState()
+        with PILImage.open(WATERMARK_LOGO) as logo_image:
+            logo_width, logo_height = logo_image.size
+        watermark_height = WATERMARK_WIDTH * logo_height / logo_width
+        watermark_x = (A4[0] - WATERMARK_WIDTH) / 2
+        watermark_y = (A4[1] - watermark_height) / 2
+        canvas.setFillAlpha(WATERMARK_OPACITY)
+        canvas.drawImage(
+            str(WATERMARK_LOGO),
+            watermark_x,
+            watermark_y,
+            width=WATERMARK_WIDTH,
+            height=watermark_height,
+            preserveAspectRatio=True,
+            mask="auto",
+        )
+        canvas.restoreState()
+
         if doc.page == 1:
             return
+
         canvas.saveState()
         canvas.setStrokeColor(LINE)
         canvas.line(22*mm, 282*mm, 188*mm, 282*mm)
