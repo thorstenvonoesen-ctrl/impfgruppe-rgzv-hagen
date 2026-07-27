@@ -163,6 +163,7 @@ const [showForm, setShowForm] = useState(false)
   if (page === '#info-sammelimpfung') return <InfoSammelimpfung />
   if (page === '#info-anmeldung') return <InfoAnmeldung />
   if (page === '#impfwart-grusswort') return <ImpfwartGrusswort />
+  if (page === '#vorsitzender-grusswort') return <VorsitzenderGrusswort />
   if (page === '#quiz') return <PoultryQuiz />
 if (page === '#signup') return <PublicSignup />
   if (page === '#admin') return <Admin />
@@ -1278,6 +1279,9 @@ function ClubSelect() {
               <a className="final-home-club-link" href="#impfwart-grusswort">
                 Grußwort unseres Impfwartes
               </a>
+              <a className="final-home-club-link" href="#vorsitzender-grusswort">
+                Grußwort unseres 1. Vorsitzenden
+              </a>
             </div>
           </div>
 
@@ -1353,6 +1357,57 @@ function ImpfwartGrusswort() {
               <strong>Rainer Koplin</strong>
               <span>Impfwart</span>
               <span>RGZV Hagen und Umgebung seit 1903 e. V.</span>
+            </div>
+          </div>
+
+          <button type="button" className="impfwart-greeting-back" onClick={() => { window.location.hash = '#' }}>
+            ← Zurück zur Informationsseite
+          </button>
+        </article>
+      </main>
+      <Footer />
+    </div>
+  )
+}
+
+function VorsitzenderGrusswort() {
+  const paragraphs = [
+    'ich freue mich sehr, Sie auf der Online-Anmeldung unseres RGZV Hagen und Umgebung seit 1903 e.V. begrüßen zu dürfen.',
+    'Unser Verein blickt auf eine über 120-jährige Geschichte zurück. Seit Generationen verbindet uns die Leidenschaft für die Rassegeflügelzucht, der verantwortungsvolle Umgang mit unseren Tieren und eine lebendige Gemeinschaft, in der Erfahrung, gegenseitige Unterstützung und Freundschaft einen hohen Stellenwert haben.',
+    'Mit dem Impfgruppenmanager gehen wir einen weiteren Schritt in die Zukunft. Unser Ziel ist es, Ihnen die Anmeldung zur gesetzlich vorgeschriebenen Newcastle-Impfung so einfach, komfortabel und transparent wie möglich zu gestalten. Lange Wartezeiten und unnötiger Papieraufwand gehören damit der Vergangenheit an.',
+    'Gleichzeitig bleibt eines unverändert: Der persönliche Kontakt zu unseren Mitgliedern und Gästen steht für uns auch weiterhin an erster Stelle. Moderne Technik soll unsere Vereinsarbeit unterstützen – sie ersetzt jedoch niemals das Miteinander, das unseren Verein seit vielen Jahrzehnten auszeichnet.',
+    'Mein besonderer Dank gilt allen ehrenamtlichen Helferinnen und Helfern, unserem Impfwart sowie allen Beteiligten, die mit großem Engagement dazu beitragen, dass unsere Impfgruppen zuverlässig organisiert und durchgeführt werden können.',
+    'Ebenso danke ich Ihnen für Ihr Vertrauen in unseren Verein. Mit Ihrer Teilnahme leisten Sie einen wichtigen Beitrag zum Schutz der Tiergesundheit und unterstützen gleichzeitig eine verantwortungsvolle und gesetzeskonforme Geflügelhaltung.',
+    'Vielleicht lernen Sie unseren Verein im Rahmen eines Impftermins näher kennen. Wir freuen uns jederzeit über interessierte Gäste und heißen neue Mitglieder herzlich willkommen. Denn ein lebendiger Verein lebt von Menschen, die ihre Begeisterung für unser schönes Hobby teilen und gemeinsam die Zukunft gestalten möchten.',
+    'Ich wünsche Ihnen eine angenehme Nutzung unseres Impfgruppenmanagers, eine unkomplizierte Anmeldung und freue mich darauf, Sie bei einem unserer nächsten Impftermine persönlich begrüßen zu dürfen.'
+  ]
+
+  return (
+    <div className="page impfwart-greeting-page">
+      <Header />
+      <main className="impfwart-greeting-shell">
+        <article className="impfwart-greeting-card">
+          <header className="impfwart-greeting-heading">
+            <span aria-hidden="true">🐔</span>
+            <div>
+              <small>RGZV Hagen und Umgebung seit 1903 e. V.</small>
+              <h1>Grußwort unseres 1. Vorsitzenden</h1>
+            </div>
+          </header>
+
+          <div className="impfwart-greeting-copy">
+            <p className="impfwart-greeting-salutation">
+              Liebe Geflügelfreunde,<br />
+              liebe Vereinsmitglieder,<br />
+              sehr geehrte Gäste,
+            </p>
+            {paragraphs.map(paragraph => <p key={paragraph}>{paragraph}</p>)}
+
+            <div className="impfwart-greeting-signature">
+              <p>Mit freundlichen Grüßen</p>
+              <strong>Frank Sternal</strong>
+              <span>1. Vorsitzender</span>
+              <span>RGZV Hagen und Umgebung seit 1903 e.V.</span>
             </div>
           </div>
 
