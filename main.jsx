@@ -1,4 +1,5 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react'
+import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
+import { createPortal } from 'react-dom'
 import { createRoot } from 'react-dom/client'
 import { Syringe, ShieldCheck, Users, Euro, Download, Search, Lock, LogOut, CalendarDays, Navigation, FileText, CreditCard, Mail, QrCode, Check, Clock, ScanLine, FileX, Settings2 } from 'lucide-react'
 import jsPDF from 'jspdf'
@@ -566,9 +567,129 @@ function InteractiveStatCard({ className, icon, label, value, loading, currency 
   )
 }
 
+const HOME_BENEFITS = [
+  [Clock, 'Anmeldung in wenigen Minuten', 'Schnell erledigt', 'Die Anmeldung dauert in der Regel nur wenige Minuten und kann vollständig online abgeschlossen werden.'],
+  [CreditCard, 'Sichere Onlinezahlung', 'Flexibel bezahlen', 'Bezahlen Sie bequem per PayPal, Kreditkarte oder – falls angeboten – per Barzahlung am Impftermin.'],
+  [Mail, 'QR-Code automatisch per E-Mail', 'Direkt per E-Mail', 'Ihren persönlichen QR-Code erhalten Sie automatisch per E-Mail. Dieser dient am Impftag zum schnellen Check-in.'],
+  [FileX, 'Kein Papier am Impftag', 'Alles digital', 'Ihre Anmeldung liegt bereits digital vor. Zusätzliche Formulare müssen am Impftag nicht mitgebracht werden.'],
+  [ScanLine, 'Schneller Check-in', 'Ein Scan genügt', 'QR-Code vorzeigen, scannen lassen und direkt einchecken – schnell und unkompliziert.'],
+  [Settings2, 'Weniger Verwaltungsaufwand', 'Mehr Zeit fürs Wesentliche', 'Digitale Teilnehmerlisten, Zahlungsübersichten und Auswertungen erleichtern die Organisation der Impfgruppe.']
+]
+
+function HomeBenefitInfoField({ benefit, index, isOpen, onOpen, onClose, onToggle }) {
+  const [Icon, label, title, description] = benefit
+  const fieldRef = useRef(null)
+  const popoverRef = useRef(null)
+  const hoverTimerRef = useRef(null)
+  const popoverId = `home-benefit-info-${index}`
+
+  const updatePopoverPosition = () => {
+    const field = fieldRef.current
+    const popover = popoverRef.current
+    if (!field || !popover) return
+
+    const fieldBounds = field.getBoundingClientRect()
+    const viewportGap = 12
+    const fieldGap = 10
+    const width = Math.min(320, window.innerWidth - viewportGap * 2)
+    popover.style.setProperty('--benefit-popover-width', `${width}px`)
+    const popoverBounds = popover.getBoundingClientRect()
+    const height = popoverBounds.height
+    const centeredLeft = fieldBounds.left + fieldBounds.width / 2 - width / 2
+    const left = Math.min(
+      Math.max(centeredLeft, viewportGap),
+      window.innerWidth - width - viewportGap
+    )
+    const fitsBelow = fieldBounds.bottom + fieldGap + height <= window.innerHeight - viewportGap
+    const top = fitsBelow
+      ? fieldBounds.bottom + fieldGap
+      : Math.max(viewportGap, fieldBounds.top - height - fieldGap)
+
+    popover.style.setProperty('--benefit-popover-left', `${left}px`)
+    popover.style.setProperty('--benefit-popover-top', `${top}px`)
+    popover.dataset.placement = fitsBelow ? 'below' : 'above'
+  }
+
+  useLayoutEffect(() => {
+    if (!isOpen) return undefined
+    updatePopoverPosition()
+    window.addEventListener('resize', updatePopoverPosition)
+    window.addEventListener('scroll', updatePopoverPosition, true)
+    return () => {
+      window.removeEventListener('resize', updatePopoverPosition)
+      window.removeEventListener('scroll', updatePopoverPosition, true)
+    }
+  }, [isOpen])
+
+  useEffect(() => () => window.clearTimeout(hoverTimerRef.current), [])
+
+  const handleMouseEnter = () => {
+    if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return
+    window.clearTimeout(hoverTimerRef.current)
+    hoverTimerRef.current = window.setTimeout(onOpen, 250)
+  }
+
+  const handleMouseLeave = () => {
+    window.clearTimeout(hoverTimerRef.current)
+    if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) onClose()
+  }
+
+  const handleKeyDown = event => {
+    if (event.key === 'Escape') {
+      onClose()
+      event.currentTarget.blur()
+    } else if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault()
+      onToggle()
+    }
+  }
+
+  return (
+    <>
+      <div
+        ref={fieldRef}
+        className={`home-benefit-info-field${isOpen ? ' is-open' : ''}`}
+        role="button"
+        tabIndex={0}
+        aria-expanded={isOpen}
+        aria-describedby={isOpen ? popoverId : undefined}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+        onFocus={event => {
+          if (event.currentTarget.matches(':focus-visible')) onOpen()
+        }}
+        onBlur={onClose}
+        onKeyDown={handleKeyDown}
+        onPointerUp={event => {
+          if (event.pointerType !== 'mouse') onToggle()
+        }}
+      >
+        <span><Icon size={18} strokeWidth={2}/></span>
+        {label}
+      </div>
+      {createPortal(
+        <div
+          ref={popoverRef}
+          id={popoverId}
+          className={`home-benefit-popover${isOpen ? ' is-open' : ''}`}
+          role="tooltip"
+          aria-hidden={!isOpen}
+        >
+          <strong>{title}</strong>
+          <p>{description}</p>
+          <span className="home-benefit-popover-arrow" aria-hidden="true" />
+        </div>,
+        document.body
+      )}
+    </>
+  )
+}
+
 function LiveSignupStats({ club }) {
   const [stats, setStats] = useState({ participants: 0, animals: 0, dates: [] })
   const [ready, setReady] = useState(false)
+  const [openBenefitIndex, setOpenBenefitIndex] = useState(null)
+  const benefitsRef = useRef(null)
 
   useEffect(() => {
     let active = true
@@ -591,6 +712,14 @@ function LiveSignupStats({ club }) {
     return () => { active = false }
   }, [])
 
+  useEffect(() => {
+    const closeOpenBenefit = event => {
+      if (!benefitsRef.current?.contains(event.target)) setOpenBenefitIndex(null)
+    }
+    document.addEventListener('pointerdown', closeOpenBenefit)
+    return () => document.removeEventListener('pointerdown', closeOpenBenefit)
+  }, [])
+
   return (
     <section className="live-signup-stats home-dashboard-grid" aria-label="Nächster Impftermin und Vorteile der Online-Anmeldung">
       <InteractiveStatCard className="live-stat-card home-countdown-card" icon={<CalendarDays size={30}/>} label="Nächster Impftermin" loading={!ready} appointmentDates={stats.dates} club={club} isAppointment tone="stat-date" animationIndex={0} />
@@ -611,16 +740,17 @@ function LiveSignupStats({ club }) {
           <h2>Warum online anmelden?</h2>
           <p>Von der Registrierung bis zum Impftag begleitet Sie ein klarer, vollständig digitaler Ablauf.</p>
         </div>
-        <div className="home-benefits-list">
-          {[
-            [Clock, 'Anmeldung in wenigen Minuten'],
-            [CreditCard, 'Sichere Onlinezahlung'],
-            [Mail, 'QR-Code automatisch per E-Mail'],
-            [FileX, 'Kein Papier am Impftag'],
-            [ScanLine, 'Schneller Check-in'],
-            [Settings2, 'Weniger Verwaltungsaufwand']
-          ].map(([Icon, text]) => (
-            <div key={text}><span><Icon size={18} strokeWidth={2}/></span>{text}</div>
+        <div className="home-benefits-list" ref={benefitsRef}>
+          {HOME_BENEFITS.map((benefit, index) => (
+            <HomeBenefitInfoField
+              key={benefit[1]}
+              benefit={benefit}
+              index={index}
+              isOpen={openBenefitIndex === index}
+              onOpen={() => setOpenBenefitIndex(index)}
+              onClose={() => setOpenBenefitIndex(current => current === index ? null : current)}
+              onToggle={() => setOpenBenefitIndex(current => current === index ? null : index)}
+            />
           ))}
         </div>
       </div>

@@ -1812,6 +1812,116 @@ body { background: #163a2f; }
   outline-offset: 3px;
 }
 
+/* Kurzinformationen zu den Vorteilen der Online-Anmeldung */
+.final-home .home-benefits-list > .home-benefit-info-field {
+  position: relative;
+  cursor: help;
+  outline: none;
+  transform: translateY(0);
+  transition:
+    transform .22s ease,
+    background .22s ease,
+    border-color .22s ease,
+    box-shadow .22s ease;
+}
+.final-home .home-benefits-list > .home-benefit-info-field:hover,
+.final-home .home-benefits-list > .home-benefit-info-field:focus-visible,
+.final-home .home-benefits-list > .home-benefit-info-field.is-open {
+  background: rgba(255,255,255,.1);
+  border-color: rgba(242,140,40,.32);
+  box-shadow: 0 9px 20px rgba(0,0,0,.2);
+  transform: translateY(-3px);
+}
+.final-home .home-benefits-list > .home-benefit-info-field:focus-visible {
+  outline: 2px solid rgba(245,158,11,.8);
+  outline-offset: 2px;
+}
+.final-home .home-benefit-info-field > span {
+  transition: transform .22s ease;
+}
+.final-home .home-benefit-info-field:hover > span,
+.final-home .home-benefit-info-field:focus-visible > span,
+.final-home .home-benefit-info-field.is-open > span {
+  transform: scale(1.08);
+}
+.home-benefit-popover {
+  position: fixed;
+  z-index: 1200;
+  top: var(--benefit-popover-top,12px);
+  left: var(--benefit-popover-left,12px);
+  width: var(--benefit-popover-width,280px);
+  padding: 13px 15px;
+  color: #edf5f1;
+  visibility: hidden;
+  pointer-events: none;
+  opacity: 0;
+  background: rgba(13,42,34,.96);
+  border: 1px solid rgba(255,255,255,.18);
+  border-radius: 13px;
+  box-shadow: 0 18px 38px rgba(0,0,0,.38),inset 0 1px 0 rgba(255,255,255,.08);
+  backdrop-filter: blur(14px) saturate(115%);
+  transform: translateY(5px);
+  transition: opacity .2s ease,transform .2s ease,visibility 0s linear .2s;
+}
+.home-benefit-popover.is-open {
+  visibility: visible;
+  opacity: 1;
+  transform: translateY(0);
+  transition-delay: 0s;
+}
+.home-benefit-popover[data-placement="above"] {
+  transform: translateY(-5px);
+}
+.home-benefit-popover[data-placement="above"].is-open {
+  transform: translateY(0);
+}
+.home-benefit-popover strong {
+  display: block;
+  margin-bottom: 5px;
+  color: #ffc98f;
+  font-size: 13px;
+  line-height: 1.25;
+}
+.home-benefit-popover p {
+  margin: 0;
+  color: rgba(237,245,241,.86);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.48;
+}
+.home-benefit-popover-arrow {
+  position: absolute;
+  top: -5px;
+  left: 50%;
+  width: 10px;
+  height: 10px;
+  background: rgba(13,42,34,.96);
+  border-top: 1px solid rgba(255,255,255,.18);
+  border-left: 1px solid rgba(255,255,255,.18);
+  transform: translateX(-50%) rotate(45deg);
+}
+.home-benefit-popover[data-placement="above"] .home-benefit-popover-arrow {
+  top: auto;
+  bottom: -5px;
+  border: 0;
+  border-right: 1px solid rgba(255,255,255,.18);
+  border-bottom: 1px solid rgba(255,255,255,.18);
+}
+
+@media (hover: none), (pointer: coarse) {
+  .final-home .home-benefits-list > .home-benefit-info-field {
+    cursor: pointer;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .final-home .home-benefits-list > .home-benefit-info-field,
+  .final-home .home-benefit-info-field > span,
+  .home-benefit-popover {
+    transition: none;
+  }
+}
+
 @media (max-width: 900px) and (min-width: 681px) {
   .impfwart-greeting-heading h1 {
     font-size: clamp(38px,5.2vw,44px);
