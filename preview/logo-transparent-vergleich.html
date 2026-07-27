@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Vergleich – Vereinslogo mit Transparenz</title>
+  <style>
+    :root {
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: #edf5f1;
+      background: #163a2f;
+    }
+    * { box-sizing: border-box; }
+    body {
+      min-width: 0;
+      min-height: 100vh;
+      margin: 0;
+      overflow-x: hidden;
+      background:
+        radial-gradient(circle at 12% 8%, rgba(53,94,43,.72), transparent 34%),
+        linear-gradient(120deg,#1f2937 0%,#163a2f 62%,#355e2b 100%);
+    }
+    main {
+      width: min(calc(100% - 32px),1180px);
+      margin: 0 auto;
+      padding: 38px 0 56px;
+    }
+    header {
+      padding: clamp(25px,4vw,40px);
+      background: rgba(13,42,34,.74);
+      border: 1px solid rgba(255,255,255,.14);
+      border-radius: 24px;
+      box-shadow: 0 22px 54px rgba(0,0,0,.28);
+    }
+    h1 {
+      margin: 0 0 10px;
+      color: #fff8ed;
+      font-size: clamp(30px,4.5vw,48px);
+      line-height: 1.08;
+    }
+    header p {
+      max-width: 760px;
+      margin: 0;
+      color: rgba(237,245,241,.76);
+      line-height: 1.6;
+    }
+    .comparison,
+    .background-tests {
+      display: grid;
+      gap: 18px;
+      margin-top: 22px;
+    }
+    .comparison {
+      grid-template-columns: repeat(2,minmax(0,1fr));
+    }
+    .background-tests {
+      grid-template-columns: repeat(2,minmax(0,1fr));
+    }
+    figure {
+      min-width: 0;
+      margin: 0;
+      overflow: hidden;
+      background: rgba(255,255,255,.07);
+      border: 1px solid rgba(255,255,255,.14);
+      border-radius: 20px;
+      box-shadow: 0 18px 42px rgba(0,0,0,.24);
+    }
+    figcaption {
+      padding: 14px 17px;
+      color: #fff8ed;
+      font-size: 14px;
+      font-weight: 800;
+      border-bottom: 1px solid rgba(255,255,255,.12);
+    }
+    .logo-stage {
+      display: grid;
+      min-height: 260px;
+      padding: clamp(18px,3vw,32px);
+      place-items: center;
+    }
+    .logo-stage img {
+      display: block;
+      width: 100%;
+      max-width: 760px;
+      height: auto;
+      object-fit: contain;
+    }
+    .original { background: #fff; }
+    .checker {
+      background-color: #e5e7eb;
+      background-image:
+        linear-gradient(45deg,#cbd5e1 25%,transparent 25%),
+        linear-gradient(-45deg,#cbd5e1 25%,transparent 25%),
+        linear-gradient(45deg,transparent 75%,#cbd5e1 75%),
+        linear-gradient(-45deg,transparent 75%,#cbd5e1 75%);
+      background-position: 0 0,0 12px,12px -12px,-12px 0;
+      background-size: 24px 24px;
+    }
+    .white { background: #fff; }
+    .light-green { background: #dce8dc; }
+    .dark-green { background: #163a2f; }
+    .anthracite { background: #1f2937; }
+    .section-heading {
+      margin: 30px 0 0;
+      color: #fff8ed;
+      font-size: clamp(23px,3vw,31px);
+    }
+    .section-note {
+      margin: 7px 0 0;
+      color: rgba(237,245,241,.7);
+      line-height: 1.55;
+    }
+    @media (max-width: 700px) {
+      main { width: min(calc(100% - 22px),1180px); padding-top: 22px; }
+      .comparison,
+      .background-tests { grid-template-columns: 1fr; }
+      .logo-stage { min-height: 190px; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <h1>Vergleich Vereinslogo</h1>
+      <p>Direkter Vergleich des unveränderten Originals mit der zusätzlichen PNG-Fassung mit transparentem Hintergrund.</p>
+    </header>
+
+    <section class="comparison" aria-label="Direkter Vergleich">
+      <figure>
+        <figcaption>Original</figcaption>
+        <div class="logo-stage original">
+          <img src="../public/Logoklein.jpg" alt="Originales Vereinslogo">
+        </div>
+      </figure>
+      <figure>
+        <figcaption>Freigestellte PNG</figcaption>
+        <div class="logo-stage checker">
+          <img src="../public/LogoTransparent.png" alt="Vereinslogo mit transparentem Hintergrund">
+        </div>
+      </figure>
+    </section>
+
+    <h2 class="section-heading">Transparenz auf unterschiedlichen Hintergründen</h2>
+    <p class="section-note">Die neue PNG-Datei bleibt in allen vier Feldern identisch. Lediglich die Hintergrundfarbe der Vorschau ändert sich.</p>
+
+    <section class="background-tests" aria-label="Hintergrundvergleich">
+      <figure>
+        <figcaption>Weißer Hintergrund</figcaption>
+        <div class="logo-stage white"><img src="../public/LogoTransparent.png" alt="Transparentes Vereinslogo auf Weiß"></div>
+      </figure>
+      <figure>
+        <figcaption>Heller Grünton</figcaption>
+        <div class="logo-stage light-green"><img src="../public/LogoTransparent.png" alt="Transparentes Vereinslogo auf hellem Grün"></div>
+      </figure>
+      <figure>
+        <figcaption>Dunkler Grünton</figcaption>
+        <div class="logo-stage dark-green"><img src="../public/LogoTransparent.png" alt="Transparentes Vereinslogo auf dunklem Grün"></div>
+      </figure>
+      <figure>
+        <figcaption>Anthrazitfarbener Hintergrund</figcaption>
+        <div class="logo-stage anthracite"><img src="../public/LogoTransparent.png" alt="Transparentes Vereinslogo auf Anthrazit"></div>
+      </figure>
+    </section>
+  </main>
+</body>
+</html>

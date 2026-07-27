@@ -157,7 +157,6 @@ const [showForm, setShowForm] = useState(false)
     return () =>
       removeEventListener('hashchange', onHash)
   }, [])
-  if (new URLSearchParams(window.location.search).get('preview') === 'vereinslogo') return <ClubLogoPreview />
   if (location.pathname === '/admin-invite') return <AdminInvitePassword />
   if (page === '#info') return <InfoPage />
   if (page === '#info-newcastle') return <InfoNewcastle />
@@ -179,87 +178,6 @@ if (page === '#register') return <ClubRegistration />
   if (page === '#club-dashboard') return <ClubDashboard />
   if (page === '#') return <ClubSelect />
 return <PublicSignup />
-}
-
-function ClubLogoPreview() {
-  const leavePreview = () => {
-    const url = new URL(window.location.href)
-    url.searchParams.delete('preview')
-    url.hash = ''
-    window.history.replaceState({}, document.title, `${url.pathname}${url.search}`)
-    window.location.reload()
-  }
-
-  const previewNotice = (
-    <p className="club-logo-preview-notice">Nur Vorschau – die bestehenden Anwendungsseiten bleiben unverändert.</p>
-  )
-
-  return (
-    <div className="club-logo-preview-page">
-      <main className="club-logo-preview-shell">
-        <button type="button" className="club-logo-preview-exit" onClick={leavePreview}>Vorschau verlassen</button>
-
-        <header className="club-logo-preview-intro">
-          <span>Interne Designansicht</span>
-          <h1>Vorschau Vereinslogo</h1>
-          <p>Diese Seite dient ausschließlich dem Vergleich verschiedener Einbindungsvarianten. Die bestehenden Seiten der Anwendung wurden nicht verändert.</p>
-        </header>
-
-        <section className="club-logo-preview-variant">
-          <div className="club-logo-preview-description">
-            <span>Variante A</span>
-            <h2>Variante A – Weiße Logokarte</h2>
-            <p>Das Vereinslogo liegt auf einer klaren weißen Karte vor dem vertrauten grünen Verlauf der Anwendung.</p>
-            {previewNotice}
-          </div>
-          <div className="club-logo-preview-stage club-logo-preview-stage-a">
-            <div className="club-logo-preview-white-card">
-              <img src={logo} alt="Logo des RGZV Hagen und Umgebung seit 1903 e.V." />
-            </div>
-            <h3>RGZV Hagen und Umgebung seit 1903 e.V.</h3>
-            <p>Gemeinschaft, Erfahrung und Verantwortung rund um das Rassegeflügel.</p>
-          </div>
-        </section>
-
-        <section className="club-logo-preview-variant">
-          <div className="club-logo-preview-description">
-            <span>Variante B</span>
-            <h2>Variante B – Ruhige Einbettung</h2>
-            <p>Eine helle, klassische Fläche lässt den weißen Bildhintergrund nahezu unmerklich in die Umgebung übergehen.</p>
-            {previewNotice}
-          </div>
-          <div className="club-logo-preview-stage club-logo-preview-stage-b">
-            <div className="club-logo-preview-line" aria-hidden="true" />
-            <img src={logo} alt="Logo des RGZV Hagen und Umgebung seit 1903 e.V." />
-            <h3>Willkommen beim RGZV Hagen und Umgebung seit 1903 e.V.</h3>
-            <p>Tradition trifft auf moderne Vereinsarbeit.</p>
-          </div>
-        </section>
-
-        <section className="club-logo-preview-variant">
-          <div className="club-logo-preview-description">
-            <span>Variante C</span>
-            <h2>Variante C – Moderne Hero-Ansicht</h2>
-            <p>Das Logo wird als zentrales Hauptelement eines modernen, großzügigen Hero-Bereichs inszeniert.</p>
-            {previewNotice}
-          </div>
-          <div className="club-logo-preview-stage club-logo-preview-stage-c">
-            <div className="club-logo-preview-hero-logo">
-              <img src={logo} alt="Logo des RGZV Hagen und Umgebung seit 1903 e.V." />
-            </div>
-            <h3>Willkommen beim RGZV Hagen und Umgebung seit 1903 e.V.</h3>
-            <p>Gemeinsam für verantwortungsvolle Geflügelhaltung, gelebte Vereinsgemeinschaft und die Freude am Rassegeflügel.</p>
-            <div className="club-logo-preview-actions">
-              <button type="button" onClick={() => window.alert('Dies ist nur eine Designvorschau.')}>Mehr über unseren Verein</button>
-              <button type="button" onClick={() => window.alert('Dies ist nur eine Designvorschau.')}>Zur Impf-Anmeldung</button>
-            </div>
-          </div>
-        </section>
-
-        <button type="button" className="club-logo-preview-exit club-logo-preview-exit-bottom" onClick={leavePreview}>Vorschau verlassen</button>
-      </main>
-    </div>
-  )
 }
 
 function AdminInvitePassword() {

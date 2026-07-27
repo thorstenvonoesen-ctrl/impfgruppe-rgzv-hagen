@@ -1,0 +1,363 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Vorschau – Vereinslogo auf aktueller Startseite</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #052e16;
+      color: #edf5f1;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      min-width: 320px;
+      margin: 0;
+      background:
+        radial-gradient(circle at 10% 0%, rgba(134, 239, 172, .13), transparent 30rem),
+        #052e16;
+    }
+
+    button {
+      font: inherit;
+    }
+
+    .preview {
+      width: min(1500px, calc(100% - 28px));
+      margin: 0 auto;
+      padding: 18px 0 34px;
+    }
+
+    .preview-head {
+      display: flex;
+      align-items: stretch;
+      flex-direction: column;
+      gap: 18px;
+      margin-bottom: 14px;
+    }
+
+    .preview-title {
+      margin: 0;
+      font-size: 1rem;
+      font-weight: 750;
+    }
+
+    .variant-tabs {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 6px;
+      width: 100%;
+      padding: 5px;
+      border: 1px solid rgba(237, 245, 241, .14);
+      border-radius: 14px;
+      background: rgba(237, 245, 241, .055);
+    }
+
+    .variant-tabs button {
+      min-height: 36px;
+      padding: 7px 12px;
+      border: 0;
+      border-radius: 9px;
+      color: rgba(237, 245, 241, .76);
+      background: transparent;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .variant-tabs button[aria-pressed="true"] {
+      color: #052e16;
+      background: #edf5f1;
+    }
+
+    .variant-note {
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+      min-height: 28px;
+      margin-bottom: 10px;
+      color: rgba(237, 245, 241, .68);
+      font-size: .86rem;
+    }
+
+    .variant-note strong {
+      color: #f28c28;
+    }
+
+    .browser-frame {
+      overflow: hidden;
+      border: 1px solid rgba(237, 245, 241, .18);
+      border-radius: 20px;
+      background: #163a2f;
+      box-shadow: 0 26px 70px rgba(0, 0, 0, .34);
+    }
+
+    .browser-bar {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      height: 38px;
+      padding: 0 14px;
+      border-bottom: 1px solid rgba(237, 245, 241, .1);
+      background: #163a2f;
+    }
+
+    .browser-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #64748b;
+    }
+
+    .browser-dot:first-child {
+      background: #f28c28;
+    }
+
+    .browser-address {
+      width: min(460px, 55%);
+      height: 22px;
+      margin-left: 8px;
+      border-radius: 999px;
+      background: rgba(237, 245, 241, .07);
+    }
+
+    iframe {
+      display: block;
+      width: 100%;
+      height: min(790px, calc(100vh - 150px));
+      min-height: 620px;
+      border: 0;
+      background: #163a2f;
+    }
+
+    @media (max-width: 820px) {
+      .preview-head {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .variant-tabs {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .variant-tabs button {
+        white-space: normal;
+      }
+
+      iframe {
+        height: 760px;
+        min-height: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="preview">
+    <header class="preview-head">
+      <h1 class="preview-title">Aktuelle Startseite · fünf reine Logo-Positionen</h1>
+      <div class="variant-tabs" aria-label="Logo-Variante wählen">
+        <button type="button" data-variant="header" aria-pressed="true">1 · Seitenkopf</button>
+        <button type="button" data-variant="hero-top" aria-pressed="false">2 · Hero oben</button>
+        <button type="button" data-variant="hero-actions" aria-pressed="false">3 · Hero Mitte</button>
+        <button type="button" data-variant="hero-end" aria-pressed="false">4 · Nach Hero</button>
+        <button type="button" data-variant="signup" aria-pressed="false">5 · Anmeldung</button>
+      </div>
+    </header>
+
+    <div class="variant-note" aria-live="polite">
+      <strong id="variantName">Variante 1</strong>
+      <span id="variantDescription">Logo als kompakte Vereinsmarke im Seitenkopf.</span>
+    </div>
+
+    <section class="browser-frame" aria-label="Startseitenvorschau">
+      <div class="browser-bar" aria-hidden="true">
+        <span class="browser-dot"></span>
+        <span class="browser-dot"></span>
+        <span class="browser-dot"></span>
+        <span class="browser-address"></span>
+      </div>
+      <iframe id="siteFrame" src="/" title="Aktuelle Startseite mit gewählter Logo-Position"></iframe>
+    </section>
+  </main>
+
+  <script>
+    const frame = document.getElementById('siteFrame');
+    const buttons = [...document.querySelectorAll('[data-variant]')];
+    const variantName = document.getElementById('variantName');
+    const variantDescription = document.getElementById('variantDescription');
+    let activeVariant = 'header';
+
+    const variants = {
+      header: {
+        name: 'Variante 1',
+        description: 'Logo als kompakte Vereinsmarke im Seitenkopf.',
+        place(document, node) {
+          const header = document.querySelector('header');
+          if (!header) return;
+          node.className = 'logo-preview-in-header';
+          header.appendChild(node);
+        }
+      },
+      'hero-top': {
+        name: 'Variante 2',
+        description: 'Logo oberhalb der bestehenden Hero-Überschrift.',
+        place(document, node) {
+          const heroCopy = document.querySelector('.final-home-hero-copy');
+          if (!heroCopy) return;
+          node.className = 'logo-preview-hero-top';
+          heroCopy.prepend(node);
+        }
+      },
+      'hero-actions': {
+        name: 'Variante 3',
+        description: 'Logo zwischen Beschreibung und den bestehenden Informationsbuttons.',
+        place(document, node) {
+          const actions = document.querySelector('.final-home-hero-actions');
+          if (!actions?.parentElement) return;
+          node.className = 'logo-preview-hero-actions';
+          actions.parentElement.insertBefore(node, actions);
+        }
+      },
+      'hero-end': {
+        name: 'Variante 4',
+        description: 'Logo als ruhiger Markenübergang direkt unter dem bestehenden Hero.',
+        place(document, node) {
+          const hero = document.querySelector('.final-home-hero');
+          if (!hero?.parentElement) return;
+          const holder = document.createElement('div');
+          holder.id = 'logo-preview-holder';
+          holder.className = 'logo-preview-after-hero';
+          holder.appendChild(node);
+          hero.insertAdjacentElement('afterend', holder);
+        }
+      },
+      signup: {
+        name: 'Variante 5',
+        description: 'Logo als Vertrauensanker innerhalb der bestehenden Anmeldekachel.',
+        place(document, node) {
+          const signupText = document.querySelector('.final-home-nav-text');
+          if (!signupText) return;
+          node.className = 'logo-preview-signup';
+          signupText.appendChild(node);
+        }
+      }
+    };
+
+    function installPreviewStyles(document) {
+      if (document.getElementById('logo-preview-styles')) return;
+
+      const style = document.createElement('style');
+      style.id = 'logo-preview-styles';
+      style.textContent = `
+        #logo-preview-image {
+          display: block;
+          height: auto;
+          object-fit: contain;
+          pointer-events: none;
+        }
+
+        .logo-preview-in-header {
+          position: absolute;
+          z-index: 20;
+          top: 10px;
+          left: 50%;
+          width: clamp(150px, 18vw, 235px);
+          transform: translateX(-50%);
+          filter: drop-shadow(0 4px 8px rgba(0,0,0,.2));
+        }
+
+        .logo-preview-hero-top {
+          width: clamp(210px, 28vw, 360px);
+          margin: 0 auto 14px;
+          filter: drop-shadow(0 6px 10px rgba(0,0,0,.18));
+        }
+
+        .logo-preview-hero-actions {
+          width: clamp(190px, 24vw, 310px);
+          margin: 14px auto 12px;
+          filter: drop-shadow(0 6px 10px rgba(0,0,0,.18));
+        }
+
+        .logo-preview-after-hero {
+          display: flex;
+          justify-content: center;
+          margin: 0;
+          padding: 8px 0;
+        }
+
+        .logo-preview-after-hero #logo-preview-image {
+          width: clamp(210px, 27vw, 350px);
+          filter: drop-shadow(0 6px 10px rgba(0,0,0,.18));
+        }
+
+        .logo-preview-signup {
+          width: clamp(170px, 20vw, 260px);
+          margin-top: 10px;
+          filter: drop-shadow(0 5px 9px rgba(0,0,0,.18));
+        }
+
+        @media (max-width: 680px) {
+          .logo-preview-in-header {
+            width: 135px;
+          }
+
+          .logo-preview-hero-top,
+          .logo-preview-hero-actions,
+          .logo-preview-after-hero #logo-preview-image {
+            width: min(78%, 280px);
+          }
+
+          .logo-preview-signup {
+            width: min(80%, 240px);
+            margin-right: auto;
+            margin-left: auto;
+          }
+        }
+      `;
+      document.head.appendChild(style);
+    }
+
+    function applyVariant() {
+      const document = frame.contentDocument;
+      if (!document?.body) return;
+
+      document.getElementById('logo-preview-image')?.remove();
+      document.getElementById('logo-preview-holder')?.remove();
+      installPreviewStyles(document);
+
+      const image = document.createElement('img');
+      image.id = 'logo-preview-image';
+      image.src = '/LogoTransparent.png';
+      image.alt = 'Logo des RGZV Hagen und Umgebung seit 1903 e.V.';
+
+      variants[activeVariant].place(document, image);
+      variantName.textContent = variants[activeVariant].name;
+      variantDescription.textContent = variants[activeVariant].description;
+    }
+
+    frame.addEventListener('load', () => {
+      applyVariant();
+      window.setTimeout(applyVariant, 500);
+    });
+    if (frame.contentDocument?.readyState === 'complete') {
+      applyVariant();
+      window.setTimeout(applyVariant, 500);
+    }
+
+    buttons.forEach((button) => {
+      button.addEventListener('click', () => {
+        activeVariant = button.dataset.variant;
+        buttons.forEach((candidate) => {
+          candidate.setAttribute('aria-pressed', String(candidate === button));
+        });
+        applyVariant();
+      });
+    });
+  </script>
+</body>
+</html>
