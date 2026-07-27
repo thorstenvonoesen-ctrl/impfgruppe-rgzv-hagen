@@ -1505,7 +1505,7 @@ function ImpfwartGrusswort() {
 
 function VorsitzenderGrusswort() {
   const paragraphs = [
-    'ich freue mich sehr, Sie auf der Online-Anmeldung unseres RGZV Hagen und Umgebung seit 1903 e.V. begrüßen zu dürfen.',
+    'ich freue mich sehr, Sie auf der Online-Anmeldung zur Newcastle-Sammelimpfung unseres RGZV Hagen und Umgebung seit 1903 e.V. begrüßen zu dürfen.',
     'Unser Verein blickt auf eine über 120-jährige Geschichte zurück. Seit Generationen verbindet uns die Leidenschaft für die Rassegeflügelzucht, der verantwortungsvolle Umgang mit unseren Tieren und eine lebendige Gemeinschaft, in der Erfahrung, gegenseitige Unterstützung und Freundschaft einen hohen Stellenwert haben.',
     'Mit dem Impfgruppenmanager gehen wir einen weiteren Schritt in die Zukunft. Unser Ziel ist es, Ihnen die Anmeldung zur gesetzlich vorgeschriebenen Newcastle-Impfung so einfach, komfortabel und transparent wie möglich zu gestalten. Lange Wartezeiten und unnötiger Papieraufwand gehören damit der Vergangenheit an.',
     'Gleichzeitig bleibt eines unverändert: Der persönliche Kontakt zu unseren Mitgliedern und Gästen steht für uns auch weiterhin an erster Stelle. Moderne Technik soll unsere Vereinsarbeit unterstützen – sie ersetzt jedoch niemals das Miteinander, das unseren Verein seit vielen Jahrzehnten auszeichnet.',
