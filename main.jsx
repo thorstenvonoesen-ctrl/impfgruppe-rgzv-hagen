@@ -1344,9 +1344,9 @@ function ImpfwartGrusswort() {
       <main className="impfwart-greeting-shell">
         <article className="impfwart-greeting-card">
           <header className="impfwart-greeting-heading">
-            <span aria-hidden="true">🐔</span>
-            <div>
-              <small>RGZV Hagen und Umgebung seit 1903 e. V.</small>
+            <small>RGZV Hagen und Umgebung seit 1903 e. V.</small>
+            <div className="impfwart-greeting-title-row">
+              <span aria-hidden="true">🐔</span>
               <h1>Grußwort unseres Impfwartes</h1>
             </div>
           </header>
@@ -1391,9 +1391,9 @@ function VorsitzenderGrusswort() {
       <main className="impfwart-greeting-shell">
         <article className="impfwart-greeting-card">
           <header className="impfwart-greeting-heading">
-            <span aria-hidden="true">🐔</span>
-            <div>
-              <small>RGZV Hagen und Umgebung seit 1903 e. V.</small>
+            <small>RGZV Hagen und Umgebung seit 1903 e. V.</small>
+            <div className="impfwart-greeting-title-row">
+              <span aria-hidden="true">🐔</span>
               <h1>Grußwort unseres 1. Vorsitzenden</h1>
             </div>
           </header>
