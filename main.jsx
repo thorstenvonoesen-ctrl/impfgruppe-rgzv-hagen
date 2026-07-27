@@ -1638,13 +1638,33 @@ function LustAufVerein() {
               <h2>Neugierig geworden?</h2>
               <p>Dann besuchen Sie uns doch einfach einmal ganz unverbindlich bei einem unserer nächsten Vereinsabende.</p>
               <p>Wenn Sie anschließend Mitglied werden möchten, freuen wir uns natürlich ganz besonders.</p>
-              <a
-                href="https://formular.vereinsplaner.com/1c866a08-6853-4d40-9d07-5c64e17bc2ca"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                📝 Jetzt Mitglied werden
-              </a>
+            </aside>
+
+            <aside className="membership-info-final">
+              <p className="membership-info-final-lead"><strong>Vielleicht sehen wir uns schon beim nächsten Vereinsabend. Wir würden uns freuen, Sie persönlich kennenzulernen!</strong></p>
+              <p className="membership-info-final-note">Ganz gleich, ob Sie direkt Mitglied werden möchten, unseren Verein erst noch näher kennenlernen oder zunächst zur Impf-Anmeldung zurückkehren möchten – wählen Sie einfach den für Sie passenden nächsten Schritt.</p>
+              <div className="membership-info-final-actions">
+                <a
+                  href="https://formular.vereinsplaner.com/1c866a08-6853-4d40-9d07-5c64e17bc2ca"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  📝 Jetzt Mitglied werden
+                </a>
+                <a
+                  href="https://www.rgzv-hagen-westfalen.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  📍 RGZV Hagen kennenlernen
+                </a>
+                <a
+                  href="#signup"
+                  onClick={() => window.requestAnimationFrame(() => window.scrollTo({ top: 0, behavior: 'smooth' }))}
+                >
+                  🐔 Zur Impf-Anmeldung
+                </a>
+              </div>
             </aside>
           </div>
 
