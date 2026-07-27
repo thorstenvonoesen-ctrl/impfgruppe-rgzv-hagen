@@ -716,7 +716,8 @@ function ClubSelect() {
 
         .final-home-club-link {
           display: inline-flex;
-          flex: 1 1 220px;
+          width: 100%;
+          height: 100%;
           align-items: center;
           justify-content: center;
           min-height: 38px;
@@ -733,9 +734,9 @@ function ClubSelect() {
         }
 
         .final-home-hero-actions {
-          display: flex;
-          flex-wrap: wrap;
-          width: min(100%, 520px);
+          display: grid;
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+          width: min(100%, 940px);
           gap: 12px;
           margin-top: 14px;
         }
@@ -1184,6 +1185,10 @@ function ClubSelect() {
             height: 106px;
           }
 
+          .final-home-hero-actions {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+          }
+
           .final-home .home-dashboard-grid {
             grid-template-columns: 1fr !important;
             grid-template-rows: auto auto !important;
@@ -1219,13 +1224,11 @@ function ClubSelect() {
 
           .final-home-hero-actions {
             width: 100%;
-            flex-direction: column;
-            align-items: stretch;
+            grid-template-columns: 1fr;
           }
 
           .final-home-club-link {
             width: 100%;
-            flex-basis: auto;
             white-space: normal;
           }
 
@@ -1276,11 +1279,11 @@ function ClubSelect() {
               >
                 RGZV Hagen kennenlernen
               </a>
-              <a className="final-home-club-link" href="#impfwart-grusswort">
-                Grußwort unseres Impfwartes
-              </a>
               <a className="final-home-club-link" href="#vorsitzender-grusswort">
                 Grußwort unseres 1. Vorsitzenden
+              </a>
+              <a className="final-home-club-link" href="#impfwart-grusswort">
+                Grußwort unseres Impfwartes
               </a>
             </div>
           </div>
