@@ -165,6 +165,7 @@ const [showForm, setShowForm] = useState(false)
   if (page === '#info-anmeldung') return <InfoAnmeldung />
   if (page === '#impfwart-grusswort') return <ImpfwartGrusswort />
   if (page === '#vorsitzender-grusswort') return <VorsitzenderGrusswort />
+  if (page === '#lust-auf-verein') return <LustAufVerein />
   if (page === '#quiz') return <PoultryQuiz />
 if (page === '#signup') return <PublicSignup />
   if (page === '#admin') return <Admin />
@@ -865,7 +866,7 @@ function ClubSelect() {
 
         .final-home-hero-actions {
           display: grid;
-          grid-template-columns: repeat(3, minmax(0, 1fr));
+          grid-template-columns: repeat(4, minmax(0, 1fr));
           width: min(100%, 940px);
           gap: 12px;
           margin-top: 14px;
@@ -1415,6 +1416,9 @@ function ClubSelect() {
               <a className="final-home-club-link" href="#impfwart-grusswort">
                 Grußwort unseres Impfwartes
               </a>
+              <a className="final-home-club-link" href="#lust-auf-verein">
+                ❤️ Lust auf Verein?
+              </a>
             </div>
           </div>
 
@@ -1542,6 +1546,106 @@ function VorsitzenderGrusswort() {
               <span>1. Vorsitzender</span>
               <span>RGZV Hagen und Umgebung seit 1903 e.V.</span>
             </div>
+          </div>
+
+          <button type="button" className="impfwart-greeting-back" onClick={() => { window.location.hash = '#' }}>
+            ← Zurück zur Informationsseite
+          </button>
+        </article>
+      </main>
+      <Footer />
+    </div>
+  )
+}
+
+function LustAufVerein() {
+  const questions = [
+    [
+      'Wann treffen wir uns?',
+      <>
+        <p>Unsere Vereinsabende finden regelmäßig <strong>an jedem ersten Mittwoch im Monat</strong> statt.</p>
+        <p>Der genaue Veranstaltungsort kann gelegentlich wechseln und wird deshalb immer aktuell auf unserer Homepage im Laufband bekanntgegeben.</p>
+      </>
+    ],
+    [
+      'Muss ich Mitglied sein?',
+      <>
+        <p>Nein.</p>
+        <p>Ganz im Gegenteil.</p>
+        <p>Wir freuen uns immer über Gäste, die unseren Verein ganz unverbindlich kennenlernen möchten.</p>
+      </>
+    ],
+    [
+      'Kann ich einfach vorbeikommen?',
+      <>
+        <p>Ja.</p>
+        <p>Eine Anmeldung ist nicht erforderlich.</p>
+        <p>Schauen Sie einfach vorbei – wir freuen uns darauf, Sie persönlich kennenzulernen.</p>
+      </>
+    ],
+    [
+      'Was erwartet mich?',
+      <>
+        <p>Eine bunt gemischte Gemeinschaft von Menschen, die eines verbindet:</p>
+        <p>Die Freude am schönen Rassegeflügel.</p>
+        <p>Bei unseren Vereinsabenden wird gefachsimpelt, gelacht, Erfahrungen werden ausgetauscht und natürlich geht es auch um Zucht, Haltung, Ausstellungen und alles, was unser gemeinsames Hobby so besonders macht.</p>
+        <p>Ganz gleich, ob Sie gerade erst anfangen oder schon viele Jahre Geflügel halten – bei uns findet jeder ein offenes Ohr und nette Gesprächspartner.</p>
+      </>
+    ],
+    [
+      'Wie werde ich Mitglied?',
+      <>
+        <p>Ganz unkompliziert.</p>
+        <p>Sprechen Sie uns einfach bei einem Vereinsabend an.</p>
+        <p>Wir beantworten gerne alle Ihre Fragen und freuen uns, wenn wir Sie vielleicht schon bald als neues Mitglied in unserem Verein begrüßen dürfen.</p>
+      </>
+    ]
+  ]
+
+  return (
+    <div className="page impfwart-greeting-page membership-info-page">
+      <Header />
+      <main className="impfwart-greeting-shell">
+        <article className="impfwart-greeting-card">
+          <header className="impfwart-greeting-heading">
+            <small>RGZV Hagen und Umgebung seit 1903 e. V.</small>
+            <div className="impfwart-greeting-title-row">
+              <span aria-hidden="true">🐔</span>
+              <h1>❤️ Lust auf Verein?</h1>
+            </div>
+          </header>
+
+          <div className="impfwart-greeting-copy membership-info-copy">
+            <p className="membership-info-lead"><strong>Vielleicht sind Sie heute wegen der Newcastle-Impfung hier. Vielleicht entdecken Sie aber auch ein neues Hobby, das weit über den Impftag hinausgeht.</strong></p>
+            <p>Der <strong>RGZV Hagen und Umgebung seit 1903 e. V.</strong> ist weit mehr als ein Verein für Rassegeflügelzüchter. Wir sind eine Gemeinschaft von Menschen, die ihre Begeisterung für Geflügel teilen, sich gegenseitig unterstützen und gemeinsam viel Freude an unserem schönen Hobby haben.</p>
+            <p>Ganz gleich, ob Sie bereits Hühner, Zwerghühner, Tauben, Wachteln oder anderes Geflügel halten oder gerade erst damit beginnen – bei uns sind Sie jederzeit herzlich willkommen.</p>
+            <p>Unsere Vereinsabende leben vom Austausch. Hier wird gefachsimpelt, gelacht, voneinander gelernt und natürlich auch über Zucht, Haltung, Gesundheit, Ausstellungen und viele andere Themen rund um unser gemeinsames Hobby gesprochen.</p>
+            <p>Niemand muss bereits Erfahrung mitbringen. Viele unserer heutigen Mitglieder haben genauso angefangen – mit Interesse, Neugier und einem ersten Besuch bei einem Vereinsabend.</p>
+            <p>Vielleicht entdecken auch Sie die Freude an der Rassegeflügelzucht. Vielleicht möchten Sie Ihre Tiere später einmal auf einer Ausstellung präsentieren oder einfach nette Menschen kennenlernen, die dieselbe Leidenschaft teilen.</p>
+            <p>Eines können wir Ihnen versprechen:</p>
+            <p className="membership-info-welcome"><strong>Bei uns sind Gäste jederzeit herzlich willkommen.</strong></p>
+
+            <div className="membership-info-questions">
+              {questions.map(([question, answer]) => (
+                <section key={question}>
+                  <h2>{question}</h2>
+                  {answer}
+                </section>
+              ))}
+            </div>
+
+            <aside className="membership-info-cta">
+              <h2>Neugierig geworden?</h2>
+              <p>Dann besuchen Sie uns doch einfach einmal ganz unverbindlich bei einem unserer nächsten Vereinsabende.</p>
+              <p>Wenn Sie anschließend Mitglied werden möchten, freuen wir uns natürlich ganz besonders.</p>
+              <a
+                href="https://formular.vereinsplaner.com/1c866a08-6853-4d40-9d07-5c64e17bc2ca"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                📝 Jetzt Mitglied werden
+              </a>
+            </aside>
           </div>
 
           <button type="button" className="impfwart-greeting-back" onClick={() => { window.location.hash = '#' }}>

@@ -2071,6 +2071,99 @@ body { background: #163a2f; }
   }
 }
 
+/* Zusätzliche Vereinsinformation */
+.membership-info-copy .membership-info-lead {
+  color: #fff8ed;
+  font-size: 19px;
+  line-height: 1.62;
+}
+.membership-info-copy .membership-info-welcome {
+  margin: 2px 0 30px;
+  color: #ffc98f;
+  font-size: 20px;
+}
+.membership-info-questions {
+  display: grid;
+  grid-template-columns: repeat(2,minmax(0,1fr));
+  gap: 16px;
+  margin-top: 32px;
+}
+.membership-info-questions section {
+  padding: 22px;
+  background: rgba(255,255,255,.055);
+  border: 1px solid rgba(255,255,255,.1);
+  border-radius: 16px;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.055);
+}
+.membership-info-questions section:nth-child(4),
+.membership-info-questions section:last-child {
+  grid-column: 1 / -1;
+}
+.membership-info-questions h2,
+.membership-info-cta h2 {
+  margin: 0 0 13px;
+  color: #fff8ed;
+  font-size: 22px;
+  line-height: 1.25;
+  letter-spacing: -.25px;
+}
+.membership-info-questions section p {
+  margin-bottom: 11px;
+  font-size: 16px;
+  line-height: 1.65;
+}
+.membership-info-questions section p:last-child {
+  margin-bottom: 0;
+}
+.membership-info-cta {
+  margin-top: 34px;
+  padding: clamp(24px,4vw,34px);
+  background: linear-gradient(145deg,rgba(242,140,40,.14),rgba(255,255,255,.055));
+  border: 1px solid rgba(242,140,40,.28);
+  border-radius: 18px;
+  box-shadow: 0 18px 38px rgba(0,0,0,.2),inset 0 1px 0 rgba(255,255,255,.07);
+}
+.membership-info-cta a {
+  display: inline-flex;
+  min-height: 46px;
+  margin-top: 10px;
+  padding: 11px 18px;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 800;
+  text-decoration: none;
+  background: #f28c28;
+  border: 1px solid rgba(255,205,154,.38);
+  border-radius: 12px;
+  box-shadow: 0 11px 24px rgba(194,93,13,.28);
+  transition: transform .2s ease,box-shadow .2s ease,background .2s ease;
+}
+.membership-info-cta a:hover {
+  background: #f59a38;
+  box-shadow: 0 14px 29px rgba(194,93,13,.34);
+  transform: translateY(-2px);
+}
+.membership-info-cta a:focus-visible {
+  outline: 3px solid rgba(255,243,229,.86);
+  outline-offset: 3px;
+}
+
+@media (max-width: 680px) {
+  .membership-info-questions {
+    grid-template-columns: 1fr;
+  }
+  .membership-info-questions section:nth-child(4),
+  .membership-info-questions section:last-child {
+    grid-column: auto;
+  }
+  .membership-info-cta a {
+    width: 100%;
+    text-align: center;
+  }
+}
+
 /* Freiwillige Stammdatenübernahme in der öffentlichen Anmeldung */
 .signup-reuse-card {
   display: grid;
