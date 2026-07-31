@@ -1,8 +1,18 @@
 import { Resend } from 'resend'
+import nodemailer from 'nodemailer'
 import QRCode from 'qrcode'
 import { createAdminSupabase } from './_supabase-admin.js'
 
 const resend = new Resend(process.env.RESEND_API_KEY)
+const clubMailTransporter = nodemailer.createTransport({
+  host: process.env.SMTP_HOST,
+  port: Number(process.env.SMTP_PORT),
+  secure: true,
+  auth: {
+    user: process.env.SMTP_USER,
+    pass: process.env.SMTP_PASS
+  }
+})
 const qrCodeContentId = 'participant-checkin-qr'
 const participantAnimalCountFields = [
   ['chicken_count', 'Hühner'],
@@ -206,6 +216,21 @@ Diese E-Mail wurde automatisch über das Anmeldesystem des RGZV Hagen erstellt.
 Diese E-Mail wurde automatisch über das Anmeldesystem des RGZV Hagen erstellt.
 </p>
     `
+
+    if (isBarRegistration) {
+      await clubMailTransporter.sendMail({
+        from: `"RGZV Hagen und Umgebung seit 1903 e.V." <${process.env.SMTP_USER}>`,
+        to: email,
+        subject: 'Ihre Anmeldung zum Impftermin ist erfolgreich eingegangen',
+        attachments: [{
+          filename: 'check-in-qr-code.png',
+          content: qrCode,
+          cid: qrCodeContentId
+        }],
+        html: barRegistrationHtml
+      })
+      return { success: true }
+    }
 
     const result = await resend.emails.send({
       from: 'RGZV Hagen <onboarding@resend.dev>',
