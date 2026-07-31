@@ -46,7 +46,7 @@ async function processSuccessfulSession(session, req) {
   const supabase = createAdminSupabase()
   const { data: participant, error: participantError } = await supabase
     .from('participants')
-    .select('id, club_id, email, payment_amount, payment_status, payment_method, payment_id')
+    .select('id, club_id, email, payment_amount, payment_status, payment_method, payment_id, registration_status')
     .eq('id', participantId)
     .single()
 
@@ -76,7 +76,8 @@ async function processSuccessfulSession(session, req) {
 
   if (
     participant.payment_status === 'bezahlt' ||
-    (participant.payment_id && String(participant.payment_id) !== paymentId)
+    (participant.payment_id && String(participant.payment_id) !== paymentId) ||
+    !['pending_payment', 'cancelled', 'expired', 'payment_failed'].includes(participant.registration_status)
   ) {
     return { processed: false, rejected: true }
   }
@@ -95,6 +96,7 @@ async function processSuccessfulSession(session, req) {
   let updateQuery = supabase
     .from('participants')
     .update({
+      registration_status: 'completed',
       payment_status: 'bezahlt',
       payment_method: 'stripe',
       payment_date: new Date().toISOString(),
@@ -103,6 +105,7 @@ async function processSuccessfulSession(session, req) {
     .eq('id', participant.id)
     .eq('club_id', participant.club_id)
     .eq('payment_status', 'offen')
+    .in('registration_status', ['pending_payment', 'cancelled', 'expired', 'payment_failed'])
 
   if (!participant.payment_id) updateQuery = updateQuery.is('payment_id', null)
 
@@ -141,6 +144,26 @@ async function processSuccessfulSession(session, req) {
   return { processed: true, emailSent }
 }
 
+async function processFailedAsyncSession(session) {
+  const participantId = session.metadata?.participantId
+  const clubId = session.metadata?.clubId
+  if (!participantId || !clubId) return { processed: false, rejected: true }
+  const supabase = createAdminSupabase()
+  const { data, error } = await supabase
+    .from('participants')
+    .update({ registration_status: 'payment_failed' })
+    .eq('id', participantId)
+    .eq('club_id', clubId)
+    .eq('registration_status', 'pending_payment')
+    .eq('payment_status', 'offen')
+    .is('payment_method', null)
+    .is('payment_id', null)
+    .select('id')
+    .maybeSingle()
+  if (error) throw error
+  return { processed: Boolean(data), alreadyProcessed: !data }
+}
+
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).send('Method Not Allowed')
@@ -162,7 +185,8 @@ export default async function handler(req, res) {
 
   try {
     if (event.type === 'checkout.session.async_payment_failed') {
-      return res.status(200).json({ received: true, processed: false })
+      const result = await processFailedAsyncSession(event.data.object)
+      return res.status(200).json({ received: true, ...result })
     }
 
     if (

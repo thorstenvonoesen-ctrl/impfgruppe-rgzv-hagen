@@ -1,5 +1,5 @@
 import { createHmac, timingSafeEqual } from 'node:crypto'
-import { createAdminSupabase } from './_supabase-admin.js'
+import { createAdminSupabase, verifyPaymentReturnToken } from './_supabase-admin.js'
 import { sendParticipantEmail } from './send-payment-email.js'
 
 const fields = ['firstname', 'lastname', 'street', 'housenumber', 'zipcode', 'city', 'email', 'phone', 'tsk_number']
@@ -147,9 +147,33 @@ async function handleParticipantLookup(req, res) {
   }
 }
 
+async function handlePaymentCancellation(req, res) {
+  const provider = String(req.body?.provider || '').toLowerCase()
+  if (!['paypal', 'stripe'].includes(provider)) {
+    return res.status(400).json({ error: 'Ungültiger Zahlungsanbieter.' })
+  }
+  const tokenData = verifyPaymentReturnToken(req.body?.cancelToken, provider)
+  if (!tokenData) return res.status(400).json({ error: 'Die Abbruchbestätigung ist ungültig oder abgelaufen.' })
+
+  const supabase = createAdminSupabase()
+  let updateQuery = supabase
+    .from('participants')
+    .update({ registration_status: 'cancelled' })
+    .eq('id', tokenData.participantId)
+    .eq('registration_status', 'pending_payment')
+    .eq('payment_status', 'offen')
+    .is('payment_method', null)
+    .is('payment_id', null)
+  if (provider === 'paypal') updateQuery = updateQuery.not('paypal_order_id', 'is', null)
+  const { data, error } = await updateQuery.select('id').maybeSingle()
+  if (error) throw error
+  return res.status(200).json({ success: true, cancelled: Boolean(data) })
+}
+
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' })
   if (req.body?.action === 'lookup-participant') return handleParticipantLookup(req, res)
+  if (req.body?.action === 'cancel-payment') return handlePaymentCancellation(req, res)
 
   try {
     const { vaccination_date_id: vaccinationDateId, member_code: memberCode, ...input } = req.body || {}
@@ -173,6 +197,24 @@ export default async function handler(req, res) {
     const { data: appointment, error: appointmentError } = await supabase
       .from('vaccination_dates').select('club_id').eq('id', vaccinationDateId).single()
     if (appointmentError || !appointment) return res.status(400).json({ error: 'Ungültiger Impftermin.' })
+    const normalizedEmail = normalizeEmail(input.email)
+    const escapedEmail = normalizedEmail.replace(/[\\%_]/g, character => `\\${character}`)
+    const { data: existingRegistration, error: duplicateError } = await supabase
+      .from('participants')
+      .select('registration_status')
+      .eq('club_id', appointment.club_id)
+      .eq('vaccination_date_id', vaccinationDateId)
+      .ilike('email', escapedEmail)
+      .in('registration_status', ['pending_payment', 'completed', 'bar_registered'])
+      .limit(1)
+      .maybeSingle()
+    if (duplicateError) throw duplicateError
+    if (existingRegistration?.registration_status === 'pending_payment') {
+      return res.status(409).json({ error: 'Für diese E-Mail-Adresse besteht bereits eine noch nicht abgeschlossene Onlinezahlung.' })
+    }
+    if (existingRegistration) {
+      return res.status(409).json({ error: 'Für diese E-Mail-Adresse besteht bereits eine verbindliche Anmeldung zu diesem Impftermin.' })
+    }
     const { data: club } = await supabase.from('clubs').select('member_code').eq('id', appointment.club_id).single()
     const isMember = Boolean(memberCode && club?.member_code && memberCode.trim().toUpperCase() === club.member_code.trim().toUpperCase())
     const participant = Object.fromEntries(fields.map(field => [field, typeof input[field] === 'string' ? input[field].trim() : input[field]]))
@@ -187,7 +229,8 @@ export default async function handler(req, res) {
       is_member: isMember,
       payment_status: 'offen',
       payment_amount: isMember ? 5 : 10,
-      payment_method: paymentMethod === 'bar' ? 'bar' : null
+      payment_method: paymentMethod === 'bar' ? 'bar' : null,
+      registration_status: paymentMethod === 'bar' ? 'bar_registered' : 'pending_payment'
     }).select('id, payment_amount').single()
     if (error) throw error
 

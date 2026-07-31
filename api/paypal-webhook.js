@@ -156,7 +156,7 @@ export default async function handler(req, res) {
     const supabase = createAdminSupabase()
     const { data: participant, error: participantError } = await supabase
       .from('participants')
-      .select('id, club_id, email, payment_amount, payment_status, payment_method, payment_id, paypal_order_id')
+      .select('id, club_id, email, payment_amount, payment_status, payment_method, payment_id, paypal_order_id, registration_status')
       .eq('paypal_order_id', orderId)
       .single()
 
@@ -187,7 +187,8 @@ export default async function handler(req, res) {
     if (
       participant.payment_status !== 'offen' ||
       participant.payment_method !== null ||
-      participant.payment_id !== null
+      participant.payment_id !== null ||
+      !['pending_payment', 'cancelled', 'expired', 'payment_failed'].includes(participant.registration_status)
     ) {
       return res.status(200).json({ ignored: true })
     }
@@ -208,6 +209,7 @@ export default async function handler(req, res) {
     const { data: updatedParticipant, error: updateError } = await supabase
       .from('participants')
       .update({
+        registration_status: 'completed',
         payment_status: 'bezahlt',
         payment_method: 'paypal',
         payment_date: new Date().toISOString(),
@@ -217,6 +219,7 @@ export default async function handler(req, res) {
       .eq('club_id', participant.club_id)
       .eq('paypal_order_id', orderId)
       .eq('payment_status', 'offen')
+      .in('registration_status', ['pending_payment', 'cancelled', 'expired', 'payment_failed'])
       .is('payment_method', null)
       .is('payment_id', null)
       .select('id')

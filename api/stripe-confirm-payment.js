@@ -43,7 +43,7 @@ export default async function handler(req, res) {
     const supabase = createAdminSupabase()
     const { data: participant, error: participantError } = await supabase
       .from('participants')
-      .select('id, club_id, email, payment_amount, payment_status, payment_method, payment_id')
+      .select('id, club_id, email, payment_amount, payment_status, payment_method, payment_id, registration_status')
       .eq('id', participantId)
       .single()
 
@@ -81,6 +81,10 @@ export default async function handler(req, res) {
       return res.status(409).json({ error: 'Für diesen Teilnehmer wurde bereits eine Zahlung verbucht.' })
     }
 
+    if (!['pending_payment', 'cancelled', 'expired', 'payment_failed'].includes(participant.registration_status)) {
+      return res.status(409).json({ error: 'Die Anmeldung kann nicht als bezahlt abgeschlossen werden.' })
+    }
+
     if (participant.payment_id && String(participant.payment_id) !== paymentId) {
       return res.status(409).json({ error: 'Es ist bereits eine andere Zahlungsreferenz hinterlegt.' })
     }
@@ -101,6 +105,7 @@ export default async function handler(req, res) {
     let updateQuery = supabase
       .from('participants')
       .update({
+        registration_status: 'completed',
         payment_status: 'bezahlt',
         payment_method: 'stripe',
         payment_date: new Date().toISOString(),
@@ -109,6 +114,7 @@ export default async function handler(req, res) {
       .eq('id', participant.id)
       .eq('club_id', participant.club_id)
       .eq('payment_status', 'offen')
+      .in('registration_status', ['pending_payment', 'cancelled', 'expired', 'payment_failed'])
 
     if (!participant.payment_id) updateQuery = updateQuery.is('payment_id', null)
 

@@ -1,4 +1,4 @@
-import { createAdminSupabase } from './_supabase-admin.js'
+import { createAdminSupabase, createPaymentReturnToken } from './_supabase-admin.js'
 
 const PAYPAL_API_BASE = 'https://api-m.paypal.com'
 
@@ -116,7 +116,7 @@ export default async function handler(req, res) {
 
       const { data: participant, error: participantError } = await supabase
         .from('participants')
-        .select('id, club_id, email, payment_amount, payment_status, payment_method, payment_id, paypal_order_id')
+        .select('id, club_id, email, payment_amount, payment_status, payment_method, payment_id, paypal_order_id, registration_status')
         .eq('id', participantId)
         .single()
 
@@ -152,7 +152,8 @@ export default async function handler(req, res) {
       if (
         participant.payment_status !== 'offen' ||
         participant.payment_method !== null ||
-        participant.payment_id !== null
+        participant.payment_id !== null ||
+        !['pending_payment', 'cancelled', 'expired', 'payment_failed'].includes(participant.registration_status)
       ) {
         return res.status(409).json({ error: 'Für diesen Teilnehmer wurde bereits eine Zahlung verbucht.' })
       }
@@ -198,6 +199,7 @@ export default async function handler(req, res) {
       const { data: updatedParticipant, error: updateError } = await supabase
         .from('participants')
         .update({
+          registration_status: 'completed',
           payment_status: 'bezahlt',
           payment_method: 'paypal',
           payment_date: new Date().toISOString(),
@@ -207,6 +209,7 @@ export default async function handler(req, res) {
         .eq('club_id', participant.club_id)
         .eq('paypal_order_id', token)
         .eq('payment_status', 'offen')
+        .in('registration_status', ['pending_payment', 'cancelled', 'expired', 'payment_failed'])
         .is('payment_method', null)
         .is('payment_id', null)
         .select('id')
@@ -236,7 +239,7 @@ export default async function handler(req, res) {
 
     const { data: participant, error: participantError } = await supabase
       .from('participants')
-      .select('id, club_id, payment_amount, payment_status, payment_method, payment_id')
+      .select('id, club_id, payment_amount, payment_status, payment_method, payment_id, registration_status')
       .eq('id', participantId)
       .single()
 
@@ -247,7 +250,8 @@ export default async function handler(req, res) {
     if (
       participant.payment_status !== 'offen' ||
       participant.payment_method !== null ||
-      participant.payment_id !== null
+      participant.payment_id !== null ||
+      participant.registration_status !== 'pending_payment'
     ) {
       return res.status(409).json({ error: 'Für diesen Teilnehmer wurde bereits eine Zahlung verbucht.' })
     }
@@ -258,11 +262,13 @@ export default async function handler(req, res) {
     }
 
     const accessToken = await getPayPalAccessToken()
+    const cancelToken = createPaymentReturnToken(participant.id, 'paypal')
     const orderResponse = await fetch(`${PAYPAL_API_BASE}/v2/checkout/orders`, {
       method: 'POST',
       headers: {
         Authorization: `Bearer ${accessToken}`,
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'PayPal-Request-Id': `registration-order-${participant.id}`
       },
       body: JSON.stringify({
         intent: 'CAPTURE',
@@ -282,7 +288,7 @@ export default async function handler(req, res) {
           landing_page: 'LOGIN',
           user_action: 'PAY_NOW',
           return_url: `https://${req.headers.host}/?paypal=success&participant=${participant.id}`,
-          cancel_url: `https://${req.headers.host}/?paypal=cancel`
+          cancel_url: `https://${req.headers.host}/?paypal=cancel&cancel_token=${encodeURIComponent(cancelToken)}`
         }
       })
     })
@@ -302,6 +308,7 @@ export default async function handler(req, res) {
       .eq('id', participant.id)
       .eq('club_id', participant.club_id)
       .eq('payment_status', 'offen')
+      .eq('registration_status', 'pending_payment')
       .is('payment_method', null)
       .is('payment_id', null)
       .select('id')

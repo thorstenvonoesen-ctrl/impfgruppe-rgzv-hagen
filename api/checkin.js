@@ -114,6 +114,7 @@ async function searchParticipants(supabase, clubId, selectedVaccinationDateId, r
       .select('id, firstname, lastname, city, email, phone, tsk_number, animal_count, payment_status, payment_method, payment_date, checked_in, checked_in_at, vaccination_date_id')
       .eq('club_id', clubId)
       .eq('vaccination_date_id', selectedVaccinationDateId)
+      .in('registration_status', ['completed', 'bar_registered'])
       .or(filters)
       .limit(75)
   }))
@@ -184,6 +185,7 @@ export default async function handler(req, res) {
         .from('participants')
         .select('id, firstname, lastname, club_id, vaccination_date_id, payment_status, payment_method, payment_amount, checked_in, checked_in_at')
         .eq('checkin_token', token)
+        .in('registration_status', ['completed', 'bar_registered'])
         .maybeSingle()
       if (participantError) {
         return res.status(500).json({ error: 'Die Teilnehmerdaten konnten nicht geladen werden.' })
@@ -227,6 +229,7 @@ export default async function handler(req, res) {
         .from('participants')
         .select('id, firstname, lastname, club_id, vaccination_date_id, checked_in, checked_in_at, payment_status, payment_method, payment_amount, email')
         .eq('id', participantId)
+        .in('registration_status', ['completed', 'bar_registered'])
         .single()
       if (participantError || !participant) return res.status(404).json({ error: 'Teilnehmer nicht gefunden.' })
       if (participant.club_id !== authorization.appointment.club_id) {
@@ -318,6 +321,7 @@ export default async function handler(req, res) {
       .from('participants')
       .select('id, club_id, vaccination_date_id, checked_in, checked_in_at, payment_status, payment_method, payment_amount')
       .eq('checkin_token', token)
+      .in('registration_status', ['completed', 'bar_registered'])
       .single()
     if (participantError || !participant) return res.status(404).json({ error: 'QR-Code nicht gefunden.' })
     if (participant.club_id !== appointment.club_id || participant.vaccination_date_id !== appointment.id) {

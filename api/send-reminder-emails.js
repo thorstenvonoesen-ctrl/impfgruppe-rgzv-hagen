@@ -101,6 +101,7 @@ async function seasonContext(supabase, vaccinationDateId) {
       .select('id, firstname, lastname, email')
       .eq('club_id', appointment.club_id)
       .in('vaccination_date_id', previousDateIds)
+      .in('registration_status', ['completed', 'bar_registered'])
     if (participantsError) throw participantsError
     participants = data || []
   }
@@ -257,7 +258,7 @@ async function handleSmartAssistant(req, res, supabase) {
     { data: campaignSummary, error: campaignError }
   ] = await Promise.all([
     supabase.from('clubs').select('*').eq('id', clubId).single(),
-    supabase.from('participants').select('id, firstname, lastname, email, phone, animal_type, animal_count, vaccine, payment_status, payment_method, vaccination_date_id').eq('club_id', clubId),
+    supabase.from('participants').select('id, firstname, lastname, email, phone, animal_type, animal_count, vaccine, payment_status, payment_method, registration_status, vaccination_date_id').eq('club_id', clubId),
     supabase.from('vaccination_dates').select('*').eq('club_id', clubId).order('date', { ascending: true }),
     supabase.rpc('season_campaign_summary', { target_club_id: clubId })
   ])
@@ -280,7 +281,9 @@ async function handleSmartAssistant(req, res, supabase) {
   const appointmentById = new Map(regularAppointments.map(appointment => [String(appointment.id), appointment]))
   const seasonParticipants = (participants || []).filter(participant => {
     const appointment = appointmentById.get(String(participant.vaccination_date_id))
-    return appointment && Number(String(appointment.date).slice(0, 4)) === activeSeasonYear
+    return appointment &&
+      ['completed', 'bar_registered'].includes(participant.registration_status) &&
+      Number(String(appointment.date).slice(0, 4)) === activeSeasonYear
   })
 
   const openPayments = seasonParticipants.filter(participant => participant.payment_status !== 'bezahlt')
@@ -342,7 +345,7 @@ async function handleSmartAssistant(req, res, supabase) {
       .map(appointment => String(appointment.id))
   )
   const hasPreviousParticipants = (participants || []).some(
-    participant => previousYearDateIds.has(String(participant.vaccination_date_id))
+    participant => ['completed', 'bar_registered'].includes(participant.registration_status) && previousYearDateIds.has(String(participant.vaccination_date_id))
   )
   if (nextAppointment && hasPreviousParticipants && !campaign) {
     addTask('yellow', 'season-not-started', 'Saisonkampagne noch nicht gestartet', 'Frühere Teilnehmer können zur neuen Saison eingeladen werden.', 'season', 'Erinnerungen versenden')
@@ -537,7 +540,7 @@ async function handleExistingReminder(req, res, supabase) {
     .from('participants')
     .select('*')
     .eq('vaccination_date_id', vaccinationDateId)
-    .eq('payment_status', 'bezahlt')
+    .in('registration_status', ['completed', 'bar_registered'])
   if (error) return res.status(500).json({ error: error.message })
   let sent = 0
   for (const participant of participants || []) {

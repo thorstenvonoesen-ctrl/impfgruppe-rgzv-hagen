@@ -181,10 +181,24 @@ function formatParticipantAnimals(participant) {
 function checkedInParticipantsForVaccinationDate(participants, vaccinationDate) {
   if (!vaccinationDate?.id) return []
   return participants.filter(participant =>
+    isBindingRegistration(participant) &&
     participant.checked_in === true &&
     String(participant.vaccination_date_id) === String(vaccinationDate.id) &&
     (!vaccinationDate.club_id || String(participant.club_id) === String(vaccinationDate.club_id))
   )
+}
+
+const bindingRegistrationStatuses = new Set(['completed', 'bar_registered'])
+const registrationStatusLabels = {
+  pending_payment: 'Onlinezahlung noch nicht abgeschlossen',
+  completed: 'Verbindlich angemeldet',
+  bar_registered: 'Verbindlich angemeldet · Barzahlung vor Ort',
+  cancelled: 'Zahlung abgebrochen',
+  expired: 'Zahlungsversuch abgelaufen',
+  payment_failed: 'Zahlung fehlgeschlagen'
+}
+function isBindingRegistration(participant) {
+  return bindingRegistrationStatuses.has(participant?.registration_status)
 }
 
 function App() {
@@ -4467,6 +4481,26 @@ useEffect(() => {
     const token = params.get('token')
     const participantId = params.get('participant')
 const stripe = params.get('stripe')
+
+    const cancelledProvider = paypal === 'cancel' ? 'paypal' : stripe === 'cancel' ? 'stripe' : null
+    if (cancelledProvider) {
+      const cancelToken = params.get('cancel_token')
+      if (cancelToken) {
+        try {
+          await fetch('/api/create-registration', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ action: 'cancel-payment', provider: cancelledProvider, cancelToken })
+          })
+        } catch {
+          // Der Datensatz bleibt bei einem Übertragungsfehler sicher als pending_payment erhalten.
+        }
+      }
+      sessionStorage.removeItem(membershipInvitationStorageKey)
+      setMessage('Die Onlinezahlung wurde abgebrochen. Es wurde keine Zahlung verbucht.')
+      window.history.replaceState({}, document.title, window.location.pathname)
+      return
+    }
     
     if (paypal !== 'success' && stripe !== 'success') return
 if (!participantId) return
@@ -6632,28 +6666,30 @@ const clubId = adminClubId
 .eq('club_id', clubId)
   load()
 }
+  const bindingParticipants = participants.filter(isBindingRegistration)
   const filtered = participants.filter(p => {
   const matchesSearch = `${p.firstname} ${p.lastname} ${p.city} ${p.email}`.toLowerCase().includes(q.toLowerCase())
   const matchesStatus =
-    statusFilter === 'all' ||
-    (statusFilter === 'paid' && p.payment_status === 'bezahlt') ||
-    (statusFilter === 'open' && p.payment_status !== 'bezahlt')
+    (statusFilter === 'all' && isBindingRegistration(p)) ||
+    (statusFilter === 'paid' && isBindingRegistration(p) && p.payment_status === 'bezahlt') ||
+    (statusFilter === 'open' && isBindingRegistration(p) && p.payment_status !== 'bezahlt') ||
+    p.registration_status === statusFilter
 
   return matchesSearch && matchesStatus
     })
   const stats = useMemo(() => ({
-    total: participants.length,
-    animals: participants.reduce((sum, participant) => sum + Number(participant.animal_count || 0), 0),
-    revenue: participants
+    total: bindingParticipants.length,
+    animals: bindingParticipants.reduce((sum, participant) => sum + Number(participant.animal_count || 0), 0),
+    revenue: bindingParticipants
       .filter(participant => participant.payment_status === 'bezahlt')
       .reduce((sum, participant) => sum + Number(participant.payment_amount || 0), 0)
   }), [participants])
   const dateStats = vaccinationDates.map(v => ({
   ...v,
-  count: participants.filter(p => p.vaccination_date_id === v.id).length
+  count: bindingParticipants.filter(p => p.vaccination_date_id === v.id).length
 }))
   async function pdfForVaccinationDate(v) {
-  const list = participants.filter(
+  const list = bindingParticipants.filter(
     p => String(p.vaccination_date_id) === String(v.id)
   )
 
@@ -6780,7 +6816,7 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
   }
 
   async function cashReportForVaccinationDate(v) {
-    const list = participants.filter(
+    const list = bindingParticipants.filter(
       participant => String(participant.vaccination_date_id) === String(v.id)
     )
     const paid = list.filter(participant => participant.payment_status === 'bezahlt')
@@ -7567,7 +7603,7 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
           </div>
         )}
       </section>
-      <CheckinPanel participants={participants} vaccinationDates={vaccinationDates} onChanged={load} adminRole={adminContext?.role} />
+      <CheckinPanel participants={bindingParticipants} vaccinationDates={vaccinationDates} onChanged={load} adminRole={adminContext?.role} />
       <section className="card admin-appointments-card">
   <h2>Anmeldungen pro Impftermin</h2>
 
@@ -7760,10 +7796,14 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
       <option value="all">Alle Zahlungen</option>
       <option value="paid">Bezahlt</option>
       <option value="open">Offen</option>
+      <option value="pending_payment">Onlinezahlung noch nicht abgeschlossen</option>
+      <option value="cancelled">Zahlung abgebrochen</option>
+      <option value="expired">Zahlungsversuch abgelaufen</option>
+      <option value="payment_failed">Zahlung fehlgeschlagen</option>
     </select>
 
     <ExportButtons
-      participants={filtered}
+      participants={filtered.filter(isBindingRegistration)}
       certificateParticipants={participants}
       vaccinationDates={vaccinationDates}
     />
@@ -7786,6 +7826,7 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
           <th>Impfung</th>
           <th>Impftermin</th>
           <th>Zahlung</th>
+          <th>Anmeldestatus</th>
           <th></th>
         </tr>
       </thead>
@@ -7815,6 +7856,7 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
                   {p.payment_status}{p.payment_method === 'bar' ? ' · Barzahlung vor Ort' : ''}
                 </span>
               </td>
+              <td><span className={`status-badge ${isBindingRegistration(p) ? 'paid' : 'open'}`}>{registrationStatusLabels[p.registration_status] || p.registration_status}</span></td>
               <td>
   <button className="small" onClick={()=>markPaid(p.id,p.payment_status!=='bezahlt')}>
     {p.payment_status==='bezahlt'?'Offen':'Bezahlt'}
