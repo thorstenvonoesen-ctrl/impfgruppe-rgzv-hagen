@@ -340,11 +340,13 @@ export default async function handler(req, res) {
         amount: (amountInCents / 100).toFixed(2),
         currency: 'EUR',
         httpStatus: orderResponse.status,
-        responseBody: order ?? orderResponseBody,
+        responseBody: order
+          ? { ...order, details: JSON.stringify(order.details ?? null, null, 2) }
+          : orderResponseBody,
         paypalErrorName: order?.name || null,
         paypalErrorMessage: order?.message || null,
         paypalDebugId,
-        paypalDetails: order?.details || null
+        paypalDetails: JSON.stringify(order?.details ?? null, null, 2)
       })
       return res.status(502).json({
         error: 'PayPal-Bestellung konnte nicht erstellt werden.',
@@ -361,11 +363,13 @@ export default async function handler(req, res) {
         amount: (amountInCents / 100).toFixed(2),
         currency: 'EUR',
         httpStatus: orderResponse.status,
-        responseBody: order ?? orderResponseBody,
+        responseBody: order
+          ? { ...order, details: JSON.stringify(order.details ?? null, null, 2) }
+          : orderResponseBody,
         paypalErrorName: order?.name || null,
         paypalErrorMessage: order?.message || null,
         paypalDebugId,
-        paypalDetails: order?.details || null
+        paypalDetails: JSON.stringify(order?.details ?? null, null, 2)
       })
       return res.status(502).json({
         error: 'PayPal-Bestellung konnte nicht erstellt werden.',
