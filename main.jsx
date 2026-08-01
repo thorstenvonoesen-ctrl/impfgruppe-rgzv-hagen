@@ -39,6 +39,7 @@ import pdfWatermarkLogo from './public/LogoTransparent.png'
 import { APP } from './config'
 const PAYMENT_URL = import.meta.env.VITE_PAYMENT_URL || ''
 const MEMBER_CODE = 'RGZV2026'
+const PAYPAL_ENABLED = false
 const PDF_WATERMARK_OPACITY = 0.1
 const PDF_WATERMARK_WIDTH_RATIO = 0.62
 const PDF_WATERMARK_ASPECT_RATIO = 1772 / 748
@@ -4271,7 +4272,7 @@ function PublicSignup() {
   const [loading, setLoading] = useState(false)
   const [message, setMessage] = useState('')
   const [privacyAccepted, setPrivacyAccepted] = useState(false)
-  const [paymentMethod, setPaymentMethod] = useState('paypal')
+  const [paymentMethod, setPaymentMethod] = useState('stripe')
   const [showForm, setShowForm] = useState(true)
   const [countdown, setCountdown] = useState('')
   const [showPaymentSuccess, setShowPaymentSuccess] = useState(false)
@@ -4568,6 +4569,11 @@ useEffect(() => {
   setLoading(false)
   return
 }
+    if (!PAYPAL_ENABLED && paymentMethod === 'paypal') {
+      setMessage('PayPal steht derzeit vorübergehend nicht zur Verfügung. Bitte wählen Sie eine andere Zahlungsart.')
+      setLoading(false)
+      return
+    }
     if (animalTotal < 1) {
       setMessage('Bitte geben Sie für mindestens eine Tierart eine Anzahl ein.')
       setLoading(false)
@@ -5005,15 +5011,24 @@ value={form.vaccination_date_id}
    <div className="payment-methods" style={{ marginTop: '15px', marginBottom: '15px' }}>
   <strong>Zahlungsart:</strong>
 
-  <div className="payment-option" style={{ marginTop: '10px' }}>
+  <div className="payment-option" style={{ marginTop: '10px', opacity: PAYPAL_ENABLED ? 1 : 0.65 }}>
     <input
       type="radio"
       name="paymentMethod"
       value="paypal"
       checked={paymentMethod === 'paypal'}
       onChange={(e) => setPaymentMethod(e.target.value)}
+      disabled={!PAYPAL_ENABLED}
+      aria-describedby="paypal-unavailable-note"
     />
-    <span style={{ marginLeft: '8px' }}>PayPal</span>
+    <span style={{ marginLeft: '8px' }}>
+      PayPal – Derzeit vorübergehend nicht verfügbar
+    </span>
+    {!PAYPAL_ENABLED && (
+      <p id="paypal-unavailable-note" style={{ margin: '6px 0 0 26px', color: '#6b7280', fontSize: '14px', lineHeight: '1.5' }}>
+        PayPal steht derzeit vorübergehend nicht zur Verfügung. Bitte wählen Sie eine andere Zahlungsart.
+      </p>
+    )}
   </div>
 
   <div className="payment-option" style={{ marginTop: '10px' }}>
@@ -5104,7 +5119,7 @@ value={form.vaccination_date_id}
         setReuseLookup({ status: 'idle', email: '', token: '' })
         setReuseConfirmation('')
         setPrivacyAccepted(false)
-        setPaymentMethod('paypal')
+        setPaymentMethod('stripe')
         setMessage('')
       }}
     />

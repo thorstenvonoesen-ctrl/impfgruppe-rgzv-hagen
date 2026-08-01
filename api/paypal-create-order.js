@@ -1,6 +1,7 @@
 import { createAdminSupabase, createPaymentReturnToken } from './_supabase-admin.js'
 
 const PAYPAL_API_BASE = 'https://api-m.paypal.com'
+const PAYPAL_ENABLED = false
 
 function amountToCents(value) {
   if (value === null || value === undefined || value === '') return null
@@ -265,6 +266,12 @@ export default async function handler(req, res) {
 
       const emailSent = await sendPaymentEmail(req, participant)
       return res.status(200).json({ success: true, emailSent })
+    }
+
+    if (!PAYPAL_ENABLED) {
+      return res.status(503).json({
+        error: 'PayPal steht derzeit vorübergehend nicht zur Verfügung.'
+      })
     }
 
     const { data: participant, error: participantError } = await supabase
