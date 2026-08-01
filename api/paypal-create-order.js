@@ -323,13 +323,54 @@ export default async function handler(req, res) {
       })
     })
 
-    if (!orderResponse.ok) {
-      return res.status(502).json({ error: 'PayPal-Bestellung konnte nicht erstellt werden.' })
+    const orderResponseBody = await orderResponse.text()
+    let order
+    try {
+      order = JSON.parse(orderResponseBody)
+    } catch {
+      order = null
     }
 
-    const order = await orderResponse.json()
-    if (!order.id) {
-      return res.status(502).json({ error: 'PayPal-Bestellung konnte nicht erstellt werden.' })
+    if (!orderResponse.ok) {
+      const paypalDebugId = order?.debug_id || null
+      console.error('PayPal Orders v2 request failed:', {
+        timestamp: new Date().toISOString(),
+        participantId: participant.id,
+        clubId: participant.club_id,
+        amount: (amountInCents / 100).toFixed(2),
+        currency: 'EUR',
+        httpStatus: orderResponse.status,
+        responseBody: order ?? orderResponseBody,
+        paypalErrorName: order?.name || null,
+        paypalErrorMessage: order?.message || null,
+        paypalDebugId,
+        paypalDetails: order?.details || null
+      })
+      return res.status(502).json({
+        error: 'PayPal-Bestellung konnte nicht erstellt werden.',
+        ...(paypalDebugId ? { paypalDebugId } : {})
+      })
+    }
+
+    if (!order?.id) {
+      const paypalDebugId = order?.debug_id || null
+      console.error('PayPal Orders v2 response did not contain an order ID:', {
+        timestamp: new Date().toISOString(),
+        participantId: participant.id,
+        clubId: participant.club_id,
+        amount: (amountInCents / 100).toFixed(2),
+        currency: 'EUR',
+        httpStatus: orderResponse.status,
+        responseBody: order ?? orderResponseBody,
+        paypalErrorName: order?.name || null,
+        paypalErrorMessage: order?.message || null,
+        paypalDebugId,
+        paypalDetails: order?.details || null
+      })
+      return res.status(502).json({
+        error: 'PayPal-Bestellung konnte nicht erstellt werden.',
+        ...(paypalDebugId ? { paypalDebugId } : {})
+      })
     }
 
     const { data: linkedParticipant, error: linkError } = await supabase
