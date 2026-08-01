@@ -45,35 +45,45 @@ async function getPayPalOrder(orderId, accessToken) {
   return response.json()
 }
 
-function validateOrderAssociation(order, participant, expectedAmountCents) {
-  if (!order || String(order.id) !== String(participant.paypal_order_id)) return null
-  if (!Array.isArray(order.purchase_units) || order.purchase_units.length !== 1) return null
+function validateOrderAssociation(order, participant, expectedAmountCents, onFailure) {
+  const fail = (reason) => {
+    if (onFailure) onFailure(reason)
+    return null
+  }
+  if (!order || String(order.id) !== String(participant.paypal_order_id)) return fail('ORDER_ID_MISMATCH')
+  if (!Array.isArray(order.purchase_units) || order.purchase_units.length !== 1) return fail('PURCHASE_UNIT_COUNT_INVALID')
 
   const unit = order.purchase_units[0]
-  if (String(unit.custom_id) !== String(participant.id)) return null
-  if (String(unit.invoice_id) !== getInvoiceId(participant)) return null
-  if (String(unit.amount?.currency_code || '').toUpperCase() !== 'EUR') return null
-  if (amountToCents(unit.amount?.value) !== expectedAmountCents) return null
+  if (String(unit.custom_id) !== String(participant.id)) return fail('CUSTOM_ID_MISMATCH')
+  if (String(unit.invoice_id) !== getInvoiceId(participant)) return fail('INVOICE_ID_MISMATCH')
+  if (String(unit.amount?.currency_code || '').toUpperCase() !== 'EUR') return fail('CURRENCY_INVALID')
+  if (amountToCents(unit.amount?.value) !== expectedAmountCents) return fail('AMOUNT_MISMATCH')
 
   return unit
 }
 
-function validateCompletedCapture(order, participant, expectedAmountCents) {
+function validateCompletedCapture(order, participant, expectedAmountCents, onFailure) {
+  const fail = (reason) => {
+    if (onFailure) onFailure(reason)
+    return null
+  }
   const unit = validateOrderAssociation(order, participant, expectedAmountCents)
-  if (!unit || order.status !== 'COMPLETED') return null
+  if (!unit) return fail('ORDER_ASSOCIATION_INVALID')
+  if (order.status !== 'COMPLETED') return fail('ORDER_NOT_COMPLETED')
 
   const captures = unit.payments?.captures
   const refunds = unit.payments?.refunds
-  if (!Array.isArray(captures) || captures.length !== 1) return null
-  if (Array.isArray(refunds) && refunds.length > 0) return null
+  if (!Array.isArray(captures) || captures.length !== 1) return fail('CAPTURE_COUNT_INVALID')
+  if (Array.isArray(refunds) && refunds.length > 0) return fail('ORDER_HAS_REFUNDS')
 
   const capture = captures[0]
   if (
+    !capture.id ||
     capture.status !== 'COMPLETED' ||
     capture.final_capture !== true ||
     String(capture.amount?.currency_code || '').toUpperCase() !== 'EUR' ||
     amountToCents(capture.amount?.value) !== expectedAmountCents
-  ) return null
+  ) return fail('CAPTURE_DETAILS_INVALID')
 
   return capture
 }
@@ -135,12 +145,25 @@ export default async function handler(req, res) {
 
       const accessToken = await getPayPalAccessToken()
       const orderBeforeCapture = await getPayPalOrder(token, accessToken)
-      const associatedUnit = validateOrderAssociation(orderBeforeCapture, participant, expectedAmountCents)
+      const recoveryFailureLogger = orderBeforeCapture.status === 'COMPLETED'
+        ? (reason) => console.error('PayPal COMPLETED recovery rejected:', reason)
+        : undefined
+      const associatedUnit = validateOrderAssociation(
+        orderBeforeCapture,
+        participant,
+        expectedAmountCents,
+        recoveryFailureLogger
+      )
       if (!associatedUnit) {
         return res.status(409).json({ error: 'Die PayPal-Bestellung konnte nicht eindeutig zugeordnet werden.' })
       }
 
-      const existingCapture = validateCompletedCapture(orderBeforeCapture, participant, expectedAmountCents)
+      const existingCapture = validateCompletedCapture(
+        orderBeforeCapture,
+        participant,
+        expectedAmountCents,
+        recoveryFailureLogger
+      )
       if (existingCapture && isSameProcessedPayment(participant, existingCapture.id)) {
         return res.status(200).json({
           success: true,
@@ -158,29 +181,35 @@ export default async function handler(req, res) {
         return res.status(409).json({ error: 'Für diesen Teilnehmer wurde bereits eine Zahlung verbucht.' })
       }
 
-      if (!['CREATED', 'APPROVED'].includes(orderBeforeCapture.status)) {
-        return res.status(409).json({ error: 'Die PayPal-Bestellung kann nicht verarbeitet werden.' })
-      }
+      let completedCapture = existingCapture
 
-      const captureResponse = await fetch(
-        `${PAYPAL_API_BASE}/v2/checkout/orders/${encodeURIComponent(token)}/capture`,
-        {
-          method: 'POST',
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-            'Content-Type': 'application/json',
-            'PayPal-Request-Id': `capture-${token}`
-          }
+      if (orderBeforeCapture.status === 'COMPLETED') {
+        if (!completedCapture) {
+          return res.status(409).json({ error: 'Die abgeschlossene PayPal-Zahlung konnte nicht sicher validiert werden.' })
         }
-      )
-      if (!captureResponse.ok) {
-        return res.status(409).json({ error: 'PayPal-Zahlung konnte nicht abgeschlossen werden.' })
-      }
+      } else if (!['CREATED', 'APPROVED'].includes(orderBeforeCapture.status)) {
+        return res.status(409).json({ error: 'Die PayPal-Bestellung kann nicht verarbeitet werden.' })
+      } else {
+        const captureResponse = await fetch(
+          `${PAYPAL_API_BASE}/v2/checkout/orders/${encodeURIComponent(token)}/capture`,
+          {
+            method: 'POST',
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+              'Content-Type': 'application/json',
+              'PayPal-Request-Id': `capture-${token}`
+            }
+          }
+        )
+        if (!captureResponse.ok) {
+          return res.status(409).json({ error: 'PayPal-Zahlung konnte nicht abgeschlossen werden.' })
+        }
 
-      const capturedOrder = await captureResponse.json()
-      const completedCapture = validateCompletedCapture(capturedOrder, participant, expectedAmountCents)
-      if (!completedCapture) {
-        return res.status(409).json({ error: 'Die PayPal-Zahlung ist nicht endgültig abgeschlossen.' })
+        const capturedOrder = await captureResponse.json()
+        completedCapture = validateCompletedCapture(capturedOrder, participant, expectedAmountCents)
+        if (!completedCapture) {
+          return res.status(409).json({ error: 'Die PayPal-Zahlung ist nicht endgültig abgeschlossen.' })
+        }
       }
 
       const { data: reusedPayment, error: reusedPaymentError } = await supabase
@@ -193,6 +222,7 @@ export default async function handler(req, res) {
 
       if (reusedPaymentError) throw reusedPaymentError
       if (reusedPayment) {
+        console.error('PayPal capture already assigned to another participant.')
         return res.status(409).json({ error: 'Diese PayPal-Zahlung wurde bereits verwendet.' })
       }
 
