@@ -167,7 +167,7 @@ Diese E-Mail wurde automatisch über das Anmeldesystem des RGZV Hagen erstellt.
 </p>
       `
 
-    const barRegistrationHtml = `
+    const barRegistrationHtml = isBarRegistration ? `
 <h2>Ihre Anmeldung zum Impftermin ist erfolgreich eingegangen</h2>
 
 <p>Hallo ${escapeHtml(firstname)} ${escapeHtml(lastname)},</p>
@@ -215,7 +215,7 @@ Diese E-Mail wurde automatisch über das Anmeldesystem des RGZV Hagen erstellt.
 <p style="font-size:12px;color:#666;">
 Diese E-Mail wurde automatisch über das Anmeldesystem des RGZV Hagen erstellt.
 </p>
-    `
+    ` : null
 
     if (isBarRegistration) {
       await clubMailTransporter.sendMail({
