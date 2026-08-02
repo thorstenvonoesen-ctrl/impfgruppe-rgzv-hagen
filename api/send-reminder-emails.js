@@ -1,7 +1,15 @@
-import { Resend } from 'resend'
+import nodemailer from 'nodemailer'
 import { createAdminSupabase, getBearerToken } from './_supabase-admin.js'
 
-const resend = new Resend(process.env.RESEND_API_KEY)
+const clubMailTransporter = nodemailer.createTransport({
+  host: process.env.SMTP_HOST,
+  port: Number(process.env.SMTP_PORT),
+  secure: true,
+  auth: {
+    user: process.env.SMTP_USER,
+    pass: process.env.SMTP_PASS
+  }
+})
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 const normalizeEmail = value => String(value || '').trim().toLowerCase()
 const escapeHtml = value => String(value || '').replace(/[&<>"']/g, character => ({
@@ -165,8 +173,8 @@ async function handleExistingReminder(req, res, supabase) {
     const detail = isTimeChange
       ? `<p><strong>Neue Uhrzeit:</strong> ${escapeHtml(newTime)}</p>`
       : `<p><strong>Neuer Treffpunkt:</strong> ${escapeHtml(newMeetingPoint)}</p>`
-    await resend.emails.send({
-      from: 'RGZV Hagen <onboarding@resend.dev>',
+    await clubMailTransporter.sendMail({
+      from: `"RGZV Hagen und Umgebung seit 1903 e.V." <${process.env.SMTP_USER}>`,
       to: participant.email,
       subject,
       html: `<h2>${isTimeChange ? 'Änderung der Uhrzeit' : 'Änderung des Treffpunkts'}</h2>

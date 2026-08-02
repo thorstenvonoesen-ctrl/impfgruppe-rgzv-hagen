@@ -1,9 +1,7 @@
-import { Resend } from 'resend'
 import nodemailer from 'nodemailer'
 import QRCode from 'qrcode'
 import { createAdminSupabase } from './_supabase-admin.js'
 
-const resend = new Resend(process.env.RESEND_API_KEY)
 const clubMailTransporter = nodemailer.createTransport({
   host: process.env.SMTP_HOST,
   port: Number(process.env.SMTP_PORT),
@@ -232,23 +230,38 @@ Diese E-Mail wurde automatisch über das Anmeldesystem des RGZV Hagen erstellt.
       return { success: true }
     }
 
-    const result = await resend.emails.send({
-      from: 'RGZV Hagen <onboarding@resend.dev>',
-      to: email,
-      subject: isBarRegistration
-        ? 'Ihre Anmeldung zum Impftermin ist erfolgreich eingegangen'
-        : 'Zahlung erfolgreich eingegangen',
-      attachments: [{
-        filename: 'check-in-qr-code.png',
-        content: qrCode.toString('base64'),
-        inlineContentId: qrCodeContentId
-      }],
-      html: isBarRegistration ? barRegistrationHtml : paymentConfirmationHtml
-    }, isBarRegistration ? { idempotencyKey: `bar-registration-${participantId}` } : undefined)
-    console.log('RESEND RESULT:', result)
-console.log('MAIL WIRD GESENDET AN:', email)
-    if (isBarRegistration && result.error) throw new Error('Bestätigungsmail konnte nicht versendet werden.')
-    return { success: true }
+    try {
+      const info = await clubMailTransporter.sendMail({
+        from: `"RGZV Hagen und Umgebung seit 1903 e.V." <${process.env.SMTP_USER}>`,
+        to: email,
+        subject: 'Zahlung erfolgreich eingegangen',
+        attachments: [{
+          filename: 'check-in-qr-code.png',
+          content: qrCode,
+          cid: qrCodeContentId
+        }],
+        html: paymentConfirmationHtml
+      })
+      if (!info?.messageId) {
+        console.error('SMTP-Zahlungsbestätigung ohne Versand-ID beantwortet.')
+        const smtpError = new Error('Zahlungsbestätigung konnte nicht versendet werden.')
+        smtpError.statusCode = 502
+        throw smtpError
+      }
+      return { success: true, provider: 'smtp', messageId: info.messageId }
+    } catch (error) {
+      if (error.statusCode !== 502) {
+        console.error('SMTP-Zahlungsbestätigung fehlgeschlagen:', {
+          name: error.name,
+          code: error.code,
+          command: error.command,
+          responseCode: error.responseCode
+        })
+      }
+      const smtpError = new Error('Zahlungsbestätigung konnte nicht versendet werden.')
+      smtpError.statusCode = 502
+      throw smtpError
+    }
 }
 
 export default async function handler(req, res) {
@@ -262,9 +275,9 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: 'Teilnehmer-ID fehlt.' })
     }
 
-    await sendParticipantEmail({ participantId, emailType })
-    return res.status(200).json({ success: true })
+    const result = await sendParticipantEmail({ participantId, emailType })
+    return res.status(200).json(result)
   } catch (error) {
-    return res.status(error.statusCode || 500).json({ error: error.message })
+    return res.status(error.statusCode || 500).json({ success: false, error: error.message })
   }
 }
