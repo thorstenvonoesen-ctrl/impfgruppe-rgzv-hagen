@@ -386,11 +386,11 @@ td .paid {
   max-width: calc(100vw - 48px);
   overflow-x: hidden;
 }
-.admin .admin-management-modal .campaign-detail-heading {
+.admin .admin-management-modal .admin-modal-heading {
   flex-wrap: wrap;
   gap: 12px;
 }
-.admin .admin-management-modal .campaign-detail-heading > div {
+.admin .admin-management-modal .admin-modal-heading > div {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
@@ -910,55 +910,10 @@ body { background: #163a2f; }
 .vaccination-edit-modal .vaccination-address-fields { margin: 0; padding-top: 4px; border-top: 1px solid rgba(255,255,255,.12); }
 .vaccination-modal-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 5px; }
 .vaccination-modal-actions .primary,.vaccination-modal-actions .ghost { width: auto; margin: 0; }
-.season-mail-modal { max-width: 720px; }
-.season-mail-eyebrow { display: inline-flex; margin-bottom: 12px; padding: 6px 10px; color: #fed7aa; font-size: 12px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; background: rgba(242,140,40,.14); border: 1px solid rgba(254,215,170,.24); border-radius: 999px; }
-.season-mail-summary { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 10px; margin: 22px 0; }
-.season-mail-summary div { padding: 14px; background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.12); border-radius: 12px; }
-.season-mail-summary dt { color: rgba(237,245,241,.7); font-size: 13px; }
-.season-mail-summary dd { margin: 5px 0 0; color: #fff3e5; font-size: 22px; font-weight: 800; }
-.season-mail-actions { align-items: center; }
-.season-mail-actions .season-mail-disable { color: #fecaca; border-color: rgba(248,113,113,.35); }
-.season-mail-status { display: inline-flex; margin-top: 10px; padding: 5px 9px; color: #dbeafe; font-size: 12px; font-weight: 700; background: rgba(59,130,246,.14); border: 1px solid rgba(147,197,253,.25); border-radius: 999px; }
-.season-mail-status-sent { color: #d1fae5; background: rgba(16,185,129,.14); border-color: rgba(110,231,183,.28); }
-.season-mail-status-partial { color: #fef3c7; background: rgba(245,158,11,.14); border-color: rgba(252,211,77,.28); }
-.season-mail-status-disabled { color: #e5e7eb; background: rgba(148,163,184,.14); border-color: rgba(203,213,225,.24); }
-.season-campaign-card { --campaign-accent: #94a3b8; position: relative; overflow: hidden; border-color: color-mix(in srgb,var(--campaign-accent) 34%,transparent)!important; box-shadow: inset 4px 0 0 var(--campaign-accent),0 18px 44px rgba(0,0,0,.2)!important; transition: border-color .25s ease,box-shadow .25s ease; }
-.season-campaign-red { --campaign-accent: #ef4444; }
-.season-campaign-orange { --campaign-accent: #f28c28; }
-.season-campaign-yellow { --campaign-accent: #eab308; }
-.season-campaign-green { --campaign-accent: #22c55e; }
-.season-campaign-header,.campaign-detail-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 18px; }
-.season-campaign-header h2,.campaign-detail-heading h2 { margin: 0; }
-.season-campaign-empty { padding: 18px; background: rgba(255,255,255,.055); border: 1px solid rgba(255,255,255,.1); border-radius: 14px; }
-.season-campaign-empty p { margin-bottom: 0; color: rgba(237,245,241,.72); }
-.season-campaign-metrics { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 12px; margin-top: 18px; }
-.season-campaign-metrics > div { padding: 15px; background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.1); border-radius: 14px; }
-.season-campaign-metrics span { display: block; min-height: 34px; color: rgba(237,245,241,.7); font-size: 13px; line-height: 1.35; }
-.season-campaign-metrics strong { display: block; margin-top: 6px; color: #fff; font-size: clamp(22px,3vw,32px); }
-.season-campaign-partial { color: #fde68a; font-size: 13px; font-weight: 700; }
-.season-campaign-progress-row { display: grid; grid-template-columns: minmax(0,1fr) auto; align-items: center; gap: 14px; margin-top: 18px; color: #fff; }
-.season-campaign-progress { overflow: hidden; height: 12px; background: rgba(255,255,255,.1); border-radius: 999px; }
-.season-campaign-progress span { display: block; height: 100%; background: var(--campaign-accent); border-radius: inherit; transition: width .45s ease; }
-.season-campaign-complete { display: flex; flex-direction: column; gap: 4px; margin-top: 16px; padding: 13px 16px; color: #d1fae5; background: rgba(34,197,94,.12); border: 1px solid rgba(134,239,172,.25); border-radius: 12px; }
-.season-campaign-history { margin-top: 22px; padding-top: 18px; border-top: 1px solid rgba(255,255,255,.1); }
-.season-campaign-history h3 { margin: 0 0 10px; color: #fff3e5; }
-.season-campaign-history table,.campaign-detail-section table { width: 100%; border-collapse: collapse; }
-.season-campaign-history th,.season-campaign-history td,.campaign-detail-section th,.campaign-detail-section td { padding: 10px 12px; text-align: left; border-bottom: 1px solid rgba(255,255,255,.09); }
-.season-campaign-history th,.campaign-detail-section th { color: rgba(237,245,241,.65); font-size: 12px; text-transform: uppercase; }
-.campaign-history-row { cursor: pointer; transition: background .2s ease; }
-.campaign-history-row:hover { background: rgba(255,255,255,.055); }
-.campaign-rate { display: inline-flex; padding: 4px 8px; font-weight: 800; border-radius: 999px; }
-.campaign-rate-red { color: #fecaca; background: rgba(239,68,68,.15); }
-.campaign-rate-orange { color: #fed7aa; background: rgba(242,140,40,.15); }
-.campaign-rate-yellow { color: #fef08a; background: rgba(234,179,8,.15); }
-.campaign-rate-green { color: #bbf7d0; background: rgba(34,197,94,.15); }
-.campaign-load-error { padding: 12px 14px; color: #fecaca; background: rgba(239,68,68,.12); border: 1px solid rgba(248,113,113,.24); border-radius: 12px; }
-.campaign-detail-modal { width: min(1040px,100%)!important; max-height: min(88vh,900px); overflow-y: auto; }
-.campaign-detail-tools { display: grid; grid-template-columns: minmax(220px,1fr) auto auto; align-items: center; gap: 10px; margin: 20px 0; }
-.campaign-detail-tools .search { min-width: 0; }
-.campaign-detail-tools .primary { margin: 0!important; white-space: nowrap; }
-.campaign-detail-section + .campaign-detail-section { margin-top: 24px; }
-.campaign-detail-section h3 { color: #fff3e5; }
+.smart-assistant-eyebrow { display: inline-flex; margin-bottom: 12px; padding: 6px 10px; color: #fed7aa; font-size: 12px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; background: rgba(242,140,40,.14); border: 1px solid rgba(254,215,170,.24); border-radius: 999px; }
+.admin-modal-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 18px; }
+.admin-modal-heading h2 { margin: 0; }
+.admin-inline-error { padding: 12px 14px; color: #fecaca; background: rgba(239,68,68,.12); border: 1px solid rgba(248,113,113,.24); border-radius: 12px; }
 .smart-assistant-card { --assistant-color: #22c55e; display: grid; grid-template-columns: auto minmax(0,1fr) auto; align-items: center; gap: 18px; width: 100%; margin: 0 0 18px; padding: 22px 24px; color: #fff; text-align: left; background: linear-gradient(120deg,color-mix(in srgb,var(--assistant-color) 20%,#102b23),rgba(15,23,42,.88)); border: 1px solid color-mix(in srgb,var(--assistant-color) 42%,transparent); border-radius: 22px; box-shadow: inset 5px 0 0 var(--assistant-color),0 18px 44px rgba(0,0,0,.24); cursor: pointer; transition: transform .22s ease,box-shadow .22s ease,border-color .22s ease; }
 .smart-assistant-card:hover { transform: translateY(-2px); border-color: color-mix(in srgb,var(--assistant-color) 68%,transparent); box-shadow: inset 5px 0 0 var(--assistant-color),0 23px 52px rgba(0,0,0,.3); }
 .smart-assistant-card-red { --assistant-color: #ef4444; }
@@ -982,9 +937,8 @@ body { background: #163a2f; }
 .smart-assistant-all-clear { display: flex; align-items: center; gap: 12px; margin-top: 20px; padding: 16px; color: #d1fae5; background: rgba(34,197,94,.12); border: 1px solid rgba(134,239,172,.25); border-radius: 14px; }
 .smart-assistant-all-clear div { display: flex; flex-direction: column; gap: 3px; }
 @media (max-width: 700px) { .vaccination-address-fields .two { grid-template-columns: 1fr; } .vaccination-modal-actions { flex-direction: column; } .vaccination-modal-actions .primary,.vaccination-modal-actions .ghost { width: 100%; justify-content: center; } }
-@media (max-width: 900px) { .season-campaign-metrics { grid-template-columns: repeat(2,minmax(0,1fr)); } .campaign-detail-tools { grid-template-columns: 1fr; } .campaign-detail-tools .primary { justify-content: center; white-space: normal; } }
 @media (max-width: 700px) { .smart-assistant-card { grid-template-columns: auto minmax(0,1fr); padding: 18px; } .smart-assistant-card-action { grid-column: 2; white-space: normal; } .smart-assistant-task { grid-template-columns: auto minmax(0,1fr); } .smart-assistant-task .ghost { grid-column: 2; justify-content: center; white-space: normal; } }
-@media (max-width: 560px) { .season-mail-summary,.season-campaign-metrics { grid-template-columns: 1fr; } .season-campaign-header,.campaign-detail-heading { flex-direction: column; } .season-campaign-header .ghost,.campaign-detail-heading .ghost { width: 100%; justify-content: center; } }
+@media (max-width: 560px) { .admin-modal-heading { flex-direction: column; } .admin-modal-heading .ghost { width: 100%; justify-content: center; } }
 
 /* Öffentliche und interne Google-Maps-Navigation */
 .vaccination-address-public { display: flex !important; align-items: center; gap: 9px !important; color: rgba(237,245,241,.78) !important; font-size: 12px !important; font-weight: 700 !important; }
@@ -3868,12 +3822,6 @@ body { background: #163a2f; }
   white-space: normal;
 }
 
-.admin .admin-dashboard-layout > .season-campaign-card {
-  grid-column: span 7;
-  width: 100%;
-  margin: 0;
-}
-
 .admin .admin-dashboard-layout > .checkin-panel {
   grid-column: span 8;
   width: 100%;
@@ -3913,31 +3861,6 @@ body { background: #163a2f; }
   padding: 14px 16px;
 }
 
-.admin .admin-dashboard-layout .season-campaign-metrics {
-  gap: 9px;
-  margin-top: 14px;
-}
-
-.admin .admin-dashboard-layout .season-campaign-metrics > div {
-  padding: 12px;
-}
-
-.admin .admin-dashboard-layout .season-campaign-history {
-  margin-top: 16px;
-  padding-top: 14px;
-}
-
-.admin .admin-dashboard-layout .season-campaign-history table {
-  min-width: 0;
-  table-layout: fixed;
-}
-
-.admin .admin-dashboard-layout .season-campaign-history th,
-.admin .admin-dashboard-layout .season-campaign-history td {
-  padding: 8px;
-  overflow-wrap: anywhere;
-}
-
 .admin .admin-dashboard-layout > .admin-participant-management-card .table-head {
   margin-bottom: 15px !important;
   padding-bottom: 15px;
@@ -3959,19 +3882,14 @@ body { background: #163a2f; }
     grid-column: 1 / -1;
   }
   .admin .admin-dashboard-layout > .smart-assistant-card,
-  .admin .admin-dashboard-layout > .season-campaign-card,
   .admin .admin-dashboard-layout > .checkin-panel,
   .admin .admin-dashboard-layout > .admin-appointments-card {
     grid-column: span 1;
-  }
-  .admin .admin-dashboard-layout .season-campaign-metrics {
-    grid-template-columns: repeat(2,minmax(0,1fr));
   }
 }
 
 @media (max-width: 900px) {
   .admin .admin-dashboard-layout > .smart-assistant-card,
-  .admin .admin-dashboard-layout > .season-campaign-card,
   .admin .admin-dashboard-layout > .checkin-panel,
   .admin .admin-dashboard-layout > .admin-appointments-card {
     grid-column: 1 / -1;

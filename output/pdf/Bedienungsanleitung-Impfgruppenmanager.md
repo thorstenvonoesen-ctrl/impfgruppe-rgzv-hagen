@@ -215,7 +215,7 @@ Der Button „Abmelden“ beendet die Supabase-Sitzung. Erst nach erfolgreichem 
 
 ## 14. Admin-Dashboard
 
-Das Dashboard bündelt Status, Kennzahlen, Aufgaben, Saisonkampagne, Check-in und Terminübersicht.
+Das Dashboard bündelt Status, Kennzahlen, Aufgaben, Check-in und Terminübersicht.
 
 ### Kennzahlen
 
@@ -237,7 +237,7 @@ Die Vereins-Ampel bewertet vorhandene Daten automatisch und zeigt nur offene Auf
 
 ### Typische Prüfungen
 
-Dazu gehören offene Zahlungen, fehlende Vereinsdaten, anstehende Termine, Saisonkampagnen und Tierarztunterlagen.
+Dazu gehören offene Zahlungen, fehlende Vereinsdaten, anstehende Termine und Tierarztunterlagen.
 
 ### Aktualisierung
 
@@ -421,39 +421,7 @@ Beachten Sie die Erfolgs- oder Fehlermeldung. Bei Unsicherheit nicht unkontrolli
 
 Die bestehende persönliche Anrede und der freigegebene Wortlaut bleiben Teil des Versandablaufs.
 
-## 27. Saisonerinnerungen
-
-Saisonerinnerungen sprechen frühere Teilnehmende des aktuellen Vereins für eine neue Impfsaison an.
-
-### Zielgruppe
-
-Die Auswahl berücksichtigt frühere Anmeldungen und die Vereinszuordnung. Testtermine dürfen den produktiven Versand nicht beeinflussen.
-
-### Vorbereitung
-
-Prüfen Sie neuen Termin, Empfängerkreis und Mailinhalt, bevor die Kampagne startet.
-
-### Rücklauf
-
-Neue Anmeldungen fließen in die Auswertung ein und zeigen, wie viele angeschriebene Personen zurückgekehrt sind.
-
-## 28. Saisonkampagne auswerten
-
-Das Dashboard stellt Versand, Rückkehrer, offene Kontakte und Rücklaufquote kompakt dar.
-
-### Kennzahlen lesen
-
-„Versendet“ beschreibt den Empfängerkreis, „Rückkehrer“ die erneuten Anmeldungen und „Offen“ die noch fehlenden Rückmeldungen.
-
-### Niedrige Quote
-
-Eine niedrige Rücklaufquote ist ein Hinweis, kein automatischer Fehler. Berücksichtigen Sie Versandzeitpunkt und Abstand zum Termin.
-
-### Datenschutz
-
-Verwenden Sie die Kontaktdaten nur für den vorgesehenen Vereins- und Impfzweck.
-
-## 29. Adminverwaltung öffnen
+## 27. Adminverwaltung öffnen
 
 Nur Superadmins sehen die Adminverwaltung. Übersicht und Detailansicht werden zusätzlich serverseitig über Bearer-Token, aktive Mitgliedschaft und Rolle abgesichert.
 
@@ -465,7 +433,7 @@ Die Tabelle zeigt E-Mail-Adresse, Verein, verständliche Rolle, Status und Erste
 
 „Details anzeigen“ öffnet Vorname, Nachname, E-Mail, Rolle, Verein, Status, Erstellungsdatum und letzte Anmeldung. Fehlende Angaben erscheinen als „Nicht hinterlegt“.
 
-## 30. Administrator einladen
+## 28. Administrator einladen
 
 Superadmins können neue Administratoren über den bestehenden Adminprozess anlegen und eine Einladungs-E-Mail über den zentralen Mailweg versenden.
 
@@ -481,7 +449,7 @@ Der Empfänger öffnet den Link auf /admin-invite. Die Supabase-Sitzung aus dem 
 
 Nach erfolgreicher Passwortvergabe erfolgt die Anmeldung über den normalen Admin-Login mit der neuen E-Mail-Adresse.
 
-## 31. Rollen ändern, sperren und löschen
+## 29. Rollen ändern, sperren und löschen
 
 Die vier Aktionen Details, Rolle ändern, Sperren und Löschen bleiben eindeutig dem jeweiligen Administrator zugeordnet.
 
@@ -497,7 +465,7 @@ Ein gesperrter Mitgliedschaftseintrag darf keine aktive Adminberechtigung mehr v
 
 Vor einer endgültigen Löschung prüfen Sie Auswirkungen auf Nachvollziehbarkeit und Vereinsbetrieb.
 
-## 32. Geflügel-Quiz
+## 30. Geflügel-Quiz
 
 Das öffentliche Geflügel-Quiz vermittelt Wissen spielerisch. Pro Runde werden zehn Fragen aus dem vorhandenen Themenbestand zusammengestellt.
 
@@ -513,7 +481,7 @@ Nach jeder Antwort erhalten Sie eine Rückmeldung; am Ende zeigt die Anwendung d
 
 Eine neue Runde kann andere Fragen enthalten und eignet sich zum Wiederholen.
 
-## 33. Fehlerbehebung
+## 31. Fehlerbehebung
 
 Viele Probleme lassen sich durch eine strukturierte Prüfung eingrenzen, ohne Daten zu verändern.
 
@@ -533,7 +501,7 @@ Displayhelligkeit erhöhen, Kamera reinigen, Abstand verändern oder manuelle Su
 
 Eine gültige Supabase-Sitzung kann automatisch fortgesetzt werden. Zum vollständigen Wechsel zuerst abmelden.
 
-## 34. Datenschutz und sichere Arbeitsweise
+## 32. Datenschutz und sichere Arbeitsweise
 
 Die Anwendung verarbeitet Kontaktdaten, Zahlungsstatus und organisatorische Angaben. Ein sorgfältiger Umgang ist deshalb Bestandteil jeder Rolle.
 
@@ -552,7 +520,7 @@ Vereinsfilter und Mitgliedschaften müssen bei jeder administrativen Aktion ber�
 
 Service-Role-Key, API-Schlüssel, Tokens und Passwörter gehören niemals in Browserausgaben, Screenshots oder Supportnachrichten.
 
-## 35. Checklisten für den Praxiseinsatz
+## 33. Checklisten für den Praxiseinsatz
 
 Die folgenden Kurzlisten helfen, die wichtigsten Schritte vor, während und nach dem Impftermin zuverlässig abzuarbeiten.
 
@@ -580,7 +548,7 @@ Die folgenden Kurzlisten helfen, die wichtigsten Schritte vor, während und nach
 - Dokumente finalisieren und sicher archivieren
 - offene Fehlermeldungen dokumentieren
 
-## 36. Vorteile und Voraussetzungen
+## 34. Vorteile und Voraussetzungen
 
 Der größte Nutzen entsteht, wenn Verein und Teilnehmende denselben digitalen Ablauf verwenden und die organisatorischen Grundlagen vor dem Start vollständig eingerichtet sind.
 
@@ -608,7 +576,7 @@ Der größte Nutzen entsteht, wenn Verein und Teilnehmende denselben digitalen A
 - für QR-Scans: Gerät mit Kamera und erteilter Kameraberechtigung
 - für Admins: persönliches Konto mit aktiver Vereinsmitgliedschaft
 
-## 37. Häufige Fragen
+## 35. Häufige Fragen
 
 Die folgenden Antworten fassen typische Rückfragen aus dem Vereins- und Impfbetrieb zusammen.
 
@@ -636,7 +604,7 @@ Nein. Sie erleichtert den Start, benötigt für aktuelle Daten, Anmeldung, Check
 
 Den Veranstalter zeitnah informieren. Änderungen nur nach eindeutiger Zuordnung im vorhandenen Verwaltungsablauf durchführen.
 
-## 38. Schritt-für-Schritt-Kurzreferenz
+## 36. Schritt-für-Schritt-Kurzreferenz
 
 Diese Kurzreferenz bündelt die häufigsten Arbeitsabläufe in einer festen Reihenfolge.
 

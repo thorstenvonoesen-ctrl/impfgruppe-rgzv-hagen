@@ -343,7 +343,7 @@ chapter("13. Admin-Login",
         note=("Wichtig", "Auf gemeinsam genutzten Geräten immer über „Abmelden“ beenden.", True))
 
 chapter("14. Admin-Dashboard",
-        "Das Dashboard bündelt Status, Kennzahlen, Aufgaben, Saisonkampagne, Check-in und Terminübersicht.",
+        "Das Dashboard bündelt Status, Kennzahlen, Aufgaben, Check-in und Terminübersicht.",
         [
             ("Kennzahlen", ["Teilnehmer, Tiere und Einnahmen werden aus den vorhandenen Vereinsdaten berechnet."], []),
             ("Schneller Einstieg", ["Nutzen Sie die priorisierten Hinweise der Vereins-Ampel und springen Sie direkt in den passenden Arbeitsbereich."], []),
@@ -355,7 +355,7 @@ chapter("15. Intelligente Vereins-Ampel",
         "Die Vereins-Ampel bewertet vorhandene Daten automatisch und zeigt nur offene Aufgaben.",
         [
             ("Prioritäten", [], ["Grün: kein aktueller Handlungsbedarf", "Gelb: normale Aufgabe oder Hinweis", "Rot: zeitkritischer oder grundlegender Handlungsbedarf"]),
-            ("Typische Prüfungen", ["Dazu gehören offene Zahlungen, fehlende Vereinsdaten, anstehende Termine, Saisonkampagnen und Tierarztunterlagen."], []),
+            ("Typische Prüfungen", ["Dazu gehören offene Zahlungen, fehlende Vereinsdaten, anstehende Termine und Tierarztunterlagen."], []),
             ("Aktualisierung", ["Nach dem Erledigen verschwinden Aufgaben beim nächsten Datenabgleich aus der Liste."], []),
         ],
         image="admin-dashboard-ampel.png",
@@ -475,27 +475,7 @@ chapter("26. Tierarztversand",
         caption="Vergrößerter Ausschnitt: „Tierarzt“ öffnet den vorhandenen Ablauf für Bescheinigung und Versand.",
         note=("Vertraulich", "Tierarztunterlagen nur an den vorgesehenen Empfänger versenden.", True))
 
-chapter("27. Saisonerinnerungen",
-        "Saisonerinnerungen sprechen frühere Teilnehmende des aktuellen Vereins für eine neue Impfsaison an.",
-        [
-            ("Zielgruppe", ["Die Auswahl berücksichtigt frühere Anmeldungen und die Vereinszuordnung. Testtermine dürfen den produktiven Versand nicht beeinflussen."], []),
-            ("Vorbereitung", ["Prüfen Sie neuen Termin, Empfängerkreis und Mailinhalt, bevor die Kampagne startet."], []),
-            ("Rücklauf", ["Neue Anmeldungen fließen in die Auswertung ein und zeigen, wie viele angeschriebene Personen zurückgekehrt sind."], []),
-        ],
-        image="admin-termine-aktionen.png",
-        caption="Vergrößerter Ausschnitt: „Saisonmail“ gehört zur Aktionsleiste des konkreten Impftermins.")
-
-chapter("28. Saisonkampagne auswerten",
-        "Das Dashboard stellt Versand, Rückkehrer, offene Kontakte und Rücklaufquote kompakt dar.",
-        [
-            ("Kennzahlen lesen", ["„Versendet“ beschreibt den Empfängerkreis, „Rückkehrer“ die erneuten Anmeldungen und „Offen“ die noch fehlenden Rückmeldungen."], []),
-            ("Niedrige Quote", ["Eine niedrige Rücklaufquote ist ein Hinweis, kein automatischer Fehler. Berücksichtigen Sie Versandzeitpunkt und Abstand zum Termin."], []),
-            ("Datenschutz", ["Verwenden Sie die Kontaktdaten nur für den vorgesehenen Vereins- und Impfzweck."], []),
-        ],
-        image="admin-dashboard-saison.png",
-        caption="Vergrößerter Kampagnenausschnitt: Versendet, Rückkehrer, Offen und Quote stehen nebeneinander.")
-
-chapter("29. Adminverwaltung öffnen",
+chapter("27. Adminverwaltung öffnen",
         "Nur Superadmins sehen die Adminverwaltung. Übersicht und Detailansicht werden zusätzlich serverseitig über Bearer-Token, aktive Mitgliedschaft und Rolle abgesichert.",
         [
             ("Übersicht", ["Die Tabelle zeigt E-Mail-Adresse, Verein, verständliche Rolle, Status und Erstellungsdatum ohne interne IDs."], []),
@@ -504,7 +484,7 @@ chapter("29. Adminverwaltung öffnen",
         image="adminverwaltung.png",
         caption="Schematische Adminverwaltung; alle Konten und Angaben sind fiktiv.")
 
-chapter("30. Administrator einladen",
+chapter("28. Administrator einladen",
         "Superadmins können neue Administratoren über den bestehenden Adminprozess anlegen und eine Einladungs-E-Mail über den zentralen Mailweg versenden.",
         [
             ("Anlegen", ["Erfassen Sie die korrekte E-Mail-Adresse, Rolle und Vereinszuordnung. Prüfen Sie die Auswahl vor dem Absenden."], []),
@@ -515,7 +495,7 @@ chapter("30. Administrator einladen",
         caption="Vergrößerter Kopf der Adminverwaltung: „Neuen Administrator anlegen“ steht rechts über der Liste.",
         note=("Sicherheit", "Einladungslinks nicht weiterleiten und Rollen nach dem Minimalprinzip vergeben.", True))
 
-chapter("31. Rollen ändern, sperren und löschen",
+chapter("29. Rollen ändern, sperren und löschen",
         "Die vier Aktionen Details, Rolle ändern, Sperren und Löschen bleiben eindeutig dem jeweiligen Administrator zugeordnet.",
         [
             ("Rolle ändern", ["Wählen Sie nur die Berechtigung, die für die Aufgabe benötigt wird. Superadmin-Rechte sind besonders restriktiv zu vergeben."], []),
@@ -526,7 +506,7 @@ chapter("31. Rollen ändern, sperren und löschen",
         caption="Vergrößerter Listenausschnitt: Details, Rolle, Sperren und Löschen stehen in derselben Administratorzeile.",
         note=("Vier-Augen-Prinzip", "Kritische Rollen- oder Löschaktionen möglichst mit einer zweiten verantwortlichen Person abstimmen.", True))
 
-chapter("32. Geflügel-Quiz",
+chapter("30. Geflügel-Quiz",
         "Das öffentliche Geflügel-Quiz vermittelt Wissen spielerisch. Pro Runde werden zehn Fragen aus dem vorhandenen Themenbestand zusammengestellt.",
         [
             ("Quiz starten", ["Öffnen Sie „Geflügel-Quiz“ in der Navigation und beantworten Sie die Fragen nacheinander."], []),
@@ -536,7 +516,7 @@ chapter("32. Geflügel-Quiz",
         image="quiz.png",
         caption="Öffentliches Geflügel-Quiz mit Themenübersicht.")
 
-chapter("33. Fehlerbehebung",
+chapter("31. Fehlerbehebung",
         "Viele Probleme lassen sich durch eine strukturierte Prüfung eingrenzen, ohne Daten zu verändern.",
         [
             ("Anmeldung lässt sich nicht speichern", ["Pflichtfelder, Termin und Netzwerkantwort prüfen. Bei einem Datenbankfehler technischen Fehlertext aus sicheren Logs verwenden, niemals Secrets veröffentlichen."], []),
@@ -545,7 +525,7 @@ chapter("33. Fehlerbehebung",
             ("Adminbereich öffnet direkt", ["Eine gültige Supabase-Sitzung kann automatisch fortgesetzt werden. Zum vollständigen Wechsel zuerst abmelden."], []),
         ])
 
-chapter("34. Datenschutz und sichere Arbeitsweise",
+chapter("32. Datenschutz und sichere Arbeitsweise",
         "Die Anwendung verarbeitet Kontaktdaten, Zahlungsstatus und organisatorische Angaben. Ein sorgfältiger Umgang ist deshalb Bestandteil jeder Rolle.",
         [
             ("Grundregeln", [], ["Nur erforderliche Daten anzeigen und weitergeben", "PDFs und Exportdateien geschützt speichern", "Keine Screenshots mit Echtdaten veröffentlichen", "Eigene Konten verwenden und Sitzungen abmelden"]),
@@ -553,7 +533,7 @@ chapter("34. Datenschutz und sichere Arbeitsweise",
             ("Secrets", ["Service-Role-Key, API-Schlüssel, Tokens und Passwörter gehören niemals in Browserausgaben, Screenshots oder Supportnachrichten."], []),
         ])
 
-chapter("35. Checklisten für den Praxiseinsatz",
+chapter("33. Checklisten für den Praxiseinsatz",
         "Die folgenden Kurzlisten helfen, die wichtigsten Schritte vor, während und nach dem Impftermin zuverlässig abzuarbeiten.",
         [
             ("Vor dem Termin", [], ["Vereins- und Tierarztdaten prüfen", "Termin und Anmeldungen kontrollieren", "offene Zahlungen klären", "Sammelimpfbescheinigung vorbereiten", "Check-in-Gerät laden und Internetzugang testen"]),
@@ -562,7 +542,7 @@ chapter("35. Checklisten für den Praxiseinsatz",
         ],
         note=("Abschluss", "Bei Unsicherheit keine kritische Aktion erzwingen. Erst Datensatz, Rolle, Verein und Termin eindeutig prüfen."))
 
-chapter("36. Vorteile und Voraussetzungen",
+chapter("34. Vorteile und Voraussetzungen",
         "Der größte Nutzen entsteht, wenn Verein und Teilnehmende denselben digitalen Ablauf verwenden und die organisatorischen Grundlagen vor dem Start vollständig eingerichtet sind.",
         [
             ("Vorteile für Vereine", [], ["zentrale, aktuelle Teilnehmerliste statt paralleler Papierstände", "klarer Überblick über Tierzahlen und Zahlungen", "schneller Check-in über QR-Code", "automatisierte Bestätigungen und wiederverwendbare Dokumente", "nachvollziehbare Rollen und Vereinszuordnung"]),
@@ -570,7 +550,7 @@ chapter("36. Vorteile und Voraussetzungen",
             ("Technische Voraussetzungen", [], ["aktueller Browser mit aktiviertem JavaScript", "stabile Internetverbindung", "erreichbare E-Mail-Adresse", "für QR-Scans: Gerät mit Kamera und erteilter Kameraberechtigung", "für Admins: persönliches Konto mit aktiver Vereinsmitgliedschaft"]),
         ])
 
-chapter("37. Häufige Fragen",
+chapter("35. Häufige Fragen",
         "Die folgenden Antworten fassen typische Rückfragen aus dem Vereins- und Impfbetrieb zusammen.",
         [
             ("Kann eine andere Person die Impfung für mich abholen?", ["Ja. Voraussetzung ist, dass die Anmeldung eindeutig zugeordnet werden kann und QR-Code beziehungsweise Anmeldebestätigung vorliegt. Bei besonderen Fällen den Veranstalter vorher informieren."], []),
@@ -581,7 +561,7 @@ chapter("37. Häufige Fragen",
             ("Was tun bei einer falschen E-Mail-Adresse?", ["Den Veranstalter zeitnah informieren. Änderungen nur nach eindeutiger Zuordnung im vorhandenen Verwaltungsablauf durchführen."], []),
         ])
 
-chapter("38. Schritt-für-Schritt-Kurzreferenz",
+chapter("36. Schritt-für-Schritt-Kurzreferenz",
         "Diese Kurzreferenz bündelt die häufigsten Arbeitsabläufe in einer festen Reihenfolge.",
         [
             ("Neuen Administrator einladen", [], ["1. Als Superadmin die Adminverwaltung öffnen.", "2. „Neuen Administrator anlegen“ wählen.", "3. E-Mail, Rolle und Verein sorgfältig eintragen.", "4. Angaben prüfen und Einladung auslösen.", "5. Empfänger öffnet den Link und legt ein Passwort fest.", "6. Erstanmeldung im normalen Admin-Login prüfen."]),

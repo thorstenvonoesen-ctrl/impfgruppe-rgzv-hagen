@@ -82,18 +82,10 @@ def dashboard_overview():
         draw.ellipse((x + 24, 278, x + 70, 324), fill=ORANGE)
         text(draw, (x + 92, 274), label, fill="#667b72", f=F14)
         text(draw, (x + 92, 304), value, fill=TEXT, f=F30B)
-    rounded(draw, (55, 398, 660, 585), fill="#15382e")
+    rounded(draw, (55, 398, 1345, 585), fill="#15382e")
     text(draw, (82, 425), "INTELLIGENTE VEREINS-AMPEL", fill="#86efac", f=F12)
     text(draw, (82, 462), "Alles in Ordnung", f=F30B)
     text(draw, (82, 510), "Aktuell besteht kein Handlungsbedarf.", fill=MUTED, f=F16)
-    rounded(draw, (690, 398, 1345, 585), fill="#243c35")
-    text(draw, (720, 425), "AUTOMATISCHE AUSWERTUNG", fill="#fdba74", f=F12)
-    text(draw, (720, 462), "Saisonkampagne 2026", f=F22B)
-    for idx, (label, value) in enumerate([("Versendet", "84"), ("Rückkehrer", "51"), ("Offen", "33"), ("Quote", "61 %")]):
-        x = 720 + idx * 150
-        rounded(draw, (x, 505, x + 135, 560), fill="#304c43", outline="#4f6c62", radius=10)
-        text(draw, (x + 10, 515), label, fill=MUTED, f=F12)
-        text(draw, (x + 10, 535), value, f=F18B)
     rounded(draw, (55, 615, 920, 842), fill=LIGHT, outline="#d6e5df")
     text(draw, (82, 642), "Teilnehmer-Check-in am Impftermin", fill=TEXT, f=F22B)
     text(draw, (82, 685), "Impftermin auswählen", fill="#667b72", f=F14)
@@ -158,14 +150,13 @@ def appointment_view():
     rounded(draw, (75, 260, 1130, 312), fill="white", outline="#cbdad4", radius=10)
     rounded(draw, (1150, 260, 1320, 312), fill=ORANGE, outline=ORANGE, radius=10)
     text(draw, (1235, 286), "Speichern", f=F16B, anchor="mm")
-    cards = [("ND-Impfung Frühjahr", "15.03.2027", "Saisonerinnerung: erfolgreich versendet"), ("ND-Impfung Sommer", "12.07.2027", "Saisonerinnerung: noch nicht versendet")]
+    cards = [("ND-Impfung Frühjahr", "15.03.2027"), ("ND-Impfung Sommer", "12.07.2027")]
     y = 355
-    for title, date, status in cards:
+    for title, date in cards:
         rounded(draw, (75, y, 1320, y + 135), fill="white", outline="#dbe7e2", radius=14)
         text(draw, (98, y + 22), title, fill=TEXT, f=F18B)
         text(draw, (98, y + 50), date, fill="#687b73", f=F14)
-        text(draw, (98, y + 79), status, fill=GREEN, f=F12)
-        buttons = ["Bearbeiten", "Route", "PDF", "Kassenbericht", "E-Mail", "Saisonmail", "Tierarzt", "Löschen"]
+        buttons = ["Bearbeiten", "Route", "PDF", "Kassenbericht", "E-Mail", "Tierarzt", "Löschen"]
         bx = 490
         for button in buttons:
             width = max(78, int(draw.textlength(button, font=F12)) + 24)
@@ -269,7 +260,6 @@ def main():
     mobile_install_view("ios")
     save_crop("admin-dashboard.png", "admin-dashboard-status.png", (45, 25, 1355, 235))
     save_crop("admin-dashboard.png", "admin-dashboard-ampel.png", (45, 380, 675, 600))
-    save_crop("admin-dashboard.png", "admin-dashboard-saison.png", (680, 380, 1355, 600))
     save_crop("admin-dashboard.png", "admin-dashboard-checkin.png", (45, 600, 930, 900))
     save_crop("admin-termine.png", "admin-termine-aktionen.png", (60, 330, 1340, 640))
     save_crop("adminverwaltung.png", "adminverwaltung-kopf.png", (80, 40, 1315, 210))
