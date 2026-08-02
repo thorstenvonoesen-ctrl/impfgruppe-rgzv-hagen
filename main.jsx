@@ -6568,8 +6568,13 @@ const clubId = adminClubId
     .eq('id', id)
 .eq('club_id', clubId)
   load()
-}
+  }
   const bindingParticipants = participants.filter(isBindingRegistration)
+  const dashboardToday = new Intl.DateTimeFormat('sv-SE', { timeZone: 'Europe/Berlin' }).format(new Date())
+  const activeDashboardAppointment = vaccinationDates.find(appointment => appointment.date >= dashboardToday) || null
+  const activeDashboardParticipants = activeDashboardAppointment
+    ? bindingParticipants.filter(participant => String(participant.vaccination_date_id) === String(activeDashboardAppointment.id))
+    : []
   const filtered = participants.filter(p => {
   const matchesSearch = `${p.firstname} ${p.lastname} ${p.city} ${p.email}`.toLowerCase().includes(q.toLowerCase())
   const matchesStatus =
@@ -6581,12 +6586,12 @@ const clubId = adminClubId
   return matchesSearch && matchesStatus
     })
   const stats = useMemo(() => ({
-    total: bindingParticipants.length,
-    animals: bindingParticipants.reduce((sum, participant) => sum + Number(participant.animal_count || 0), 0),
-    revenue: bindingParticipants
+    total: activeDashboardParticipants.length,
+    animals: activeDashboardParticipants.reduce((sum, participant) => sum + Number(participant.animal_count || 0), 0),
+    revenue: activeDashboardParticipants
       .filter(participant => participant.payment_status === 'bezahlt')
       .reduce((sum, participant) => sum + Number(participant.payment_amount || 0), 0)
-  }), [participants])
+  }), [participants, vaccinationDates])
   const dateStats = vaccinationDates.map(v => ({
   ...v,
   count: bindingParticipants.filter(p => p.vaccination_date_id === v.id).length
@@ -7198,6 +7203,11 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
         <InteractiveStatCard className="stat" icon={<ShieldCheck/>} label="Tiere" value={stats.animals} loading={loading} tone="stat-animals" animationIndex={1} />
         <InteractiveStatCard className="stat" icon={<Euro/>} label="Einnahmen" value={stats.revenue} loading={loading} currency tone="stat-revenue" animationIndex={2} />
       </div>
+      <p style={{ margin: '0', textAlign: 'center' }}>
+        {activeDashboardAppointment
+          ? `Aktueller Impftermin: ${activeDashboardAppointment.title} – ${formatGermanVaccinationDate(activeDashboardAppointment.date)}`
+          : 'Zurzeit ist kein zukünftiger Impftermin vorhanden.'}
+      </p>
       <button
         type="button"
         className={`smart-assistant-card smart-assistant-card-${smartAssistantError ? 'error' : assistantStatus}`}
