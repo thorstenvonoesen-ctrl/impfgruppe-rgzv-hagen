@@ -5022,11 +5022,11 @@ value={form.vaccination_date_id}
       aria-describedby="paypal-unavailable-note"
     />
     <span style={{ marginLeft: '8px' }}>
-      PayPal – Derzeit vorübergehend nicht verfügbar
+      ⚠️ PayPal – Derzeit nicht verfügbar
     </span>
     {!PAYPAL_ENABLED && (
       <p id="paypal-unavailable-note" style={{ margin: '6px 0 0 26px', color: '#6b7280', fontSize: '14px', lineHeight: '1.5' }}>
-        PayPal steht derzeit vorübergehend nicht zur Verfügung. Bitte wählen Sie eine andere Zahlungsart.
+        PayPal steht derzeit nicht zur Verfügung. Bitte nutzen Sie alternativ Kreditkarte, Apple Pay, Google Pay, SEPA-Lastschrift oder Barzahlung vor Ort.
       </p>
     )}
   </div>
