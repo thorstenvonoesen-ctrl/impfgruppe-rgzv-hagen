@@ -6516,7 +6516,12 @@ setNewDateNote('')
       method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${session?.access_token || ''}` },
       body: JSON.stringify({ participantId: id, paid })
     })
-    if (!response.ok) { alert('Zahlungsstatus konnte nicht gespeichert werden.'); return }
+    const result = await response.json().catch(() => ({}))
+    if (!response.ok) { alert(result.error || 'Zahlungsstatus konnte nicht gespeichert werden.'); return }
+    if (result.warning) alert(result.warning)
+    else if (paid && result.emailSent) alert('Zahlung wurde verbucht und die Bestätigungsmail wurde versendet.')
+    else if (paid && result.alreadyProcessed) alert('Die Zahlung ist bereits als bezahlt verbucht.')
+    else alert('Der Zahlungsstatus wurde erfolgreich gespeichert.')
   } else {
     const list = participants.map(p =>
       p.id === id ? { ...p, payment_status: paid ? 'bezahlt' : 'offen' } : p

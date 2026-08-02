@@ -363,14 +363,87 @@ export default async function handler(req, res) {
     }
     const { participantId, paid } = req.body || {}
     if (!participantId || typeof paid !== 'boolean') return res.status(400).json({ error: 'Ungültige Zahlungsanfrage.' })
-    const { data: participant, error: participantError } = await supabase.from('participants').select('club_id, email, firstname, lastname').eq('id', participantId).single()
+    const { data: participant, error: participantError } = await supabase
+      .from('participants')
+      .select('club_id, email, firstname, lastname, registration_status, payment_status, payment_method, payment_id')
+      .eq('id', participantId)
+      .single()
     if (participantError || !participant) return res.status(404).json({ error: 'Teilnehmer nicht gefunden.' })
     const { data: memberships } = await supabase.from('club_admin_memberships').select('club_id, role').eq('user_id', userResult.user.id).eq('active', true)
     if (!(memberships || []).some(member => member.role === 'superadmin' || member.club_id === participant.club_id)) return res.status(403).json({ error: 'Keine Berechtigung für diesen Verein.' })
-    const { error: updateError } = await supabase.from('participants').update({ payment_status: paid ? 'bezahlt' : 'offen', payment_date: paid ? new Date().toISOString() : null }).eq('id', participantId)
+    const providerPaymentMethods = new Set(['paypal', 'stripe', 'card', 'sepa', 'sepa_debit'])
+    const paymentMethod = String(participant.payment_method || '').toLowerCase()
+    const hasProviderPayment = Boolean(participant.payment_id) || providerPaymentMethods.has(paymentMethod)
+
+    if (paid && participant.payment_status === 'bezahlt') {
+      return res.status(200).json({ success: true, alreadyProcessed: true, emailSent: false })
+    }
+    if (!paid && participant.payment_status === 'offen') {
+      return res.status(200).json({ success: true, alreadyProcessed: true, emailSent: false })
+    }
+    if (!paid && hasProviderPayment) {
+      return res.status(409).json({ error: 'Eine bereits über PayPal oder Stripe verbuchte Zahlung kann nicht manuell auf offen zurückgesetzt werden.' })
+    }
+    if (paid && hasProviderPayment) {
+      return res.status(409).json({ error: 'Eine Zahlung mit vorhandener Anbieterreferenz muss über den zugehörigen Zahlungsanbieter verbucht werden.' })
+    }
+    if (paid && ['cancelled', 'expired', 'payment_failed'].includes(participant.registration_status)) {
+      return res.status(409).json({ error: 'Eine abgebrochene oder fehlgeschlagene Onlinezahlung kann nicht manuell als bezahlt verbucht werden.' })
+    }
+
+    const update = paid
+      ? {
+          payment_status: 'bezahlt',
+          payment_date: new Date().toISOString(),
+          payment_method: participant.payment_method || 'bar',
+          registration_status: 'completed'
+        }
+      : {
+          payment_status: 'offen',
+          payment_date: null,
+          payment_method: participant.payment_method || 'bar',
+          registration_status: 'bar_registered'
+        }
+    let updateQuery = supabase
+      .from('participants')
+      .update(update)
+      .eq('id', participantId)
+      .eq('club_id', participant.club_id)
+      .eq('payment_status', participant.payment_status)
+    updateQuery = participant.payment_method === null
+      ? updateQuery.is('payment_method', null)
+      : updateQuery.eq('payment_method', participant.payment_method)
+    updateQuery = participant.payment_id === null
+      ? updateQuery.is('payment_id', null)
+      : updateQuery.eq('payment_id', participant.payment_id)
+    const { data: updatedParticipant, error: updateError } = await updateQuery.select('id').maybeSingle()
     if (updateError) throw updateError
-    if (paid && participant.email) await fetch(`https://${req.headers.host}/api/send-payment-email`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ participantId }) })
-    return res.status(200).json({ success: true })
+    if (!updatedParticipant) return res.status(409).json({ error: 'Der Zahlungsstatus wurde zwischenzeitlich geändert. Bitte die Ansicht neu laden.' })
+
+    if (paid && participant.email) {
+      try {
+        const emailResponse = await fetch(`https://${req.headers.host}/api/send-payment-email`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ participantId })
+        })
+        if (!emailResponse.ok) {
+          return res.status(200).json({
+            success: true,
+            emailSent: false,
+            warning: 'Zahlung wurde verbucht, die Bestätigungsmail konnte jedoch nicht versendet werden.'
+          })
+        }
+        return res.status(200).json({ success: true, emailSent: true })
+      } catch {
+        return res.status(200).json({
+          success: true,
+          emailSent: false,
+          warning: 'Zahlung wurde verbucht, die Bestätigungsmail konnte jedoch nicht versendet werden.'
+        })
+      }
+    }
+    return res.status(200).json({ success: true, emailSent: false })
   } catch (error) {
     if (action === 'list-admin-memberships') {
       return res.status(500).json({ error: 'Die Administratoren konnten nicht geladen werden.' })
