@@ -6519,6 +6519,7 @@ setNewDateNote('')
     const result = await response.json().catch(() => ({}))
     if (!response.ok) { alert(result.error || 'Zahlungsstatus konnte nicht gespeichert werden.'); return }
     if (result.warning) alert(result.warning)
+    else if (paid && result.barPaymentRecorded) alert('Die Barzahlung wurde erfolgreich verbucht.')
     else if (paid && result.emailSent) alert('Zahlung wurde verbucht und die Bestätigungsmail wurde versendet.')
     else if (paid && result.alreadyProcessed) alert('Die Zahlung ist bereits als bezahlt verbucht.')
     else alert('Der Zahlungsstatus wurde erfolgreich gespeichert.')

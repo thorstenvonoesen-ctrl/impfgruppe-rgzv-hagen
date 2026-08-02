@@ -374,6 +374,11 @@ export default async function handler(req, res) {
     const providerPaymentMethods = new Set(['paypal', 'stripe', 'card', 'sepa', 'sepa_debit'])
     const paymentMethod = String(participant.payment_method || '').toLowerCase()
     const hasProviderPayment = Boolean(participant.payment_id) || providerPaymentMethods.has(paymentMethod)
+    const isConfirmedBarRegistration =
+      paymentMethod === 'bar' &&
+      participant.registration_status === 'bar_registered' &&
+      participant.payment_status === 'offen' &&
+      participant.payment_id === null
 
     if (paid && participant.payment_status === 'bezahlt') {
       return res.status(200).json({ success: true, alreadyProcessed: true, emailSent: false })
@@ -419,6 +424,10 @@ export default async function handler(req, res) {
     const { data: updatedParticipant, error: updateError } = await updateQuery.select('id').maybeSingle()
     if (updateError) throw updateError
     if (!updatedParticipant) return res.status(409).json({ error: 'Der Zahlungsstatus wurde zwischenzeitlich geändert. Bitte die Ansicht neu laden.' })
+
+    if (paid && isConfirmedBarRegistration) {
+      return res.status(200).json({ success: true, emailSent: false, barPaymentRecorded: true })
+    }
 
     if (paid && participant.email) {
       try {
