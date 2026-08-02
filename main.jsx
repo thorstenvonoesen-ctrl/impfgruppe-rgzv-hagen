@@ -5026,7 +5026,7 @@ value={form.vaccination_date_id}
     </span>
     {!PAYPAL_ENABLED && (
       <p id="paypal-unavailable-note" style={{ margin: '6px 0 0 26px', color: '#6b7280', fontSize: '14px', lineHeight: '1.5' }}>
-        PayPal steht derzeit nicht zur Verfügung. Bitte nutzen Sie alternativ Kreditkarte, Apple Pay, Google Pay, SEPA-Lastschrift oder Barzahlung vor Ort.
+        PayPal steht derzeit nicht zur Verfügung. Bitte nutzen Sie alternativ Kreditkarte, Apple Pay, Google Pay oder Barzahlung vor Ort.
       </p>
     )}
   </div>
@@ -5042,6 +5042,22 @@ value={form.vaccination_date_id}
     <span style={{ marginLeft: '8px' }}>
       Kreditkarte / Apple Pay / Google Pay
     </span>
+  </div>
+
+  <div className="payment-option" style={{ marginTop: '10px', opacity: 0.65 }}>
+    <input
+      type="radio"
+      name="paymentMethod"
+      value="sepa"
+      disabled
+      aria-describedby="sepa-unavailable-note"
+    />
+    <span style={{ marginLeft: '8px' }}>
+      SEPA-Lastschrift – Derzeit nicht verfügbar
+    </span>
+    <p id="sepa-unavailable-note" style={{ margin: '6px 0 0 26px', color: '#6b7280', fontSize: '14px', lineHeight: '1.5' }}>
+      SEPA-Lastschrift steht derzeit nicht zur Verfügung. Bitte nutzen Sie Kreditkarte, Apple Pay, Google Pay oder Barzahlung vor Ort.
+    </p>
   </div>
 
   <div className="payment-option" style={{ marginTop: '10px' }}>

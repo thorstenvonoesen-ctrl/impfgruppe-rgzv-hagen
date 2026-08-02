@@ -53,7 +53,7 @@ export default async function handler(req, res) {
 
     const cancelToken = createPaymentReturnToken(participant.id, 'stripe')
     const session = await stripe.checkout.sessions.create({
-      payment_method_types: ['card', 'sepa_debit'],
+      payment_method_types: ['card'],
       mode: 'payment',
       metadata: {
         participantId: String(participant.id),
