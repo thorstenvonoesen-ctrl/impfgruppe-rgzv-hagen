@@ -270,7 +270,7 @@ export default async function handler(req, res) {
 
     if (!PAYPAL_ENABLED) {
       return res.status(503).json({
-        error: 'PayPal steht derzeit vorübergehend nicht zur Verfügung.'
+        error: 'PayPal steht derzeit nicht zur Verfügung.'
       })
     }
 

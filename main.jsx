@@ -40,6 +40,7 @@ import { APP } from './config'
 const PAYMENT_URL = import.meta.env.VITE_PAYMENT_URL || ''
 const MEMBER_CODE = 'RGZV2026'
 const PAYPAL_ENABLED = false
+const STRIPE_ENABLED = false
 const PDF_WATERMARK_OPACITY = 0.1
 const PDF_WATERMARK_WIDTH_RATIO = 0.62
 const PDF_WATERMARK_ASPECT_RATIO = 1772 / 748
@@ -4272,7 +4273,7 @@ function PublicSignup() {
   const [loading, setLoading] = useState(false)
   const [message, setMessage] = useState('')
   const [privacyAccepted, setPrivacyAccepted] = useState(false)
-  const [paymentMethod, setPaymentMethod] = useState('stripe')
+  const [paymentMethod, setPaymentMethod] = useState('bar')
   const [showForm, setShowForm] = useState(true)
   const [countdown, setCountdown] = useState('')
   const [showPaymentSuccess, setShowPaymentSuccess] = useState(false)
@@ -4570,7 +4571,12 @@ useEffect(() => {
   return
 }
     if (!PAYPAL_ENABLED && paymentMethod === 'paypal') {
-      setMessage('PayPal steht derzeit vorübergehend nicht zur Verfügung. Bitte wählen Sie eine andere Zahlungsart.')
+      setMessage('PayPal steht derzeit nicht zur Verfügung.')
+      setLoading(false)
+      return
+    }
+    if (!STRIPE_ENABLED && paymentMethod === 'stripe') {
+      setMessage('Online-Zahlung über Stripe steht derzeit nicht zur Verfügung.')
       setLoading(false)
       return
     }
@@ -5026,22 +5032,29 @@ value={form.vaccination_date_id}
     </span>
     {!PAYPAL_ENABLED && (
       <p id="paypal-unavailable-note" style={{ margin: '6px 0 0 26px', color: '#6b7280', fontSize: '14px', lineHeight: '1.5' }}>
-        PayPal steht derzeit nicht zur Verfügung. Bitte nutzen Sie alternativ Kreditkarte, Apple Pay, Google Pay oder Barzahlung vor Ort.
+        PayPal steht derzeit nicht zur Verfügung.
       </p>
     )}
   </div>
 
-  <div className="payment-option" style={{ marginTop: '10px' }}>
+  <div className="payment-option" style={{ marginTop: '10px', opacity: STRIPE_ENABLED ? 1 : 0.65 }}>
     <input
       type="radio"
       name="paymentMethod"
       value="stripe"
       checked={paymentMethod === 'stripe'}
       onChange={(e) => setPaymentMethod(e.target.value)}
+      disabled={!STRIPE_ENABLED}
+      aria-describedby="stripe-unavailable-note"
     />
     <span style={{ marginLeft: '8px' }}>
-      Kreditkarte / Apple Pay / Google Pay
+      Stripe / Online-Zahlung – Derzeit nicht verfügbar
     </span>
+    {!STRIPE_ENABLED && (
+      <p id="stripe-unavailable-note" style={{ margin: '6px 0 0 26px', color: '#6b7280', fontSize: '14px', lineHeight: '1.5' }}>
+        Online-Zahlung über Stripe steht derzeit nicht zur Verfügung.
+      </p>
+    )}
   </div>
 
   <div className="payment-option" style={{ marginTop: '10px', opacity: 0.65 }}>
@@ -5068,8 +5081,12 @@ value={form.vaccination_date_id}
       checked={paymentMethod === 'bar'}
       onChange={(e) => setPaymentMethod(e.target.value)}
     />
-    <span style={{ marginLeft: '8px' }}>Barzahlung vor Ort</span>
+    <span style={{ marginLeft: '8px' }}>Barzahlung vor Ort – Verfügbar</span>
   </div>
+
+  <p style={{ margin: '12px 0 0', color: '#6b7280', fontSize: '14px', lineHeight: '1.5' }}>
+    Online-Zahlungen stehen derzeit nicht zur Verfügung. Bitte wählen Sie für Ihre Anmeldung „Barzahlung vor Ort“.
+  </p>
 
   <p style={{ margin: '12px 0 0', color: '#6b7280', fontSize: '14px', lineHeight: '1.5' }}>
     {paymentMethod === 'bar'

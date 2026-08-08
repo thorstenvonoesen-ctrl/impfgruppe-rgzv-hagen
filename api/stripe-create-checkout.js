@@ -2,10 +2,17 @@ import Stripe from 'stripe'
 import { createAdminSupabase, createPaymentReturnToken } from './_supabase-admin.js'
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY)
+const STRIPE_NEW_PAYMENTS_ENABLED = false
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' })
+  }
+
+  if (!STRIPE_NEW_PAYMENTS_ENABLED) {
+    return res.status(503).json({
+      error: 'Online-Zahlung steht derzeit nicht zur Verfügung.'
+    })
   }
 
   try {
