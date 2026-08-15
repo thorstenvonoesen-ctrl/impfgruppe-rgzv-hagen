@@ -1468,12 +1468,7 @@ function ClubSelect() {
               >
                 RGZV Hagen kennenlernen
               </a>
-              <a className="final-home-club-link" href="#vorsitzender-grusswort">
-                Grußwort unseres 1. Vorsitzenden
-              </a>
-              <a className="final-home-club-link" href="#impfwart-grusswort">
-                Grußwort unseres Impfwartes
-              </a>
+              
               <a className="final-home-club-link" href="#lust-auf-verein">
                 ❤️ Lust auf Verein?
               </a>
