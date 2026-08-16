@@ -7826,21 +7826,22 @@ function Datenschutz() {
 <h3>Kontaktdaten des Formularanbieters</h3>
 
 <p>
-  von Oesen Software &amp; Digitale Lösungen
+  Rassegeflügelzuchtverein Hagen und Umgebung seit 1903 e.V. (kurz RGZV)
   <br />
-  Inhaber Thorsten von Oesen
+  Vertreten durch seinen 1. Vorsitzenden Frank Sternal
   <br />
-  Raiffeisenstraße 38a
+  Im Wiedenbusch 41
   <br />
-  58093 Hagen
+  58099 Hagen
   <br />
-  E-Mail: thorsten-von-oesen@t-online.de
+  kontakt@rgzv-hagen-westfalen.de
 </p>
 
 <h3>Verarbeitete Daten</h3>
 
 <p>
-  Folgende Daten werden im Anmeldeformular erfasst:
+  Neben den in der Datenschutzerklärung des RGZV beschriebenen Daten,
+  werden folgende Daten im Anmeldeformular erfasst:
 </p>
 
 <ul>
@@ -7894,6 +7895,11 @@ function Datenschutz() {
 <p>
   Alle personenbezogenen Daten, die in dem Anmeldeformular erhoben und
   gespeichert wurden, werden in diesem Fall gelöscht.
+</p>
+
+<p>
+  Im Einzelnen können Sie Ihre Rechte der Datenschutzerklärung des RGZV
+  entnehmen.
 </p>
 
 <h3>Nutzung von personenbezogenen Daten bei Zahlungsvorgängen</h3>
@@ -8048,6 +8054,18 @@ function Datenschutz() {
 </p>
 
 <p>
+  Die vollständige Datenschutzerklärung des RGZV Hagen und Umgebung seit 1903 e.V. finden Sie unter:
+  <br />
+  <a
+    href="https://rgzv-hagen-westfalen.com/Datenschutz/"
+    target="_blank"
+    rel="noopener noreferrer"
+  >
+    Datenschutzerklärung auf der Vereinswebsite öffnen
+  </a>
+</p>
+
+<p>
   Stand Juni 2026
 </p>
 
@@ -8065,15 +8083,35 @@ function Impressum() {
         <h1>Impressum</h1>
 
         <p>
-  von Oesen Software &amp; Digitale Lösungen
+  Rassegeflügelzuchtverein Hagen und Umgebung seit 1903 e.V.
   <br />
-  Inhaber Thorsten von Oesen
+  Vertretungsberechtigter 1. Vorsitzender
   <br />
-  Raiffeisenstraße 38a
+  Frank Sternal
   <br />
-  58093 Hagen
+  Im Wiedenbusch 41
   <br />
-  E-Mail: thorsten-von-oesen@t-online.de
+  58099 Hagen
+  <br />
+  Tel: 02331/631841
+  <br />
+  Email: kontakt@rgzv-hagen-westfalen.de
+  <br />
+  Internet: www.rgzv-hagen-westfalen.de
+</p>
+
+<p>
+  Verantwortlich für den Inhalt nach § 55 Abs. 2 RStV:
+  <br />
+  Frank Sternal
+  <br />
+  Email: webmaster@rgzv-hagen-westfalen.de
+</p>
+
+<p>
+  Registergericht: Hagen
+  <br />
+  Registernummer: VR 3271
 </p>
 
         <a href="#">Zurück zur Anmeldung</a>
