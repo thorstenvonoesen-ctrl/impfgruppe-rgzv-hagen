@@ -4735,3 +4735,357 @@ footer a { color: var(--aurora-blue) !important; }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
 }
+
+/* NOVA-LAYOUT — neuer Seitenaufbau statt Kartenraster */
+.app-header-inner {
+  width: min(100%, 1480px);
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+.app-header-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 11px;
+  color: var(--aurora-navy);
+  text-decoration: none;
+}
+.app-header-brand-mark {
+  display: grid;
+  width: 42px;
+  height: 42px;
+  place-items: center;
+  background: linear-gradient(145deg,#edf0ff,#fff);
+  border: 1px solid #dbe0f7;
+  border-radius: 13px;
+  box-shadow: 0 7px 18px rgba(45,57,116,.1);
+}
+.app-header-brand-mark img { width: 34px; height: 34px; object-fit: contain; }
+.app-header-brand-copy { display: grid; gap: 1px; }
+.app-header-brand-copy strong { font-size: 14px; letter-spacing: -.01em; }
+.app-header-brand-copy small { color: var(--aurora-muted); font-size: 10px; font-weight: 750; letter-spacing: .09em; text-transform: uppercase; }
+
+/* Startseite: asymmetrisches Command Center mit seitlichem Termin-Stream */
+.home-command-center {
+  display: grid;
+  grid-template-columns: minmax(0,1.4fr) minmax(390px,.72fr);
+  gap: 24px;
+  align-items: stretch;
+}
+.home-command-intro { min-width: 0; display: grid; grid-template-rows: minmax(0,1fr) auto; gap: 18px; }
+.home-command-data { min-width: 0; }
+.home-command-center .final-home-hero {
+  height: 100% !important;
+  min-height: 610px !important;
+  grid-template-columns: 1fr !important;
+  grid-template-rows: 1fr auto !important;
+  align-items: start !important;
+}
+.home-command-center .final-home-hero-copy { align-self: center; }
+.home-command-center .final-home-hero-copy h1 { max-width: 790px !important; font-size: clamp(48px,5vw,76px) !important; }
+.home-command-center .final-home-logo-stage {
+  position: absolute;
+  right: clamp(28px,4vw,62px);
+  bottom: 34px;
+  width: 148px !important;
+  height: 148px !important;
+  opacity: .94;
+}
+.home-command-center .final-home-logo-stage img { width: 112px !important; height: 112px !important; }
+.home-command-center .final-home-nav { display: block; }
+.home-command-center .final-home-nav-card {
+  min-height: 102px !important;
+  grid-template-columns: 46px minmax(0,1fr) auto !important;
+  padding: 16px 18px !important;
+  border-radius: 18px !important;
+}
+.home-command-center .final-home-nav-action { border-radius: 999px !important; }
+
+.home-command-center .home-dashboard-grid {
+  width: 100% !important;
+  height: 100%;
+  margin: 0 !important;
+  display: flex !important;
+  flex-direction: column;
+  gap: 0 !important;
+  overflow: hidden;
+  background: rgba(255,255,255,.96);
+  border: 1px solid var(--aurora-border);
+  border-radius: 28px;
+  box-shadow: var(--aurora-shadow);
+}
+.home-command-center .home-countdown-card {
+  flex: 1 1 auto;
+  height: auto !important;
+  min-height: 390px !important;
+  margin: 0 !important;
+  padding: 30px 26px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: flex-start !important;
+  justify-content: center;
+  text-align: left;
+  background: transparent !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+.home-command-center .home-countdown-card .dashboard-stat-icon { margin: 0 0 24px !important; }
+.home-command-center .home-countdown-card .dashboard-stat-content { width: 100%; text-align: left; }
+.home-command-center .home-countdown-card .appointment-countdown { justify-items: start; }
+.home-command-center .home-countdown-card .appointment-countdown strong { font-size: clamp(30px,3vw,42px) !important; }
+.home-command-center .home-countdown-card .appointment-countdown-units { width: 100% !important; grid-template-columns: repeat(2,minmax(0,1fr)) !important; }
+.home-command-center .home-countdown-card .appointment-countdown-units > span { min-height: 74px !important; }
+.home-command-center .home-countdown-card .appointment-action-buttons { width: 100% !important; align-items: stretch; }
+.home-command-center .home-countdown-card .appointment-action-buttons > * { flex: 1 1 auto; }
+.home-command-center .home-dashboard-support {
+  min-width: 0;
+  display: contents !important;
+}
+.home-command-center .home-community-card,
+.home-command-center .home-benefits-card {
+  min-height: 0 !important;
+  padding: 21px 24px !important;
+  background: #f7f8fd !important;
+  border: 0 !important;
+  border-top: 1px solid var(--aurora-border) !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  animation: none;
+  opacity: 1;
+  translate: none;
+}
+.home-command-center .home-community-card { display: grid; grid-template-columns: minmax(0,1fr) auto; align-items: center; gap: 12px 18px; }
+.home-command-center .home-community-heading h2 { font-size: 20px !important; }
+.home-command-center .home-community-metrics { margin: 0 !important; }
+.home-command-center .home-community-metrics > div { min-height: 64px !important; padding: 8px !important; }
+.home-command-center .home-community-card > p { grid-column: 1 / -1; margin: 0 !important; }
+.home-command-center .home-benefits-card { gap: 11px !important; }
+.home-command-center .home-benefits-heading h2 { font-size: 22px !important; }
+.home-command-center .home-benefits-list { grid-template-columns: 1fr !important; gap: 7px !important; }
+.home-command-center .home-benefits-list > div { min-height: 38px !important; padding: 6px 8px !important; }
+
+/* Anmeldung: Inhaltsnavigation links, Formularfluss rechts */
+.signup-shell {
+  width: min(100% - 48px,1320px);
+  display: grid;
+  grid-template-columns: minmax(260px,360px) minmax(0,1fr);
+  align-items: start;
+  gap: 34px;
+  padding-top: 48px;
+}
+.signup-hero {
+  position: sticky;
+  top: 94px;
+  min-height: 520px;
+  margin: 0;
+  padding: 42px 34px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  border-radius: 26px 26px 80px 26px;
+}
+.signup-hero::before {
+  position: absolute;
+  top: 34px;
+  left: 34px;
+  width: 72px;
+  height: 5px;
+  content: "";
+  background: linear-gradient(90deg,var(--aurora-cyan),var(--aurora-coral));
+  border-radius: 999px;
+}
+.signup-card { margin: 0; padding: clamp(28px,4vw,54px); border-radius: 8px 30px 30px 30px !important; }
+.signup-form-section { overflow: visible; }
+.signup-form { gap: 24px; }
+.signup-section-title {
+  margin: 32px 0 2px;
+  padding: 0 0 12px;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--aurora-border);
+  border-radius: 0;
+  font-size: 19px;
+}
+.signup-section-title::before {
+  display: inline-grid;
+  width: 28px;
+  height: 28px;
+  margin-right: 10px;
+  place-items: center;
+  color: var(--aurora-blue);
+  content: "•";
+  background: #e9edff;
+  border-radius: 9px;
+}
+.signup-animal-counts { padding: 18px; background: #f5f7fd; border: 1px solid var(--aurora-border); border-radius: 18px; }
+.payment-methods { padding: 20px; border-radius: 20px; }
+.payment-option { margin-top: 8px !important; border-radius: 14px; }
+
+/* Admin: vertikale Arbeitskonsole statt Dashboard-Kartenwand */
+.admin .admin-dashboard-layout {
+  width: min(100% - 48px,1760px);
+  grid-template-columns: 280px minmax(0,1fr) minmax(300px,380px);
+  gap: 20px;
+  padding-top: 30px;
+}
+.admin .admin-dashboard-layout > .admin-top {
+  grid-column: 1;
+  grid-row: 1 / span 4;
+  min-height: 720px;
+  padding: 30px 24px;
+  align-items: flex-start;
+  flex-direction: column;
+  justify-content: space-between;
+  border-radius: 24px 24px 70px 24px;
+}
+.admin .admin-dashboard-layout > .admin-top h1 { font-size: clamp(34px,3.2vw,48px); writing-mode: horizontal-tb; }
+.admin .admin-dashboard-layout > .admin-top > div { width: 100%; align-items: stretch; flex-direction: column; }
+.admin .admin-dashboard-layout > .admin-top .ghost,
+.admin .admin-dashboard-layout > .admin-top .admin-manual-download { width: 100%; margin: 0; justify-content: flex-start; }
+.admin .admin-dashboard-layout > .admin-presence { grid-column: 3; grid-row: 1; min-height: 0; }
+.admin .admin-dashboard-layout > .admin-dashboard-stats { grid-column: 2; grid-row: 1; grid-template-columns: repeat(2,minmax(0,1fr)); }
+.admin .admin-dashboard-layout > .admin-dashboard-stats .stat.dashboard-stat-card {
+  min-height: 142px;
+  border-radius: 4px 20px 20px 20px;
+}
+.admin .admin-dashboard-layout > .smart-assistant-card { grid-column: 3; grid-row: 2; }
+.admin .admin-dashboard-layout > .checkin-panel { grid-column: 2; grid-row: 2 / span 2; }
+.admin .admin-dashboard-layout > .admin-appointments-card { grid-column: 3; grid-row: 3; }
+.admin .admin-dashboard-layout > .admin-appointment-management-card,
+.admin .admin-dashboard-layout > .admin-participant-management-card { grid-column: 2 / -1; }
+.admin .admin-dashboard-layout > .card:not(.checkin-panel) { border-radius: 5px 24px 24px 24px !important; }
+.admin .admin-dashboard-layout > .card h2 {
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--aurora-border);
+  position: relative;
+}
+.admin .admin-dashboard-layout > .card h2::after {
+  position: absolute;
+  left: 0;
+  bottom: -1px;
+  width: 54px;
+  height: 3px;
+  content: "";
+  background: linear-gradient(90deg,var(--aurora-blue),var(--aurora-cyan));
+  border-radius: 999px;
+}
+.admin .table-scroll { border: 1px solid var(--aurora-border); border-radius: 16px; }
+.admin table { border: 0; border-radius: 0; box-shadow: none; }
+.admin th { position: sticky; top: 0; z-index: 2; }
+.admin td { padding-block: 17px; }
+
+/* Info und Langtexte: redaktionelle Seiten statt isolierter Kacheln */
+.collective-info-shell { width: min(100% - 48px,1220px); padding-block: 44px 72px; }
+.collective-info-hero {
+  min-height: 420px;
+  padding: clamp(42px,7vw,88px);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  border-radius: 34px 34px 110px 34px;
+}
+.collective-info-hero h1 { max-width: 850px; font-size: clamp(44px,6vw,76px); }
+.collective-info-section { margin-top: 56px; }
+.collective-info-intro-grid,
+.collective-info-after-grid { grid-template-columns: minmax(0,1.4fr) minmax(280px,.7fr); gap: 0; }
+.collective-info-card,
+.collective-info-benefit,
+.collective-info-process,
+.collective-info-checklist,
+.collective-info-faq details,
+.collective-info-notice,
+.collective-info-summary {
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+.collective-info-card { padding: 34px; border-width: 0 0 0 1px !important; }
+.collective-info-card:first-child { border-left: 4px solid var(--aurora-blue) !important; }
+.collective-info-benefits { gap: 0; border-top: 1px solid var(--aurora-border); border-bottom: 1px solid var(--aurora-border); }
+.collective-info-benefit { padding: 28px; border: 0 !important; border-right: 1px solid var(--aurora-border) !important; background: transparent !important; }
+.collective-info-benefit:last-child { border-right: 0 !important; }
+.collective-info-process,
+.collective-info-checklist { padding: clamp(30px,5vw,54px); border-radius: 28px 6px 28px 28px !important; }
+.collective-info-faq details { background: transparent !important; border-width: 0 0 1px !important; }
+.collective-info-notice,
+.collective-info-summary { padding: 30px 34px; background: transparent !important; }
+.impfwart-greeting-shell { width: min(100% - 48px,1180px); }
+.impfwart-greeting-card { padding: clamp(34px,6vw,76px); border-radius: 6px 34px 34px 90px !important; }
+.impfwart-greeting-copy { max-width: 76ch; }
+.membership-info-questions { gap: 0; border-top: 1px solid var(--aurora-border); }
+.membership-info-questions section { border: 0; border-bottom: 1px solid var(--aurora-border); border-radius: 0; background: transparent; }
+
+/* Status, Hinweise und Dialoge werden zu kompakten Systemelementen */
+.message,
+.participation-fee-notice,
+.checkin-payment-warning { border-radius: 6px 18px 18px 18px; }
+.paid,
+.open,
+.status-badge,
+.checkin-status { border-radius: 7px; }
+.modal-card { border-radius: 8px 28px 28px 28px; }
+
+@media (max-width: 1250px) {
+  .home-command-center { grid-template-columns: minmax(0,1fr) minmax(350px,.7fr); }
+  .admin .admin-dashboard-layout { grid-template-columns: 240px minmax(0,1fr); }
+  .admin .admin-dashboard-layout > .admin-presence,
+  .admin .admin-dashboard-layout > .smart-assistant-card,
+  .admin .admin-dashboard-layout > .admin-appointments-card { grid-column: 2; grid-row: auto; }
+  .admin .admin-dashboard-layout > .checkin-panel { grid-column: 2; grid-row: auto; }
+  .admin .admin-dashboard-layout > .admin-appointment-management-card,
+  .admin .admin-dashboard-layout > .admin-participant-management-card { grid-column: 1 / -1; }
+}
+
+@media (max-width: 960px) {
+  .home-command-center { grid-template-columns: 1fr; }
+  .home-command-center .final-home-hero { min-height: 560px !important; }
+  .home-command-center .home-dashboard-grid { height: auto; }
+  .home-command-center .home-countdown-card { min-height: 320px !important; }
+  .signup-shell { grid-template-columns: 1fr; }
+  .signup-hero { position: relative; top: auto; min-height: 300px; border-radius: 24px 24px 64px 24px; }
+  .admin .admin-dashboard-layout { grid-template-columns: 1fr; }
+  .admin .admin-dashboard-layout > .admin-top {
+    grid-column: 1;
+    grid-row: auto;
+    min-height: 0;
+    border-radius: 24px 24px 56px 24px;
+  }
+  .admin .admin-dashboard-layout > .admin-top > div { flex-direction: row; flex-wrap: wrap; }
+  .admin .admin-dashboard-layout > .admin-top .ghost,
+  .admin .admin-dashboard-layout > .admin-top .admin-manual-download { width: auto; }
+  .admin .admin-dashboard-layout > .admin-presence,
+  .admin .admin-dashboard-layout > .admin-dashboard-stats,
+  .admin .admin-dashboard-layout > .smart-assistant-card,
+  .admin .admin-dashboard-layout > .checkin-panel,
+  .admin .admin-dashboard-layout > .admin-appointments-card,
+  .admin .admin-dashboard-layout > .admin-appointment-management-card,
+  .admin .admin-dashboard-layout > .admin-participant-management-card { grid-column: 1; grid-row: auto; }
+}
+
+@media (max-width: 700px) {
+  .app-header-inner { gap: 10px; }
+  .app-header-brand-copy { display: none; }
+  .app-header-brand-mark { width: 38px; height: 38px; }
+  .home-command-center .final-home-hero { min-height: 530px !important; }
+  .home-command-center .final-home-logo-stage { right: 20px; bottom: 22px; }
+  .home-command-center .final-home-nav-card { grid-template-columns: 40px minmax(0,1fr) !important; grid-template-rows: auto auto !important; }
+  .home-command-center .final-home-nav-action { grid-column: 1 / -1; }
+  .home-command-center .home-community-card { grid-template-columns: 1fr; }
+  .home-command-center .home-countdown-card .appointment-countdown-units { grid-template-columns: repeat(2,minmax(0,1fr)) !important; }
+  .signup-shell { width: min(100% - 22px,1320px); padding-top: 22px; gap: 16px; }
+  .signup-hero { min-height: 260px; padding: 32px 24px; }
+  .signup-card { border-radius: 6px 22px 22px 22px !important; }
+  .admin .admin-dashboard-layout { width: min(100% - 22px,1760px); }
+  .admin .admin-dashboard-layout > .admin-dashboard-stats { grid-template-columns: 1fr; }
+  .collective-info-shell,
+  .impfwart-greeting-shell { width: min(100% - 22px,1220px); }
+  .collective-info-hero { min-height: 330px; padding: 32px 24px; border-radius: 24px 24px 66px 24px; }
+  .collective-info-hero h1 { font-size: clamp(36px,11vw,52px); }
+  .collective-info-intro-grid,
+  .collective-info-after-grid { grid-template-columns: 1fr; }
+  .collective-info-benefits { grid-template-columns: 1fr; }
+  .collective-info-benefit { border-right: 0 !important; border-bottom: 1px solid var(--aurora-border) !important; }
+  .impfwart-greeting-card { border-radius: 6px 24px 24px 52px !important; }
+}

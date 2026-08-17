@@ -1453,48 +1453,53 @@ function ClubSelect() {
       <Header />
 
       <main className="final-home">
-        <section className="final-home-hero premium-home-surface">
-          <div className="final-home-hero-copy">
-            <h1>Online-Anmeldung beim RGZV Hagen und Umgebung seit 1903 e.V.</h1>
-            <h2>zur Newcastle-Sammelimpfung</h2>
-            <p>Geflügelbestand sicher online anmelden, bequem bezahlen und am Impftag digital einchecken.</p>
+        <section className="home-command-center">
+          <div className="home-command-intro">
+            <section className="final-home-hero premium-home-surface">
+              <div className="final-home-hero-copy">
+                <h1>Online-Anmeldung beim RGZV Hagen und Umgebung seit 1903 e.V.</h1>
+                <h2>zur Newcastle-Sammelimpfung</h2>
+                <p>Geflügelbestand sicher online anmelden, bequem bezahlen und am Impftag digital einchecken.</p>
 
-            <div className="final-home-hero-actions">
-              <a
-                className="final-home-club-link"
-                href="https://www.rgzv-hagen-westfalen.com"
-                target="_blank"
-                rel="noopener noreferrer"
+                <div className="final-home-hero-actions">
+                  <a
+                    className="final-home-club-link"
+                    href="https://www.rgzv-hagen-westfalen.com"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    RGZV Hagen kennenlernen
+                  </a>
+                  <a className="final-home-club-link" href="#lust-auf-verein">
+                    ❤️ Lust auf Verein?
+                  </a>
+                </div>
+              </div>
+
+              <div className="final-home-logo-stage" aria-hidden="true">
+                <img src="/shield-orange.png" alt="" />
+              </div>
+            </section>
+
+            <section className="final-home-nav" aria-label="Weitere Bereiche">
+              <button
+                type="button"
+                className="final-home-nav-card final-home-nav-primary premium-home-surface"
+                onClick={() => { window.location.hash = '#info' }}
               >
-                RGZV Hagen kennenlernen
-              </a>
-              
-              <a className="final-home-club-link" href="#lust-auf-verein">
-                ❤️ Lust auf Verein?
-              </a>
-            </div>
+                <span className="final-home-nav-icon" aria-hidden="true">👥</span>
+                <span className="final-home-nav-text">
+                  <strong>Zur Impfanmeldung</strong>
+                  <small>Direkt zur Anmeldung Ihrer Tiere für den nächsten Impftermin des RGZV Hagen.</small>
+                </span>
+                <span className="final-home-nav-action">Zur Impfanmeldung →</span>
+              </button>
+            </section>
           </div>
 
-          <div className="final-home-logo-stage" aria-hidden="true">
-            <img src="/shield-orange.png" alt="" />
-          </div>
-        </section>
-
-        <LiveSignupStats club={currentClub} />
-
-        <section className="final-home-nav" aria-label="Weitere Bereiche">
-          <button
-            type="button"
-            className="final-home-nav-card final-home-nav-primary premium-home-surface"
-            onClick={() => { window.location.hash = '#info' }}
-          >
-            <span className="final-home-nav-icon" aria-hidden="true">👥</span>
-            <span className="final-home-nav-text">
-              <strong>Zur Impfanmeldung</strong>
-              <small>Direkt zur Anmeldung Ihrer Tiere für den nächsten Impftermin des RGZV Hagen.</small>
-            </span>
-            <span className="final-home-nav-action">Zur Impfanmeldung →</span>
-          </button>
+          <aside className="home-command-data" aria-label="Impftermin und Anmeldung">
+            <LiveSignupStats club={currentClub} />
+          </aside>
         </section>
       </main>
 
@@ -8306,34 +8311,17 @@ function Header({ admin = false }) {
       }}
     >
       {!hasSupabase && <p role="alert" style={{ margin: '0 0 10px', color: '#ffe1c2', fontSize: '13px', fontWeight: '700', textAlign: 'center' }}>{supabaseConfigMessage}</p>}
-      <div
-  style={{
-    width: '100%',
-    display: 'flex',
-    alignItems: 'center'
-  }}
->
-  
-
-  
-
-{!admin && (
-  <nav className="public-header-links" aria-label="Öffentliche Bereiche">
-    <a href="#quiz" className="public-quiz-link">🧠 Geflügel-Quiz</a>
-    {showAdminLogin && <a
-      href="#admin"
-      style={{
-        paddingRight: '32px',
-        color: '#ffffff',
-        textDecoration: 'none',
-        fontSize: '18px',
-        fontWeight: '700'
-      }}
-    >
-      Admin-Login
-    </a>}
-  </nav>
-)}
+      <div className="app-header-inner">
+        <a className="app-header-brand" href="#" aria-label="Impfgruppenmanager Startseite">
+          <span className="app-header-brand-mark" aria-hidden="true"><img src="/shield-orange.png" alt="" /></span>
+          <span className="app-header-brand-copy"><strong>Impfgruppenmanager</strong><small>RGZV Hagen</small></span>
+        </a>
+        {!admin && (
+          <nav className="public-header-links" aria-label="Öffentliche Bereiche">
+            <a href="#quiz" className="public-quiz-link">🧠 Geflügel-Quiz</a>
+            {showAdminLogin && <a href="#admin">Admin-Login</a>}
+          </nav>
+        )}
       </div>
     </header>
   )
