@@ -1601,6 +1601,203 @@ body { background: #163a2f; }
   }
 }
 
+/* Desktop-Anmeldung als kompakte Eingabemaske */
+@media (min-width: 721px) {
+  .signup-workspace {
+    padding-top: 16px;
+    padding-bottom: 34px;
+  }
+
+  .signup-page-head {
+    min-height: 108px;
+    margin-bottom: 14px;
+    padding-left: 18px;
+  }
+
+  .signup-home-link {
+    top: 0;
+    left: 18px;
+    font-size: 11px;
+  }
+
+  .signup-page-head .signup-eyebrow {
+    padding: 3px 8px;
+    font-size: 8px;
+  }
+
+  .signup-page-head h1 {
+    margin: 6px 0 3px;
+    font-size: clamp(30px,3.2vw,42px);
+    line-height: 1;
+  }
+
+  .signup-page-head p {
+    font-size: 13px;
+    line-height: 1.3;
+  }
+
+  .signup-layout {
+    grid-template-columns: minmax(0,1fr) 300px;
+    gap: 16px;
+  }
+
+  .signup-layout .signup-card {
+    padding: 16px 20px;
+    border-radius: 5px 20px 20px 20px !important;
+  }
+
+  .signup-layout .signup-card-heading,
+  .signup-step-heading,
+  .signup-step .signup-field-note {
+    display: none;
+  }
+
+  .signup-step,
+  .signup-step-final {
+    margin: 0;
+    padding: 6px 0;
+    display: grid;
+    grid-template-columns: minmax(0,1fr);
+    gap: 7px;
+    background: transparent;
+    border: 0;
+  }
+
+  .signup-step:not(.signup-step-final) > :not(.signup-step-heading) {
+    grid-column: 1;
+  }
+
+  .signup-fields-row,
+  .signup-step .two,
+  .signup-step .signup-animal-counts {
+    gap: 8px;
+  }
+
+  .signup-step .signup-animal-counts {
+    padding: 0;
+    background: transparent;
+    border: 0;
+    border-radius: 0;
+  }
+
+  .signup-step label {
+    gap: 3px;
+    font-size: 11px;
+  }
+
+  .signup-step input:not([type="radio"]):not([type="checkbox"]),
+  .signup-step select {
+    min-height: 38px;
+    padding: 6px 10px;
+    border-radius: 9px;
+    font-size: 13px;
+  }
+
+  .signup-step .signup-animal-total {
+    min-height: 16px;
+    margin: -3px 0 0;
+    font-size: 10px;
+    line-height: 1;
+  }
+
+  .signup-step .signup-animal-total strong { font-size: 14px; }
+
+  .signup-step-final {
+    margin-top: 3px;
+    padding-top: 9px;
+    grid-template-columns: minmax(0,1fr) minmax(0,1fr);
+    align-items: stretch;
+    border-top: 1px solid #e3e7f1;
+  }
+
+  .signup-step-final .payment-methods,
+  .signup-step-final .privacy-check,
+  .signup-step-final .participation-fee-notice,
+  .signup-step-final .signup-submit {
+    min-width: 0;
+    margin: 0 !important;
+  }
+
+  .signup-step .payment-methods {
+    padding: 8px 10px;
+    display: grid;
+    grid-template-columns: auto minmax(0,1fr);
+    align-items: center;
+    gap: 4px 9px;
+    border-radius: 10px;
+    font-size: 11px;
+  }
+
+  .signup-step .payment-option {
+    margin: 0 !important;
+    padding: 6px 8px;
+    align-items: center;
+    border-radius: 8px;
+  }
+
+  .signup-step .payment-methods > p {
+    grid-column: 1 / -1;
+    margin: 0 !important;
+    font-size: 11px !important;
+    line-height: 1.3 !important;
+  }
+
+  .signup-step .privacy-check {
+    padding: 9px 11px;
+    align-content: center;
+    gap: 8px;
+    font-size: 11px;
+    line-height: 1.35;
+    border-radius: 10px;
+  }
+
+  .signup-step .privacy-check input { width: 17px; height: 17px; }
+
+  .signup-step .participation-fee-notice {
+    padding: 8px 10px;
+    gap: 8px;
+    align-items: center;
+    border-radius: 5px 10px 10px 10px;
+  }
+
+  .signup-step .participation-fee-notice-icon {
+    width: 22px;
+    height: 22px;
+    font-size: 11px;
+  }
+
+  .signup-step .participation-fee-notice p {
+    margin: 0;
+    font-size: 10px;
+    line-height: 1.3;
+  }
+
+  .signup-step .signup-submit {
+    min-height: 44px;
+    padding: 8px 12px;
+    align-self: stretch;
+    font-size: 12px;
+  }
+
+  .signup-step-final .message { grid-column: 1 / -1; }
+
+  .signup-summary {
+    top: 72px;
+    padding: 16px 18px;
+  }
+
+  .signup-summary h2 {
+    margin: 7px 0 10px;
+    font-size: 19px;
+  }
+
+  .signup-summary dl > div { padding: 7px 0; }
+  .signup-summary dt { font-size: 8px; }
+  .signup-summary dd { margin-top: 2px; font-size: 11px; line-height: 1.25; }
+  .signup-summary-note { margin-top: 8px; padding: 8px; }
+  .signup-summary-note p { font-size: 9px; line-height: 1.35; }
+}
+
 @media (max-width: 560px) {
   .appointment-action-buttons { flex-direction: column; }
   .appointment-action-buttons .appointment-route-button,
