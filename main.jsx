@@ -1725,7 +1725,7 @@ function openInfoDetail(hash) {
   })
 }
 
-function InfoPage() {
+function InfoPageLegacy() {
   const [openCard, setOpenCard] = useState(null)
   return (
     <div className="min-h-screen bg-slate-100">
@@ -2001,6 +2001,102 @@ minHeight: openCard === title ? "360px" : "230px",
     </div>
   );
 }
+
+function InfoPage() {
+  const processSteps = [
+    [FileText, 'Anmeldung', 'Teilnehmer online registrieren'],
+    [CreditCard, 'Zahlung', 'Sicher online bezahlen'],
+    [Mail, 'QR-Code', 'Automatisch per E-Mail erhalten'],
+    [QrCode, 'Check-in', 'QR-Code am Impftag scannen'],
+    [Syringe, 'Impfung', 'Direkt teilnehmen']
+  ]
+
+  const digitalBenefits = [
+    [Clock, 'Anmeldung in wenigen Minuten'],
+    [CreditCard, 'Sichere Onlinezahlung'],
+    [Mail, 'QR-Code automatisch per E-Mail'],
+    [ScanLine, 'Schneller Check-in am Impftag'],
+    [FileX, 'Kein Papier am Impftag erforderlich'],
+    [Settings2, 'Weniger Verwaltungsaufwand']
+  ]
+
+  return (
+    <div className="page vaccination-info-page">
+      <Header />
+      <main className="vaccination-info-main">
+        <section className="vaccination-info-intro">
+          <span className="vaccination-info-eyebrow"><ShieldCheck size={15}/> Newcastle-Sammelimpfung</span>
+          <h1>Gut vorbereitet<br/>zum Impftermin.</h1>
+          <p>Erfüllen Sie die gesetzliche Impfpflicht bequem online: Bestand anmelden, sicher bezahlen und am Impftag digital einchecken – schnell, übersichtlich und zuverlässig.</p>
+          <div className="vaccination-info-intro-line" aria-hidden="true"><span/><i/><i/></div>
+        </section>
+
+        <section className="vaccination-journey" aria-labelledby="vaccination-journey-title">
+          <div className="vaccination-info-section-heading">
+            <span>Ihr Weg zum Impftermin</span>
+            <h2 id="vaccination-journey-title">So einfach funktioniert&apos;s</h2>
+          </div>
+          <ol className="vaccination-journey-track">
+            {processSteps.map(([Icon, title, description], index) => (
+              <li key={title}>
+                <span className="vaccination-journey-number">{String(index + 1).padStart(2, '0')}</span>
+                <span className="vaccination-journey-icon"><Icon size={22} strokeWidth={1.9}/></span>
+                <div><h3>{title}</h3><p>{description}</p></div>
+              </li>
+            ))}
+          </ol>
+        </section>
+
+        <section className="vaccination-knowledge" aria-labelledby="vaccination-knowledge-title">
+          <article className="vaccination-knowledge-lead" onClick={() => openInfoDetail('#info-newcastle')}>
+            <span className="vaccination-knowledge-icon"><ShieldCheck size={30}/></span>
+            <div>
+              <span>Schutz Ihrer Tiere</span>
+              <h2 id="vaccination-knowledge-title">Warum die Newcastle-Impfung wichtig ist</h2>
+              <p>Regelmäßige Newcastle-Impfungen schützen Ihren Geflügelbestand zuverlässig und reduzieren das Risiko einer Ausbreitung.</p>
+              <strong>Mehr erfahren →</strong>
+            </div>
+          </article>
+
+          <div className="vaccination-knowledge-side">
+            <button type="button" onClick={() => openInfoDetail('#info-pflicht')}>
+              <span><FileText size={22}/></span>
+              <div><small>Gesetzliche Impfpflicht</small><p>Die Newcastle-Impfung ist gesetzlich vorgeschrieben. Mit der App melden Sie Ihren Bestand einfach online an.</p><strong>Details ansehen →</strong></div>
+            </button>
+            <button type="button" onClick={() => openInfoDetail('#info-sammelimpfung')}>
+              <span><Users size={22}/></span>
+              <div><small>Gemeinsame Sammelimpfung</small><p>Gemeinsame Termin- und Impfstoffplanung spart Zeit, reduziert den Aufwand und vereinfacht die Organisation.</p><strong>Details ansehen →</strong></div>
+            </button>
+          </div>
+
+          <button className="vaccination-knowledge-digital" type="button" onClick={() => openInfoDetail('#info-anmeldung')}>
+            <span className="vaccination-knowledge-digital-icon"><QrCode size={30}/></span>
+            <div><small>Digitaler QR-Check-in</small><h3>Vom Postfach direkt zum Impftag.</h3><p>Nach erfolgreicher Zahlung erhalten Sie Ihren persönlichen QR-Code. Am Impftag genügt ein kurzer Scan.</p></div>
+            <strong>Digitalen Ablauf ansehen →</strong>
+          </button>
+        </section>
+
+        <section className="vaccination-digital" aria-labelledby="vaccination-digital-title">
+          <div className="vaccination-digital-copy">
+            <span>Digital organisiert</span>
+            <h2 id="vaccination-digital-title">Weniger Papier.<br/>Mehr Zeit für das Wesentliche.</h2>
+            <p>Von der Anmeldung bis zum Check-in begleitet Sie ein klarer digitaler Ablauf.</p>
+          </div>
+          <ul>
+            {digitalBenefits.map(([Icon, text], index) => <li key={text}><span>{String(index + 1).padStart(2, '0')}</span><Icon size={19}/><strong>{text}</strong></li>)}
+          </ul>
+        </section>
+
+        <section className="vaccination-info-cta">
+          <div><span>Bereit für den nächsten Impftermin?</span><h2>Melden Sie Ihren Geflügelbestand bequem online zur nächsten Newcastle-Sammelimpfung an.</h2></div>
+          <button type="button" onClick={() => (window.location.hash = '#signup')}>Zur Impfanmeldung <span>→</span></button>
+        </section>
+      </main>
+      <Footer />
+    </div>
+  )
+}
+
 function InfoNewcastle() {
   const warningSigns = [
     ["Allgemeines Befinden", "Betroffene Tiere können matt wirken, weniger fressen oder einen deutlichen Leistungsabfall zeigen."],
