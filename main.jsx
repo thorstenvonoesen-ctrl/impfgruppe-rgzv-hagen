@@ -7298,41 +7298,57 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
 
     <div className="admin-workspace-content">
     <main className="admin-wrap admin-dashboard-layout">
-      <div id="admin-dashboard-top" className="admin-top">
-        <div className="admin-top-copy"><span>Arbeitsbereich</span><h1>Übersicht</h1><p>{activeClub?.name || 'RGZV Hagen'} · {adminContext?.role === 'superadmin' ? 'Superadmin' : adminContext?.role === 'checkin_admin' ? 'Check-in-Admin' : 'Vereinsadmin'}</p></div>
-        <div className="admin-top-status"><span className="admin-top-status-dot"/>System bereit</div>
-        {logoutError && <span className="admin-shell-error" role="alert">{logoutError}</span>}
-      </div>
-      <AdminPresence />
-      <div className="stats admin-dashboard-stats">
-        <InteractiveStatCard className="stat" icon={<Users/>} label="Teilnehmer" value={stats.total} loading={loading} tone="stat-participants" animationIndex={0} />
-        <InteractiveStatCard className="stat" icon={<ShieldCheck/>} label="Tiere" value={stats.animals} loading={loading} tone="stat-animals" animationIndex={1} />
-        <InteractiveStatCard className="stat" icon={<Euro/>} label="Einnahmen" value={stats.revenue} loading={loading} currency tone="stat-revenue" animationIndex={2} />
-      </div>
-      <p style={{ margin: '0', textAlign: 'center' }}>
-        {activeDashboardAppointment
-          ? `Aktueller Impftermin: ${activeDashboardAppointment.title} – ${formatGermanVaccinationDate(activeDashboardAppointment.date)}`
-          : 'Zurzeit ist kein zukünftiger Impftermin vorhanden.'}
-      </p>
-      <button
-        type="button"
-        className={`smart-assistant-card smart-assistant-card-${smartAssistantError ? 'error' : assistantStatus}`}
-        onClick={() => setSmartAssistantOpen(true)}
-      >
-        <span className="smart-assistant-card-icon" aria-hidden="true">{smartAssistantError ? '⚪' : assistantIcon}</span>
-        <span className="smart-assistant-card-copy">
-          <small>Intelligente Vereins-Ampel</small>
-          <strong>{assistantHeadline}</strong>
-          <span>
-            {smartAssistantLoading
-              ? 'Teilnehmer, Termine, Tierarzt und System werden ausgewertet.'
-              : smartAssistantError || (assistantStatus === 'green'
-                ? 'Aktuell besteht kein Handlungsbedarf.'
-                : 'Aufgaben ansehen und direkt zum passenden Bereich wechseln.')}
-          </span>
-        </span>
-        <span className="smart-assistant-card-action">Aufgaben anzeigen →</span>
-      </button>
+      <section id="admin-dashboard-top" className="admin-overview">
+        <header className="admin-overview-heading">
+          <div className="admin-top-copy"><span>Arbeitsbereich</span><h1>Übersicht</h1><p>{activeClub?.name || 'RGZV Hagen'} · {adminContext?.role === 'superadmin' ? 'Superadmin' : adminContext?.role === 'checkin_admin' ? 'Check-in-Admin' : 'Vereinsadmin'}</p></div>
+          <div className="admin-top-status"><span className="admin-top-status-dot"/>System bereit</div>
+          {logoutError && <span className="admin-shell-error" role="alert">{logoutError}</span>}
+        </header>
+
+        <div className="admin-overview-appointment">
+          <span className="admin-overview-appointment-label">Aktueller Impftermin</span>
+          {activeDashboardAppointment ? (
+            <div className="admin-overview-appointment-copy">
+              <strong>{activeDashboardAppointment.title}</strong>
+              <span>{formatGermanVaccinationDate(activeDashboardAppointment.date)}</span>
+            </div>
+          ) : (
+            <div className="admin-overview-appointment-copy">
+              <strong>Kein zukünftiger Impftermin</strong>
+              <span>Zurzeit ist kein zukünftiger Impftermin vorhanden.</span>
+            </div>
+          )}
+        </div>
+
+        <div className="stats admin-dashboard-stats admin-overview-metrics">
+          <InteractiveStatCard className="stat" icon={<Users/>} label="Teilnehmer" value={stats.total} loading={loading} tone="stat-participants" animationIndex={0} />
+          <InteractiveStatCard className="stat" icon={<ShieldCheck/>} label="Tiere" value={stats.animals} loading={loading} tone="stat-animals" animationIndex={1} />
+          <InteractiveStatCard className="stat" icon={<Euro/>} label="Einnahmen" value={stats.revenue} loading={loading} currency tone="stat-revenue" animationIndex={2} />
+        </div>
+
+        <div className="admin-overview-operations">
+          <AdminPresence />
+          <button
+            type="button"
+            className={`smart-assistant-card smart-assistant-card-${smartAssistantError ? 'error' : assistantStatus}`}
+            onClick={() => setSmartAssistantOpen(true)}
+          >
+            <span className="smart-assistant-card-icon" aria-hidden="true">{smartAssistantError ? '⚪' : assistantIcon}</span>
+            <span className="smart-assistant-card-copy">
+              <small>Intelligente Vereins-Ampel</small>
+              <strong>{assistantHeadline}</strong>
+              <span>
+                {smartAssistantLoading
+                  ? 'Teilnehmer, Termine, Tierarzt und System werden ausgewertet.'
+                  : smartAssistantError || (assistantStatus === 'green'
+                    ? 'Aktuell besteht kein Handlungsbedarf.'
+                    : 'Aufgaben ansehen und direkt zum passenden Bereich wechseln.')}
+              </span>
+            </span>
+            <span className="smart-assistant-card-action">Aufgaben anzeigen →</span>
+          </button>
+        </div>
+      </section>
       <div id="admin-checkin" className="admin-checkin-anchor"><CheckinPanel participants={bindingParticipants} vaccinationDates={vaccinationDates} onChanged={load} adminRole={adminContext?.role} /></div>
       <section className="card admin-appointments-card">
   <h2>Anmeldungen pro Impftermin</h2>

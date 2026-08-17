@@ -6400,3 +6400,120 @@ footer a { color: var(--aurora-blue) !important; }
   .admin .admin-workspace-content .admin-dashboard-layout > .admin-top { padding: 22px 18px; align-items: flex-start; flex-direction: column; }
   .admin-top-status { align-self: flex-start; }
 }
+
+/* Admin-Übersicht: klarer operativer Einstieg ohne Änderungen an den Folge-Bereichen */
+.admin .admin-workspace-content .admin-dashboard-layout > .admin-overview {
+  grid-column: 1 / -1;
+  min-width: 0;
+  display: grid;
+  grid-template-columns: minmax(0,1fr);
+  gap: 14px;
+  scroll-margin-top: 20px;
+}
+.admin-overview-heading {
+  position: relative;
+  min-height: 112px;
+  padding: 24px 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  background: #fff;
+  border: 1px solid #dfe3ef;
+  border-radius: 5px 20px 20px 20px;
+  box-shadow: 0 12px 32px rgba(31,43,93,.07);
+}
+.admin-overview-appointment {
+  min-height: 112px;
+  padding: 25px 28px;
+  display: grid;
+  grid-template-columns: minmax(150px,.35fr) minmax(0,1fr);
+  align-items: center;
+  gap: 28px;
+  color: #fff;
+  background: radial-gradient(circle at 92% 20%,rgba(141,232,238,.13),transparent 28%),#121a38;
+  border: 1px solid #202a52;
+  border-radius: 5px 20px 20px 20px;
+  box-shadow: 0 16px 34px rgba(18,26,56,.16);
+}
+.admin-overview-appointment-label {
+  color: #8de8ee;
+  font-size: 10px;
+  font-weight: 850;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+.admin-overview-appointment-copy {
+  min-width: 0;
+  padding-left: 28px;
+  display: grid;
+  gap: 5px;
+  border-left: 1px solid rgba(255,255,255,.14);
+}
+.admin-overview-appointment-copy strong {
+  overflow-wrap: anywhere;
+  color: #fff;
+  font-size: clamp(23px,2.4vw,34px);
+  line-height: 1.08;
+  letter-spacing: -.035em;
+}
+.admin-overview-appointment-copy span { color: rgba(255,255,255,.68); font-size: 13px; }
+.admin .admin-overview .admin-overview-metrics {
+  width: 100%;
+  margin: 0;
+  gap: 12px;
+}
+.admin .admin-overview .admin-overview-metrics .stat.dashboard-stat-card {
+  min-height: 108px;
+  padding: 18px 20px;
+  color: #17203f;
+  background: #fff !important;
+  border: 1px solid #dfe3ef;
+  border-radius: 5px 16px 16px 16px;
+  box-shadow: 0 9px 24px rgba(31,43,93,.055);
+}
+.admin .admin-overview .admin-overview-metrics .stat.dashboard-stat-card:hover {
+  border-color: #cdd3e2;
+  box-shadow: 0 14px 30px rgba(31,43,93,.1);
+}
+.admin .admin-overview .admin-overview-metrics .dashboard-stat-content > span { color: #727c96; }
+.admin .admin-overview .admin-overview-metrics .dashboard-stat-content > strong { color: #121a38; }
+.admin-overview-operations {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: minmax(280px,.72fr) minmax(0,1.28fr);
+  gap: 14px;
+  align-items: stretch;
+}
+.admin-overview-operations > .admin-presence,
+.admin-overview-operations > .smart-assistant-card {
+  width: 100%;
+  min-height: 132px;
+  margin: 0;
+  border-radius: 5px 18px 18px 18px !important;
+}
+.admin-overview-operations > .smart-assistant-card {
+  padding: 20px 22px;
+  background: #17213f;
+  box-shadow: inset 4px 0 0 var(--assistant-color),0 12px 28px rgba(18,26,56,.15);
+}
+.admin-overview-operations .smart-assistant-card-copy strong { font-size: clamp(20px,2vw,27px); }
+.admin-overview-operations .smart-assistant-card-copy > span { font-size: 12px; }
+
+@media (max-width: 1040px) {
+  .admin-overview-operations { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 820px) {
+  .admin-overview-heading { min-height: 0; }
+  .admin-overview-appointment { grid-template-columns: 1fr; gap: 12px; }
+  .admin-overview-appointment-copy { padding: 12px 0 0; border-top: 1px solid rgba(255,255,255,.14); border-left: 0; }
+}
+
+@media (max-width: 560px) {
+  .admin-overview-heading { padding: 21px 18px; align-items: flex-start; flex-direction: column; }
+  .admin-overview-appointment { padding: 22px 18px; }
+  .admin .admin-overview .admin-overview-metrics { grid-template-columns: 1fr; }
+  .admin-overview-operations { grid-template-columns: minmax(0,1fr); }
+  .admin-overview-operations > .smart-assistant-card { padding: 18px; }
+}
