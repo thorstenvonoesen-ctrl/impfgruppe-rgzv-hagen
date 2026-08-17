@@ -5723,12 +5723,22 @@ footer a { color: var(--aurora-blue) !important; }
 .signup-layout .signup-card-heading p { color: #69738e; }
 .signup-layout .signup-form-section { margin: 0; padding: 0; }
 .signup-layout .signup-form { gap: 0; }
+.signup-fields-row {
+  min-width: 0;
+  display: grid;
+  gap: 10px;
+}
+.signup-fields-row-three { grid-template-columns: repeat(3,minmax(0,1fr)); }
+.signup-address-row { grid-template-columns: minmax(150px,2fr) minmax(90px,.8fr) minmax(82px,.75fr) minmax(130px,1.4fr); }
 .signup-step {
   padding: 24px 0;
   display: grid;
+  grid-template-columns: 158px minmax(0,1fr);
   gap: 14px;
   border-bottom: 1px solid #e3e7f1;
 }
+.signup-step:not(.signup-step-final) > :not(.signup-step-heading) { grid-column: 2; }
+.signup-step:not(.signup-step-final) > .signup-step-heading { grid-column: 1; grid-row: 1 / span 5; align-self: start; }
 .signup-step:last-child { border-bottom: 0; }
 .signup-step-heading {
   display: grid;
@@ -5802,9 +5812,12 @@ footer a { color: var(--aurora-blue) !important; }
 .signup-step-final {
   margin: 6px -12px -12px;
   padding: 22px 12px 12px;
+  grid-template-columns: minmax(0,1fr);
+  gap: 10px;
   background: linear-gradient(180deg,transparent,#fafaff 20%);
   border-bottom: 0;
 }
+.signup-step-final .signup-step-heading { margin-bottom: 2px; }
 .signup-step .privacy-check {
   padding: 11px 13px;
   grid-template-columns: auto minmax(0,1fr);
@@ -5893,6 +5906,8 @@ footer a { color: var(--aurora-blue) !important; }
 @media (max-width: 1050px) {
   .signup-layout { grid-template-columns: minmax(0,1fr) 290px; gap: 20px; }
   .signup-summary { padding: 22px; }
+  .signup-step { grid-template-columns: 142px minmax(0,1fr); }
+  .signup-address-row { grid-template-columns: minmax(140px,1.8fr) minmax(82px,.8fr) minmax(76px,.7fr) minmax(115px,1.3fr); }
 }
 
 @media (max-width: 850px) {
@@ -5900,6 +5915,14 @@ footer a { color: var(--aurora-blue) !important; }
   .signup-summary { position: relative; top: auto; grid-row: 1; }
   .signup-summary dl { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); }
   .signup-summary dl > div { padding-right: 16px; }
+}
+
+@media (max-width: 720px) {
+  .signup-step { grid-template-columns: minmax(0,1fr); }
+  .signup-step:not(.signup-step-final) > :not(.signup-step-heading),
+  .signup-step:not(.signup-step-final) > .signup-step-heading { grid-column: 1; grid-row: auto; }
+  .signup-fields-row-three,
+  .signup-address-row { grid-template-columns: 1fr; }
 }
 
 @media (max-width: 620px) {

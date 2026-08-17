@@ -4990,18 +4990,22 @@ if (!showForm) {
         <form onSubmit={submit} className="form signup-form">
           <section className="signup-step">
             <header className="signup-step-heading"><span>01</span><div><h3>Persönliche Angaben</h3><p>Wer nimmt an der Sammelimpfung teil?</p></div></header>
-            <div className="two"><Input label="Vorname" name="firstname" value={form.firstname} onChange={update} required/><Input label="Nachname" name="lastname" value={form.lastname} onChange={update} required/></div>
+            <div className="signup-fields-row signup-fields-row-three"><Input label="Vorname" name="firstname" value={form.firstname} onChange={update} required/><Input label="Nachname" name="lastname" value={form.lastname} onChange={update} required/><Input label="E-Mail" name="email" type="email" value={form.email} onChange={update} onBlur={checkPreviousRegistration} required/></div>
           </section>
 
           <section className="signup-step">
             <header className="signup-step-heading"><span>02</span><div><h3>Anschrift</h3><p>Ihre aktuelle Kontaktanschrift.</p></div></header>
-            <div className="two"><Input label="Straße" name="street" value={form.street} onChange={update}/><Input label="Hausnummer" name="housenumber" value={form.housenumber} onChange={update}/></div>
-            <div className="two"><Input label="PLZ" name="zipcode" value={form.zipcode} onChange={update}/><Input label="Ort" name="city" value={form.city} onChange={update}/></div>
+            <div className="signup-fields-row signup-address-row"><Input label="Straße" name="street" value={form.street} onChange={update}/><Input label="Hausnummer" name="housenumber" value={form.housenumber} onChange={update}/><Input label="PLZ" name="zipcode" value={form.zipcode} onChange={update}/><Input label="Ort" name="city" value={form.city} onChange={update}/></div>
           </section>
 
           <section className="signup-step">
             <header className="signup-step-heading"><span>03</span><div><h3>Kontakt</h3><p>Für Bestätigung, QR-Code und Rückfragen.</p></div></header>
-            <div className="two"><Input label="E-Mail" name="email" type="email" value={form.email} onChange={update} onBlur={checkPreviousRegistration} required/><Input label="Telefon" name="phone" value={form.phone} onChange={update}/></div>
+            <div className="signup-fields-row signup-fields-row-three">
+              <Input label="Telefon" name="phone" value={form.phone} onChange={update}/>
+              <Input label="TSK Betriebsnummer." name="tsk_number" value={form.tsk_number} onChange={update} required/>
+              <Input label="Mitgliedercode (optional)" name="member_code" value={form.member_code} onChange={update}/>
+            </div>
+            <p className="signup-field-note">Optional: Mitglieder Ihres Vereins erhalten bei Eingabe eines gültigen Mitgliedscodes automatisch den vergünstigten Preis.</p>
 
           {reuseLookup.status === 'checking' && (
             <p className="signup-reuse-status" role="status">Frühere Anmeldung wird geprüft …</p>
@@ -5037,11 +5041,6 @@ if (!showForm) {
 
           <section className="signup-step">
             <header className="signup-step-heading"><span>04</span><div><h3>Tierbestand &amp; Termin</h3><p>Angaben zu Betrieb, Tieren und gewünschtem Impftermin.</p></div></header>
-            <div className="two">
-              <Input label="TSK Betriebsnummer." name="tsk_number" value={form.tsk_number} onChange={update} required/>
-              <Input label="Mitgliedercode (optional)" name="member_code" value={form.member_code} onChange={update}/>
-            </div>
-            <p className="signup-field-note">Optional: Mitglieder Ihres Vereins erhalten bei Eingabe eines gültigen Mitgliedscodes automatisch den vergünstigten Preis.</p>
             <div className="signup-animal-counts">
               <Input label="Anzahl Hühner" name="chicken_count" type="number" min="0" step="1" value={form.chicken_count} onChange={update}/>
               <Input label="Anzahl Zwerghühner" name="bantam_count" type="number" min="0" step="1" value={form.bantam_count} onChange={update}/>
@@ -5059,14 +5058,6 @@ if (!showForm) {
 
           <section className="signup-step signup-step-final">
             <header className="signup-step-heading"><span>05</span><div><h3>Zahlung &amp; Abschluss</h3><p>Hinweise zur Barzahlung prüfen und verbindlich anmelden.</p></div></header>
-          <label className="privacy-check">
-  <input
-    type="checkbox"
-    checked={privacyAccepted}
-    onChange={e => setPrivacyAccepted(e.target.checked)}
-  />
-  Ich habe die Datenschutzerklärung gelesen und stimme der Verarbeitung meiner Daten zu.
-</label>
    <div className="payment-methods" style={{ marginTop: '15px', marginBottom: '15px' }}>
   <strong>Zahlungsart:</strong>
 
@@ -5085,6 +5076,14 @@ if (!showForm) {
     Die Teilnahmegebühr bezahlen Sie am Impftag vor Ort in bar.
   </p>
 </div>
+          <label className="privacy-check">
+  <input
+    type="checkbox"
+    checked={privacyAccepted}
+    onChange={e => setPrivacyAccepted(e.target.checked)}
+  />
+  Ich habe die Datenschutzerklärung gelesen und stimme der Verarbeitung meiner Daten zu.
+</label>
           <aside
             className="participation-fee-notice participation-fee-notice-compact"
             role="note"
