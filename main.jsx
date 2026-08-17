@@ -6009,16 +6009,20 @@ if (!data.session) {
     <div className="page admin-login-page">
       <Header />
       <main className="admin-login-shell">
-        <section className="admin-login-hero">
-          <div className="admin-login-eyebrow">Geschützter Bereich</div>
-          <h1>Admin-Login</h1>
-          <p>Verwalten Sie Teilnehmer, Impftermine und Zahlungen zentral an einem Ort.</p>
+        <section className="admin-login-branding">
+          <span className="admin-login-branding-badge"><ShieldCheck size={15}/> Geschützter Bereich</span>
+          <div className="admin-login-branding-mark"><img src="/shield-orange.png" alt="" /></div>
+          <div>
+            <small>Impfgruppenmanager · RGZV Hagen</small>
+            <h1>Administration.<br/>Sicher organisiert.</h1>
+            <p>Verwalten Sie Teilnehmer, Impftermine und Zahlungen zentral an einem Ort.</p>
+          </div>
+          <div className="admin-login-security"><Lock size={18}/><span>Geschützter Verwaltungszugang</span></div>
         </section>
 
         <section className="card admin-login-card">
-          <div className="admin-login-icon"><Lock size={28}/></div>
           <div className="admin-login-heading">
-            <span>RGZV Hagen</span>
+            <span>Administration</span>
             <h2>Willkommen zurück</h2>
             <p>Bitte melden Sie sich mit Ihrem Admin-Konto an.</p>
           </div>
@@ -6026,7 +6030,7 @@ if (!data.session) {
           <label className="admin-login-field"><span>Passwort</span><input placeholder="Passwort" value={password} onChange={e=>setPassword(e.target.value)} type="password" autoComplete="current-password" /></label>
           {loginError && <p role="alert" className="admin-login-error">{loginError}</p>}
           <button className="primary admin-login-submit" onClick={login}>Einloggen</button>
-          <a className="admin-login-back" href="#">← Zur Anmeldung</a>
+          <a className="admin-login-back" href="#">← Zur öffentlichen Startseite</a>
         </section>
       </main>
       <Footer />
@@ -7273,24 +7277,31 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
     </div>
   )}
 
-  
+  <div className="admin-workspace-shell">
+    <aside className="admin-workspace-nav" aria-label="Admin-Navigation">
+      <div className="admin-workspace-brand">
+        <span><img src="/shield-orange.png" alt="" /></span>
+        <div><strong>Impfgruppenmanager</strong><small>RGZV Hagen · Admin</small></div>
+      </div>
+      <nav>
+        <a className="active" href="#admin-dashboard-top"><span>01</span>Übersicht</a>
+        <a href="#admin-checkin"><span>02</span>Check-in</a>
+        <a href="#appointment-management"><span>03</span>Impftermine</a>
+        <a href="#participant-management"><span>04</span>Teilnehmer</a>
+        {adminContext?.role === 'superadmin' && <button type="button" onClick={openAdminManagement}><span>05</span>Adminverwaltung</button>}
+      </nav>
+      <div className="admin-workspace-nav-bottom">
+        <a href="/Bedienungsanleitung-Impfgruppenmanager.pdf" download><Download size={16}/>Bedienungsanleitung</a>
+        <button type="button" onClick={onLogout}><LogOut size={16}/>Abmelden</button>
+      </div>
+    </aside>
+
+    <div className="admin-workspace-content">
     <main className="admin-wrap admin-dashboard-layout">
       <div id="admin-dashboard-top" className="admin-top">
-        <h1>Adminbereich</h1>
-        <div>
-          {logoutError && <span role="alert">{logoutError}</span>}
-          {adminContext?.role === 'superadmin' && (
-            <button className="ghost" onClick={openAdminManagement}>Adminverwaltung</button>
-          )}
-          <a
-            className="ghost admin-manual-download"
-            href="/Bedienungsanleitung-Impfgruppenmanager.pdf"
-            download
-          >
-            <Download size={16}/> Bedienungsanleitung herunterladen
-          </a>
-          <button className="ghost" onClick={onLogout}><LogOut size={16}/> Abmelden</button>
-        </div>
+        <div className="admin-top-copy"><span>Arbeitsbereich</span><h1>Übersicht</h1><p>{activeClub?.name || 'RGZV Hagen'} · {adminContext?.role === 'superadmin' ? 'Superadmin' : adminContext?.role === 'checkin_admin' ? 'Check-in-Admin' : 'Vereinsadmin'}</p></div>
+        <div className="admin-top-status"><span className="admin-top-status-dot"/>System bereit</div>
+        {logoutError && <span className="admin-shell-error" role="alert">{logoutError}</span>}
       </div>
       <AdminPresence />
       <div className="stats admin-dashboard-stats">
@@ -7322,7 +7333,7 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
         </span>
         <span className="smart-assistant-card-action">Aufgaben anzeigen →</span>
       </button>
-      <CheckinPanel participants={bindingParticipants} vaccinationDates={vaccinationDates} onChanged={load} adminRole={adminContext?.role} />
+      <div id="admin-checkin" className="admin-checkin-anchor"><CheckinPanel participants={bindingParticipants} vaccinationDates={vaccinationDates} onChanged={load} adminRole={adminContext?.role} /></div>
       <section className="card admin-appointments-card">
   <h2>Anmeldungen pro Impftermin</h2>
 
@@ -7686,6 +7697,8 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
     </div>
 )}
     </main>
+    </div>
+  </div>
   </div>
 }
 
