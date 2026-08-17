@@ -5930,12 +5930,11 @@ footer a { color: var(--aurora-blue) !important; }
 .signup-step {
   padding: 24px 0;
   display: grid;
-  grid-template-columns: 158px minmax(0,1fr);
+  grid-template-columns: minmax(0,1fr);
   gap: 14px;
   border-bottom: 1px solid #e3e7f1;
 }
-.signup-step:not(.signup-step-final) > :not(.signup-step-heading) { grid-column: 2; }
-.signup-step:not(.signup-step-final) > .signup-step-heading { grid-column: 1; grid-row: 1 / span 5; align-self: start; }
+.signup-step:not(.signup-step-final) > :not(.signup-step-heading) { grid-column: 1; }
 .signup-step:last-child { border-bottom: 0; }
 .signup-step-heading {
   display: grid;
@@ -6103,7 +6102,7 @@ footer a { color: var(--aurora-blue) !important; }
 @media (max-width: 1050px) {
   .signup-layout { grid-template-columns: minmax(0,1fr) 290px; gap: 20px; }
   .signup-summary { padding: 22px; }
-  .signup-step { grid-template-columns: 142px minmax(0,1fr); }
+  .signup-step { grid-template-columns: minmax(0,1fr); }
   .signup-address-row { grid-template-columns: minmax(140px,1.8fr) minmax(82px,.8fr) minmax(76px,.7fr) minmax(115px,1.3fr); }
 }
 
