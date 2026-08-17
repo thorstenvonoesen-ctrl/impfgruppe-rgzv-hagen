@@ -628,7 +628,7 @@ function InteractiveStatCard({ className, icon, label, value, loading, currency 
 
 const HOME_BENEFITS = [
   [Clock, 'Anmeldung in wenigen Minuten', 'Schnell erledigt', 'Die Anmeldung dauert in der Regel nur wenige Minuten und kann vollständig online abgeschlossen werden.'],
-  [CreditCard, 'Sichere Onlinezahlung', 'Flexibel bezahlen', 'Bezahlen Sie bequem per PayPal, Kreditkarte oder – falls angeboten – per Barzahlung am Impftermin.'],
+  [CreditCard, 'Barzahlung vor Ort', 'Einfach vor Ort', 'Die Teilnahmegebühr bezahlen Sie am Impftermin direkt vor Ort in bar.'],
   [Mail, 'QR-Code automatisch per E-Mail', 'Direkt per E-Mail', 'Ihren persönlichen QR-Code erhalten Sie automatisch per E-Mail. Dieser dient am Impftag zum schnellen Check-in.'],
   [FileX, 'Kein Papier am Impftag', 'Alles digital', 'Ihre Anmeldung liegt bereits digital vor. Zusätzliche Formulare müssen am Impftag nicht mitgebracht werden.'],
   [ScanLine, 'Schneller Check-in', 'Ein Scan genügt', 'QR-Code vorzeigen, scannen lassen und direkt einchecken – schnell und unkompliziert.'],
@@ -1455,7 +1455,7 @@ function ClubSelect() {
           <div className="landing-hero-copy">
             <span className="landing-eyebrow"><ShieldCheck size={15}/> Newcastle-Sammelimpfung</span>
             <h1>Gemeinsam gesund.<br/>Gemeinsam <em>geschützt.</em></h1>
-            <p>Online anmelden, bequem bezahlen, persönlichen QR-Code erhalten und am Impftag digital einchecken.</p>
+            <p>Online anmelden, persönlichen QR-Code erhalten, am Impftag digital einchecken und vor Ort bar bezahlen.</p>
             <div className="landing-hero-actions">
               <a className="landing-button landing-button-primary" href="#info">Zur Impfanmeldung <span>→</span></a>
               <a className="landing-button landing-button-secondary" href="https://www.rgzv-hagen-westfalen.com" target="_blank" rel="noopener noreferrer">RGZV Hagen kennenlernen</a>
@@ -1802,7 +1802,7 @@ function InfoPageLegacy() {
       <div className="info-process-grid">
         {[
           [FileText, 'Anmeldung', 'Teilnehmer online registrieren'],
-          [CreditCard, 'Zahlung', 'Sicher online bezahlen'],
+          [Mail, 'Bestätigung', 'Anmeldung per E-Mail bestätigt'],
           [Mail, 'QR-Code', 'Automatisch per E-Mail erhalten'],
           [QrCode, 'Check-in', 'QR-Code am Impftag scannen'],
           [Syringe, 'Impfung', 'Direkt teilnehmen']
@@ -1820,7 +1820,7 @@ function InfoPageLegacy() {
     <div className="info-process-trust" aria-label="Vorteile des digitalen Ablaufs">
       {[
         'Anmeldung in wenigen Minuten',
-        'Sichere Onlinezahlung',
+        'Barzahlung vor Ort',
         'QR-Code automatisch per E-Mail',
         'Kein Papier am Impftag erforderlich'
       ].map(benefit => (
@@ -1874,7 +1874,7 @@ function InfoPageLegacy() {
   [
     "▣",
     "QR-Check-in",
-    "Nach erfolgreicher Zahlung erhalten Sie Ihren persönlichen QR-Code. Am Impftag genügt ein kurzer Scan."
+    "Nach der Anmeldung erhalten Sie Ihren persönlichen QR-Code. Am Impftag genügt ein kurzer Scan."
   ]
 ].map(([icon, title, text]) => (
     <div
@@ -1972,7 +1972,7 @@ minHeight: openCard === title ? "360px" : "230px",
 
     {title === "QR-Check-in" && (
       <>
-        Der persönliche QR-Code wird nach erfolgreicher Zahlung direkt in
+        Der persönliche QR-Code wird nach der Anmeldung direkt in
         der Bestätigungs-E-Mail bereitgestellt und beschleunigt die Anmeldung
         beim Impftermin.
       </>
@@ -2005,7 +2005,7 @@ minHeight: openCard === title ? "360px" : "230px",
 function InfoPage() {
   const processSteps = [
     [FileText, 'Anmeldung', 'Teilnehmer online registrieren'],
-    [CreditCard, 'Zahlung', 'Sicher online bezahlen'],
+    [Mail, 'Bestätigung', 'Anmeldung per E-Mail bestätigt'],
     [Mail, 'QR-Code', 'Automatisch per E-Mail erhalten'],
     [QrCode, 'Check-in', 'QR-Code am Impftag scannen'],
     [Syringe, 'Impfung', 'Direkt teilnehmen']
@@ -2013,7 +2013,7 @@ function InfoPage() {
 
   const digitalBenefits = [
     [Clock, 'Anmeldung in wenigen Minuten'],
-    [CreditCard, 'Sichere Onlinezahlung'],
+    [CreditCard, 'Barzahlung vor Ort'],
     [Mail, 'QR-Code automatisch per E-Mail'],
     [ScanLine, 'Schneller Check-in am Impftag'],
     [FileX, 'Kein Papier am Impftag erforderlich'],
@@ -2071,7 +2071,7 @@ function InfoPage() {
 
           <button className="vaccination-knowledge-digital" type="button" onClick={() => openInfoDetail('#info-anmeldung')}>
             <span className="vaccination-knowledge-digital-icon"><QrCode size={30}/></span>
-            <div><small>Digitaler QR-Check-in</small><h3>Vom Postfach direkt zum Impftag.</h3><p>Nach erfolgreicher Zahlung erhalten Sie Ihren persönlichen QR-Code. Am Impftag genügt ein kurzer Scan.</p></div>
+            <div><small>Digitaler QR-Check-in</small><h3>Vom Postfach direkt zum Impftag.</h3><p>Nach der Anmeldung erhalten Sie Ihren persönlichen QR-Code. Am Impftag genügt ein kurzer Scan.</p></div>
             <strong>Digitalen Ablauf ansehen →</strong>
           </button>
         </section>
@@ -2881,7 +2881,7 @@ function InfoSammelimpfung() {
 
   const processSteps = [
     ["1", "Online anmelden", "Sie wählen den passenden Termin und erfassen Ihren Geflügelbestand mit den benötigten Kontaktdaten."],
-    ["2", "Teilnahme bestätigen", "Nach Abschluss der Anmeldung erhalten Sie eine Bestätigung. Bei erfolgreicher Zahlung kommt Ihr persönlicher QR-Code per E-Mail."],
+    ["2", "Teilnahme bestätigen", "Nach Abschluss der Anmeldung erhalten Sie Ihre Bestätigung und den persönlichen QR-Code per E-Mail."],
     ["3", "Termin vorbereiten", "Der Verein fasst die Meldungen zusammen und organisiert den Ablauf sowie den benötigten Impfstoff auf Basis aller Anmeldungen."],
     ["4", "Vor Ort einchecken", "Am Impftag zeigen Sie Ihren QR-Code vor. Der Impfwart scannt ihn und kann Ihre Anmeldung sofort eindeutig zuordnen."],
     ["5", "Impfung durchführen", "Die Ausgabe und Anwendung erfolgen nach den für den Termin mitgeteilten organisatorischen und fachlichen Vorgaben."]
@@ -2890,7 +2890,7 @@ function InfoSammelimpfung() {
   const faqs = [
     ["Muss ich Vereinsmitglied sein?", "Nein. Sofern beim jeweiligen Termin nichts anderes angegeben ist, können auch Geflügelhalterinnen und Geflügelhalter teilnehmen, die nicht Mitglied im Verein sind."],
     ["Warum muss ich die Tierzahl frühzeitig angeben?", "Die gemeldete Tierzahl ist für die Planung entscheidend. Sie hilft dabei, den Bedarf realistisch zu bestimmen und den Termin verlässlich vorzubereiten."],
-    ["Wann erhalte ich meinen QR-Code?", "Ihr persönlicher QR-Code wird nach erfolgreicher Zahlung automatisch mit der Zahlungsbestätigung per E-Mail versendet."],
+    ["Wann erhalte ich meinen QR-Code?", "Ihr persönlicher QR-Code wird nach Abschluss der Anmeldung automatisch mit der Bestätigung per E-Mail versendet."],
     ["Was mache ich, wenn ich die E-Mail nicht finde?", "Prüfen Sie bitte zunächst Ihren Spam-Ordner. Ist die Nachricht dort ebenfalls nicht vorhanden, wenden Sie sich rechtzeitig vor dem Termin an den Veranstalter."],
     ["Kann eine andere Person die Impfung für mich abholen?", "Ja. Eine andere Person kann den Impfstoff für Sie abholen. Voraussetzung ist, dass die Anmeldung eindeutig zugeordnet werden kann und der QR-Code bzw. die Anmeldebestätigung vorliegt. Bei Unsicherheiten oder besonderen Fällen empfehlen wir, den Veranstalter vorab zu informieren."],
     ["Was passiert, wenn sich meine Tierzahl ändert?", "Teilen Sie größere Änderungen möglichst frühzeitig mit. Kurzfristige Abweichungen können die bereits abgeschlossene Impfstoff- und Ablaufplanung beeinflussen."]
@@ -3008,9 +3008,8 @@ function InfoSammelimpfung() {
               <h2>Gut informiert bis zum Termin</h2>
               <p>
                 Ihre Angaben werden dem gewählten Impftermin zugeordnet. Sie
-                erhalten die vorgesehenen Bestätigungen per E-Mail und nach
-                erfolgreicher Zahlung zusätzlich Ihren persönlichen QR-Code für
-                den Check-in.
+                erhalten die vorgesehene Bestätigung und Ihren persönlichen
+                QR-Code für den Check-in per E-Mail.
               </p>
               <p>
                 Bewahren Sie diese Nachricht am besten auf Ihrem Smartphone auf.
@@ -3675,8 +3674,8 @@ Impftag deutlich reduziert.
 function InfoAnmeldung() {
   const qrSteps = [
     ["📝", "Anmeldung abschließen", "Sie erfassen Ihren Bestand und wählen den vorgesehenen Impftermin."],
-    ["💳", "Zahlung bestätigen", "Nach erfolgreicher Zahlung wird die Anmeldung für den digitalen Check-in vorbereitet."],
-    ["📧", "QR-Code erhalten", "Der persönliche QR-Code kommt automatisch eingebettet in Ihrer Zahlungsbestätigungs-E-Mail."],
+    ["📧", "Anmeldung bestätigen", "Nach Abschluss der Anmeldung wird der digitale Check-in vorbereitet."],
+    ["📱", "QR-Code erhalten", "Der persönliche QR-Code kommt automatisch mit Ihrer Bestätigungs-E-Mail."],
     ["📱", "Am Impftag vorzeigen", "Öffnen Sie die E-Mail auf dem Smartphone oder bringen Sie einen gut lesbaren Ausdruck mit."],
     ["✅", "Schnell einchecken", "Der Impfwart scannt den Code und ordnet Ihre Anmeldung direkt dem richtigen Termin zu."]
   ]
@@ -3690,7 +3689,7 @@ function InfoAnmeldung() {
             QR-Check-in am Impftag
           </h1>
           <p>
-            Nach Anmeldung und erfolgreicher Zahlung erhalten Sie Ihren
+            Nach der Anmeldung erhalten Sie Ihren
             persönlichen QR-Code automatisch per E-Mail. Ein kurzer Scan genügt,
             damit der Impfwart Ihre Anmeldung findet und den Check-in sicher
             dokumentiert.
@@ -3905,7 +3904,7 @@ gesamten Sammelimpfung.
   Neben Ihrem Namen und Ihren Kontaktdaten werden unter anderem Ihre Anschrift,
   die Tierart, die Anzahl der zu impfenden Tiere sowie – sofern vorhanden –
   Ihre TSK-Betriebsnummer abgefragt. Zusätzlich wählen Sie den gewünschten
-  Impftermin aus und entscheiden sich für die angebotene Zahlungsart.
+  Impftermin aus. Die Teilnahmegebühr bezahlen Sie am Impftag vor Ort in bar.
 </p>
 
 <div
@@ -4933,7 +4932,7 @@ if (!showForm) {
   <h3>Ihre Vorteile</h3>
 
   <p>✔ Online anmelden</p>
-  <p>✔ Online bezahlen</p>
+  <p>✔ Barzahlung vor Ort</p>
   <p>✔ Automatische Bestätigung per E-Mail</p>
   <p>✔ Offizielle Sammelimpfbescheinigung</p>
 
@@ -5059,7 +5058,7 @@ if (!showForm) {
           </section>
 
           <section className="signup-step signup-step-final">
-            <header className="signup-step-heading"><span>05</span><div><h3>Zahlung &amp; Abschluss</h3><p>Zahlungsart wählen, Hinweise prüfen und verbindlich anmelden.</p></div></header>
+            <header className="signup-step-heading"><span>05</span><div><h3>Zahlung &amp; Abschluss</h3><p>Hinweise zur Barzahlung prüfen und verbindlich anmelden.</p></div></header>
           <label className="privacy-check">
   <input
     type="checkbox"
@@ -5071,62 +5070,6 @@ if (!showForm) {
    <div className="payment-methods" style={{ marginTop: '15px', marginBottom: '15px' }}>
   <strong>Zahlungsart:</strong>
 
-  <div className="payment-option" style={{ marginTop: '10px', opacity: PAYPAL_ENABLED ? 1 : 0.65 }}>
-    <input
-      type="radio"
-      name="paymentMethod"
-      value="paypal"
-      checked={paymentMethod === 'paypal'}
-      onChange={(e) => setPaymentMethod(e.target.value)}
-      disabled={!PAYPAL_ENABLED}
-      aria-describedby="paypal-unavailable-note"
-    />
-    <span style={{ marginLeft: '8px' }}>
-      ⚠️ PayPal – Derzeit nicht verfügbar
-    </span>
-    {!PAYPAL_ENABLED && (
-      <p id="paypal-unavailable-note" style={{ margin: '6px 0 0 26px', color: '#6b7280', fontSize: '14px', lineHeight: '1.5' }}>
-        PayPal steht derzeit nicht zur Verfügung.
-      </p>
-    )}
-  </div>
-
-  <div className="payment-option" style={{ marginTop: '10px', opacity: STRIPE_ENABLED ? 1 : 0.65 }}>
-    <input
-      type="radio"
-      name="paymentMethod"
-      value="stripe"
-      checked={paymentMethod === 'stripe'}
-      onChange={(e) => setPaymentMethod(e.target.value)}
-      disabled={!STRIPE_ENABLED}
-      aria-describedby="stripe-unavailable-note"
-    />
-    <span style={{ marginLeft: '8px' }}>
-      Stripe / Online-Zahlung – Derzeit nicht verfügbar
-    </span>
-    {!STRIPE_ENABLED && (
-      <p id="stripe-unavailable-note" style={{ margin: '6px 0 0 26px', color: '#6b7280', fontSize: '14px', lineHeight: '1.5' }}>
-        Online-Zahlung über Stripe steht derzeit nicht zur Verfügung.
-      </p>
-    )}
-  </div>
-
-  <div className="payment-option" style={{ marginTop: '10px', opacity: 0.65 }}>
-    <input
-      type="radio"
-      name="paymentMethod"
-      value="sepa"
-      disabled
-      aria-describedby="sepa-unavailable-note"
-    />
-    <span style={{ marginLeft: '8px' }}>
-      SEPA-Lastschrift – Derzeit nicht verfügbar
-    </span>
-    <p id="sepa-unavailable-note" style={{ margin: '6px 0 0 26px', color: '#6b7280', fontSize: '14px', lineHeight: '1.5' }}>
-      SEPA-Lastschrift steht derzeit nicht zur Verfügung. Bitte nutzen Sie Kreditkarte, Apple Pay, Google Pay oder Barzahlung vor Ort.
-    </p>
-  </div>
-
   <div className="payment-option" style={{ marginTop: '10px' }}>
     <input
       type="radio"
@@ -5135,19 +5078,11 @@ if (!showForm) {
       checked={paymentMethod === 'bar'}
       onChange={(e) => setPaymentMethod(e.target.value)}
     />
-    <span style={{ marginLeft: '8px' }}>Barzahlung vor Ort – Verfügbar</span>
+    <span style={{ marginLeft: '8px' }}>Barzahlung vor Ort</span>
   </div>
 
   <p style={{ margin: '12px 0 0', color: '#6b7280', fontSize: '14px', lineHeight: '1.5' }}>
-    Online-Zahlungen stehen derzeit nicht zur Verfügung. Bitte wählen Sie für Ihre Anmeldung „Barzahlung vor Ort“.
-  </p>
-
-  <p style={{ margin: '12px 0 0', color: '#6b7280', fontSize: '14px', lineHeight: '1.5' }}>
-    {paymentMethod === 'bar'
-      ? 'Die Teilnahmegebühr bezahlen Sie am Impftag vor Ort in bar. Es erfolgt keine Weiterleitung zu einem Zahlungsdienstleister.'
-      : paymentMethod === 'stripe'
-        ? 'Nach der Anmeldung werden Sie zur sicheren Zahlung per Kreditkarte, Apple Pay oder Google Pay weitergeleitet.'
-        : 'Nach der Anmeldung werden Sie zur sicheren Zahlung mit PayPal weitergeleitet.'}
+    Die Teilnahmegebühr bezahlen Sie am Impftag vor Ort in bar.
   </p>
 </div>
           <aside
@@ -5171,8 +5106,8 @@ if (!showForm) {
                   ? `${animalTotal} Tiere verbindlich zur Newcastle-Impfung anmelden`
                   : 'Verbindlich zur Newcastle-Impfung anmelden'
                 : animalTotal > 0
-                  ? `${animalTotal} Tiere zur Newcastle-Impfung anmelden & bezahlen`
-                  : 'Zur Newcastle-Impfung anmelden & bezahlen'}
+                  ? `${animalTotal} Tiere zur Newcastle-Impfung anmelden`
+                  : 'Zur Newcastle-Impfung anmelden'}
           </button>
           {message && <p className="message">{message}</p>}
           </section>
@@ -5187,7 +5122,7 @@ if (!showForm) {
           <div><dt>Impftermin</dt><dd>{selectedVaccinationDate ? `${selectedVaccinationDate.title} · ${new Date(selectedVaccinationDate.date).toLocaleDateString('de-DE')}` : 'Noch nicht ausgewählt'}</dd></div>
           <div><dt>Tierbestand</dt><dd>{animalTotal > 0 ? `${animalTotal} Tiere` : 'Noch keine Anzahl'}</dd></div>
           <div><dt>Impfstoff</dt><dd>Newcastle-Impfung</dd></div>
-          <div><dt>Zahlungsart</dt><dd>{paymentMethod === 'bar' ? 'Barzahlung vor Ort' : paymentMethod === 'stripe' ? 'Stripe / Online-Zahlung' : 'PayPal'}</dd></div>
+          <div><dt>Zahlungsart</dt><dd>Barzahlung vor Ort</dd></div>
           <div><dt>Teilnahmegebühr</dt><dd>{club?.guest_price ?? 10} € Gäste · {club?.member_price ?? 5} € Mitglieder</dd></div>
         </dl>
         <div className="signup-summary-note"><ShieldCheck size={18}/><p>Ihre Angaben werden sicher für die Organisation des Impftermins verwendet.</p></div>
