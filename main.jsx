@@ -7816,9 +7816,9 @@ function Input({ label, ...props }) { return <label>{label}<input {...props}/></
 function Stat({ icon,label,value }) { return <div className="stat">{icon}<span>{label}</span><strong>{value}</strong></div> }
 function Datenschutz() {
   return (
-    <div className="page">
+    <div className="page legal-page privacy-page">
       <Header />
-      <main className="card">
+      <main className="card legal-document">
         
 
  <h2>Datenschutzerklärung für das Anmeldeformular</h2>
@@ -8074,7 +8074,7 @@ function Datenschutz() {
   Stand Juni 2026
 </p>
 
-        <a href="#">Zurück zur Anmeldung</a>
+        <a className="legal-back" href="#">Zurück zur Anmeldung</a>
       </main>
     </div>
   )
@@ -8082,9 +8082,9 @@ function Datenschutz() {
 
 function Impressum() {
   return (
-    <div className="page">
+    <div className="page legal-page imprint-page">
       <Header />
-      <main className="card">
+      <main className="card legal-document">
         <h1>Impressum</h1>
 
         <p>
@@ -8119,7 +8119,7 @@ function Impressum() {
   Registernummer: VR 3271
 </p>
 
-        <a href="#">Zurück zur Anmeldung</a>
+        <a className="legal-back" href="#">Zurück zur Anmeldung</a>
       </main>
     </div>
   )
