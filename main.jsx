@@ -7284,10 +7284,10 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
         <div><strong>Impfgruppenmanager</strong><small>RGZV Hagen · Admin</small></div>
       </div>
       <nav>
-        <a className="active" href="#admin-dashboard-top"><span>01</span>Übersicht</a>
-        <a href="#admin-checkin"><span>02</span>Check-in</a>
-        <a href="#appointment-management"><span>03</span>Impftermine</a>
-        <a href="#participant-management"><span>04</span>Teilnehmer</a>
+        <a className="active" href="#admin-dashboard-top" onClick={event => { event.preventDefault(); document.getElementById('admin-dashboard-top')?.scrollIntoView({ behavior: 'smooth', block: 'start' }) }}><span>01</span>Übersicht</a>
+        <a href="#admin-checkin" onClick={event => { event.preventDefault(); document.getElementById('admin-checkin')?.scrollIntoView({ behavior: 'smooth', block: 'start' }) }}><span>02</span>Check-in</a>
+        <a href="#appointment-management" onClick={event => { event.preventDefault(); document.getElementById('appointment-management')?.scrollIntoView({ behavior: 'smooth', block: 'start' }) }}><span>03</span>Impftermine</a>
+        <a href="#participant-management" onClick={event => { event.preventDefault(); document.getElementById('participant-management')?.scrollIntoView({ behavior: 'smooth', block: 'start' }) }}><span>04</span>Teilnehmer</a>
         {adminContext?.role === 'superadmin' && <button type="button" onClick={openAdminManagement}><span>05</span>Adminverwaltung</button>}
       </nav>
       <div className="admin-workspace-nav-bottom">
