@@ -635,6 +635,8 @@ const HOME_BENEFITS = [
   [Settings2, 'Weniger Verwaltungsaufwand', 'Mehr Zeit fürs Wesentliche', 'Digitale Teilnehmerlisten, Zahlungsübersichten und Auswertungen erleichtern die Organisation der Impfgruppe.']
 ]
 
+const LANDING_BENEFITS = [HOME_BENEFITS[0], HOME_BENEFITS[2], HOME_BENEFITS[4], HOME_BENEFITS[5]]
+
 function HomeBenefitInfoField({ benefit, index, isOpen, onOpen, onClose, onToggle }) {
   const [Icon, label, title, description] = benefit
   const fieldRef = useRef(null)
@@ -780,27 +782,24 @@ function LiveSignupStats({ club }) {
   }, [])
 
   return (
-    <section className="live-signup-stats home-dashboard-grid" aria-label="Nächster Impftermin und Vorteile der Online-Anmeldung">
-      <InteractiveStatCard className="live-stat-card home-countdown-card" icon={<CalendarDays size={30}/>} label="Nächster Impftermin" loading={!ready} appointmentDates={stats.dates} club={club} isAppointment tone="stat-date" animationIndex={0} />
-      <div className="home-dashboard-support">
-      <div className="home-community-card">
-        <div className="home-community-heading">
-          <h2>Bereits angemeldet</h2>
+    <>
+      <section className="landing-appointment" aria-label="Nächster Impftermin">
+        <div className="landing-appointment-main">
+          <InteractiveStatCard className="landing-countdown" icon={<CalendarDays size={28}/>} label="Nächster Impftermin" loading={!ready} appointmentDates={stats.dates} club={club} isAppointment tone="stat-date" animationIndex={0} />
         </div>
-        <div className="home-community-metrics">
-          <div><span><Users size={22}/></span><strong>{ready ? <AnimatedMetric value={Number(stats.participants || 0)}/> : '–'}</strong><small>Geflügelhalter</small></div>
-          <div><span><Syringe size={22}/></span><strong>{ready ? <AnimatedMetric value={Number(stats.animals || 0)}/> : '–'}</strong><small>Tiere</small></div>
+        <div className="landing-appointment-metrics" aria-label="Aktuelle Anmeldezahlen">
+          <div><span><Users size={19}/></span><strong>{ready ? <AnimatedMetric value={Number(stats.participants || 0)}/> : '–'}</strong><small>Geflügelhalter</small></div>
+          <div><span><Syringe size={19}/></span><strong>{ready ? <AnimatedMetric value={Number(stats.animals || 0)}/> : '–'}</strong><small>angemeldete Tiere</small></div>
         </div>
-        <p>Bereits für den nächsten Termin angemeldet.</p>
-      </div>
-      <div className="home-benefits-card premium-home-surface">
-        <div className="home-benefits-heading">
-          <span>Digital. Sicher. Zeitsparend.</span>
-          <h2>Warum online anmelden?</h2>
-          <p>Von der Registrierung bis zum Impftag begleitet Sie ein klarer, vollständig digitaler Ablauf.</p>
+      </section>
+
+      <section className="landing-benefits" aria-labelledby="landing-benefits-title">
+        <div className="landing-section-heading">
+          <span>Digital organisiert</span>
+          <h2 id="landing-benefits-title">Einfach anmelden. Entspannt zum Impftag.</h2>
         </div>
-        <div className="home-benefits-list" ref={benefitsRef}>
-          {HOME_BENEFITS.map((benefit, index) => (
+        <div className="landing-benefits-list" ref={benefitsRef}>
+          {LANDING_BENEFITS.map((benefit, index) => (
             <HomeBenefitInfoField
               key={benefit[1]}
               benefit={benefit}
@@ -812,9 +811,8 @@ function LiveSignupStats({ club }) {
             />
           ))}
         </div>
-      </div>
-      </div>
-    </section>
+      </section>
+    </>
   )
 }
 function ClubSelect() {
@@ -1452,54 +1450,33 @@ function ClubSelect() {
 
       <Header />
 
-      <main className="final-home">
-        <section className="home-command-center">
-          <div className="home-command-intro">
-            <section className="final-home-hero premium-home-surface">
-              <div className="final-home-hero-copy">
-                <h1>Online-Anmeldung beim RGZV Hagen und Umgebung seit 1903 e.V.</h1>
-                <h2>zur Newcastle-Sammelimpfung</h2>
-                <p>Geflügelbestand sicher online anmelden, bequem bezahlen und am Impftag digital einchecken.</p>
-
-                <div className="final-home-hero-actions">
-                  <a
-                    className="final-home-club-link"
-                    href="https://www.rgzv-hagen-westfalen.com"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    RGZV Hagen kennenlernen
-                  </a>
-                  <a className="final-home-club-link" href="#lust-auf-verein">
-                    ❤️ Lust auf Verein?
-                  </a>
-                </div>
-              </div>
-
-              <div className="final-home-logo-stage" aria-hidden="true">
-                <img src="/shield-orange.png" alt="" />
-              </div>
-            </section>
-
-            <section className="final-home-nav" aria-label="Weitere Bereiche">
-              <button
-                type="button"
-                className="final-home-nav-card final-home-nav-primary premium-home-surface"
-                onClick={() => { window.location.hash = '#info' }}
-              >
-                <span className="final-home-nav-icon" aria-hidden="true">👥</span>
-                <span className="final-home-nav-text">
-                  <strong>Zur Impfanmeldung</strong>
-                  <small>Direkt zur Anmeldung Ihrer Tiere für den nächsten Impftermin des RGZV Hagen.</small>
-                </span>
-                <span className="final-home-nav-action">Zur Impfanmeldung →</span>
-              </button>
-            </section>
+      <main className="landing-main">
+        <section className="landing-hero">
+          <div className="landing-hero-copy">
+            <span className="landing-eyebrow"><ShieldCheck size={15}/> Newcastle-Sammelimpfung</span>
+            <h1>Gemeinsam gesund.<br/>Gemeinsam <em>geschützt.</em></h1>
+            <p>Online anmelden, bequem bezahlen, persönlichen QR-Code erhalten und am Impftag digital einchecken.</p>
+            <div className="landing-hero-actions">
+              <a className="landing-button landing-button-primary" href="#info">Zur Impfanmeldung <span>→</span></a>
+              <a className="landing-button landing-button-secondary" href="https://www.rgzv-hagen-westfalen.com" target="_blank" rel="noopener noreferrer">RGZV Hagen kennenlernen</a>
+            </div>
           </div>
 
-          <aside className="home-command-data" aria-label="Impftermin und Anmeldung">
-            <LiveSignupStats club={currentClub} />
-          </aside>
+          <div className="landing-visual" aria-hidden="true">
+            <div className="landing-visual-orbit landing-visual-orbit-one" />
+            <div className="landing-visual-orbit landing-visual-orbit-two" />
+            <div className="landing-visual-center"><img src="/shield-orange.png" alt="" /></div>
+            <span className="landing-visual-node landing-node-calendar"><CalendarDays size={25}/><small>Termin</small></span>
+            <span className="landing-visual-node landing-node-qr"><QrCode size={25}/><small>QR-Code</small></span>
+            <span className="landing-visual-node landing-node-check"><ScanLine size={25}/><small>Check-in</small></span>
+          </div>
+        </section>
+
+        <LiveSignupStats club={currentClub} />
+
+        <section className="landing-closing">
+          <div><span>Bereit für den nächsten Termin?</span><h2>Jetzt Tiere für den nächsten Impftermin anmelden.</h2></div>
+          <a className="landing-button landing-button-light" href="#info">Zur Impfanmeldung <span>→</span></a>
         </section>
       </main>
 
@@ -8348,6 +8325,7 @@ function Footer({ showDeveloper = false }) {
       <a href="#impressum" style={{ color: '#ffffff' }}>
         Impressum
       </a>
+      {showDeveloper && <>{' | '}<a href="mailto:kontakt@rgzv-hagen-westfalen.de">Kontakt</a></>}
       {showDeveloper && (
         <div className="footer-signature">
           Entwickelt von <span>Thorsten von Oesen</span> · Konzeption, Entwicklung &amp; Design
