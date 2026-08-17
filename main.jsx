@@ -4267,6 +4267,7 @@ function PublicSignup() {
     (sum, { field }) => sum + (Number.isSafeInteger(Number(form[field])) && Number(form[field]) >= 0 ? Number(form[field]) : 0),
     0
   )
+  const selectedVaccinationDate = vaccinationDates.find(date => String(date.id) === String(form.vaccination_date_id)) || null
   
   const normalizeReuseEmail = value => String(value || '').trim().toLowerCase()
   const isValidReuseEmail = value => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)
@@ -4875,32 +4876,37 @@ if (!showForm) {
   <>
   <div className="page signup-page">
     <Header />
-    <main
-      className="signup-shell"
->
-      <section className="signup-hero">
-        <div className="signup-eyebrow">Online-Anmeldung</div>
-        <h1>Teilnehmer anmelden</h1>
+    <main className="signup-shell signup-workspace">
+      <section className="signup-page-head">
+        <a className="signup-home-link" href="#">← Zur Startseite</a>
+        <span className="signup-eyebrow"><ShieldCheck size={15}/> Newcastle-Sammelimpfung</span>
+        <h1>Tiere zum Impftermin anmelden</h1>
         <p>Registrieren Sie Ihre Tiere einfach und sicher für den nächsten Impftermin.</p>
       </section>
 
+      <div className="signup-layout">
       <section className="card signup-card">
         <div className="signup-card-heading">
           <span>Impfgruppe RGZV Hagen</span>
           <h2>Ihre Anmeldung</h2>
           <p>Bitte füllen Sie die folgenden Angaben vollständig aus.</p>
         </div>
-        <div className="section-title signup-section-title">
-  Persönliche Daten
-</div>
+        <div className="form-section signup-form-section">
+        <form onSubmit={submit} className="form signup-form">
+          <section className="signup-step">
+            <header className="signup-step-heading"><span>01</span><div><h3>Persönliche Angaben</h3><p>Wer nimmt an der Sammelimpfung teil?</p></div></header>
+            <div className="two"><Input label="Vorname" name="firstname" value={form.firstname} onChange={update} required/><Input label="Nachname" name="lastname" value={form.lastname} onChange={update} required/></div>
+          </section>
 
-<div className="form-section signup-form-section">
+          <section className="signup-step">
+            <header className="signup-step-heading"><span>02</span><div><h3>Anschrift</h3><p>Ihre aktuelle Kontaktanschrift.</p></div></header>
+            <div className="two"><Input label="Straße" name="street" value={form.street} onChange={update}/><Input label="Hausnummer" name="housenumber" value={form.housenumber} onChange={update}/></div>
+            <div className="two"><Input label="PLZ" name="zipcode" value={form.zipcode} onChange={update}/><Input label="Ort" name="city" value={form.city} onChange={update}/></div>
+          </section>
 
-<form onSubmit={submit} className="form signup-form">
-          <div className="two"><Input label="Vorname" name="firstname" value={form.firstname} onChange={update} required/><Input label="Nachname" name="lastname" value={form.lastname} onChange={update} required/></div>
-          <div className="two"><Input label="Straße" name="street" value={form.street} onChange={update}/><Input label="Hausnummer" name="housenumber" value={form.housenumber} onChange={update}/></div>
-          <div className="two"><Input label="PLZ" name="zipcode" value={form.zipcode} onChange={update}/><Input label="Ort" name="city" value={form.city} onChange={update}/></div>
-          <div className="two"><Input label="E-Mail" name="email" type="email" value={form.email} onChange={update} onBlur={checkPreviousRegistration} required/><Input label="Telefon" name="phone" value={form.phone} onChange={update}/></div>
+          <section className="signup-step">
+            <header className="signup-step-heading"><span>03</span><div><h3>Kontakt</h3><p>Für Bestätigung, QR-Code und Rückfragen.</p></div></header>
+            <div className="two"><Input label="E-Mail" name="email" type="email" value={form.email} onChange={update} onBlur={checkPreviousRegistration} required/><Input label="Telefon" name="phone" value={form.phone} onChange={update}/></div>
 
           {reuseLookup.status === 'checking' && (
             <p className="signup-reuse-status" role="status">Frühere Anmeldung wird geprüft …</p>
@@ -4932,57 +4938,32 @@ if (!showForm) {
           {reuseConfirmation && (
             <p className="signup-reuse-confirmation" role="status">{reuseConfirmation}</p>
           )}
-     
-          <div className="section-title signup-section-title">
-  Tierhalterdaten
-</div>
-          <Input label="TSK Betriebsnummer." name="tsk_number" value={form.tsk_number} onChange={update} required/>
-          <Input
-  label="Mitgliedercode (optional)"
-  name="member_code"
-  value={form.member_code}
-  onChange={update}
-/>
-  
+          </section>
 
-<p
-  style={{
-    marginTop: '8px',
-    marginBottom: '16px',
-    color: '#6b7280',
-    fontSize: '14px'
-  }}
->
-  Optional: Mitglieder Ihres Vereins erhalten bei Eingabe eines gültigen Mitgliedscodes automatisch den vergünstigten Preis.
-</p>
+          <section className="signup-step">
+            <header className="signup-step-heading"><span>04</span><div><h3>Tierbestand &amp; Termin</h3><p>Angaben zu Betrieb, Tieren und gewünschtem Impftermin.</p></div></header>
+            <div className="two">
+              <Input label="TSK Betriebsnummer." name="tsk_number" value={form.tsk_number} onChange={update} required/>
+              <Input label="Mitgliedercode (optional)" name="member_code" value={form.member_code} onChange={update}/>
+            </div>
+            <p className="signup-field-note">Optional: Mitglieder Ihres Vereins erhalten bei Eingabe eines gültigen Mitgliedscodes automatisch den vergünstigten Preis.</p>
+            <div className="signup-animal-counts">
+              <Input label="Anzahl Hühner" name="chicken_count" type="number" min="0" step="1" value={form.chicken_count} onChange={update}/>
+              <Input label="Anzahl Zwerghühner" name="bantam_count" type="number" min="0" step="1" value={form.bantam_count} onChange={update}/>
+              <Input label="Anzahl Puten" name="turkey_count" type="number" min="0" step="1" value={form.turkey_count} onChange={update}/>
+            </div>
+            <p className="signup-animal-total" aria-live="polite">Gesamtzahl Tiere: <strong>{animalTotal}</strong></p>
+            <div className="two">
+              <label>Impfstoff<input value="Newcastle-Impfung" readOnly aria-readonly="true" /></label>
+              <label>Impftermin<select name="vaccination_date_id" value={form.vaccination_date_id} onChange={update} required>
+                <option value="">Bitte Impftermin wählen</option>
+                {vaccinationDates.map(v => <option key={v.id} value={v.id}>{v.title} - {new Date(v.date).toLocaleDateString('de-DE')}</option>)}
+              </select></label>
+            </div>
+          </section>
 
-          <div className="signup-animal-counts">
-            <Input label="Anzahl Hühner" name="chicken_count" type="number" min="0" step="1" value={form.chicken_count} onChange={update}/>
-            <Input label="Anzahl Zwerghühner" name="bantam_count" type="number" min="0" step="1" value={form.bantam_count} onChange={update}/>
-            <Input label="Anzahl Puten" name="turkey_count" type="number" min="0" step="1" value={form.turkey_count} onChange={update}/>
-          </div>
-          <p className="signup-animal-total" aria-live="polite">Gesamtzahl Tiere: <strong>{animalTotal}</strong></p>
-          <label>Impfstoff<input value="Newcastle-Impfung" readOnly aria-readonly="true" /></label>
-          <div className="section-title signup-section-title">
-  Impfung
-</div>
-          <select
-  name="vaccination_date_id"
-value={form.vaccination_date_id}
-  onChange={update}
-  required
->
-  <option value="">Bitte Impftermin wählen</option>
-
-  {vaccinationDates.map(v => (
-    <option key={v.id} value={v.id}>
-      {v.title} - {new Date(v.date).toLocaleDateString('de-DE')}
-    </option>
-  ))}
-</select>
-          <div className="section-title signup-section-title">
-  Zahlung & Datenschutz
-</div>
+          <section className="signup-step signup-step-final">
+            <header className="signup-step-heading"><span>05</span><div><h3>Zahlung &amp; Abschluss</h3><p>Zahlungsart wählen, Hinweise prüfen und verbindlich anmelden.</p></div></header>
           <label className="privacy-check">
   <input
     type="checkbox"
@@ -5098,17 +5079,25 @@ value={form.vaccination_date_id}
                   : 'Zur Newcastle-Impfung anmelden & bezahlen'}
           </button>
           {message && <p className="message">{message}</p>}
+          </section>
         </form>
-  </div>
+        </div>
       </section>
-          </main>
-    <button
-  type="button"
-  className="ghost"
-  onClick={() => window.location.hash = '#'}
->
-  ← Zurück
-</button>
+
+      <aside className="signup-summary" aria-label="Zusammenfassung der Anmeldung">
+        <div className="signup-summary-label"><FileText size={17}/> Ihre Auswahl</div>
+        <h2>Anmeldung im Überblick</h2>
+        <dl>
+          <div><dt>Impftermin</dt><dd>{selectedVaccinationDate ? `${selectedVaccinationDate.title} · ${new Date(selectedVaccinationDate.date).toLocaleDateString('de-DE')}` : 'Noch nicht ausgewählt'}</dd></div>
+          <div><dt>Tierbestand</dt><dd>{animalTotal > 0 ? `${animalTotal} Tiere` : 'Noch keine Anzahl'}</dd></div>
+          <div><dt>Impfstoff</dt><dd>Newcastle-Impfung</dd></div>
+          <div><dt>Zahlungsart</dt><dd>{paymentMethod === 'bar' ? 'Barzahlung vor Ort' : paymentMethod === 'stripe' ? 'Stripe / Online-Zahlung' : 'PayPal'}</dd></div>
+          <div><dt>Teilnahmegebühr</dt><dd>{club?.guest_price ?? 10} € Gäste · {club?.member_price ?? 5} € Mitglieder</dd></div>
+        </dl>
+        <div className="signup-summary-note"><ShieldCheck size={18}/><p>Ihre Angaben werden sicher für die Organisation des Impftermins verwendet.</p></div>
+      </aside>
+      </div>
+    </main>
     <Footer />
   </div>
   {showPaymentSuccess && (
