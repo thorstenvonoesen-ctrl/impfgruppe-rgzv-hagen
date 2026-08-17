@@ -6517,3 +6517,146 @@ footer a { color: var(--aurora-blue) !important; }
   .admin-overview-operations { grid-template-columns: minmax(0,1fr); }
   .admin-overview-operations > .smart-assistant-card { padding: 18px; }
 }
+
+/* Korrektur der Dashboard-Breiten, Kontraste und Administratorenliste */
+.admin .admin-workspace-content,
+.admin .admin-workspace-content .admin-dashboard-layout,
+.admin .admin-workspace-content .admin-dashboard-layout > *,
+.admin .admin-overview,
+.admin .admin-overview > * {
+  min-width: 0;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.admin .admin-workspace-content .admin-dashboard-layout > .admin-overview {
+  width: 100%;
+}
+
+.admin .admin-overview .admin-overview-metrics {
+  display: grid;
+  grid-template-columns: repeat(3,minmax(0,1fr));
+}
+
+.admin .admin-overview .admin-overview-metrics .stat.dashboard-stat-card {
+  width: 100%;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.admin-overview-operations {
+  grid-template-columns: minmax(0,.9fr) minmax(0,1.35fr);
+}
+
+.admin-overview-operations > .admin-presence {
+  padding: 20px;
+  display: grid;
+  grid-template-columns: 1fr;
+  align-content: start;
+  gap: 14px;
+  color: #17203f;
+  background: #fff;
+  border: 1px solid #dfe3ef;
+  box-shadow: 0 9px 24px rgba(31,43,93,.055);
+}
+
+.admin-overview-operations > .admin-presence .admin-presence-heading {
+  color: #17203f;
+  font-size: 13px;
+}
+
+.admin-overview-operations > .admin-presence ul {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+  overflow: visible;
+  scrollbar-width: none;
+}
+
+.admin-overview-operations > .admin-presence li {
+  width: 100%;
+  min-width: 0;
+  max-width: none;
+  padding: 11px 12px;
+  grid-template-columns: 9px minmax(0,1fr) minmax(92px,auto);
+  color: #17203f;
+  background: #f7f8fc;
+  border: 1px solid #e1e5ef;
+}
+
+.admin-overview-operations > .admin-presence .admin-presence-person strong {
+  overflow: visible;
+  color: #17203f;
+  text-overflow: clip;
+  white-space: normal;
+}
+
+.admin-overview-operations > .admin-presence .admin-presence-person small {
+  overflow-wrap: anywhere;
+  overflow: visible;
+  color: #69738d;
+  text-overflow: clip;
+  white-space: normal;
+}
+
+.admin-overview-operations > .admin-presence .admin-presence-status-online {
+  color: #087456;
+}
+
+.admin-overview-operations > .admin-presence .admin-presence-status-offline {
+  max-width: 150px;
+  color: #626d87;
+}
+
+.admin-overview-operations > .admin-presence .admin-presence-error {
+  color: #9b3d20;
+}
+
+.admin-overview-operations > .smart-assistant-card {
+  min-width: 0;
+  overflow: hidden;
+}
+
+.admin-overview-operations .smart-assistant-card-copy,
+.admin-overview-operations .smart-assistant-card-copy > * {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.admin-overview-operations .smart-assistant-card-action {
+  max-width: 150px;
+  white-space: normal;
+  text-align: right;
+}
+
+.admin .admin-workspace-content .admin-dashboard-layout > .admin-checkin-anchor,
+.admin .admin-workspace-content .admin-dashboard-layout > .admin-appointments-card {
+  grid-column: 1 / -1;
+  width: 100%;
+  min-width: 0;
+}
+
+.admin .admin-workspace-content .admin-checkin-anchor > .checkin-panel {
+  max-width: 100%;
+  overflow: hidden;
+}
+
+@media (max-width: 1120px) {
+  .admin-overview-operations { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 760px) {
+  .admin .admin-overview .admin-overview-metrics { grid-template-columns: 1fr; }
+  .admin-overview-operations > .admin-presence li { grid-template-columns: 9px minmax(0,1fr); }
+  .admin-overview-operations > .admin-presence .admin-presence-status-online,
+  .admin-overview-operations > .admin-presence .admin-presence-status-offline {
+    grid-column: 2;
+    max-width: none;
+    text-align: left;
+  }
+  .admin-overview-operations .smart-assistant-card-action {
+    max-width: none;
+    text-align: left;
+  }
+}
