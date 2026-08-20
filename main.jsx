@@ -510,9 +510,14 @@ async function loadWeatherPreview(location, date) {
     const place = geocodingData.results?.[0]
     if (!place) throw new Error('Ort nicht verfügbar')
 
-    const endDate = new Date(`${date}T00:00:00`)
-    endDate.setDate(endDate.getDate() + 4)
-    const forecastUrl = `https://api.open-meteo.com/v1/forecast?latitude=${place.latitude}&longitude=${place.longitude}&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max&timezone=auto&start_date=${date}&end_date=${endDate.toISOString().slice(0, 10)}`
+    const targetDate = new Date(`${date}T00:00:00`)
+    const daysUntil = Math.ceil((targetDate.getTime() - Date.now()) / 86400000)
+    const forecastStart = new Date(targetDate)
+    const forecastEnd = new Date(targetDate)
+    const weatherIndex = daysUntil > 11 ? 4 : 0
+    forecastStart.setDate(forecastStart.getDate() - weatherIndex)
+    forecastEnd.setDate(forecastEnd.getDate() + 4 - weatherIndex)
+    const forecastUrl = `https://api.open-meteo.com/v1/forecast?latitude=${place.latitude}&longitude=${place.longitude}&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max&timezone=auto&start_date=${forecastStart.toISOString().slice(0, 10)}&end_date=${forecastEnd.toISOString().slice(0, 10)}`
     const forecastResponse = await fetch(forecastUrl)
     if (!forecastResponse.ok) throw new Error('Wetter nicht verfügbar')
     const forecastData = await forecastResponse.json()
@@ -522,8 +527,8 @@ async function loadWeatherPreview(location, date) {
       temperature: forecastData.daily.temperature_2m_max?.[index],
       minimumTemperature: forecastData.daily.temperature_2m_min?.[index]
     }))
-    const weather = forecast[0]
-    const precipitation = forecastData.daily?.precipitation_probability_max?.[0]
+    const weather = forecast[weatherIndex]
+    const precipitation = forecastData.daily?.precipitation_probability_max?.[weatherIndex]
     if (forecast.length !== 5 || typeof weather?.temperature !== 'number' || typeof weather?.minimumTemperature !== 'number') throw new Error('Wetter nicht verfügbar')
     return { ...weather, precipitation: Number(precipitation || 0), forecast }
   })()
@@ -550,7 +555,7 @@ function WeatherPreview({ location, date }) {
       setStatus('unavailable')
       return () => { active = false }
     }
-    if (daysUntil > 16) {
+    if (daysUntil > 15) {
       setStatus('later')
       return () => { active = false }
     }
