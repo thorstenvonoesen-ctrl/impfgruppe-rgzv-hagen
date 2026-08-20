@@ -4878,20 +4878,8 @@ if (!showForm) {
       <aside className="participation-fee-notice" role="note">
         <span className="participation-fee-notice-icon" aria-hidden="true">!</span>
         <div>
-          <h3>Hinweis zur Teilnahmegebühr</h3>
           <p>
-            Die Teilnahmegebühr wird mit der verbindlichen Anmeldung fällig. Der
-            Impfstoff wird ausschließlich auf Grundlage der eingegangenen
-            Anmeldungen bestellt und bereitgestellt.
-          </p>
-          <p>
-            Bei einer Absage oder einem unentschuldigten Nichterscheinen kann die
-            bereits entrichtete Teilnahmegebühr daher grundsätzlich nicht
-            erstattet werden.
-          </p>
-          <p>
-            Sollte in begründeten Ausnahmefällen eine Erstattung möglich sein,
-            entscheidet der Veranstalter im Einzelfall.
+            Hinweis: Mit Ihrer verbindlichen Anmeldung wird Ihr Teilnahmeplatz fest reserviert und der Impftermin auf Grundlage aller eingegangenen Anmeldungen organisiert. Bitte melden Sie sich daher nur an, wenn Sie den Termin verbindlich wahrnehmen können. Die Teilnahmegebühr wird vor Ort in bar entrichtet.
           </p>
         </div>
       </aside>
