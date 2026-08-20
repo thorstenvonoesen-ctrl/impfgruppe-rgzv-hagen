@@ -510,15 +510,22 @@ async function loadWeatherPreview(location, date) {
     const place = geocodingData.results?.[0]
     if (!place) throw new Error('Ort nicht verfügbar')
 
-    const forecastUrl = `https://api.open-meteo.com/v1/forecast?latitude=${place.latitude}&longitude=${place.longitude}&daily=weather_code,temperature_2m_max,precipitation_probability_max&timezone=auto&start_date=${date}&end_date=${date}`
+    const endDate = new Date(`${date}T00:00:00`)
+    endDate.setDate(endDate.getDate() + 4)
+    const forecastUrl = `https://api.open-meteo.com/v1/forecast?latitude=${place.latitude}&longitude=${place.longitude}&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max&timezone=auto&start_date=${date}&end_date=${endDate.toISOString().slice(0, 10)}`
     const forecastResponse = await fetch(forecastUrl)
     if (!forecastResponse.ok) throw new Error('Wetter nicht verfügbar')
     const forecastData = await forecastResponse.json()
-    const code = forecastData.daily?.weather_code?.[0]
-    const temperature = forecastData.daily?.temperature_2m_max?.[0]
+    const forecast = (forecastData.daily?.time || []).map((forecastDate, index) => ({
+      date: forecastDate,
+      ...weatherInfo(forecastData.daily.weather_code?.[index]),
+      temperature: forecastData.daily.temperature_2m_max?.[index],
+      minimumTemperature: forecastData.daily.temperature_2m_min?.[index]
+    }))
+    const weather = forecast[0]
     const precipitation = forecastData.daily?.precipitation_probability_max?.[0]
-    if (typeof code !== 'number' || typeof temperature !== 'number') throw new Error('Wetter nicht verfügbar')
-    return { ...weatherInfo(code), temperature, precipitation: Number(precipitation || 0) }
+    if (forecast.length !== 5 || typeof weather?.temperature !== 'number' || typeof weather?.minimumTemperature !== 'number') throw new Error('Wetter nicht verfügbar')
+    return { ...weather, precipitation: Number(precipitation || 0), forecast }
   })()
 
   weatherPreviewCache.set(cacheKey, request)
@@ -533,6 +540,7 @@ async function loadWeatherPreview(location, date) {
 function WeatherPreview({ location, date }) {
   const [weather, setWeather] = useState(null)
   const [status, setStatus] = useState('idle')
+  const [expanded, setExpanded] = useState(false)
 
   useEffect(() => {
     let active = true
@@ -557,7 +565,19 @@ function WeatherPreview({ location, date }) {
   if (status === 'unavailable') return <button type="button" className="appointment-weather-button" disabled title="Wettervorhersage derzeit nicht verfügbar">🌤 Wettervorhersage</button>
   if (status !== 'ready' || !weather) return <button type="button" className="appointment-weather-button" disabled>🌤 Wetter wird geladen</button>
 
-  return <button type="button" className="appointment-weather-button appointment-weather-ready" title={`Regenwahrscheinlichkeit: ${weather.precipitation} %`}>{weather.icon} {Math.round(weather.temperature)} °C · {weather.label}</button>
+  return (
+    <div className="appointment-weather-preview">
+      <button type="button" className="appointment-weather-button appointment-weather-ready" title={`Regenwahrscheinlichkeit: ${weather.precipitation} %`} aria-expanded={expanded} onClick={() => setExpanded(value => !value)}>{weather.icon} {Math.round(weather.temperature)} °C · {weather.label}</button>
+      {expanded && <div className="appointment-weather-forecast">
+        {weather.forecast.map(day => <div className="appointment-weather-day" key={day.date}>
+          <strong>{new Date(`${day.date}T12:00:00`).toLocaleDateString('de-DE', { weekday: 'short' })}</strong>
+          <span aria-hidden="true">{day.icon}</span>
+          <span>{Math.round(day.temperature)}° / {Math.round(day.minimumTemperature)}°</span>
+          <small>{day.label}</small>
+        </div>)}
+      </div>}
+    </div>
+  )
 }
 
 function AppointmentCountdown({ appointments, club, isAdmin }) {

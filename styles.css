@@ -1516,7 +1516,29 @@ body { background: #163a2f; }
   border-color: rgba(104,205,145,.3);
 }
 .appointment-weather-button:disabled { cursor: default; opacity: .62; }
-.appointment-weather-ready { cursor: default; }
+.appointment-weather-ready { cursor: pointer; }
+.appointment-weather-preview { position: relative; display: flex; flex: 1 1 0; min-width: 0; }
+.appointment-weather-preview .appointment-weather-button { width: 100%; }
+.appointment-weather-forecast {
+  position: absolute;
+  z-index: 5;
+  top: calc(100% + 6px);
+  right: 0;
+  display: grid;
+  width: min(430px, calc(100vw - 32px));
+  padding: 8px;
+  grid-template-columns: repeat(5, minmax(58px, 1fr));
+  gap: 5px;
+  color: rgba(255,243,229,.92);
+  background: #102f4a;
+  border: 1px solid rgba(255,255,255,.14);
+  border-radius: 10px;
+  box-shadow: 0 12px 28px rgba(4,18,31,.32);
+}
+.appointment-weather-day { display: grid; gap: 3px; justify-items: center; text-align: center; font-size: 10px; }
+.appointment-weather-day strong { text-transform: capitalize; }
+.appointment-weather-day > span:first-of-type { font-size: 17px; }
+.appointment-weather-day small { color: rgba(255,243,229,.72); font-size: 8px; line-height: 1.15; }
 
 @media (min-width: 1081px) {
   .home-main { padding-top: 8px; padding-bottom: 8px; }
@@ -1802,6 +1824,8 @@ body { background: #163a2f; }
   .appointment-action-buttons { flex-direction: column; }
   .appointment-action-buttons .appointment-route-button,
   .appointment-weather-button { width: 100%; margin-top: 0; }
+  .appointment-weather-preview { width: 100%; }
+  .appointment-weather-forecast { right: auto; left: 0; }
 }
 
 .home-hero-copy {
