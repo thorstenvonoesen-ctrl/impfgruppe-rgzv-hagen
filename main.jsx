@@ -477,7 +477,6 @@ function openVaccinationRoute(appointment) {
 
 function getWeatherLocation(club, appointment) {
   const appointmentAddress = formatVaccinationAddress(appointment)
-  if (appointment?.postal_code && appointment?.city) return `${appointment.postal_code} ${appointment.city}`
   if (appointment?.city) return appointment.city
   if (appointmentAddress.length) return appointmentAddress.join(', ')
   if (!club) return null
