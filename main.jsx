@@ -5074,9 +5074,9 @@ if (!showForm) {
             <p>
               <strong>Hinweis:</strong> Mit Ihrer verbindlichen Anmeldung wird Ihr
               Teilnahmeplatz fest reserviert und der Impftermin auf Grundlage
-              aller eingegangenen Anmeldungen organisiert. Bei einer Absage oder
-              einem unentschuldigten Nichterscheinen besteht kein Anspruch auf
-              Erstattung der bereits entrichteten Teilnahmegebühr.
+              aller eingegangenen Anmeldungen organisiert. Bitte melden Sie sich
+              daher nur an, wenn Sie den Termin verbindlich wahrnehmen können. Die
+              Teilnahmegebühr wird vor Ort in bar entrichtet.
             </p>
           </aside>
           <button disabled={loading} className="primary signup-submit">
