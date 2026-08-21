@@ -827,6 +827,18 @@ function LiveSignupStats({ club }) {
         </aside>
       </section>
 
+      <section className="landing-process" aria-labelledby="landing-process-title">
+        <div className="landing-section-heading landing-process-heading">
+          <span>In drei klaren Schritten</span>
+          <h2 id="landing-process-title">Von der Anmeldung bis zum Impftag.</h2>
+        </div>
+        <ol className="landing-process-track">
+          <li><span>01</span><FileText size={23}/><div><strong>Online anmelden</strong><small>Bestand und Wunschtermin bequem erfassen.</small></div></li>
+          <li><span>02</span><Mail size={23}/><div><strong>QR-Code erhalten</strong><small>Die Bestätigung kommt automatisch per E-Mail.</small></div></li>
+          <li><span>03</span><ScanLine size={23}/><div><strong>Vor Ort einchecken</strong><small>QR-Code zeigen und ohne Papier teilnehmen.</small></div></li>
+        </ol>
+      </section>
+
       <section className="landing-benefits" aria-labelledby="landing-benefits-title">
         <div className="landing-section-heading">
           <span>Digital organisiert</span>
@@ -1508,6 +1520,23 @@ function ClubSelect() {
 
         <LiveSignupStats club={currentClub} />
 
+        <section className="landing-editorial" aria-label="Informationen zur Impfung und zum Check-in">
+          <article className="landing-newcastle-feature">
+            <span className="landing-editorial-kicker">Gesundheit im Bestand</span>
+            <div className="landing-editorial-icon"><ShieldCheck size={31}/></div>
+            <h2>Newcastle-Schutz ist gemeinsame Verantwortung.</h2>
+            <p>Die regelmäßige Impfung schützt den eigenen Geflügelbestand und hilft, die Ausbreitung der Newcastle-Krankheit zuverlässig einzudämmen.</p>
+            <a href="#info-newcastle">Warum die Impfung wichtig ist <span>→</span></a>
+          </article>
+          <article className="landing-checkin-feature">
+            <span className="landing-editorial-kicker">Am Impftag</span>
+            <div className="landing-editorial-icon"><QrCode size={31}/></div>
+            <h2>QR-Code zeigen.<br/>Schnell einchecken.</h2>
+            <p>Ihr persönlicher QR-Code verbindet Anmeldung und Termin. Ein kurzer Scan genügt – alle Angaben liegen direkt vor.</p>
+            <a href="#info-anmeldung">Digitalen Ablauf ansehen <span>→</span></a>
+          </article>
+        </section>
+
         <section className="landing-closing">
           <div><span>Bereit für den nächsten Termin?</span><h2>Jetzt Tiere für den nächsten Impftermin anmelden.</h2></div>
           <a className="landing-button landing-button-light" href="#info">Zur Impfanmeldung <span>→</span></a>
@@ -2065,6 +2094,7 @@ function InfoPage() {
           <div className="vaccination-info-intro-line" aria-hidden="true"><span/><i/><i/></div>
         </section>
 
+        <div className="vaccination-info-flow">
         <section className="vaccination-journey" aria-labelledby="vaccination-journey-title">
           <div className="vaccination-info-section-heading">
             <span>Ihr Weg zum Impftermin</span>
@@ -2120,6 +2150,7 @@ function InfoPage() {
             {digitalBenefits.map(([Icon, text], index) => <li key={text}><span>{String(index + 1).padStart(2, '0')}</span><Icon size={19}/><strong>{text}</strong></li>)}
           </ul>
         </section>
+        </div>
 
         <section className="vaccination-info-cta">
           <div><span>Bereit für den nächsten Impftermin?</span><h2>Melden Sie Ihren Geflügelbestand bequem online zur nächsten Newcastle-Sammelimpfung an.</h2></div>

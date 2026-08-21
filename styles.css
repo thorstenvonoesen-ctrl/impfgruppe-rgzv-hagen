@@ -1204,6 +1204,172 @@ body { background: #163a2f; }
   .admin-participant-management-card td:last-child::before { display: none; }
   .participant-row-actions { min-width: 0; }
 }
+
+/* Abschließender struktureller Neuaufbau: öffentliche Dramaturgie, Infofluss und Arbeits-Dashboard */
+.landing-process {
+  width: min(1180px,calc(100% - 40px));
+  margin: 14px auto 0;
+  padding: 42px 0 34px;
+  display: grid;
+  grid-template-columns: minmax(220px,.72fr) minmax(0,1.55fr);
+  gap: clamp(30px,6vw,90px);
+  border-top: 1px solid rgba(20,32,61,.14);
+  border-bottom: 1px solid rgba(20,32,61,.14);
+}
+.landing-process-heading { align-self: center; }
+.landing-process-heading h2 { max-width: 410px; margin-bottom: 0; }
+.landing-process-track {
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3,minmax(0,1fr));
+  list-style: none;
+}
+.landing-process-track li {
+  position: relative;
+  min-width: 0;
+  padding: 6px 24px 8px;
+  display: grid;
+  grid-template-columns: 38px minmax(0,1fr);
+  align-items: start;
+  gap: 12px;
+  color: var(--rgzv-navy);
+  border-left: 1px solid rgba(20,32,61,.13);
+}
+.landing-process-track li > span {
+  grid-column: 1 / -1;
+  color: #a05b2f;
+  font-size: 11px;
+  font-weight: 850;
+  letter-spacing: .12em;
+}
+.landing-process-track li > svg { padding: 8px; color: #fff; background: #a05b2f; border-radius: 12px; box-sizing: content-box; }
+.landing-process-track div { min-width: 0; display: grid; gap: 5px; }
+.landing-process-track strong { color: var(--rgzv-navy); font-size: 15px; }
+.landing-process-track small { color: #657087; font-size: 12px; line-height: 1.45; }
+
+.landing-editorial {
+  width: min(1180px,calc(100% - 40px));
+  margin: 24px auto 0;
+  display: grid;
+  grid-template-columns: minmax(0,1.18fr) minmax(300px,.82fr);
+  gap: 16px;
+}
+.landing-editorial article {
+  position: relative;
+  min-height: 320px;
+  padding: clamp(28px,4vw,52px);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  overflow: hidden;
+  border-radius: 6px 28px 28px 28px;
+}
+.landing-newcastle-feature { color: var(--rgzv-navy); background: #e8dfd1; }
+.landing-checkin-feature { color: #fff; background: var(--rgzv-navy); }
+.landing-editorial-kicker { font-size: 11px; font-weight: 850; letter-spacing: .12em; text-transform: uppercase; }
+.landing-newcastle-feature .landing-editorial-kicker { color: #884920; }
+.landing-checkin-feature .landing-editorial-kicker { color: #9ddde0; }
+.landing-editorial-icon { position: absolute; top: 30px; right: 34px; padding: 12px; border: 1px solid currentColor; border-radius: 50%; opacity: .72; }
+.landing-editorial h2 { max-width: 650px; margin: auto 0 14px; color: inherit; font-size: clamp(28px,3.4vw,48px); line-height: 1.02; letter-spacing: -.045em; }
+.landing-checkin-feature h2 { font-size: clamp(27px,3vw,42px); }
+.landing-editorial p { max-width: 640px; margin: 0 0 22px; color: inherit; line-height: 1.65; opacity: .78; }
+.landing-editorial a { color: inherit; font-size: 13px; font-weight: 850; text-decoration: none; }
+.landing-editorial a span { margin-left: 7px; color: #a05b2f; }
+.landing-checkin-feature a span { color: #9ddde0; }
+
+.vaccination-info-flow {
+  position: relative;
+  display: grid;
+  gap: 0;
+  background: #fffdf9;
+  border: 1px solid #e1dacd;
+  border-radius: 8px 32px 32px 32px;
+  overflow: hidden;
+  box-shadow: 0 22px 54px rgba(32,43,67,.08);
+}
+.vaccination-info-flow > section { width: 100%; margin: 0; border: 0; border-radius: 0; box-shadow: none; }
+.vaccination-info-flow > section + section { border-top: 1px solid #e3ddd2; }
+.vaccination-info-flow .vaccination-journey { padding-top: clamp(36px,5vw,64px); padding-bottom: clamp(36px,5vw,64px); }
+.vaccination-info-flow .vaccination-knowledge { background: #f3eee5; }
+.vaccination-info-flow .vaccination-digital { background: #fffdf9; }
+
+/* Kompakte Kennzahlenleiste statt drei separater Dashboard-Karten */
+.admin .admin-overview .admin-overview-metrics {
+  padding: 9px 12px;
+  gap: 0 !important;
+  background: #eee8dc;
+  border: 1px solid #ded5c6;
+  border-radius: 5px 18px 18px 18px;
+}
+.admin .admin-overview .admin-overview-metrics .stat.dashboard-stat-card {
+  min-height: 82px;
+  padding: 13px 18px;
+  background: transparent !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+.admin .admin-overview .admin-overview-metrics .stat.dashboard-stat-card + .stat.dashboard-stat-card { border-left: 1px solid #d7cebf !important; }
+.admin .admin-overview .admin-overview-metrics .dashboard-stat-content > strong { font-size: clamp(23px,2.4vw,34px); }
+
+/* Check-in als helle Arbeitsstation; dunkle Altregel und Kontrastfehler gezielt aufheben */
+.admin .admin-workspace-content .admin-checkin-anchor > .checkin-panel {
+  color: #17203f !important;
+  background: #fffdf9 !important;
+  border: 1px solid #ddd6ca !important;
+  box-shadow: 0 18px 40px rgba(23,32,63,.09) !important;
+}
+.admin .admin-workspace-content .admin-checkin-anchor > .checkin-panel .checkin-head h2 { color: #17203f !important; }
+.admin .admin-workspace-content .admin-checkin-anchor > .checkin-panel .checkin-head > div > span { color: #8b4b26 !important; }
+.admin .admin-workspace-content .admin-checkin-anchor > .checkin-panel .checkin-head p { color: #667087 !important; }
+.admin .admin-workspace-content .admin-checkin-anchor > .checkin-panel .checkin-control-deck,
+.admin .admin-workspace-content .admin-checkin-anchor > .checkin-panel .checkin-operation-bar { background: #f2ede4 !important; border-color: #ddd5c8 !important; }
+.admin .admin-workspace-content .admin-checkin-anchor > .checkin-panel .checkin-date-control { color: #fff !important; background: #17203f !important; }
+.admin .admin-workspace-content .admin-checkin-anchor > .checkin-panel .checkin-date-control label,
+.admin .admin-workspace-content .admin-checkin-anchor > .checkin-panel .checkin-date-control span { color: #fff !important; }
+.admin .admin-workspace-content .admin-checkin-anchor > .checkin-panel .checkin-live-stat { color: #17203f !important; background: #fff !important; border-color: #d9d3c8 !important; }
+.admin .admin-workspace-content .admin-checkin-anchor > .checkin-panel .checkin-live-stat span { color: #657087 !important; }
+.admin .admin-workspace-content .admin-checkin-anchor > .checkin-panel .checkin-live-stat strong { color: #17203f !important; }
+
+/* Warmes Vereinsgold ersetzt verbliebene violette Hauptakzente */
+.landing-button-primary,
+.vaccination-info-cta button,
+.signup-submit { background: #a85f31 !important; border-color: #a85f31 !important; }
+.landing-hero-copy h1 em,
+.landing-section-heading > span,
+.vaccination-info-section-heading > span { color: #a85f31 !important; }
+.landing-metrics-label,
+.landing-appointment-metrics > div > span { color: #8b4b26 !important; }
+.landing-closing { color: #fff !important; background: #17203f !important; }
+.landing-closing h2,
+.landing-closing > div > span { color: #fff !important; }
+.landing-metrics-label { color: #8b4b26 !important; }
+.landing-appointment-metrics > div > span { color: #8b4b26 !important; }
+.landing-closing { color: #fff !important; background: #17203f !important; }
+.landing-closing h2,
+.landing-closing > div > span { color: #fff !important; }
+
+@media (max-width: 900px) {
+  .landing-process { grid-template-columns: 1fr; gap: 24px; }
+  .landing-editorial { grid-template-columns: 1fr; }
+  .landing-editorial article { min-height: 280px; }
+}
+@media (max-width: 680px) {
+  .landing-process,
+  .landing-editorial { width: min(100% - 24px,1180px); }
+  .landing-process { padding: 30px 0 24px; }
+  .landing-process-track { grid-template-columns: 1fr; }
+  .landing-process-track li { padding: 18px 4px; border-left: 0; border-top: 1px solid rgba(20,32,61,.13); }
+  .landing-process-track li:first-child { border-top: 0; }
+  .landing-editorial article { min-height: 270px; padding: 26px 22px; border-radius: 5px 20px 20px 20px; }
+  .landing-editorial-icon { top: 22px; right: 22px; }
+  .landing-editorial h2 { padding-right: 15px; font-size: 29px; }
+  .vaccination-info-flow { border-radius: 5px 20px 20px 20px; }
+  .admin .admin-overview .admin-overview-metrics { grid-template-columns: 1fr !important; padding: 6px 14px; }
+  .admin .admin-overview .admin-overview-metrics .stat.dashboard-stat-card { min-height: 72px; padding: 12px 6px; }
+  .admin .admin-overview .admin-overview-metrics .stat.dashboard-stat-card + .stat.dashboard-stat-card { border-top: 1px solid #d7cebf !important; border-left: 0 !important; }
+}
 @media (max-width: 520px) { .signup-success-overlay { padding: 18px; } .signup-success-card { padding: 34px 24px; border-radius: 23px; } .signup-success-actions { grid-template-columns: 1fr; } }
 @media (prefers-reduced-motion: reduce) { .signup-success-overlay,.signup-success-card,.signup-success-icon,.signup-success-icon::after,.signup-success-icon path,.signup-success-email { animation-duration: .01ms !important; animation-delay: 0ms !important; } .signup-success-confetti { display: none; } }
 
@@ -7755,3 +7921,37 @@ footer a { color: var(--aurora-blue) !important; }
     text-align: left;
   }
 }
+
+/* Finale Priorität nach allen historischen Admin-Regeln */
+.admin .admin-overview .admin-overview-metrics { padding: 9px 12px; gap: 0 !important; background: #eee8dc; border: 1px solid #ded5c6; border-radius: 5px 18px 18px 18px; }
+.admin .admin-overview .admin-overview-metrics .stat.dashboard-stat-card { min-height: 82px; padding: 13px 18px; background: transparent !important; border: 0 !important; border-radius: 0 !important; box-shadow: none !important; }
+.admin .admin-overview .admin-overview-metrics .stat.dashboard-stat-card + .stat.dashboard-stat-card { border-left: 1px solid #d7cebf !important; }
+.admin .admin-workspace-content .admin-checkin-anchor > .checkin-panel { color: #17203f !important; background: #fffdf9 !important; border: 1px solid #ddd6ca !important; box-shadow: 0 18px 40px rgba(23,32,63,.09) !important; }
+.admin .admin-workspace-content .admin-checkin-anchor > .checkin-panel .checkin-head h2 { color: #17203f !important; }
+.admin .admin-workspace-content .admin-checkin-anchor > .checkin-panel .checkin-head > div > span { color: #8b4b26 !important; }
+.admin .admin-workspace-content .admin-checkin-anchor > .checkin-panel .checkin-head p { color: #667087 !important; }
+.admin .admin-workspace-content .admin-checkin-anchor > .checkin-panel .checkin-control-deck,
+.admin .admin-workspace-content .admin-checkin-anchor > .checkin-panel .checkin-operation-bar { background: #f2ede4 !important; border-color: #ddd5c8 !important; }
+.admin .admin-workspace-content .admin-checkin-anchor > .checkin-panel .checkin-date-control { color: #fff !important; background: #17203f !important; }
+.admin .admin-workspace-content .admin-checkin-anchor > .checkin-panel .checkin-date-control label,
+.admin .admin-workspace-content .admin-checkin-anchor > .checkin-panel .checkin-date-control span { color: #fff !important; }
+.admin .admin-workspace-content .admin-checkin-anchor > .checkin-panel .checkin-live-stat { color: #17203f !important; background: #fff !important; border-color: #d9d3c8 !important; }
+.admin .admin-workspace-content .admin-checkin-anchor > .checkin-panel .checkin-live-stat span { color: #657087 !important; }
+.admin .admin-workspace-content .admin-checkin-anchor > .checkin-panel .checkin-live-stat strong { color: #17203f !important; }
+@media (max-width: 680px) {
+  .admin .admin-overview .admin-overview-metrics { grid-template-columns: 1fr !important; padding: 6px 14px; }
+  .admin .admin-overview .admin-overview-metrics .stat.dashboard-stat-card { min-height: 72px; padding: 12px 6px; }
+  .admin .admin-overview .admin-overview-metrics .stat.dashboard-stat-card + .stat.dashboard-stat-card { border-top: 1px solid #d7cebf !important; border-left: 0 !important; }
+}
+
+.landing-button-primary,
+.vaccination-info-cta button,
+.signup-submit { color: #fff !important; background: #a85f31 !important; border-color: #a85f31 !important; }
+.landing-hero-copy h1 em,
+.landing-section-heading > span,
+.vaccination-info-section-heading > span { color: #a85f31 !important; }
+.landing-metrics-label,
+.landing-appointment-metrics > div > span { color: #8b4b26 !important; }
+.landing-closing { color: #fff !important; background: #17203f !important; }
+.landing-closing h2,
+.landing-closing > div > span { color: #fff !important; }
