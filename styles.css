@@ -1091,7 +1091,7 @@ body { background: #163a2f; }
   padding: 0 !important;
   display: grid !important;
   grid-template-columns: minmax(0,1fr) minmax(280px,.55fr);
-  overflow: hidden;
+  overflow: visible;
   background: #fff !important;
   border: 1px solid var(--rgzv-border) !important;
   border-radius: 15px !important;
@@ -1111,7 +1111,7 @@ body { background: #163a2f; }
   border-radius: 15px;
 }
 .admin-management-table-wrap, .admin-participant-management-card .table-scroll { margin-top: 16px; }
-.admin-participant-management-card table { height: auto; min-width: 1220px; overflow: visible; }
+.admin-participant-management-card table { min-width: 1220px; }
 .admin-participant-management-card th { padding: 13px 12px !important; font-size: 10px !important; }
 .admin-participant-management-card td { padding: 15px 12px !important; vertical-align: top; font-size: 12px; line-height: 1.45; }
 .participant-row-actions { display: flex; flex-wrap: wrap; gap: 5px; min-width: 190px; }
@@ -1174,8 +1174,7 @@ body { background: #163a2f; }
   .admin-participant-management-card thead { display: none; }
   .admin-participant-management-card tbody { display: grid; gap: 14px; }
   .admin-participant-management-card tr {
-    height: auto;
-    overflow: visible;
+    overflow: hidden;
     background: #fff;
     border: 1px solid var(--rgzv-border);
     border-radius: 16px;
@@ -1524,7 +1523,7 @@ body { background: #163a2f; }
 .checkin-live-stat.warning { border-color: rgba(242,140,40,.28); background: rgba(242,140,40,.1); }.checkin-live-stat.warning strong { color: #ffd2a5; }
 .checkin-filter-bar { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 8px 11px; border: 1px solid rgba(244,160,71,.2); border-radius: 12px; color: rgba(237,245,241,.76); background: rgba(244,160,71,.07); font-size: 12px; font-weight: 700; }
 .checkin-filter-bar button { flex: 0 0 auto; }
-.checkin-actions input { flex: 1; }.checkin-candidates { display: grid; max-height: 300px; overflow: auto; border-top: 1px solid rgba(255,255,255,.12); }
+.checkin-actions input { flex: 1; }.checkin-candidates { display: grid; max-height: none; overflow: visible; border-top: 1px solid rgba(255,255,255,.12); }
 .checkin-person { justify-content: space-between; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,.1); }.checkin-person small { display: block; margin-top: 3px; color: rgba(237,245,241,.64); }.checkin-person > div:last-child { flex-wrap: wrap; justify-content: flex-end; }
 .checkin-status { padding: 4px 8px; border-radius: 999px; color: #ffe1c2; background: rgba(242,140,40,.16); font-size: 11px; font-weight: 800; }.checkin-status.done { color: #d1fae5; background: rgba(52,211,153,.16); }
 .checkin-scanner-wrap { display: grid; justify-items: center; gap: 12px; padding: 16px; border: 1px solid rgba(255,255,255,.13); border-radius: 18px; }.checkin-scanner-wrap #checkin-scanner { width: min(100%, 360px); overflow: hidden; border-radius: 14px; }
