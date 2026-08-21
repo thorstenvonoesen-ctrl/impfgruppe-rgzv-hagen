@@ -1112,6 +1112,454 @@ body { background: #163a2f; }
   .home-hero-trust { justify-content: center; }
   .home-closing { width: min(100% - 28px,1240px); border-radius: 22px !important; }
 }
+
+/* ========================================================================== */
+/* RGZV Hagen – warmes, vereinsnahes Designsystem (rein visuelle Theme-Schicht) */
+/* ========================================================================== */
+:root {
+  --rgzv-ink: #18233d;
+  --rgzv-navy: #17213f;
+  --rgzv-navy-soft: #243153;
+  --rgzv-violet: #6256c7;
+  --rgzv-aqua: #168b91;
+  --rgzv-warm: #c8783d;
+  --rgzv-cream: #f7f2e9;
+  --rgzv-sand: #eee4d4;
+  --rgzv-paper: #fffdf9;
+  --rgzv-muted: #667087;
+  --rgzv-border: #e2d9ca;
+  --rgzv-success: #26765c;
+  --rgzv-warning: #a95d28;
+  --rgzv-danger: #a4443f;
+  --rgzv-shadow-sm: 0 8px 24px rgba(38,33,54,.07);
+  --rgzv-shadow: 0 20px 54px rgba(38,33,54,.1);
+}
+
+html { overflow-x: hidden; background: var(--rgzv-cream); scroll-behavior: auto; }
+body {
+  overflow-x: hidden;
+  color: var(--rgzv-ink);
+  background:
+    radial-gradient(circle at 8% 4%, rgba(200,120,61,.1), transparent 25rem),
+    radial-gradient(circle at 92% 15%, rgba(22,139,145,.08), transparent 28rem),
+    var(--rgzv-cream) !important;
+}
+body, button, input, select, textarea { font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+::selection { color: #fff; background: var(--rgzv-violet); }
+
+.premium-background {
+  background:
+    radial-gradient(circle at 12% 8%, rgba(200,120,61,.12), transparent 29%),
+    radial-gradient(circle at 88% 12%, rgba(98,86,199,.08), transparent 30%),
+    linear-gradient(145deg, #faf6ef, #f3ecdf 54%, #eef4f1) !important;
+}
+.premium-orb { opacity: .16 !important; filter: blur(22px) !important; }
+.premium-pointer-light { opacity: .08 !important; }
+.page { color: var(--rgzv-ink); }
+
+/* Kopfzeile und Footer */
+.app-header {
+  color: var(--rgzv-ink) !important;
+  background: rgba(255,253,249,.9) !important;
+  border-bottom: 1px solid rgba(205,194,177,.8) !important;
+  box-shadow: 0 8px 28px rgba(38,33,54,.055) !important;
+  backdrop-filter: blur(18px) saturate(130%);
+}
+.app-header-brand-copy strong { color: var(--rgzv-navy) !important; }
+.app-header-brand-copy small { color: var(--rgzv-muted) !important; }
+.public-header-links a,
+.app-header a,
+.app-header button { color: var(--rgzv-navy) !important; }
+.public-header-links a:hover,
+.app-header a:hover { color: var(--rgzv-violet) !important; }
+.app-header p[role="alert"] { color: #9a5429 !important; }
+.public-quiz-link {
+  color: #4f439f !important;
+  background: #f0edff !important;
+  border: 1px solid #ddd6ff !important;
+  border-radius: 999px !important;
+}
+footer {
+  color: #dce3f2 !important;
+  background: var(--rgzv-navy) !important;
+  border-top: 4px solid rgba(200,120,61,.7) !important;
+}
+footer a { color: #fff !important; }
+.footer-signature { color: rgba(255,255,255,.62) !important; }
+
+/* Gemeinsame Flächen, Typografie und Aktionen */
+.card,
+.modal-card,
+.info-page-card,
+.collective-info-card,
+.poultry-question-card,
+.poultry-result,
+.signup-reuse-card,
+.membership-invitation-card {
+  color: var(--rgzv-ink);
+  background: rgba(255,253,249,.97) !important;
+  border: 1px solid var(--rgzv-border) !important;
+  border-radius: 22px !important;
+  box-shadow: var(--rgzv-shadow-sm) !important;
+}
+h1, h2, h3, h4,
+.info-page-title,
+.collective-info-heading h1,
+.signup-card-heading h2,
+.poultry-question-card h2 { color: var(--rgzv-navy); letter-spacing: -.035em; }
+p, li, dd { text-wrap: pretty; }
+.landing-eyebrow,
+.signup-eyebrow,
+.poultry-quiz-eyebrow,
+.collective-info-eyebrow,
+.vaccination-info-eyebrow {
+  color: var(--rgzv-warm) !important;
+  background: #f8ede2 !important;
+  border: 1px solid #ecd3bc !important;
+  border-radius: 999px !important;
+  letter-spacing: .11em !important;
+}
+button, .primary, .landing-button, .small, .info-page-signup-button, .vaccination-info-cta {
+  border-radius: 11px;
+  transition: transform .18s ease, box-shadow .18s ease, background-color .18s ease, border-color .18s ease;
+}
+button:not(:disabled):hover, .landing-button:hover, .info-page-signup-button:hover { transform: translateY(-1px); }
+.primary,
+.landing-button-primary,
+.signup-submit,
+.admin-login-submit,
+.poultry-next-button {
+  color: #fff !important;
+  background: var(--rgzv-violet) !important;
+  border-color: var(--rgzv-violet) !important;
+  box-shadow: 0 10px 24px rgba(98,86,199,.2) !important;
+}
+.ghost,
+.landing-button-secondary,
+.landing-button-light {
+  color: var(--rgzv-navy) !important;
+  background: rgba(255,253,249,.82) !important;
+  border: 1px solid #d8cfbf !important;
+  box-shadow: none !important;
+}
+button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
+  outline: 3px solid rgba(98,86,199,.25) !important;
+  outline-offset: 2px;
+}
+
+/* Startseite */
+.final-home-page,
+.landing-main { color: var(--rgzv-ink) !important; background: transparent !important; }
+.landing-hero,
+.final-home-hero {
+  color: var(--rgzv-ink) !important;
+  background:
+    radial-gradient(circle at 88% 16%, rgba(22,139,145,.12), transparent 30%),
+    linear-gradient(135deg, #fffdf9, #f4eadc) !important;
+  border: 1px solid var(--rgzv-border) !important;
+  border-radius: 28px !important;
+  box-shadow: var(--rgzv-shadow) !important;
+}
+.landing-hero h1, .landing-hero h2, .landing-hero-copy h1,
+.final-home-hero h1, .final-home-hero h2 { color: var(--rgzv-navy) !important; }
+.landing-hero p, .final-home-hero p { color: var(--rgzv-muted) !important; }
+.landing-visual {
+  background: linear-gradient(145deg, #f2e9dc, #e9f2ef) !important;
+  border-color: #ded3c3 !important;
+}
+.landing-visual-center { background: var(--rgzv-paper) !important; border-color: #ded3c3 !important; box-shadow: var(--rgzv-shadow-sm) !important; }
+.landing-visual-node { color: var(--rgzv-navy) !important; background: var(--rgzv-paper) !important; border-color: var(--rgzv-border) !important; }
+.landing-benefits, .landing-closing { background: transparent !important; }
+.landing-benefits-list > *,
+.home-nav-card,
+.home-benefit-info-field,
+.home-community-card,
+.home-benefits-card {
+  color: var(--rgzv-ink) !important;
+  background: var(--rgzv-paper) !important;
+  border-color: var(--rgzv-border) !important;
+  box-shadow: var(--rgzv-shadow-sm) !important;
+}
+.landing-benefits-list h3, .home-nav-card h3, .home-community-card h2, .home-benefits-card h2 { color: var(--rgzv-navy) !important; }
+.landing-benefits-list p, .home-nav-card p, .home-community-card p, .home-benefits-card p { color: var(--rgzv-muted) !important; }
+.landing-appointment,
+.landing-countdown.dashboard-stat-card,
+.final-home .home-countdown-card,
+.home-command-center .home-countdown-card {
+  color: var(--rgzv-ink) !important;
+  background: linear-gradient(145deg, #fffdf9, #f4ecdf) !important;
+  border-color: #ded3c3 !important;
+  box-shadow: var(--rgzv-shadow) !important;
+}
+.landing-countdown .dashboard-stat-content > span,
+.final-home .home-countdown-card .dashboard-stat-content > span { color: var(--rgzv-warm) !important; }
+.landing-countdown .appointment-countdown strong,
+.landing-countdown .appointment-countdown em,
+.final-home .appointment-countdown strong,
+.final-home .appointment-countdown em { color: var(--rgzv-navy) !important; }
+.landing-countdown .appointment-countdown small,
+.final-home .appointment-countdown small { color: var(--rgzv-muted) !important; }
+.appointment-countdown-units > span {
+  color: var(--rgzv-ink) !important;
+  background: rgba(255,255,255,.72) !important;
+  border-color: #ddd4c5 !important;
+}
+.appointment-countdown-units b { color: var(--rgzv-violet) !important; }
+.appointment-countdown-units small { color: var(--rgzv-muted) !important; }
+.appointment-route-button { color: #fff !important; background: var(--rgzv-aqua) !important; border-color: var(--rgzv-aqua) !important; box-shadow: none !important; }
+.appointment-weather-button { color: var(--rgzv-navy) !important; background: #f1ede6 !important; border-color: #ddd4c5 !important; }
+.appointment-weather-forecast { color: #fff !important; background: var(--rgzv-navy) !important; border-color: var(--rgzv-navy-soft) !important; }
+.appointment-weather-day small { color: rgba(255,255,255,.7) !important; }
+.landing-appointment-metrics { background: #ede6da !important; border-color: #ddd2c1 !important; }
+.landing-appointment-metrics strong { color: var(--rgzv-navy) !important; }
+
+/* Öffentliche Anmeldung */
+.signup-page { background: transparent !important; }
+.signup-shell.signup-workspace { width: min(1180px, calc(100% - 32px)); }
+.signup-page-head,
+.signup-hero {
+  color: var(--rgzv-ink) !important;
+  background: linear-gradient(135deg, #fffdf9, #f1e6d5) !important;
+  border: 1px solid var(--rgzv-border) !important;
+  border-radius: 26px !important;
+  box-shadow: var(--rgzv-shadow-sm) !important;
+}
+.signup-page-head h1, .signup-hero h1 { color: var(--rgzv-navy) !important; font-size: clamp(34px,5vw,54px) !important; }
+.signup-page-head p, .signup-hero p { color: var(--rgzv-muted) !important; }
+.signup-layout { gap: 22px !important; align-items: start; }
+.signup-card { padding: clamp(24px,4vw,42px) !important; }
+.signup-card-heading { padding-bottom: 22px; border-bottom: 1px solid var(--rgzv-border); }
+.signup-step {
+  margin-top: 22px !important;
+  padding: 22px !important;
+  background: #fbf7f0 !important;
+  border: 1px solid #e7ddce !important;
+  border-radius: 16px !important;
+}
+.signup-step h3 { margin-bottom: 16px !important; color: var(--rgzv-navy) !important; border-color: #dbc8b4 !important; }
+.signup-form label { color: #34405b !important; }
+.signup-form input:not([type="radio"]):not([type="checkbox"]),
+.signup-form select,
+.signup-form textarea,
+.container input,
+.container select,
+.container textarea {
+  color: var(--rgzv-ink) !important;
+  background: #fff !important;
+  border: 1px solid #d8cfbf !important;
+  border-radius: 11px !important;
+  box-shadow: inset 0 1px 2px rgba(38,33,54,.025) !important;
+}
+.signup-form input:focus, .signup-form select:focus, .signup-form textarea:focus { border-color: var(--rgzv-violet) !important; box-shadow: 0 0 0 4px rgba(98,86,199,.1) !important; }
+.signup-summary {
+  color: var(--rgzv-ink) !important;
+  background: var(--rgzv-navy) !important;
+  border: 1px solid var(--rgzv-navy-soft) !important;
+  border-radius: 20px !important;
+  box-shadow: var(--rgzv-shadow) !important;
+}
+.signup-summary h2, .signup-summary dt, .signup-summary dd { color: #fff !important; }
+.signup-summary-label { color: #9ddfe0 !important; }
+.payment-option { color: var(--rgzv-ink) !important; background: #fff !important; border-color: #d8cfbf !important; }
+.privacy-check { color: var(--rgzv-muted) !important; background: #f5efe5 !important; border-color: #e3d6c4 !important; }
+.participation-fee-notice { color: #6e421f !important; background: #fbf0df !important; border-color: #e9cda7 !important; }
+.participation-fee-notice-icon { color: #fff !important; background: var(--rgzv-warm) !important; }
+.signup-field-note { color: var(--rgzv-muted) !important; }
+.message { color: #1f624e !important; background: #e7f3ed !important; border: 1px solid #c8e1d5 !important; }
+.signup-reuse-confirmation { color: var(--rgzv-ink) !important; background: #f4eee4 !important; border-color: var(--rgzv-border) !important; }
+
+/* Informations-, Grußwort- und Rechtstextseiten */
+.collective-info-page,
+.vaccination-info-page,
+.impfwart-greeting-page,
+.legal-page,
+.poultry-quiz-page { color: var(--rgzv-ink) !important; background: transparent !important; }
+.collective-info-hero,
+.vaccination-info-intro,
+.impfwart-greeting-card,
+.poultry-quiz-heading {
+  color: var(--rgzv-ink) !important;
+  background: linear-gradient(135deg, #fffdf9, #f1e7d8) !important;
+  border: 1px solid var(--rgzv-border) !important;
+  box-shadow: var(--rgzv-shadow) !important;
+}
+.collective-info-hero h1, .vaccination-info-intro h1, .impfwart-greeting-card h1, .poultry-quiz-heading h1 { color: var(--rgzv-navy) !important; }
+.collective-info-hero p, .vaccination-info-intro p, .impfwart-greeting-card p, .poultry-quiz-heading p { color: var(--rgzv-muted) !important; }
+.collective-info-section { color: var(--rgzv-ink) !important; }
+.collective-info-card p, .collective-info-card li, .info-page-card p { color: var(--rgzv-muted) !important; }
+.collective-info-icon, .info-page-card-icon, .vaccination-knowledge-icon {
+  color: var(--rgzv-violet) !important;
+  background: #eeebff !important;
+  border-color: #dcd6ff !important;
+}
+.collective-info-notice,
+.collective-info-summary,
+.vaccination-digital,
+.info-topic-alert {
+  color: var(--rgzv-ink) !important;
+  background: #edf5f1 !important;
+  border: 1px solid #cfe2d9 !important;
+  box-shadow: none !important;
+}
+.collective-info-timeline::before, .vaccination-journey-track::before { background: #d8cbb8 !important; }
+.collective-info-step-number, .vaccination-journey-number { color: #fff !important; background: var(--rgzv-violet) !important; }
+.legal-document {
+  width: min(920px, calc(100% - 32px));
+  margin: 34px auto;
+  padding: clamp(26px,5vw,58px) !important;
+  color: var(--rgzv-ink) !important;
+  background: var(--rgzv-paper) !important;
+}
+.legal-document h1, .legal-document h2, .legal-document h3 { color: var(--rgzv-navy) !important; }
+.legal-document p, .legal-document li { color: #505a70 !important; line-height: 1.72; }
+.legal-document a { color: var(--rgzv-violet) !important; }
+.legal-back, .collective-info-back, .impfwart-greeting-back, .poultry-quiz-back { color: var(--rgzv-violet) !important; }
+
+/* Geflügelquiz */
+.poultry-quiz-shell { width: min(1040px, calc(100% - 32px)); }
+.poultry-quiz-progress { background: #e4dbce !important; }
+.poultry-quiz-progress::-webkit-progress-value { background: linear-gradient(90deg, var(--rgzv-aqua), var(--rgzv-violet)) !important; }
+.poultry-question-meta span { color: #5a4da8 !important; background: #f0edff !important; border-color: #ded8ff !important; }
+.poultry-answer-grid { border-color: var(--rgzv-border) !important; }
+.poultry-answer-grid button {
+  color: var(--rgzv-ink) !important;
+  background: #fff !important;
+  border-color: var(--rgzv-border) !important;
+}
+.poultry-answer-grid button:hover { background: #f6f1e9 !important; border-color: #cfc2ae !important; }
+.poultry-correct-answer { color: var(--rgzv-success) !important; background: #e7f3ed !important; border-color: #c8e2d6 !important; }
+.poultry-result-stats > div { background: #f8f3eb !important; border-color: var(--rgzv-border) !important; }
+.poultry-certificate { color: var(--rgzv-navy) !important; background: #fbf0df !important; border-color: #e5c79f !important; }
+
+/* Login, Admin-Arbeitsbereich und Verwaltung */
+.admin-login-page { background: linear-gradient(145deg, #f7f2e9, #ede7dc) !important; }
+.admin-login-shell { width: min(1040px, calc(100% - 32px)); }
+.admin-login-branding {
+  color: #fff !important;
+  background: linear-gradient(145deg, var(--rgzv-navy), #29375b) !important;
+  border-color: #344269 !important;
+}
+.admin-login-branding h1, .admin-login-branding p { color: #fff !important; }
+.admin-login-card { background: var(--rgzv-paper) !important; }
+.admin-login-heading h2 { color: var(--rgzv-navy) !important; }
+.admin-login-heading p, .admin-login-security { color: var(--rgzv-muted) !important; }
+.admin-login-field input { color: var(--rgzv-ink) !important; background: #fff !important; border-color: #d8cfbf !important; }
+.admin { color: var(--rgzv-ink) !important; background: var(--rgzv-cream) !important; }
+.admin-workspace-shell { background: var(--rgzv-cream) !important; }
+.admin-workspace-nav {
+  color: #fff !important;
+  background: var(--rgzv-navy) !important;
+  border-color: #2d3b60 !important;
+  box-shadow: 14px 0 38px rgba(26,29,48,.12) !important;
+}
+.admin-workspace-brand strong, .admin-workspace-brand small { color: #fff !important; }
+.admin-workspace-nav nav button,
+.admin-workspace-nav-bottom button { color: rgba(255,255,255,.76) !important; background: transparent !important; border-color: transparent !important; }
+.admin-workspace-nav nav button:hover,
+.admin-workspace-nav nav button.active,
+.admin-workspace-nav-bottom button:hover { color: #fff !important; background: rgba(255,255,255,.1) !important; }
+.admin-workspace-content { background: transparent !important; }
+.admin-top-copy h1, .admin-overview-heading h1 { color: var(--rgzv-navy) !important; }
+.admin-top-copy p, .admin-overview-heading p { color: var(--rgzv-muted) !important; }
+.admin-top-status { color: var(--rgzv-success) !important; background: #e7f3ed !important; border-color: #c7e0d4 !important; }
+.admin-overview-heading,
+.admin-overview-operations > .admin-presence,
+.admin .admin-overview .admin-overview-metrics .stat.dashboard-stat-card,
+.admin-appointments-card,
+.admin-participant-management-card,
+.admin-appointment-management-card,
+.checkin-panel {
+  color: var(--rgzv-ink) !important;
+  background: var(--rgzv-paper) !important;
+  border-color: var(--rgzv-border) !important;
+  box-shadow: var(--rgzv-shadow-sm) !important;
+}
+.admin-overview-appointment {
+  color: #fff !important;
+  background: linear-gradient(135deg, var(--rgzv-navy), #2b385c) !important;
+  border-color: #344269 !important;
+}
+.admin-overview-appointment-copy strong, .admin-overview-appointment-copy span { color: #fff !important; }
+.admin .stat.dashboard-stat-card { border-radius: 16px !important; }
+.admin .dashboard-stat-icon { background: var(--rgzv-violet) !important; box-shadow: none !important; }
+.admin .dashboard-stat-content > span { color: var(--rgzv-muted) !important; }
+.admin .dashboard-stat-content > strong { color: var(--rgzv-navy) !important; }
+.smart-assistant-card { background: var(--rgzv-navy) !important; border-color: #344269 !important; }
+.smart-assistant-card-copy strong, .smart-assistant-card-copy span, .smart-assistant-card-action { color: #fff !important; }
+
+/* Tabellen, Filter und Status */
+.table-scroll, .table-wrap { border: 1px solid var(--rgzv-border); border-radius: 15px; background: #fff; }
+table { color: var(--rgzv-ink); background: #fff !important; }
+th {
+  color: #59647b !important;
+  background: #f2ede5 !important;
+  border-bottom-color: #ddd4c6 !important;
+  letter-spacing: .055em;
+}
+td { color: #303b54 !important; border-bottom-color: #ece5da !important; }
+tbody tr:hover { background: #fbf7f0 !important; }
+.search, .checkin-filter-bar {
+  color: var(--rgzv-ink) !important;
+  background: #fff !important;
+  border-color: #d8cfbf !important;
+  border-radius: 11px !important;
+}
+.search input, .checkin-filter-bar input, .checkin-filter-bar select { color: var(--rgzv-ink) !important; background: transparent !important; }
+.paid { color: #1d684f !important; background: #e4f2eb !important; }
+.open { color: #8b5428 !important; background: #fbebd7 !important; }
+.admin-inline-error, .admin-login-error { color: #8e3733 !important; background: #f8e7e5 !important; border-color: #e8c4c0 !important; }
+.small { color: #fff !important; background: var(--rgzv-navy) !important; border-color: var(--rgzv-navy) !important; }
+.small.checkin-pay { background: var(--rgzv-success) !important; border-color: var(--rgzv-success) !important; }
+
+/* Check-in / Impftag */
+.checkin-panel { border-radius: 20px !important; }
+.checkin-head h2 { color: var(--rgzv-navy) !important; }
+.checkin-head p, .checkin-search-state { color: var(--rgzv-muted) !important; }
+.checkin-live-stat {
+  color: var(--rgzv-ink) !important;
+  background: #f6f1e9 !important;
+  border-color: #e1d7c8 !important;
+}
+.checkin-live-stat span { color: var(--rgzv-muted) !important; }
+.checkin-live-stat strong { color: var(--rgzv-navy) !important; }
+.checkin-actions input { color: var(--rgzv-ink) !important; background: #fff !important; border-color: #d8cfbf !important; }
+.checkin-candidates { border-color: var(--rgzv-border) !important; }
+.checkin-result-main, .checkin-confirm, .checkin-scanner-wrap { background: #f8f4ed !important; border-color: #e3d9cb !important; }
+.checkin-result-details dt { color: var(--rgzv-muted) !important; }
+.checkin-result-details dd, .checkin-confirm strong { color: var(--rgzv-navy) !important; }
+.checkin-payment-warning { color: #74431f !important; background: #fbecd8 !important; border-color: #e8c69d !important; }
+
+/* Dialoge, Modals und Systemmeldungen */
+.modal { background: rgba(23,33,63,.55) !important; backdrop-filter: blur(7px); }
+.modal-card { color: var(--rgzv-ink) !important; background: var(--rgzv-paper) !important; }
+.modal-card h2, .modal-card h3 { color: var(--rgzv-navy) !important; }
+.modal-card label { color: #39455e !important; }
+.modal-card input, .modal-card select, .modal-card textarea { color: var(--rgzv-ink) !important; background: #fff !important; border-color: #d8cfbf !important; }
+.signup-success-overlay { background: rgba(23,33,63,.62) !important; }
+.signup-success-card { color: var(--rgzv-ink) !important; background: var(--rgzv-paper) !important; border-color: var(--rgzv-border) !important; }
+.signup-success-card h2 { color: var(--rgzv-navy) !important; }
+.signup-success-card > p { color: var(--rgzv-muted) !important; }
+
+/* Responsive Verdichtung und Schutz vor Überbreite */
+.page, .container, .landing-main, .collective-info-shell, .vaccination-info-main, .admin-workspace-content { max-width: 100%; }
+img, svg { max-width: 100%; }
+@media (max-width: 900px) {
+  .signup-layout { grid-template-columns: minmax(0,1fr) !important; }
+  .signup-summary { position: static !important; }
+  .admin-workspace-nav { box-shadow: 0 8px 24px rgba(26,29,48,.1) !important; }
+  .landing-hero, .final-home-hero { border-radius: 22px !important; }
+}
+@media (max-width: 620px) {
+  .card, .modal-card, .info-page-card, .collective-info-card, .poultry-question-card { border-radius: 16px !important; }
+  .signup-step { padding: 17px !important; }
+  .signup-fields-row, .signup-fields-row-three, .signup-address-row { grid-template-columns: minmax(0,1fr) !important; }
+  .poultry-answer-grid { grid-template-columns: minmax(0,1fr) !important; }
+  .appointment-weather-forecast { grid-template-columns: repeat(5,minmax(48px,1fr)); width: min(100%, calc(100vw - 40px)); overflow: hidden; }
+  .appointment-weather-day { min-width: 0; }
+  .appointment-weather-day small { overflow-wrap: anywhere; }
+  .legal-document { margin: 20px auto; padding: 24px 18px !important; }
+  .table-scroll, .table-wrap { overflow-x: auto; }
+}
 @media (max-width: 430px) {
   .home-community-metrics { grid-template-columns: 1fr; }
   .home-community-metrics > div { min-height: 112px; }

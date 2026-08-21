@@ -215,6 +215,16 @@ const [showForm, setShowForm] = useState(false)
     return () =>
       removeEventListener('hashchange', onHash)
   }, [])
+  useLayoutEffect(() => {
+    let finalFrame
+    const frame = window.requestAnimationFrame(() => {
+      finalFrame = window.requestAnimationFrame(() => window.scrollTo(0, 0))
+    })
+    return () => {
+      window.cancelAnimationFrame(frame)
+      if (finalFrame) window.cancelAnimationFrame(finalFrame)
+    }
+  }, [page])
   if (location.pathname === '/admin-invite') return <AdminInvitePassword />
   if (page === '#info') return <InfoPage />
   if (page === '#info-newcastle') return <InfoNewcastle />
