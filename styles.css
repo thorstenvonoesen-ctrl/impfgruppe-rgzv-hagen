@@ -1111,7 +1111,7 @@ body { background: #163a2f; }
   border-radius: 15px;
 }
 .admin-management-table-wrap, .admin-participant-management-card .table-scroll { margin-top: 16px; }
-.admin-participant-management-card table { min-width: 1220px; }
+.admin-participant-management-card table { height: auto; min-width: 1220px; overflow: visible; }
 .admin-participant-management-card th { padding: 13px 12px !important; font-size: 10px !important; }
 .admin-participant-management-card td { padding: 15px 12px !important; vertical-align: top; font-size: 12px; line-height: 1.45; }
 .participant-row-actions { display: flex; flex-wrap: wrap; gap: 5px; min-width: 190px; }
