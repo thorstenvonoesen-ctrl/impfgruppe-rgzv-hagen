@@ -814,14 +814,17 @@ function LiveSignupStats({ club }) {
 
   return (
     <>
-      <section className="landing-appointment" aria-label="Nächster Impftermin">
-        <div className="landing-appointment-main">
-          <InteractiveStatCard className="landing-countdown" icon={<CalendarDays size={28}/>} label="Nächster Impftermin" loading={!ready} appointmentDates={stats.dates} club={club} isAppointment tone="stat-date" animationIndex={0} />
+      <section className="landing-event-hub" aria-label="Nächster Impftermin und aktuelle Anmeldezahlen">
+        <div className="landing-appointment" aria-label="Nächster Impftermin">
+          <div className="landing-appointment-main">
+            <InteractiveStatCard className="landing-countdown" icon={<CalendarDays size={28}/>} label="Nächster Impftermin" loading={!ready} appointmentDates={stats.dates} club={club} isAppointment tone="stat-date" animationIndex={0} />
+          </div>
         </div>
-        <div className="landing-appointment-metrics" aria-label="Aktuelle Anmeldezahlen">
+        <aside className="landing-appointment-metrics" aria-label="Aktuelle Anmeldezahlen">
+          <span className="landing-metrics-label">Impfgruppe aktuell</span>
           <div><span><Users size={19}/></span><strong>{ready ? <AnimatedMetric value={Number(stats.participants || 0)}/> : '–'}</strong><small>Geflügelhalter</small></div>
           <div><span><Syringe size={19}/></span><strong>{ready ? <AnimatedMetric value={Number(stats.animals || 0)}/> : '–'}</strong><small>angemeldete Tiere</small></div>
-        </div>
+        </aside>
       </section>
 
       <section className="landing-benefits" aria-labelledby="landing-benefits-title">
@@ -5008,14 +5011,17 @@ if (!showForm) {
         <div className="form-section signup-form-section">
         <form onSubmit={submit} className="form signup-form">
           <section className="signup-step">
+            <div className="signup-step-heading"><span>01</span><div><h3>Persönliche Daten</h3><p>Name und erreichbare E-Mail-Adresse</p></div></div>
             <div className="signup-fields-row signup-fields-row-three"><Input label="Vorname" name="firstname" value={form.firstname} onChange={update} required/><Input label="Nachname" name="lastname" value={form.lastname} onChange={update} required/><Input label="E-Mail" name="email" type="email" value={form.email} onChange={update} onBlur={checkPreviousRegistration} required/></div>
           </section>
 
           <section className="signup-step">
+            <div className="signup-step-heading"><span>02</span><div><h3>Adresse</h3><p>Anschrift des Tierbestands</p></div></div>
             <div className="signup-fields-row signup-address-row"><Input label="Straße" name="street" value={form.street} onChange={update}/><Input label="Hausnummer" name="housenumber" value={form.housenumber} onChange={update}/><Input label="PLZ" name="zipcode" value={form.zipcode} onChange={update}/><Input label="Ort" name="city" value={form.city} onChange={update}/></div>
           </section>
 
           <section className="signup-step">
+            <div className="signup-step-heading"><span>03</span><div><h3>Halterdaten</h3><p>Kontakt, TSK-Nummer und Vereinszugehörigkeit</p></div></div>
             <div className="signup-fields-row signup-fields-row-three">
               <Input label="Telefon" name="phone" value={form.phone} onChange={update}/>
               <Input label="TSK Betriebsnummer." name="tsk_number" value={form.tsk_number} onChange={update} required/>
@@ -5056,6 +5062,7 @@ if (!showForm) {
           </section>
 
           <section className="signup-step">
+            <div className="signup-step-heading"><span>04</span><div><h3>Tiere und Impftermin</h3><p>Bestand erfassen und Termin auswählen</p></div></div>
             <div className="signup-animal-counts">
               <Input label="Anzahl Hühner" name="chicken_count" type="number" min="0" step="1" value={form.chicken_count} onChange={update}/>
               <Input label="Anzahl Zwerghühner" name="bantam_count" type="number" min="0" step="1" value={form.bantam_count} onChange={update}/>
@@ -5072,6 +5079,7 @@ if (!showForm) {
           </section>
 
           <section className="signup-step signup-step-final">
+            <div className="signup-step-heading"><span>05</span><div><h3>Anmeldung abschließen</h3><p>Zahlungsart und Datenschutz bestätigen</p></div></div>
    <div className="payment-methods" style={{ marginTop: '15px', marginBottom: '15px' }}>
   <strong>Zahlungsart:</strong>
 
@@ -5661,21 +5669,26 @@ function CheckinPanel({ participants, vaccinationDates, onChanged, adminRole }) 
 
   return <section className="card checkin-panel">
     <div className="checkin-head"><div><span>QR-CHECK-IN</span><h2>Teilnehmer-Check-in am Impftermin</h2></div></div>
-    <select value={dateId} onChange={event => { setDateId(event.target.value); setQuery(''); setQuickFilter(''); setSearchResults([]); setCandidate(null); setQrImage(''); setFeedback(''); scannerBusyRef.current = false }}><option value="">Impftermin auswählen</option>{vaccinationDates.map(date => <option key={date.id} value={date.id}>{date.title} · {date.date}</option>)}</select>
-    {dateId && <>
-      <div className="checkin-live-stats" aria-label="Live-Statistik des ausgewählten Impftermins">
+    <div className="checkin-control-deck">
+      <label className="checkin-date-control"><span>Aktiver Impftermin</span><select value={dateId} onChange={event => { setDateId(event.target.value); setQuery(''); setQuickFilter(''); setSearchResults([]); setCandidate(null); setQrImage(''); setFeedback(''); scannerBusyRef.current = false }}><option value="">Impftermin auswählen</option>{vaccinationDates.map(date => <option key={date.id} value={date.id}>{date.title} · {date.date}</option>)}</select></label>
+      {dateId && <div className="checkin-live-stats" aria-label="Live-Statistik des ausgewählten Impftermins">
         {liveStats.map(stat => <button type="button" key={stat.label} className={`checkin-live-stat ${stat.tone}${quickFilter === stat.filter ? ' active' : ''}`} aria-pressed={quickFilter === stat.filter} onClick={() => { setQuickFilter(stat.filter); setQuery(''); setSearchResults([]); setCandidate(null); setQrImage('') }}>
           <span><b aria-hidden="true">{stat.icon}</b>{stat.label}</span>
           <strong>{Number(stat.value).toLocaleString('de-DE')}</strong>
         </button>)}
-      </div>
+      </div>}
+    </div>
+    {dateId && <>
       {quickFilter && quickFilter !== 'all' && <div className="checkin-filter-bar">
         <span>{liveStats.find(stat => stat.filter === quickFilter)?.label}: {displayedResults.length} Teilnehmer</span>
         <button type="button" className="ghost small" onClick={() => setQuickFilter('all')}>Alle Teilnehmer anzeigen</button>
       </div>}
-      <div className="checkin-actions">
-        <button className="primary" type="button" onClick={startScanner}>QR-Code scannen</button>
-        <input value={query} onChange={event => { setQuery(event.target.value); setQuickFilter('') }} placeholder="Name, E-Mail, Telefon oder TSK suchen..." />
+      <div className="checkin-operation-bar">
+        <div className="checkin-operation-copy"><strong>Teilnehmer finden</strong><span>Per QR-Code oder Direktsuche</span></div>
+        <div className="checkin-actions">
+          <button className="primary" type="button" onClick={startScanner}>QR-Code scannen</button>
+          <input value={query} onChange={event => { setQuery(event.target.value); setQuickFilter('') }} placeholder="Name, E-Mail, Telefon oder TSK suchen..." />
+        </div>
       </div>
       <div className="checkin-search-state" aria-live="polite">
         {query.trim().length === 1 && 'Bitte mindestens zwei Zeichen eingeben.'}
@@ -7247,6 +7260,7 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
     <div className="admin-workspace-content">
     <main className="admin-wrap admin-dashboard-layout">
       <section id="admin-dashboard-top" className="admin-overview">
+        <div className="admin-overview-lead">
         <header className="admin-overview-heading">
           <div className="admin-top-copy"><span>Arbeitsbereich</span><h1>Übersicht</h1><p>{activeClub?.name || 'RGZV Hagen'} · {adminContext?.role === 'superadmin' ? 'Superadmin' : adminContext?.role === 'checkin_admin' ? 'Check-in-Admin' : 'Vereinsadmin'}</p></div>
           <div className="admin-top-status"><span className="admin-top-status-dot"/>System bereit</div>
@@ -7267,7 +7281,9 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
             </div>
           )}
         </div>
+        </div>
 
+        <div className="admin-overview-command-grid">
         <div className="stats admin-dashboard-stats admin-overview-metrics">
           <InteractiveStatCard className="stat" icon={<Users/>} label="Teilnehmer" value={stats.total} loading={loading} tone="stat-participants" animationIndex={0} />
           <InteractiveStatCard className="stat" icon={<ShieldCheck/>} label="Tiere" value={stats.animals} loading={loading} tone="stat-animals" animationIndex={1} />
@@ -7296,6 +7312,7 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
             <span className="smart-assistant-card-action">Aufgaben anzeigen →</span>
           </button>
         </div>
+        </div>
       </section>
       <div id="admin-checkin" className="admin-checkin-anchor"><CheckinPanel participants={bindingParticipants} vaccinationDates={vaccinationDates} onChanged={load} adminRole={adminContext?.role} /></div>
       <section className="card admin-appointments-card">
@@ -7315,7 +7332,7 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
 </section>
       <section id="appointment-management" className="card admin-appointment-management-card">
   <h2>Impftermin anlegen</h2>
-
+  <div className="appointment-create-grid">
   <input
     type="text"
     placeholder="Titel des Impftermins"
@@ -7337,7 +7354,7 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
   />
 
   <VaccinationAddressFields value={newDateAddress} onChange={setNewDateAddress} />
-
+  </div>
   <button className="primary" onClick={addVaccinationDate}>
     Impftermin speichern
   </button>
@@ -7512,28 +7529,28 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
           
 
             <tr key={p.id}>
-              <td>{p.firstname} {p.lastname}</td>
-              <td>{p.street} {p.housenumber}, {p.zipcode} {p.city}</td>
-              <td>{p.email}</td>
-<td>{p.phone}</td>
-<td>{p.tsk_number}</td>
-              <td>{p.is_member ? 'Ja' : 'Nein'}</td>
-              <td>{formatParticipantAnimals(p)}</td>
-              <td>{p.vaccine}</td>
-              <td>
+              <td data-label="Name"><strong>{p.firstname} {p.lastname}</strong></td>
+              <td data-label="Ort">{p.street} {p.housenumber}, {p.zipcode} {p.city}</td>
+              <td data-label="E-Mail">{p.email}</td>
+<td data-label="Telefon">{p.phone}</td>
+<td data-label="TSK">{p.tsk_number}</td>
+              <td data-label="Mitglied">{p.is_member ? 'Ja' : 'Nein'}</td>
+              <td data-label="Tiere">{formatParticipantAnimals(p)}</td>
+              <td data-label="Impfung">{p.vaccine}</td>
+              <td data-label="Impftermin">
   {
     vaccinationDates.find(v => v.id === p.vaccination_date_id)
       ? `${vaccinationDates.find(v => v.id === p.vaccination_date_id).title} - ${vaccinationDates.find(v => v.id === p.vaccination_date_id).date}`
       : '-'
   }
 </td>
-              <td>
+              <td data-label="Zahlung">
                 <span className={`status-badge ${p.payment_status === 'bezahlt' ? 'paid' : 'open'}`}>
                   {p.payment_status}{p.payment_method === 'bar' ? ' · Barzahlung vor Ort' : ''}
                 </span>
               </td>
-              <td><span className={`status-badge ${isBindingRegistration(p) ? 'paid' : 'open'}`}>{registrationStatusLabels[p.registration_status] || p.registration_status}</span></td>
-              <td>
+              <td data-label="Anmeldestatus"><span className={`status-badge ${isBindingRegistration(p) ? 'paid' : 'open'}`}>{registrationStatusLabels[p.registration_status] || p.registration_status}</span></td>
+              <td data-label="Aktionen"><div className="participant-row-actions">
   <button className="small" onClick={()=>markPaid(p.id,p.payment_status!=='bezahlt')}>
     {p.payment_status==='bezahlt'?'Offen':'Bezahlt'}
   </button>
@@ -7568,7 +7585,7 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
 >
   E-Mail
 </button>
-</td></tr>))}</tbody></table></div>)}
+</div></td></tr>))}</tbody></table></div>)}
       </section>
       {editingParticipant && (
   <div className="modal">

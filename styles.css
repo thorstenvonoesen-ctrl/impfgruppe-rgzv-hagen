@@ -812,6 +812,398 @@ body { background: #163a2f; }
   .membership-invitation-questions section:last-child { grid-column: auto; }
   .membership-invitation-link { width: 100%; text-align: center; }
 }
+
+/* ========================================================================== */
+/* Strukturelles Redesign – neue Kompositionen auf bestehenden Funktionen      */
+/* ========================================================================== */
+
+/* Start: Termin als Fokusmodul, Kennzahlen als eigenständige Seitenleiste */
+.landing-main {
+  width: min(1320px, calc(100% - 40px)) !important;
+  display: grid;
+  gap: 28px !important;
+}
+.landing-hero {
+  min-height: 540px !important;
+  grid-template-columns: minmax(0,.85fr) minmax(440px,1.15fr) !important;
+  gap: clamp(32px,5vw,74px) !important;
+  padding: clamp(42px,6vw,78px) !important;
+  align-items: center !important;
+}
+.landing-hero-copy { align-self: center; }
+.landing-hero-copy h1 { max-width: 680px; font-size: clamp(48px,6vw,82px) !important; line-height: .94 !important; }
+.landing-hero-copy p { max-width: 610px; margin-top: 24px !important; font-size: clamp(17px,1.5vw,21px) !important; line-height: 1.55 !important; }
+.landing-hero-actions { margin-top: 30px !important; }
+.landing-visual { min-height: 420px !important; border-radius: 46% 54% 30% 70% / 44% 30% 70% 56% !important; }
+.landing-event-hub {
+  display: grid;
+  grid-template-columns: minmax(0,1fr) 270px;
+  gap: 18px;
+  align-items: stretch;
+}
+.landing-event-hub .landing-appointment {
+  min-width: 0;
+  margin: 0 !important;
+  display: block !important;
+  overflow: visible !important;
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+.landing-event-hub .landing-countdown.dashboard-stat-card {
+  min-height: 300px !important;
+  padding: clamp(28px,4vw,52px) !important;
+  grid-template-columns: 72px minmax(0,1fr) !important;
+  border-radius: 28px 28px 76px 28px !important;
+}
+.landing-event-hub .landing-countdown .dashboard-stat-icon { width: 64px !important; height: 64px !important; border-radius: 20px !important; }
+.landing-event-hub .appointment-countdown { align-items: start; justify-items: start; }
+.landing-event-hub .appointment-countdown > strong { font-size: clamp(30px,4vw,52px) !important; text-align: left; }
+.landing-event-hub .appointment-countdown-units { width: min(100%,560px) !important; }
+.landing-event-hub .appointment-action-buttons { justify-content: flex-start; }
+.landing-appointment-metrics {
+  min-width: 0;
+  padding: 22px !important;
+  display: grid !important;
+  grid-template-columns: 1fr !important;
+  grid-template-rows: auto repeat(2,1fr);
+  gap: 12px !important;
+  color: #fff !important;
+  background: var(--rgzv-navy) !important;
+  border: 1px solid #2e3c61 !important;
+  border-radius: 28px 28px 28px 72px !important;
+  box-shadow: var(--rgzv-shadow) !important;
+}
+.landing-metrics-label {
+  display: block;
+  color: #9ee4e2;
+  font-size: 10px;
+  font-weight: 850;
+  letter-spacing: .13em;
+  text-transform: uppercase;
+}
+.landing-appointment-metrics > div {
+  min-width: 0;
+  padding: 16px 0 !important;
+  display: grid !important;
+  grid-template-columns: 40px 1fr;
+  grid-template-rows: auto auto;
+  align-content: center;
+  border-top: 1px solid rgba(255,255,255,.12);
+}
+.landing-appointment-metrics > div > span { grid-row: 1 / 3; color: #8de8ee !important; background: rgba(141,232,238,.1) !important; }
+.landing-appointment-metrics strong { color: #fff !important; font-size: 34px !important; }
+.landing-appointment-metrics small { color: rgba(255,255,255,.66) !important; }
+.landing-benefits {
+  padding: clamp(32px,5vw,62px) !important;
+  display: grid !important;
+  grid-template-columns: minmax(220px,.45fr) minmax(0,1fr);
+  gap: 42px !important;
+  align-items: start;
+  background: rgba(255,253,249,.7) !important;
+  border: 1px solid var(--rgzv-border) !important;
+  border-radius: 28px !important;
+}
+.landing-benefits .landing-section-heading { position: sticky; top: 90px; }
+.landing-benefits-list { grid-template-columns: repeat(2,minmax(0,1fr)) !important; gap: 12px !important; }
+.landing-benefits-list > * { min-height: 98px !important; }
+.landing-closing {
+  min-height: 240px !important;
+  padding: clamp(36px,5vw,64px) !important;
+  display: grid !important;
+  grid-template-columns: minmax(0,1fr) auto;
+  background: linear-gradient(135deg,var(--rgzv-navy),#2a385c) !important;
+  border-radius: 28px 80px 28px 28px !important;
+}
+.landing-closing h2, .landing-closing span { color: #fff !important; }
+
+/* Anmeldung: Arbeitsabschnitte statt langer gleichförmiger Feldfolge */
+.signup-workspace { width: min(1240px, calc(100% - 40px)) !important; }
+.signup-page-head {
+  min-height: 300px !important;
+  padding: clamp(34px,5vw,62px) !important;
+  display: grid;
+  align-content: end;
+  grid-template-columns: minmax(0,1fr) auto;
+  column-gap: 28px;
+  border-radius: 26px 26px 88px 26px !important;
+}
+.signup-page-head .signup-home-link, .signup-page-head .signup-eyebrow, .signup-page-head h1, .signup-page-head p { grid-column: 1; }
+.signup-page-head h1 { max-width: 780px; }
+.signup-layout { grid-template-columns: minmax(0,1fr) 320px !important; gap: 24px !important; }
+.signup-card { padding: 30px !important; }
+.signup-form {
+  display: grid !important;
+  grid-template-columns: repeat(2,minmax(0,1fr));
+  gap: 16px !important;
+}
+.signup-step {
+  min-width: 0;
+  margin: 0 !important;
+  padding: 22px !important;
+  align-content: start;
+}
+.signup-fields-row,
+.signup-fields-row > label,
+.signup-animal-counts,
+.signup-animal-counts > label,
+.signup-step .two,
+.signup-step .two > label { min-width: 0; }
+.signup-fields-row input,
+.signup-fields-row select,
+.signup-animal-counts input,
+.signup-step .two input,
+.signup-step .two select { width: 100%; min-width: 0; }
+.signup-address-row { grid-template-columns: minmax(0,1.4fr) minmax(76px,.55fr) minmax(72px,.5fr) minmax(0,1fr) !important; }
+.signup-step:nth-of-type(3), .signup-step:nth-of-type(4), .signup-step-final { grid-column: 1 / -1; }
+.signup-step-heading {
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-bottom: 1px solid #e5dacb;
+}
+.signup-step-heading > span {
+  display: grid;
+  flex: 0 0 auto;
+  width: 34px;
+  height: 34px;
+  place-items: center;
+  color: #fff;
+  background: var(--rgzv-violet);
+  border-radius: 11px;
+  font-size: 11px;
+  font-weight: 900;
+}
+.signup-step-heading h3 { margin: 0 !important; padding: 0 !important; border: 0 !important; font-size: 17px !important; }
+.signup-step-heading p { margin: 2px 0 0; color: var(--rgzv-muted); font-size: 11px; }
+.signup-summary {
+  top: 92px !important;
+  min-height: 470px;
+  padding: 28px !important;
+  border-radius: 24px 24px 64px 24px !important;
+}
+.signup-summary dl { display: grid; gap: 0 !important; }
+.signup-summary dl > div { padding: 17px 0 !important; }
+
+/* Admin: Lead-Komposition und operatives Cockpit */
+.admin-overview { gap: 18px !important; }
+.admin-overview-lead {
+  display: grid;
+  grid-template-columns: minmax(280px,.72fr) minmax(0,1.28fr);
+  gap: 16px;
+}
+.admin-overview-heading,
+.admin-overview-appointment { min-height: 170px !important; }
+.admin-overview-heading { border-radius: 20px 20px 20px 52px !important; }
+.admin-overview-appointment { border-radius: 20px 20px 58px 20px !important; }
+.admin-overview-command-grid {
+  display: grid;
+  grid-template-columns: minmax(0,.82fr) minmax(420px,1.18fr);
+  gap: 16px;
+  align-items: stretch;
+}
+.admin .admin-overview .admin-overview-metrics {
+  grid-template-columns: 1fr !important;
+  gap: 10px !important;
+}
+.admin .admin-overview .admin-overview-metrics .stat.dashboard-stat-card {
+  min-height: 92px !important;
+  padding: 15px 18px !important;
+  display: grid !important;
+  grid-template-columns: 46px minmax(0,1fr);
+  border-radius: 14px 14px 14px 30px !important;
+}
+.admin-overview-operations { grid-template-columns: 1fr !important; gap: 10px !important; }
+.admin-overview-operations > .admin-presence,
+.admin-overview-operations > .smart-assistant-card { min-height: 142px !important; }
+.admin-checkin-anchor, .admin-appointment-management-card, .admin-participant-management-card { scroll-margin-top: 24px; }
+.appointment-create-grid {
+  margin: 18px 0;
+  padding: 20px;
+  display: grid;
+  grid-template-columns: 1.4fr .7fr 1fr;
+  gap: 12px;
+  background: #f7f2ea;
+  border: 1px solid var(--rgzv-border);
+  border-radius: 16px;
+}
+.appointment-create-grid > .vaccination-address-fields { grid-column: 1 / -1; }
+.date-card {
+  margin-top: 12px !important;
+  padding: 18px 20px !important;
+  gap: 18px;
+  background: #fff !important;
+  border: 1px solid var(--rgzv-border) !important;
+  border-left: 4px solid var(--rgzv-aqua) !important;
+  border-radius: 6px 16px 16px 6px !important;
+}
+
+/* Check-in: Auswahl, Live-Lage und Bedienung als Arbeitsstation */
+.checkin-panel { padding: clamp(22px,3vw,34px) !important; }
+.checkin-head { margin-bottom: 20px; }
+.checkin-control-deck {
+  display: grid;
+  grid-template-columns: 240px minmax(0,1fr);
+  gap: 16px;
+  align-items: stretch;
+}
+.checkin-date-control {
+  padding: 20px;
+  display: grid;
+  align-content: center;
+  gap: 10px;
+  color: #fff !important;
+  background: var(--rgzv-navy);
+  border-radius: 16px 16px 16px 38px;
+}
+.checkin-date-control > span { color: #9ee4e2; font-size: 10px; font-weight: 850; letter-spacing: .1em; text-transform: uppercase; }
+.checkin-date-control select { width: 100%; color: var(--rgzv-ink) !important; background: #fff !important; }
+.checkin-live-stats { grid-template-columns: repeat(3,minmax(0,1fr)) !important; gap: 8px !important; }
+.checkin-live-stat {
+  min-height: 76px !important;
+  padding: 11px 13px !important;
+  display: grid !important;
+  grid-template-columns: minmax(0,1fr) auto;
+  align-items: center;
+  text-align: left;
+  border-radius: 13px !important;
+}
+.checkin-live-stat strong { font-size: 24px !important; }
+.checkin-operation-bar {
+  margin-top: 16px;
+  padding: 16px;
+  display: grid;
+  grid-template-columns: 180px minmax(0,1fr);
+  gap: 18px;
+  align-items: center;
+  background: #f5efe6;
+  border: 1px solid var(--rgzv-border);
+  border-radius: 16px;
+}
+.checkin-operation-copy { display: grid; gap: 2px; }
+.checkin-operation-copy strong { color: var(--rgzv-navy); }
+.checkin-operation-copy span { color: var(--rgzv-muted); font-size: 11px; }
+.checkin-operation-bar .checkin-actions { margin: 0 !important; }
+.checkin-candidates { margin-top: 14px; display: grid; gap: 10px; border: 0 !important; }
+.checkin-person.checkin-result {
+  padding: 0 !important;
+  display: grid !important;
+  grid-template-columns: minmax(0,1fr) minmax(280px,.55fr);
+  overflow: hidden;
+  background: #fff !important;
+  border: 1px solid var(--rgzv-border) !important;
+  border-radius: 15px !important;
+}
+.checkin-result-main { padding: 18px !important; border: 0 !important; border-radius: 0 !important; }
+.checkin-result-actions { padding: 16px !important; background: #f6f1e9; border-left: 1px solid var(--rgzv-border); }
+
+/* Teilnehmer: professionelle Datentabelle, mobil echte Personenkarten */
+.admin-participant-management-card { padding: clamp(20px,3vw,32px) !important; }
+.admin-participant-management-card .table-head {
+  padding: 16px;
+  display: grid !important;
+  grid-template-columns: minmax(260px,1fr) minmax(190px,.35fr) auto;
+  gap: 10px !important;
+  background: #f5f0e7;
+  border: 1px solid var(--rgzv-border);
+  border-radius: 15px;
+}
+.admin-management-table-wrap, .admin-participant-management-card .table-scroll { margin-top: 16px; }
+.admin-participant-management-card table { min-width: 1220px; }
+.admin-participant-management-card th { padding: 13px 12px !important; font-size: 10px !important; }
+.admin-participant-management-card td { padding: 15px 12px !important; vertical-align: top; font-size: 12px; line-height: 1.45; }
+.participant-row-actions { display: flex; flex-wrap: wrap; gap: 5px; min-width: 190px; }
+.participant-row-actions .small { min-height: 30px; margin: 0 !important; padding: 6px 9px !important; font-size: 10px !important; }
+
+@media (max-width: 1050px) {
+  .landing-hero { min-height: 0 !important; grid-template-columns: minmax(0,1fr) 360px !important; }
+  .landing-event-hub { grid-template-columns: minmax(0,1fr) 230px; }
+  .landing-benefits { grid-template-columns: 1fr; }
+  .landing-benefits .landing-section-heading { position: static; }
+  .signup-layout { grid-template-columns: minmax(0,1fr) !important; }
+  .signup-summary { position: static !important; min-height: 0; display: grid; grid-template-columns: .6fr 1fr; gap: 20px; }
+  .signup-summary dl { grid-template-columns: repeat(2,minmax(0,1fr)); gap: 0 18px !important; }
+  .admin-overview-command-grid { grid-template-columns: 1fr; }
+  .admin .admin-overview .admin-overview-metrics { grid-template-columns: repeat(3,minmax(0,1fr)) !important; }
+  .admin-overview-operations { grid-template-columns: repeat(2,minmax(0,1fr)) !important; }
+}
+
+@media (max-width: 760px) {
+  .landing-main, .signup-workspace { width: min(100% - 24px, 680px) !important; }
+  .landing-hero { grid-template-columns: 1fr !important; padding: 28px 20px !important; }
+  .landing-hero-copy h1 { font-size: clamp(42px,14vw,64px) !important; }
+  .landing-visual { min-height: 300px !important; }
+  .landing-event-hub { grid-template-columns: 1fr; }
+  .landing-event-hub .landing-countdown.dashboard-stat-card { min-height: 0 !important; grid-template-columns: 1fr !important; border-radius: 22px 22px 48px 22px !important; }
+  .landing-event-hub .appointment-countdown { justify-items: center; }
+  .landing-event-hub .appointment-countdown > strong { text-align: center; }
+  .landing-appointment-metrics { grid-template-columns: repeat(2,1fr) !important; grid-template-rows: auto 1fr; border-radius: 22px 22px 22px 48px !important; }
+  .landing-metrics-label { grid-column: 1 / -1; }
+  .landing-benefits { padding: 24px 18px !important; }
+  .landing-benefits-list { grid-template-columns: 1fr !important; }
+  .landing-closing { grid-template-columns: 1fr !important; gap: 22px; border-radius: 22px 48px 22px 22px !important; }
+  .signup-page-head { min-height: 230px !important; padding: 28px 20px !important; grid-template-columns: 1fr; border-radius: 22px 22px 52px 22px !important; }
+  .signup-card { padding: 16px !important; }
+  .signup-layout .signup-card { order: 1 !important; }
+  .signup-layout .signup-summary { order: 2 !important; grid-row: auto !important; }
+  .signup-form { grid-template-columns: 1fr !important; }
+  .signup-step, .signup-step:nth-of-type(3), .signup-step:nth-of-type(4), .signup-step-final { grid-column: auto; }
+  .signup-summary { grid-template-columns: 1fr; padding: 22px !important; border-radius: 20px 20px 46px 20px !important; }
+  .signup-summary dl { grid-template-columns: 1fr; }
+  .admin-overview-lead { grid-template-columns: 1fr; }
+  .admin .admin-overview .admin-overview-metrics { grid-template-columns: 1fr !important; }
+  .admin-overview-operations { grid-template-columns: 1fr !important; }
+  .appointment-create-grid { grid-template-columns: 1fr; padding: 15px; }
+  .appointment-create-grid > .vaccination-address-fields { grid-column: auto; }
+  .date-card { align-items: flex-start !important; flex-direction: column; }
+  .checkin-control-deck { grid-template-columns: 1fr; }
+  .checkin-live-stats { grid-template-columns: repeat(2,minmax(0,1fr)) !important; }
+  .checkin-operation-bar { grid-template-columns: 1fr; }
+  .checkin-operation-bar .checkin-actions { grid-template-columns: 1fr !important; }
+  .checkin-person.checkin-result { grid-template-columns: 1fr; }
+  .checkin-result-actions { border-top: 1px solid var(--rgzv-border); border-left: 0; }
+  .admin-participant-management-card .table-head { grid-template-columns: 1fr !important; }
+  .admin-participant-management-card .table-scroll { overflow: visible; border: 0; background: transparent; }
+  .admin-participant-management-card table,
+  .admin-participant-management-card tbody,
+  .admin-participant-management-card tr,
+  .admin-participant-management-card td { display: block; width: 100%; min-width: 0; }
+  .admin-participant-management-card table { min-width: 0; background: transparent !important; }
+  .admin-participant-management-card thead { display: none; }
+  .admin-participant-management-card tbody { display: grid; gap: 14px; }
+  .admin-participant-management-card tr {
+    overflow: hidden;
+    background: #fff;
+    border: 1px solid var(--rgzv-border);
+    border-radius: 16px;
+    box-shadow: var(--rgzv-shadow-sm);
+  }
+  .admin-participant-management-card td {
+    min-height: 44px;
+    padding: 11px 14px 11px 42% !important;
+    position: relative;
+    border-bottom: 1px solid #eee7dc !important;
+  }
+  .admin-participant-management-card td::before {
+    position: absolute;
+    top: 11px;
+    left: 14px;
+    width: 36%;
+    content: attr(data-label);
+    color: var(--rgzv-muted);
+    font-size: 9px;
+    font-weight: 850;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+  }
+  .admin-participant-management-card td:first-child { padding: 18px 14px !important; color: var(--rgzv-navy) !important; background: #f5f0e7; font-size: 16px; }
+  .admin-participant-management-card td:first-child::before { display: none; }
+  .admin-participant-management-card td:last-child { padding: 14px !important; border-bottom: 0 !important; }
+  .admin-participant-management-card td:last-child::before { display: none; }
+  .participant-row-actions { min-width: 0; }
+}
 @media (max-width: 520px) { .signup-success-overlay { padding: 18px; } .signup-success-card { padding: 34px 24px; border-radius: 23px; } .signup-success-actions { grid-template-columns: 1fr; } }
 @media (prefers-reduced-motion: reduce) { .signup-success-overlay,.signup-success-card,.signup-success-icon,.signup-success-icon::after,.signup-success-icon path,.signup-success-email { animation-duration: .01ms !important; animation-delay: 0ms !important; } .signup-success-confetti { display: none; } }
 
