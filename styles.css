@@ -1174,7 +1174,8 @@ body { background: #163a2f; }
   .admin-participant-management-card thead { display: none; }
   .admin-participant-management-card tbody { display: grid; gap: 14px; }
   .admin-participant-management-card tr {
-    overflow: hidden;
+    height: auto;
+    overflow: visible;
     background: #fff;
     border: 1px solid var(--rgzv-border);
     border-radius: 16px;
