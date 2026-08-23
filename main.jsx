@@ -5073,7 +5073,7 @@ if (!showForm) {
       </aside>
       </div>
     </main>
-    <Footer />
+    <Footer showDeveloper />
   </div>
   {showPaymentSuccess && (
     <SignupSuccessOverlay

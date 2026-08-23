@@ -7007,17 +7007,22 @@ footer a { color: var(--aurora-blue) !important; }
 .landing-button-light { flex: 0 0 auto; color: #3429b6; background: #fff; border-color: #fff; box-shadow: 0 10px 26px rgba(27,18,115,.2); }
 .landing-button-light:hover { color: #21188e; background: #f7f7ff; }
 
-.final-home-page > footer {
+.final-home-page > footer,
+.signup-page > footer {
   margin-top: auto !important;
   padding: 40px 24px !important;
   color: rgba(255,255,255,.68) !important;
   background: #121a38 !important;
   border-top: 0 !important;
 }
-.final-home-page > footer .footer-content { width: min(100%,1360px) !important; margin: 0 auto; }
-.final-home-page > footer a { color: #a9f0f3 !important; }
-.final-home-page > footer .footer-signature { color: rgba(255,255,255,.45); }
-.final-home-page > footer .footer-signature span { color: #ff977f; }
+.final-home-page > footer .footer-content,
+.signup-page > footer .footer-content { width: min(100%,1360px) !important; margin: 0 auto; }
+.final-home-page > footer a,
+.signup-page > footer a { color: #a9f0f3 !important; }
+.final-home-page > footer .footer-signature,
+.signup-page > footer .footer-signature { color: rgba(255,255,255,.45); }
+.final-home-page > footer .footer-signature span,
+.signup-page > footer .footer-signature span { color: #ff977f; }
 
 @media (max-width: 1080px) {
   .landing-hero { grid-template-columns: minmax(0,1fr) minmax(300px,.7fr); gap: 36px; }
@@ -7324,9 +7329,6 @@ footer a { color: var(--aurora-blue) !important; }
 .signup-summary-note { margin-top: 13px; padding: 11px; display: grid; grid-template-columns: auto minmax(0,1fr); gap: 8px; color: #a9f0f3; background: rgba(24,184,201,.09); border: 1px solid rgba(141,232,238,.14); border-radius: 12px; }
 .signup-summary-note p { margin: 0; color: rgba(255,255,255,.67); font-size: 11px; line-height: 1.55; }
 .signup-page > .ghost { display: none; }
-.signup-page footer { color: #717b95 !important; border-top-color: rgba(91,78,228,.1) !important; }
-.signup-page footer a { color: #5b4ee4 !important; }
-
 @media (max-width: 1050px) {
   .signup-layout { grid-template-columns: minmax(0,1fr) 290px; gap: 20px; }
   .signup-summary { padding: 22px; }
