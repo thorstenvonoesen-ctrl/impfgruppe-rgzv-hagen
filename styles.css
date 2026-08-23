@@ -1425,6 +1425,31 @@ body { background: #163a2f; }
 .landing-closing { color: #fff !important; background: #17203f !important; }
 .landing-closing h2,
 .landing-closing > div > span { color: #fff !important; }
+
+/* Kompakte Startseiten-Hero-Kachel */
+@media (min-width: 761px) {
+  .landing-hero {
+    min-height: 390px !important;
+    padding: clamp(24px, 3vw, 38px) !important;
+    gap: clamp(28px, 4vw, 58px) !important;
+  }
+  .landing-hero-copy h1 {
+    margin: 16px 0 12px !important;
+    font-size: clamp(42px, 5vw, 64px) !important;
+    line-height: .92 !important;
+  }
+  .landing-hero-copy > p { margin-top: 0 !important; line-height: 1.48 !important; }
+  .landing-hero-actions { margin-top: 18px !important; }
+  .landing-visual {
+    width: min(100%, 360px) !important;
+    min-height: 340px !important;
+  }
+  .landing-visual-center { width: 104px !important; height: 104px !important; border-radius: 27px !important; }
+  .landing-visual-center img { width: 84px !important; height: 84px !important; }
+  .landing-visual-node { min-width: 92px !important; min-height: 46px !important; padding: 7px 10px !important; gap: 7px !important; }
+  .landing-visual-node svg { width: 21px !important; height: 21px !important; }
+  .landing-visual-node small { font-size: 10px !important; }
+}
 .landing-metrics-label { color: #8b4b26 !important; }
 .landing-appointment-metrics > div > span { color: #8b4b26 !important; }
 .landing-closing { color: #fff !important; background: #17203f !important; }
