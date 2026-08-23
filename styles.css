@@ -893,7 +893,7 @@ body { background: #163a2f; }
 }
 .landing-appointment-metrics > div > span { grid-row: 1 / 3; color: #8de8ee !important; background: rgba(141,232,238,.1) !important; }
 .landing-appointment-metrics strong { color: #fff !important; font-size: 34px !important; }
-.landing-appointment-metrics small { color: rgba(255,255,255,.66) !important; }
+.landing-appointment-metrics small { color: var(--rgzv-navy) !important; }
 .landing-benefits {
   padding: clamp(32px,5vw,62px) !important;
   display: grid !important;
