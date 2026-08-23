@@ -7444,7 +7444,6 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
           <th>Impftermin</th>
           <th>Zahlung</th>
           <th>Anmeldestatus</th>
-          <th></th>
         </tr>
       </thead>
 
@@ -7453,7 +7452,24 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
           
 
             <tr key={p.id}>
-              <td data-label="Name"><strong>{p.firstname} {p.lastname}</strong></td>
+              <td data-label="Name"><strong>{p.firstname} {p.lastname}</strong><div className="participant-row-actions">
+                <button className="small" onClick={()=>markPaid(p.id,p.payment_status!=='bezahlt')}>{p.payment_status==='bezahlt'?'Offen':'Bezahlt'}</button>
+                <button className="small" onClick={()=>setEditingParticipant(p)}>Bearbeiten</button>
+                <button className="small" onClick={() => deleteParticipant(p.id)}>Löschen</button>
+                <button className="small" onClick={() =>
+                  window.location.href =
+                    `mailto:${p.email}` +
+                    `?subject=Anmeldung zum Impftermin RGZV Hagen` +
+                    `&body=Hallo ${p.firstname} ${p.lastname},%0D%0A%0D%0A` +
+                    `vielen Dank für Ihre Anmeldung zum Impftermin des RGZV Hagen und Umgebung seit 1903 e.V.%0D%0A%0D%0A` +
+                    `Ihre Anmeldung wurde erfolgreich erfasst und in unsere Teilnehmerliste aufgenommen. Der benötigte Impfstoff wird anhand der eingegangenen Anmeldungen bestellt und vorbereitet.%0D%0A%0D%0A` +
+                    `Sollten sich Änderungen ergeben oder Sie den Termin wider Erwarten nicht wahrnehmen können, bitten wir um eine kurze Mitteilung, damit wir entsprechend planen können.%0D%0A%0D%0A` +
+                    `Bei Fragen stehen wir Ihnen gerne zur Verfügung.%0D%0A%0D%0A` +
+                    `Mit freundlichen Grüßen%0D%0A%0D%0A` +
+                    `Ihr Impfwart%0D%0A%0D%0A` +
+                    `RGZV Hagen und Umgebung seit 1903 e.V.`
+                }>E-Mail</button>
+              </div></td>
               <td data-label="Ort">{p.street} {p.housenumber}, {p.zipcode} {p.city}</td>
               <td data-label="E-Mail">{p.email}</td>
 <td data-label="Telefon">{p.phone}</td>
@@ -7474,42 +7490,7 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
                 </span>
               </td>
               <td data-label="Anmeldestatus"><span className={`status-badge ${isBindingRegistration(p) ? 'paid' : 'open'}`}>{registrationStatusLabels[p.registration_status] || p.registration_status}</span></td>
-              <td data-label="Aktionen"><div className="participant-row-actions">
-  <button className="small" onClick={()=>markPaid(p.id,p.payment_status!=='bezahlt')}>
-    {p.payment_status==='bezahlt'?'Offen':'Bezahlt'}
-  </button>
-
-  <button
-    className="small"
-    onClick={()=>setEditingParticipant(p)}
-  >
-    Bearbeiten
-  </button>
-          <button
-  className="small"
-  onClick={() => deleteParticipant(p.id)}
->
-  Löschen
-</button>
-          <button
-  className="small"
-  onClick={() =>
-  window.location.href =
-    `mailto:${p.email}` +
-`?subject=Anmeldung zum Impftermin RGZV Hagen` +
-`&body=Hallo ${p.firstname} ${p.lastname},%0D%0A%0D%0A` +
-`vielen Dank für Ihre Anmeldung zum Impftermin des RGZV Hagen und Umgebung seit 1903 e.V.%0D%0A%0D%0A` +
-`Ihre Anmeldung wurde erfolgreich erfasst und in unsere Teilnehmerliste aufgenommen. Der benötigte Impfstoff wird anhand der eingegangenen Anmeldungen bestellt und vorbereitet.%0D%0A%0D%0A` +
-`Sollten sich Änderungen ergeben oder Sie den Termin wider Erwarten nicht wahrnehmen können, bitten wir um eine kurze Mitteilung, damit wir entsprechend planen können.%0D%0A%0D%0A` +
-`Bei Fragen stehen wir Ihnen gerne zur Verfügung.%0D%0A%0D%0A` +
-`Mit freundlichen Grüßen%0D%0A%0D%0A` +
-`Ihr Impfwart%0D%0A%0D%0A` +
-`RGZV Hagen und Umgebung seit 1903 e.V.`
-}
->
-  E-Mail
-</button>
-</div></td></tr>))}</tbody></table></div>)}
+            </tr>))}</tbody></table></div>)}
       </section>
       {editingParticipant && (
   <div className="modal">
