@@ -582,7 +582,7 @@ function WeatherPreview({ location, date }) {
       <button type="button" className="appointment-weather-button appointment-weather-ready" title={`Regenwahrscheinlichkeit: ${weather.precipitation} %`} aria-expanded={expanded} onClick={() => setExpanded(value => !value)}>{weather.icon} {Math.round(weather.temperature)} °C · {weather.label}</button>
       {expanded && <div className="appointment-weather-forecast">
         {weather.forecast.map(day => <div className="appointment-weather-day" key={day.date}>
-          <strong>{new Date(`${day.date}T12:00:00`).toLocaleDateString('de-DE', { weekday: 'short' })}</strong>
+          <span style={{ color: '#fff', fontWeight: 700, textTransform: 'capitalize' }}>{new Date(`${day.date}T12:00:00`).toLocaleDateString('de-DE', { weekday: 'short' })}</span>
           <span aria-hidden="true">{day.icon}</span>
           <span>{Math.round(day.temperature)}° / {Math.round(day.minimumTemperature)}°</span>
           <small>{day.label}</small>
