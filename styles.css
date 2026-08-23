@@ -1427,10 +1427,15 @@ body { background: #163a2f; }
 .landing-closing > div > span { color: #fff !important; }
 
 /* Kompakte Teilnehmerübersicht */
-@media (min-width: 761px) {
-  .admin .admin-participant-management-card { padding: 18px !important; }
-  .admin .admin-participant-management-card .table-scroll { margin-top: 12px; overflow-x: auto; }
-  .admin .admin-participant-management-card table { width: 100%; min-width: 1480px; table-layout: fixed; }
+@media (min-width: 1181px) {
+  .admin .admin-workspace-content .admin-dashboard-layout > .admin-participant-management-card {
+    width: calc(100vw - 300px) !important;
+    max-width: none !important;
+    justify-self: center;
+    padding: 18px !important;
+  }
+  .admin .admin-participant-management-card .table-scroll { margin-top: 12px; overflow-x: visible; }
+  .admin .admin-participant-management-card table { width: 100%; min-width: 0; table-layout: fixed; }
   .admin .admin-participant-management-card th { padding: 9px 8px !important; line-height: 1.15; }
   .admin .admin-participant-management-card td {
     min-height: 0;
@@ -1440,19 +1445,20 @@ body { background: #163a2f; }
     line-height: 1.25;
   }
   .admin .admin-participant-management-card tbody tr { min-height: 0; border-bottom: 1px solid #e1e5ed; }
-  .admin .admin-participant-management-card th:nth-child(1) { width: 118px; }
-  .admin .admin-participant-management-card th:nth-child(2) { width: 170px; }
-  .admin .admin-participant-management-card th:nth-child(3) { width: 175px; }
-  .admin .admin-participant-management-card th:nth-child(4) { width: 105px; }
-  .admin .admin-participant-management-card th:nth-child(5) { width: 112px; }
-  .admin .admin-participant-management-card th:nth-child(6) { width: 62px; }
-  .admin .admin-participant-management-card th:nth-child(7) { width: 140px; }
-  .admin .admin-participant-management-card th:nth-child(8) { width: 82px; }
-  .admin .admin-participant-management-card th:nth-child(9) { width: 155px; }
-  .admin .admin-participant-management-card th:nth-child(10) { width: 145px; }
-  .admin .admin-participant-management-card th:nth-child(11) { width: 132px; }
-  .admin .admin-participant-management-card th:nth-child(12) { width: 132px; }
+  .admin .admin-participant-management-card th:nth-child(1) { width: 8%; }
+  .admin .admin-participant-management-card th:nth-child(2) { width: 12%; }
+  .admin .admin-participant-management-card th:nth-child(3) { width: 12%; }
+  .admin .admin-participant-management-card th:nth-child(4) { width: 7%; }
+  .admin .admin-participant-management-card th:nth-child(5) { width: 7%; }
+  .admin .admin-participant-management-card th:nth-child(6) { width: 4%; }
+  .admin .admin-participant-management-card th:nth-child(7) { width: 10%; }
+  .admin .admin-participant-management-card th:nth-child(8) { width: 5%; }
+  .admin .admin-participant-management-card th:nth-child(9) { width: 11%; }
+  .admin .admin-participant-management-card th:nth-child(10) { width: 9%; }
+  .admin .admin-participant-management-card th:nth-child(11) { width: 8%; }
+  .admin .admin-participant-management-card th:nth-child(12) { width: 7%; }
   .admin .admin-participant-management-card td:nth-child(3) { overflow-wrap: anywhere; }
+  .admin .admin-participant-management-card td:nth-child(4),
   .admin .admin-participant-management-card td:nth-child(5) { white-space: nowrap; }
   .admin .admin-participant-management-card .status-badge {
     min-width: 0 !important;
