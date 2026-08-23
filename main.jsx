@@ -4944,9 +4944,9 @@ if (!showForm) {
         <form onSubmit={submit} className="form signup-form">
           <section className="signup-step">
             <div className="signup-step-heading"><span>01</span><div><h3>Ihre Daten</h3><p>Persönliche Angaben, Anschrift und Halterdaten</p></div></div>
-            <div className="signup-fields-row signup-fields-row-three"><Input label="Vorname" name="firstname" value={form.firstname} onChange={update} required/><Input label="Nachname" name="lastname" value={form.lastname} onChange={update} required/><Input label="E-Mail" name="email" type="email" value={form.email} onChange={update} onBlur={checkPreviousRegistration} required/></div>
+            <div className="signup-fields-row signup-fields-row-three signup-personal-row"><Input label="Vorname" name="firstname" value={form.firstname} onChange={update} required/><Input label="Nachname" name="lastname" value={form.lastname} onChange={update} required/><Input label="E-Mail" name="email" type="email" value={form.email} onChange={update} onBlur={checkPreviousRegistration} required/></div>
             <div className="signup-fields-row signup-address-row"><Input label="Straße" name="street" value={form.street} onChange={update}/><Input label="Hausnummer" name="housenumber" value={form.housenumber} onChange={update}/><Input label="PLZ" name="zipcode" value={form.zipcode} onChange={update}/><Input label="Ort" name="city" value={form.city} onChange={update}/></div>
-            <div className="signup-fields-row signup-fields-row-three">
+            <div className="signup-fields-row signup-fields-row-three signup-holder-row">
               <Input label="Telefon" name="phone" value={form.phone} onChange={update}/>
               <Input label="TSK Betriebsnummer." name="tsk_number" value={form.tsk_number} onChange={update} required/>
               <Input label="Mitgliedercode (optional)" name="member_code" value={form.member_code} onChange={update}/>

@@ -1465,7 +1465,7 @@ body { background: #163a2f; }
   border-radius: 20px !important;
   box-shadow: 0 14px 34px rgba(31,43,93,.08) !important;
 }
-.signup-page .signup-form { gap: 10px !important; }
+.signup-page .signup-form { grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); gap: 10px !important; }
 .signup-page .signup-step {
   margin: 0 !important;
   padding: 14px !important;
@@ -1480,6 +1480,9 @@ body { background: #163a2f; }
 .signup-page .signup-step-heading h3 { font-size: 17px; }
 .signup-page .signup-step-heading p { margin-top: 1px; }
 .signup-page .signup-fields-row { gap: 8px; }
+.signup-page .signup-personal-row { grid-template-columns: minmax(0, .8fr) minmax(0, .9fr) minmax(0, 1.3fr); }
+.signup-page .signup-address-row { grid-template-columns: minmax(0, 2fr) minmax(62px, .55fr) minmax(62px, .55fr) minmax(0, 1.3fr) !important; }
+.signup-page .signup-holder-row { grid-template-columns: minmax(0, .85fr) minmax(0, 1.15fr) minmax(0, 1.1fr); }
 .signup-page .signup-step label { gap: 3px; }
 .signup-page .signup-step input:not([type="radio"]):not([type="checkbox"]),
 .signup-page .signup-step select { min-height: 40px; padding: 7px 11px; border-radius: 9px; }
@@ -1495,6 +1498,15 @@ body { background: #163a2f; }
 @media (max-width: 850px) {
   .signup-page .signup-layout { grid-template-columns: 1fr !important; }
   .signup-page .signup-summary { grid-row: auto; }
+  .signup-page .signup-form { grid-template-columns: 1fr; }
+}
+@media (min-width: 1051px) {
+  .signup-page .signup-holder-row > label:nth-child(2) { white-space: nowrap; }
+}
+@media (max-width: 720px) {
+  .signup-page .signup-personal-row,
+  .signup-page .signup-address-row,
+  .signup-page .signup-holder-row { grid-template-columns: 1fr !important; }
 }
 @media (max-width: 620px) {
   .signup-page .signup-workspace { width: min(100% - 22px, 1220px) !important; padding-top: 14px !important; }
