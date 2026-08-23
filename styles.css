@@ -1428,7 +1428,8 @@ body { background: #163a2f; }
 
 /* Kompakte, formularzentrierte Impfanmeldung */
 .signup-page .signup-workspace {
-  width: min(100% - 32px, 1220px) !important;
+  width: calc(100% - 64px) !important;
+  max-width: none;
   padding: 18px 0 40px !important;
 }
 .signup-page .signup-page-head {
