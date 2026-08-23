@@ -5027,18 +5027,12 @@ if (!showForm) {
     <main className="signup-shell signup-workspace">
       <section className="signup-page-head">
         <a className="signup-home-link" href="#">← Zur Startseite</a>
-        <span className="signup-eyebrow"><ShieldCheck size={15}/> Newcastle-Sammelimpfung</span>
-        <h1>Tiere zum Impftermin anmelden</h1>
-        <p>Registrieren Sie Ihre Tiere einfach und sicher für den nächsten Impftermin.</p>
+        <h1>Zur Impfung anmelden</h1>
+        <p>Bitte wählen Sie Ihren Impftermin und tragen Sie die erforderlichen Angaben ein.</p>
       </section>
 
       <div className="signup-layout">
       <section className="card signup-card">
-        <div className="signup-card-heading">
-          <span>Impfgruppe RGZV Hagen</span>
-          <h2>Ihre Anmeldung</h2>
-          <p>Bitte füllen Sie die folgenden Angaben vollständig aus.</p>
-        </div>
         <div className="form-section signup-form-section">
         <form onSubmit={submit} className="form signup-form">
           <section className="signup-step">
@@ -5177,7 +5171,6 @@ if (!showForm) {
           <div><dt>Zahlungsart</dt><dd>Barzahlung vor Ort</dd></div>
           <div><dt>Teilnahmegebühr</dt><dd>{club?.guest_price ?? 10} € Gäste · {club?.member_price ?? 5} € Mitglieder</dd></div>
         </dl>
-        <div className="signup-summary-note"><ShieldCheck size={18}/><p>Ihre Angaben werden sicher für die Organisation des Impftermins verwendet.</p></div>
       </aside>
       </div>
     </main>

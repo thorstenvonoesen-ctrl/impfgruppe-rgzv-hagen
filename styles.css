@@ -1426,6 +1426,67 @@ body { background: #163a2f; }
 .landing-closing h2,
 .landing-closing > div > span { color: #fff !important; }
 
+/* Kompakte, formularzentrierte Impfanmeldung */
+.signup-page .signup-workspace {
+  width: min(100% - 32px, 1220px) !important;
+  padding: 18px 0 40px !important;
+}
+.signup-page .signup-page-head {
+  min-height: 0 !important;
+  max-width: none;
+  margin: 0 0 14px;
+  padding: 4px 0 10px 16px !important;
+  justify-content: flex-start;
+  color: var(--rgzv-ink) !important;
+  background: transparent !important;
+  border: 0 !important;
+  border-left: 3px solid #a85f31 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+.signup-page .signup-home-link {
+  position: static;
+  margin-bottom: 7px;
+  color: var(--rgzv-navy);
+  font-size: 12px;
+}
+.signup-page .signup-page-head h1 {
+  margin: 0 0 4px !important;
+  color: var(--rgzv-navy) !important;
+  font-size: clamp(28px, 3vw, 38px) !important;
+  line-height: 1.05;
+}
+.signup-page .signup-page-head p { font-size: 14px; line-height: 1.35; }
+.signup-page .signup-layout { grid-template-columns: minmax(0, 1fr) 300px !important; gap: 18px !important; }
+.signup-page .signup-layout .signup-card { padding: 18px 22px !important; border-radius: 6px 20px 20px 20px !important; }
+.signup-page .signup-step { margin-top: 0 !important; padding: 16px 0 !important; gap: 10px; }
+.signup-page .signup-step-heading { grid-template-columns: 36px minmax(0, 1fr); gap: 10px; }
+.signup-page .signup-step-heading > span { width: 36px; height: 27px; }
+.signup-page .signup-step-heading h3 { font-size: 17px; }
+.signup-page .signup-step-heading p { margin-top: 1px; }
+.signup-page .signup-fields-row { gap: 8px; }
+.signup-page .signup-step input:not([type="radio"]):not([type="checkbox"]),
+.signup-page .signup-step select { min-height: 40px; padding: 7px 11px; border-radius: 9px; }
+.signup-page .signup-step .signup-animal-counts { padding: 10px; gap: 9px; border-radius: 12px; }
+.signup-page .signup-step-final { margin: 0 -8px -8px; padding: 16px 8px 8px !important; }
+.signup-page .signup-step .payment-methods,
+.signup-page .signup-step .privacy-check,
+.signup-page .signup-step .participation-fee-notice { padding: 9px 11px; }
+.signup-page .signup-summary { padding: 18px; border-radius: 6px 18px 18px 18px; }
+.signup-page .signup-summary h2 { margin: 8px 0 12px; font-size: 20px; }
+.signup-page .signup-summary dl > div { padding: 8px 0; }
+
+@media (max-width: 850px) {
+  .signup-page .signup-layout { grid-template-columns: 1fr !important; }
+  .signup-page .signup-summary { grid-row: auto; }
+}
+@media (max-width: 620px) {
+  .signup-page .signup-workspace { width: min(100% - 22px, 1220px) !important; padding-top: 14px !important; }
+  .signup-page .signup-page-head { margin-bottom: 10px; padding-left: 12px !important; }
+  .signup-page .signup-layout .signup-card { padding: 12px 15px !important; }
+  .signup-page .signup-step { padding: 14px 0 !important; }
+}
+
 /* Kompakte Startseiten-Hero-Kachel */
 @media (min-width: 761px) {
   .landing-hero {
