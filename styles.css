@@ -1664,7 +1664,7 @@ body { background: #163a2f; }
 .vaccination-edit-modal .vaccination-address-fields { margin: 0; padding-top: 4px; border-top: 1px solid rgba(255,255,255,.12); }
 .vaccination-modal-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 5px; }
 .vaccination-modal-actions .primary,.vaccination-modal-actions .ghost { width: auto; margin: 0; }
-.smart-assistant-eyebrow { display: inline-flex; margin-bottom: 12px; padding: 6px 10px; color: #fed7aa; font-size: 12px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; background: rgba(242,140,40,.14); border: 1px solid rgba(254,215,170,.24); border-radius: 999px; }
+.smart-assistant-eyebrow { display: inline-flex; margin-bottom: 12px; padding: 6px 10px; color: #8b4b26; font-size: 12px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; background: rgba(242,140,40,.14); border: 1px solid rgba(254,215,170,.24); border-radius: 999px; }
 .admin-modal-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 18px; }
 .admin-modal-heading h2 { margin: 0; }
 .admin-inline-error { padding: 12px 14px; color: #fecaca; background: rgba(239,68,68,.12); border: 1px solid rgba(248,113,113,.24); border-radius: 12px; }
@@ -1685,8 +1685,8 @@ body { background: #163a2f; }
 .smart-assistant-task { display: grid; grid-template-columns: auto minmax(0,1fr) auto; align-items: center; gap: 12px; padding: 15px; background: rgba(255,255,255,.055); border: 1px solid rgba(255,255,255,.1); border-left: 4px solid #f59e0b; border-radius: 14px; }
 .smart-assistant-task-red { border-left-color: #ef4444; }
 .smart-assistant-task-dot { font-size: 16px; }
-.smart-assistant-task strong { display: block; color: #fff3e5; }
-.smart-assistant-task p { margin: 5px 0 0; color: rgba(237,245,241,.7); font-size: 13px; }
+.smart-assistant-task strong { display: block; color: #17203f; }
+.smart-assistant-task p { margin: 5px 0 0; color: #4f5b72; font-size: 13px; }
 .smart-assistant-task .ghost { margin: 0!important; white-space: nowrap; }
 .smart-assistant-all-clear { display: flex; align-items: center; gap: 12px; margin-top: 20px; padding: 16px; color: #d1fae5; background: rgba(34,197,94,.12); border: 1px solid rgba(134,239,172,.25); border-radius: 14px; }
 .smart-assistant-all-clear div { display: flex; flex-direction: column; gap: 3px; }
