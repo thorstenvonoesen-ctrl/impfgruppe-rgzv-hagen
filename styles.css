@@ -2542,7 +2542,7 @@ img, svg { max-width: 100%; }
   box-shadow: 0 12px 28px rgba(4,18,31,.32);
 }
 .appointment-weather-day { display: grid; gap: 3px; justify-items: center; text-align: center; font-size: 10px; }
-.appointment-weather-day strong { text-transform: capitalize; }
+.appointment-weather-day strong { color: #fff !important; text-transform: capitalize; }
 .appointment-weather-day > span:first-of-type { font-size: 17px; }
 .appointment-weather-day small { color: rgba(255,243,229,.72); font-size: 8px; line-height: 1.15; }
 
