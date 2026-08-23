@@ -5924,6 +5924,7 @@ if (!data.session) {
 }
 
 function AdminDashboard({ onLogout, logoutError, adminContext }) {
+  const [activeAdminSection, setActiveAdminSection] = useState('overview')
   const [participants, setParticipants] = useState([])
   const [isVaccinationDay, setIsVaccinationDay] = useState(false)
   const [q, setQ] = useState('')
@@ -6837,7 +6838,7 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
 
 
 
-  return <div className="page admin"><Header admin />
+  return <div className="page admin">
 
   {adminDeleteTarget && adminContext?.role === 'superadmin' && (
     <div className="modal admin-delete-modal">
@@ -7162,23 +7163,23 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
   )}
 
   <div className="admin-workspace-shell">
-    <aside className="admin-workspace-nav" aria-label="Admin-Navigation">
+    <header className="admin-workspace-nav" aria-label="Admin-Navigation">
       <div className="admin-workspace-brand">
         <span><img src="/shield-orange.png" alt="" /></span>
         <div><strong>Impfgruppenmanager</strong><small>RGZV Hagen · Admin</small></div>
       </div>
       <nav>
-        <a className="active" href="#admin-dashboard-top" onClick={event => { event.preventDefault(); document.getElementById('admin-dashboard-top')?.scrollIntoView({ behavior: 'smooth', block: 'start' }) }}><span>01</span>Übersicht</a>
-        <a href="#admin-checkin" onClick={event => { event.preventDefault(); document.getElementById('admin-checkin')?.scrollIntoView({ behavior: 'smooth', block: 'start' }) }}><span>02</span>Check-in</a>
-        <a href="#appointment-management" onClick={event => { event.preventDefault(); document.getElementById('appointment-management')?.scrollIntoView({ behavior: 'smooth', block: 'start' }) }}><span>03</span>Impftermine</a>
-        <a href="#participant-management" onClick={event => { event.preventDefault(); document.getElementById('participant-management')?.scrollIntoView({ behavior: 'smooth', block: 'start' }) }}><span>04</span>Teilnehmer</a>
-        {adminContext?.role === 'superadmin' && <button type="button" onClick={openAdminManagement}><span>05</span>Adminverwaltung</button>}
+        <a className={activeAdminSection === 'overview' ? 'active' : ''} href="#admin-dashboard-top" onClick={event => { event.preventDefault(); setActiveAdminSection('overview'); document.getElementById('admin-dashboard-top')?.scrollIntoView({ behavior: 'smooth', block: 'start' }) }}><span>01</span>Übersicht</a>
+        <a className={activeAdminSection === 'checkin' ? 'active' : ''} href="#admin-checkin" onClick={event => { event.preventDefault(); setActiveAdminSection('checkin'); document.getElementById('admin-checkin')?.scrollIntoView({ behavior: 'smooth', block: 'start' }) }}><span>02</span>Check-in</a>
+        <a className={activeAdminSection === 'appointments' ? 'active' : ''} href="#appointment-management" onClick={event => { event.preventDefault(); setActiveAdminSection('appointments'); document.getElementById('appointment-management')?.scrollIntoView({ behavior: 'smooth', block: 'start' }) }}><span>03</span>Impftermine</a>
+        <a className={activeAdminSection === 'participants' ? 'active' : ''} href="#participant-management" onClick={event => { event.preventDefault(); setActiveAdminSection('participants'); document.getElementById('participant-management')?.scrollIntoView({ behavior: 'smooth', block: 'start' }) }}><span>04</span>Teilnehmer</a>
+        {adminContext?.role === 'superadmin' && <button className={activeAdminSection === 'administration' ? 'active' : ''} type="button" onClick={() => { setActiveAdminSection('administration'); openAdminManagement() }}><span>05</span>Adminverwaltung</button>}
       </nav>
       <div className="admin-workspace-nav-bottom">
         <a href="/Bedienungsanleitung-Impfgruppenmanager.pdf" download><Download size={16}/>Bedienungsanleitung</a>
         <button type="button" onClick={onLogout}><LogOut size={16}/>Abmelden</button>
       </div>
-    </aside>
+    </header>
 
     <div className="admin-workspace-content">
     <main className="admin-wrap admin-dashboard-layout">
