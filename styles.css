@@ -1332,6 +1332,87 @@ body { background: #163a2f; }
 .admin .admin-workspace-content .admin-checkin-anchor > .checkin-panel .checkin-live-stat span { color: #657087 !important; }
 .admin .admin-workspace-content .admin-checkin-anchor > .checkin-panel .checkin-live-stat strong { color: #17203f !important; }
 
+/* Öffentlicher App-Header */
+.public-app-header {
+  min-height: 0;
+  padding: 12px clamp(18px, 4vw, 54px) !important;
+  background: rgba(255, 253, 249, .96) !important;
+  border-bottom: 1px solid #ded5c8 !important;
+  box-shadow: none;
+  backdrop-filter: blur(16px);
+}
+.public-app-header-inner {
+  width: min(100%, 1480px);
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 28px;
+}
+.public-header-identity {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  color: var(--rgzv-navy) !important;
+  text-decoration: none;
+}
+.public-header-crest {
+  display: grid;
+  width: 62px;
+  height: 62px;
+  flex: 0 0 62px;
+  place-items: center;
+}
+.public-header-crest img { width: 58px; height: 58px; object-fit: contain; }
+.public-header-divider { width: 1px; height: 50px; flex: 0 0 1px; background: #d7cabb; }
+.public-header-title { min-width: 0; display: grid; gap: 4px; }
+.public-header-title strong {
+  color: var(--rgzv-navy) !important;
+  font-size: clamp(17px, 1.45vw, 22px);
+  line-height: 1.14;
+  letter-spacing: -.02em;
+}
+.public-header-title small {
+  color: #9a5429;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+.public-app-header .public-header-links { width: auto; flex: 0 0 auto; gap: 10px; }
+.public-app-header .public-header-links a {
+  min-height: 42px;
+  padding: 10px 17px !important;
+  justify-content: center;
+  color: var(--rgzv-navy) !important;
+  background: transparent !important;
+  border: 1px solid #b9c1ca !important;
+  border-radius: 10px;
+  font-size: 14px !important;
+  font-weight: 750 !important;
+  text-decoration: none;
+}
+.public-app-header .public-header-links .public-admin-link {
+  color: #fff !important;
+  background: var(--rgzv-navy) !important;
+  border-color: var(--rgzv-navy) !important;
+}
+.public-app-header .public-header-links a:hover { transform: none; filter: brightness(.95); }
+
+@media (max-width: 760px) {
+  .public-app-header { padding: 10px 14px !important; }
+  .public-app-header-inner { align-items: stretch; flex-direction: column; gap: 10px; }
+  .public-header-identity { gap: 12px; }
+  .public-header-crest { width: 50px; height: 50px; flex-basis: 50px; }
+  .public-header-crest img { width: 47px; height: 47px; }
+  .public-header-divider { height: 44px; }
+  .public-header-title strong { font-size: clamp(15px, 4.4vw, 18px); }
+  .public-header-title small { font-size: 10px; }
+  .public-app-header .public-header-links { width: 100%; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .public-app-header .public-header-links a { width: 100%; min-height: 40px; padding: 9px 12px !important; }
+}
+
 /* Warmes Vereinsgold ersetzt verbliebene violette Hauptakzente */
 .landing-button-primary,
 .vaccination-info-cta button,

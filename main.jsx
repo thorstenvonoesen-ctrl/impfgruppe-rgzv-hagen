@@ -8391,25 +8391,37 @@ function Header({ admin = false }) {
   const showAdminLogin = !admin && window.location.hash !== '#admin'
   return (
     <header
-      style={{
+      className={!admin ? 'public-app-header' : undefined}
+      style={admin ? {
         background: 'transparent',
         padding: '14px 32px',
         borderBottom: '1px solid rgba(255,255,255,0.08)'
-      }}
+      } : undefined}
     >
       {!hasSupabase && <p role="alert" style={{ margin: '0 0 10px', color: '#ffe1c2', fontSize: '13px', fontWeight: '700', textAlign: 'center' }}>{supabaseConfigMessage}</p>}
-      <div className="app-header-inner">
-        <a className="app-header-brand" href="#" aria-label="Impfgruppenmanager Startseite">
-          <span className="app-header-brand-mark" aria-hidden="true"><img src="/shield-orange.png" alt="" /></span>
-          <span className="app-header-brand-copy"><strong>Impfgruppenmanager</strong><small>RGZV Hagen</small></span>
-        </a>
-        {!admin && (
+      {admin ? (
+        <div className="app-header-inner">
+          <a className="app-header-brand" href="#" aria-label="Impfgruppenmanager Startseite">
+            <span className="app-header-brand-mark" aria-hidden="true"><img src="/shield-orange.png" alt="" /></span>
+            <span className="app-header-brand-copy"><strong>Impfgruppenmanager</strong><small>RGZV Hagen</small></span>
+          </a>
+        </div>
+      ) : (
+        <div className="public-app-header-inner">
+          <a className="public-header-identity" href="#" aria-label="Impfgruppe des RGZV Hagen – Startseite">
+            <span className="public-header-crest"><img src="/shield-orange.png" alt="Wappen des RGZV Hagen" /></span>
+            <span className="public-header-divider" aria-hidden="true" />
+            <span className="public-header-title">
+              <strong>Rassegeflügelzuchtverein<br />Hagen und Umgebung seit 1903 e.V.</strong>
+              <small>Impfgruppe</small>
+            </span>
+          </a>
           <nav className="public-header-links" aria-label="Öffentliche Bereiche">
-            <a href="#quiz" className="public-quiz-link">🧠 Geflügel-Quiz</a>
-            {showAdminLogin && <a href="#admin">Admin-Login</a>}
+            <a href="#quiz" className="public-quiz-link">Geflügel-Quiz</a>
+            {showAdminLogin && <a href="#admin" className="public-admin-link">Admin-Login</a>}
           </nav>
-        )}
-      </div>
+        </div>
+      )}
     </header>
   )
 }
