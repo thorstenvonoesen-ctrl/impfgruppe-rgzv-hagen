@@ -4943,17 +4943,9 @@ if (!showForm) {
         <div className="form-section signup-form-section">
         <form onSubmit={submit} className="form signup-form">
           <section className="signup-step">
-            <div className="signup-step-heading"><span>01</span><div><h3>Persönliche Daten</h3><p>Name und erreichbare E-Mail-Adresse</p></div></div>
+            <div className="signup-step-heading"><span>01</span><div><h3>Ihre Daten</h3><p>Persönliche Angaben, Anschrift und Halterdaten</p></div></div>
             <div className="signup-fields-row signup-fields-row-three"><Input label="Vorname" name="firstname" value={form.firstname} onChange={update} required/><Input label="Nachname" name="lastname" value={form.lastname} onChange={update} required/><Input label="E-Mail" name="email" type="email" value={form.email} onChange={update} onBlur={checkPreviousRegistration} required/></div>
-          </section>
-
-          <section className="signup-step">
-            <div className="signup-step-heading"><span>02</span><div><h3>Adresse</h3><p>Anschrift des Tierbestands</p></div></div>
             <div className="signup-fields-row signup-address-row"><Input label="Straße" name="street" value={form.street} onChange={update}/><Input label="Hausnummer" name="housenumber" value={form.housenumber} onChange={update}/><Input label="PLZ" name="zipcode" value={form.zipcode} onChange={update}/><Input label="Ort" name="city" value={form.city} onChange={update}/></div>
-          </section>
-
-          <section className="signup-step">
-            <div className="signup-step-heading"><span>03</span><div><h3>Halterdaten</h3><p>Kontakt, TSK-Nummer und Vereinszugehörigkeit</p></div></div>
             <div className="signup-fields-row signup-fields-row-three">
               <Input label="Telefon" name="phone" value={form.phone} onChange={update}/>
               <Input label="TSK Betriebsnummer." name="tsk_number" value={form.tsk_number} onChange={update} required/>
@@ -4994,7 +4986,7 @@ if (!showForm) {
           </section>
 
           <section className="signup-step">
-            <div className="signup-step-heading"><span>04</span><div><h3>Tiere und Impftermin</h3><p>Bestand erfassen und Termin auswählen</p></div></div>
+            <div className="signup-step-heading"><span>02</span><div><h3>Tiere &amp; Impftermin</h3><p>Bestand erfassen und Termin auswählen</p></div></div>
             <div className="signup-animal-counts">
               <Input label="Anzahl Hühner" name="chicken_count" type="number" min="0" step="1" value={form.chicken_count} onChange={update}/>
               <Input label="Anzahl Zwerghühner" name="bantam_count" type="number" min="0" step="1" value={form.bantam_count} onChange={update}/>
@@ -5011,7 +5003,7 @@ if (!showForm) {
           </section>
 
           <section className="signup-step signup-step-final">
-            <div className="signup-step-heading"><span>05</span><div><h3>Anmeldung abschließen</h3><p>Zahlungsart und Datenschutz bestätigen</p></div></div>
+            <div className="signup-step-heading"><span>03</span><div><h3>Anmeldung abschließen</h3><p>Zahlungsart und Datenschutz bestätigen</p></div></div>
    <div className="payment-methods" style={{ marginTop: '15px', marginBottom: '15px' }}>
   <strong>Zahlungsart:</strong>
 

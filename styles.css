@@ -1458,21 +1458,37 @@ body { background: #163a2f; }
 }
 .signup-page .signup-page-head p { font-size: 14px; line-height: 1.35; }
 .signup-page .signup-layout { grid-template-columns: minmax(0, 1fr) 300px !important; gap: 18px !important; }
-.signup-page .signup-layout .signup-card { padding: 18px 22px !important; border-radius: 6px 20px 20px 20px !important; }
-.signup-page .signup-step { margin-top: 0 !important; padding: 16px 0 !important; gap: 10px; }
+.signup-page .signup-layout .signup-card {
+  padding: 10px !important;
+  background: #f3efe7 !important;
+  border-color: #ddd5c8 !important;
+  border-radius: 20px !important;
+  box-shadow: 0 14px 34px rgba(31,43,93,.08) !important;
+}
+.signup-page .signup-form { gap: 10px !important; }
+.signup-page .signup-step {
+  margin: 0 !important;
+  padding: 14px !important;
+  gap: 9px;
+  background: #fff !important;
+  border: 1px solid #ded8ce !important;
+  border-radius: 18px !important;
+}
+.signup-page .signup-step:last-child { border-bottom: 1px solid #ded8ce !important; }
 .signup-page .signup-step-heading { grid-template-columns: 36px minmax(0, 1fr); gap: 10px; }
 .signup-page .signup-step-heading > span { width: 36px; height: 27px; }
 .signup-page .signup-step-heading h3 { font-size: 17px; }
 .signup-page .signup-step-heading p { margin-top: 1px; }
 .signup-page .signup-fields-row { gap: 8px; }
+.signup-page .signup-step label { gap: 3px; }
 .signup-page .signup-step input:not([type="radio"]):not([type="checkbox"]),
 .signup-page .signup-step select { min-height: 40px; padding: 7px 11px; border-radius: 9px; }
-.signup-page .signup-step .signup-animal-counts { padding: 10px; gap: 9px; border-radius: 12px; }
-.signup-page .signup-step-final { margin: 0 -8px -8px; padding: 16px 8px 8px !important; }
+.signup-page .signup-step .signup-animal-counts { padding: 0; gap: 8px; background: transparent; border: 0; border-radius: 0; }
+.signup-page .signup-step-final { margin: 0 !important; padding: 14px !important; background: #fff !important; }
 .signup-page .signup-step .payment-methods,
 .signup-page .signup-step .privacy-check,
 .signup-page .signup-step .participation-fee-notice { padding: 9px 11px; }
-.signup-page .signup-summary { padding: 18px; border-radius: 6px 18px 18px 18px; }
+.signup-page .signup-summary { padding: 18px; border-radius: 18px; }
 .signup-page .signup-summary h2 { margin: 8px 0 12px; font-size: 20px; }
 .signup-page .signup-summary dl > div { padding: 8px 0; }
 
@@ -1483,8 +1499,8 @@ body { background: #163a2f; }
 @media (max-width: 620px) {
   .signup-page .signup-workspace { width: min(100% - 22px, 1220px) !important; padding-top: 14px !important; }
   .signup-page .signup-page-head { margin-bottom: 10px; padding-left: 12px !important; }
-  .signup-page .signup-layout .signup-card { padding: 12px 15px !important; }
-  .signup-page .signup-step { padding: 14px 0 !important; }
+  .signup-page .signup-layout .signup-card { padding: 8px !important; }
+  .signup-page .signup-step { padding: 13px !important; }
 }
 
 /* Kompakte Startseiten-Hero-Kachel */
