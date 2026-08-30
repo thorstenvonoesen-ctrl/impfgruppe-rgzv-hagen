@@ -9,16 +9,16 @@ export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' })
 
   try {
-    const { vaccinationDateId, clubId, archived } = req.body || {}
-    if (!vaccinationDateId || !clubId || typeof archived !== 'boolean') {
-      return res.status(400).json({ error: 'Ungültige Archivanfrage.' })
-    }
-
     const supabase = createAdminSupabase()
     const accessToken = getBearerToken(req)
     if (!accessToken) return res.status(401).json({ error: 'Authentifizierung erforderlich.' })
     const { data: userResult, error: userError } = await supabase.auth.getUser(accessToken)
     if (userError || !userResult.user) return res.status(401).json({ error: 'Authentifizierung erforderlich.' })
+
+    const { vaccinationDateId, clubId, archived } = req.body || {}
+    if (!vaccinationDateId || !clubId || typeof archived !== 'boolean') {
+      return res.status(400).json({ error: 'Ungültige Archivanfrage.' })
+    }
 
     const { data: memberships, error: membershipError } = await supabase
       .from('club_admin_memberships')
