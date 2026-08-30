@@ -39,13 +39,24 @@ export default function NextVaccinationCountdown() {
   async function loadNextDate() {
     const today = new Date().toISOString().split('T')[0]
 
-    const { data } = await supabase
+    let result = await supabase
       .from('vaccination_dates')
       .select('date')
       .or('archived.eq.false,archived.is.null')
       .gte('date', today)
       .order('date', { ascending: true })
       .limit(1)
+
+    const archiveError = `${result.error?.code || ''} ${result.error?.message || ''}`.toLowerCase()
+    if (archiveError.includes('archived') && (archiveError.includes('column') || archiveError.includes('schema cache') || archiveError.includes('42703'))) {
+      result = await supabase
+        .from('vaccination_dates')
+        .select('date')
+        .gte('date', today)
+        .order('date', { ascending: true })
+        .limit(1)
+    }
+    const { data } = result
       .single()
 
     setNextDate(data?.date ?? null)

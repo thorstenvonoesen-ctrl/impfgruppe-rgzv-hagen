@@ -22,6 +22,19 @@ function isTestAppointment(appointment) {
   )
 }
 
+function isMissingArchiveColumn(error) {
+  const detail = `${error?.code || ''} ${error?.message || ''} ${error?.details || ''}`.toLowerCase()
+  return detail.includes('archived') && (detail.includes('column') || detail.includes('schema cache') || detail.includes('42703'))
+}
+
+async function loadActiveAppointments(supabase, clubId) {
+  let result = await supabase.from('vaccination_dates').select('*').eq('club_id', clubId).or('archived.eq.false,archived.is.null').order('date', { ascending: true })
+  if (result.error && isMissingArchiveColumn(result.error)) {
+    result = await supabase.from('vaccination_dates').select('*').eq('club_id', clubId).order('date', { ascending: true })
+  }
+  return result
+}
+
 async function authenticateAdmin(req, supabase, clubId) {
   const accessToken = getBearerToken(req)
   if (!accessToken) return null
@@ -51,7 +64,7 @@ async function handleSmartAssistant(req, res, supabase) {
   ] = await Promise.all([
     supabase.from('clubs').select('*').eq('id', clubId).single(),
     supabase.from('participants').select('id, firstname, lastname, email, phone, animal_type, animal_count, vaccine, payment_status, payment_method, registration_status, vaccination_date_id').eq('club_id', clubId),
-    supabase.from('vaccination_dates').select('*').eq('club_id', clubId).or('archived.eq.false,archived.is.null').order('date', { ascending: true })
+    loadActiveAppointments(supabase, clubId)
   ])
   if (clubError || participantsError || appointmentsError) {
     throw clubError || participantsError || appointmentsError

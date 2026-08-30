@@ -796,7 +796,7 @@ function LiveSignupStats({ club }) {
       setStats({
         participants: result?.participants || 0,
         animals: result?.animals || 0,
-        dates: result?.dates || []
+        dates: result?.activeAppointment ? [result.activeAppointment] : []
       })
       setReady(true)
     }
@@ -4480,12 +4480,22 @@ function PublicSignup() {
 setClub(clubData)
   console.log("clubId =", clubId)
 
-  const { data, error } = await supabase
+  let dateResult = await supabase
     .from('vaccination_dates')
     .select('*')
     .eq('club_id', clubId)
     .or('archived.eq.false,archived.is.null')
     .order('date', { ascending: true })
+
+  const archiveError = `${dateResult.error?.code || ''} ${dateResult.error?.message || ''}`.toLowerCase()
+  if (archiveError.includes('archived') && (archiveError.includes('column') || archiveError.includes('schema cache') || archiveError.includes('42703'))) {
+    dateResult = await supabase
+      .from('vaccination_dates')
+      .select('*')
+      .eq('club_id', clubId)
+      .order('date', { ascending: true })
+  }
+  const { data, error } = dateResult
 
   console.log("error =", error)
   console.log("data =", data)

@@ -11,6 +11,36 @@ function currentDateKey() {
   return `${values.year}-${values.month}-${values.day}`
 }
 
+export function selectNextAppointment(dates, todayKey) {
+  return (dates || []).find(appointment => appointment.date > todayKey) || null
+}
+
+function isMissingArchiveColumn(error) {
+  const detail = `${error?.code || ''} ${error?.message || ''} ${error?.details || ''}`.toLowerCase()
+  return detail.includes('archived') && (detail.includes('column') || detail.includes('schema cache') || detail.includes('42703'))
+}
+
+async function loadActiveDates(supabase, clubId) {
+  const publicFields = 'id,date,title,venue_name,street,house_number,postal_code,city,address_public'
+  let result = await supabase
+    .from('vaccination_dates')
+    .select(`${publicFields},archived`)
+    .eq('club_id', clubId)
+    .or('archived.eq.false,archived.is.null')
+    .order('date', { ascending: true })
+
+  // Keep existing appointments visible during a deployment where application
+  // code reaches production before the additive archive migration.
+  if (result.error && isMissingArchiveColumn(result.error)) {
+    result = await supabase
+      .from('vaccination_dates')
+      .select(publicFields)
+      .eq('club_id', clubId)
+      .order('date', { ascending: true })
+  }
+  return result
+}
+
 export default async function handler(req, res) {
   if (req.method !== 'GET') return res.status(405).json({ error: 'Method not allowed' })
   try {
@@ -23,14 +53,12 @@ export default async function handler(req, res) {
       .eq('slug', slug)
       .maybeSingle()
     if (!club) return res.status(404).json({ error: 'Verein nicht gefunden.' })
-    const { data: dates, error: datesError } = await supabase
-      .from('vaccination_dates')
-      .select('id,date,title,venue_name,street,house_number,postal_code,city,address_public')
-      .eq('club_id', club.id)
-      .or('archived.eq.false,archived.is.null')
-      .order('date', { ascending: true })
+    const { data: dates, error: datesError } = await loadActiveDates(supabase, club.id)
     if (datesError) throw datesError
-    const activeAppointment = (dates || []).find(appointment => appointment.date >= currentDateKey()) || null
+    // A date without an explicit event time is considered completed once its
+    // calendar day has started. Always advance to the following appointment so
+    // the public countdown and its statistics refer to the same record.
+    const activeAppointment = selectNextAppointment(dates, currentDateKey())
     let participants = []
     if (activeAppointment) {
       const { data, error } = await supabase
