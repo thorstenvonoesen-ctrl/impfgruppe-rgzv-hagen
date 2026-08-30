@@ -1,6 +1,16 @@
 -- Archive completed vaccination dates without moving or deleting historical data.
 alter table public.vaccination_dates
-  add column if not exists archived boolean not null default false;
+  add column if not exists archived boolean;
+
+-- A pre-existing nullable column is possible when archive support was partially
+-- deployed. Existing dates must always remain active unless explicitly archived.
+update public.vaccination_dates
+set archived = false
+where archived is null;
+
+alter table public.vaccination_dates
+  alter column archived set default false,
+  alter column archived set not null;
 
 create index if not exists vaccination_dates_club_archived_date_idx
   on public.vaccination_dates (club_id, archived, date desc);

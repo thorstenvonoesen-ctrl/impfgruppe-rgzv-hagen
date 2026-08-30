@@ -42,7 +42,7 @@ export default function NextVaccinationCountdown() {
     const { data } = await supabase
       .from('vaccination_dates')
       .select('date')
-      .eq('archived', false)
+      .or('archived.eq.false,archived.is.null')
       .gte('date', today)
       .order('date', { ascending: true })
       .limit(1)

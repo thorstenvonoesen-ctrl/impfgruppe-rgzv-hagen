@@ -51,7 +51,7 @@ async function handleSmartAssistant(req, res, supabase) {
   ] = await Promise.all([
     supabase.from('clubs').select('*').eq('id', clubId).single(),
     supabase.from('participants').select('id, firstname, lastname, email, phone, animal_type, animal_count, vaccine, payment_status, payment_method, registration_status, vaccination_date_id').eq('club_id', clubId),
-    supabase.from('vaccination_dates').select('*').eq('club_id', clubId).eq('archived', false).order('date', { ascending: true })
+    supabase.from('vaccination_dates').select('*').eq('club_id', clubId).or('archived.eq.false,archived.is.null').order('date', { ascending: true })
   ])
   if (clubError || participantsError || appointmentsError) {
     throw clubError || participantsError || appointmentsError

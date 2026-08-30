@@ -27,7 +27,7 @@ export default async function handler(req, res) {
       .from('vaccination_dates')
       .select('id,date,title,venue_name,street,house_number,postal_code,city,address_public')
       .eq('club_id', club.id)
-      .eq('archived', false)
+      .or('archived.eq.false,archived.is.null')
       .order('date', { ascending: true })
     if (datesError) throw datesError
     const activeAppointment = (dates || []).find(appointment => appointment.date >= currentDateKey()) || null

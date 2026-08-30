@@ -4484,7 +4484,7 @@ setClub(clubData)
     .from('vaccination_dates')
     .select('*')
     .eq('club_id', clubId)
-    .eq('archived', false)
+    .or('archived.eq.false,archived.is.null')
     .order('date', { ascending: true })
 
   console.log("error =", error)
@@ -6495,12 +6495,14 @@ setNewDateNote('')
     setArchiveActionBusy(true)
     setDateFeedback('')
     const restoring = archiveActionTarget.archived === true
-    const { error } = await supabase
+    let updateQuery = supabase
       .from('vaccination_dates')
       .update({ archived: !restoring })
       .eq('id', archiveActionTarget.id)
       .eq('club_id', adminClubId)
-      .eq('archived', restoring)
+    if (!restoring) updateQuery = updateQuery.or('archived.eq.false,archived.is.null')
+    else updateQuery = updateQuery.eq('archived', true)
+    const { error } = await updateQuery
     setArchiveActionBusy(false)
     if (error) {
       setDateFeedback(restoring ? 'Impftermin konnte nicht wiederhergestellt werden.' : 'Impftermin konnte nicht archiviert werden.')
