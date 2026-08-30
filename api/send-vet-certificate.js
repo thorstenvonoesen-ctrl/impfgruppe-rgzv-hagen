@@ -42,11 +42,14 @@ export default async function handler(req, res) {
     }
     const { data: appointment, error: appointmentError } = await supabase
       .from('vaccination_dates')
-      .select('id, club_id, date')
+      .select('id, club_id, date, archived')
       .eq('id', vaccinationDateId)
       .single()
     if (appointmentError || !appointment || appointment.date !== datum) {
       return res.status(404).json({ success: false, error: 'Impftermin nicht gefunden.' })
+    }
+    if (appointment.archived) {
+      return res.status(409).json({ success: false, error: 'Dieser Impftermin ist archiviert und schreibgeschützt.' })
     }
     const { data: memberships } = await supabase
       .from('club_admin_memberships')

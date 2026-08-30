@@ -24,13 +24,15 @@ export default async function handler(req, res) {
     const supabase = createAdminSupabase()
     const { data: participant, error: participantError } = await supabase
       .from('participants')
-      .select('id, payment_amount, payment_status, payment_method, payment_id, registration_status, club_id')
+      .select('id, payment_amount, payment_status, payment_method, payment_id, registration_status, club_id, vaccination_date_id')
       .eq('id', participantId)
       .single()
 
     if (participantError || !participant) {
       return res.status(404).json({ error: 'Teilnehmer nicht gefunden.' })
     }
+    const { data: appointment } = await supabase.from('vaccination_dates').select('archived').eq('id', participant.vaccination_date_id).maybeSingle()
+    if (appointment?.archived) return res.status(409).json({ error: 'Dieser Impftermin ist bereits abgeschlossen. Änderungen an der Anmeldung sind nicht mehr möglich.' })
 
     if (
       participant.payment_status !== 'offen' ||

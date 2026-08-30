@@ -4484,6 +4484,7 @@ setClub(clubData)
     .from('vaccination_dates')
     .select('*')
     .eq('club_id', clubId)
+    .eq('archived', false)
     .order('date', { ascending: true })
 
   console.log("error =", error)
@@ -5973,11 +5974,15 @@ const [newDateNote, setNewDateNote] = useState('')
   const [adminDeleteError, setAdminDeleteError] = useState('')
   const [adminDeleteSuccess, setAdminDeleteSuccess] = useState('')
   const [dateFeedback, setDateFeedback] = useState('')
+  const [archiveActionTarget, setArchiveActionTarget] = useState(null)
+  const [archiveActionBusy, setArchiveActionBusy] = useState(false)
+  const [selectedArchivedDate, setSelectedArchivedDate] = useState(null)
   const [clubs, setClubs] = useState([])
 const [selectedClub, setSelectedClub] = useState(null)
   const adminClubId = adminContext?.club_id
   const activeClub = selectedClub || clubs.find(club => club.id === adminClubId) || null
   const dashboardClubId = activeClub?.id || adminClubId
+  const canManageArchive = adminContext?.role === 'clubadmin' || adminContext?.role === 'superadmin'
   async function openAdminManagement() {
     if (adminContext?.role !== 'superadmin') return
     setAdminManagementOpen(true)
@@ -6390,7 +6395,7 @@ if (result.sent === 0) {
       return
     }
     if (task.action === 'vet') {
-      const nextDate = vaccinationDates.find(date => !isTestVaccinationDate(date) && date.date >= new Date().toISOString().slice(0, 10))
+      const nextDate = vaccinationDates.find(date => date.archived !== true && !isTestVaccinationDate(date) && date.date >= new Date().toISOString().slice(0, 10))
       if (nextDate && canSendVetCertificate(nextDate)) setVetSendDate(nextDate)
       document.getElementById('appointment-management')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
       return
@@ -6428,7 +6433,7 @@ const { data, error } = await supabase
 
 setVaccinationDates(dates || [])
       await loadSmartAssistant()
-      const nextDate = dates?.[0]?.date
+      const nextDate = dates?.find(date => date.archived !== true)?.date
 
 const today = new Date().toISOString().split('T')[0]
 
@@ -6484,6 +6489,27 @@ setNewDateNote('')
     setEditingVaccinationDate(null)
     setDateFeedback('Impftermin wurde aktualisiert.')
     load()
+  }
+  async function changeVaccinationDateArchiveStatus() {
+    if (!canManageArchive || !archiveActionTarget || archiveActionBusy) return
+    setArchiveActionBusy(true)
+    setDateFeedback('')
+    const restoring = archiveActionTarget.archived === true
+    const { error } = await supabase
+      .from('vaccination_dates')
+      .update({ archived: !restoring })
+      .eq('id', archiveActionTarget.id)
+      .eq('club_id', adminClubId)
+      .eq('archived', restoring)
+    setArchiveActionBusy(false)
+    if (error) {
+      setDateFeedback(restoring ? 'Impftermin konnte nicht wiederhergestellt werden.' : 'Impftermin konnte nicht archiviert werden.')
+      return
+    }
+    setArchiveActionTarget(null)
+    if (selectedArchivedDate?.id === archiveActionTarget.id) setSelectedArchivedDate(null)
+    setDateFeedback(restoring ? 'Impftermin wurde wiederhergestellt.' : 'Impftermin wurde archiviert.')
+    await load()
   }
   useEffect(()=>{ load() }, [])
   useEffect(() => {
@@ -6553,13 +6579,20 @@ const clubId = adminClubId
 .eq('club_id', clubId)
   load()
   }
-  const bindingParticipants = participants.filter(isBindingRegistration)
+  const activeVaccinationDates = vaccinationDates.filter(date => date.archived !== true)
+  const archivedVaccinationDates = vaccinationDates
+    .filter(date => date.archived === true)
+    .sort((first, second) => String(second.date).localeCompare(String(first.date)))
+  const activeVaccinationDateIds = new Set(activeVaccinationDates.map(date => String(date.id)))
+  const activeParticipants = participants.filter(participant => activeVaccinationDateIds.has(String(participant.vaccination_date_id)))
+  const allBindingParticipants = participants.filter(isBindingRegistration)
+  const bindingParticipants = activeParticipants.filter(isBindingRegistration)
   const dashboardToday = new Intl.DateTimeFormat('sv-SE', { timeZone: 'Europe/Berlin' }).format(new Date())
-  const activeDashboardAppointment = vaccinationDates.find(appointment => appointment.date >= dashboardToday) || null
+  const activeDashboardAppointment = activeVaccinationDates.find(appointment => appointment.date >= dashboardToday) || null
   const activeDashboardParticipants = activeDashboardAppointment
     ? bindingParticipants.filter(participant => String(participant.vaccination_date_id) === String(activeDashboardAppointment.id))
     : []
-  const filtered = participants.filter(p => {
+  const filtered = activeParticipants.filter(p => {
   const matchesSearch = `${p.firstname} ${p.lastname} ${p.city} ${p.email}`.toLowerCase().includes(q.toLowerCase())
   const matchesStatus =
     (statusFilter === 'all' && isBindingRegistration(p)) ||
@@ -6576,12 +6609,12 @@ const clubId = adminClubId
       .filter(participant => participant.payment_status === 'bezahlt')
       .reduce((sum, participant) => sum + Number(participant.payment_amount || 0), 0)
   }), [participants, vaccinationDates])
-  const dateStats = vaccinationDates.map(v => ({
+  const dateStats = activeVaccinationDates.map(v => ({
   ...v,
   count: bindingParticipants.filter(p => p.vaccination_date_id === v.id).length
 }))
   async function pdfForVaccinationDate(v) {
-  const list = bindingParticipants.filter(
+  const list = allBindingParticipants.filter(
     p => String(p.vaccination_date_id) === String(v.id)
   )
 
@@ -6708,7 +6741,7 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
   }
 
   async function cashReportForVaccinationDate(v) {
-    const list = bindingParticipants.filter(
+    const list = allBindingParticipants.filter(
       participant => String(participant.vaccination_date_id) === String(v.id)
     )
     const paid = list.filter(participant => participant.payment_status === 'bezahlt')
@@ -7173,7 +7206,8 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
         <a className={activeAdminSection === 'checkin' ? 'active' : ''} href="#admin-checkin" onClick={event => { event.preventDefault(); setActiveAdminSection('checkin'); document.getElementById('admin-checkin')?.scrollIntoView({ behavior: 'smooth', block: 'start' }) }}><span>02</span>Check-in</a>
         <a className={activeAdminSection === 'appointments' ? 'active' : ''} href="#appointment-management" onClick={event => { event.preventDefault(); setActiveAdminSection('appointments'); document.getElementById('appointment-management')?.scrollIntoView({ behavior: 'smooth', block: 'start' }) }}><span>03</span>Impftermine</a>
         <a className={activeAdminSection === 'participants' ? 'active' : ''} href="#participant-management" onClick={event => { event.preventDefault(); setActiveAdminSection('participants'); document.getElementById('participant-management')?.scrollIntoView({ behavior: 'smooth', block: 'start' }) }}><span>04</span>Teilnehmer</a>
-        {adminContext?.role === 'superadmin' && <button className={activeAdminSection === 'administration' ? 'active' : ''} type="button" onClick={() => { setActiveAdminSection('administration'); openAdminManagement() }}><span>05</span>Adminverwaltung</button>}
+        <a className={activeAdminSection === 'archive' ? 'active' : ''} href="#vaccination-date-archive" onClick={event => { event.preventDefault(); setActiveAdminSection('archive'); document.getElementById('vaccination-date-archive')?.scrollIntoView({ behavior: 'smooth', block: 'start' }) }}><span>05</span>Archiv</a>
+        {adminContext?.role === 'superadmin' && <button className={activeAdminSection === 'administration' ? 'active' : ''} type="button" onClick={() => { setActiveAdminSection('administration'); openAdminManagement() }}><span>06</span>Adminverwaltung</button>}
       </nav>
       <div className="admin-workspace-nav-bottom">
         <a href="/Bedienungsanleitung-Impfgruppenmanager.pdf" download><Download size={16}/>Bedienungsanleitung</a>
@@ -7238,7 +7272,7 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
         </div>
         </div>
       </section>
-      <div id="admin-checkin" className="admin-checkin-anchor"><CheckinPanel participants={bindingParticipants} vaccinationDates={vaccinationDates} onChanged={load} adminRole={adminContext?.role} /></div>
+      <div id="admin-checkin" className="admin-checkin-anchor"><CheckinPanel participants={bindingParticipants} vaccinationDates={activeVaccinationDates} onChanged={load} adminRole={adminContext?.role} /></div>
       <section className="card admin-appointments-card">
   <h2>Anmeldungen pro Impftermin</h2>
 
@@ -7285,7 +7319,7 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
   {dateFeedback && <p className="vaccination-date-feedback">{dateFeedback}</p>}
         
 
-{vaccinationDates.map(v => (
+{activeVaccinationDates.map(v => (
   <div
   key={v.id}
   className="date-card"
@@ -7319,6 +7353,13 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
     flexWrap: 'wrap'
   }}
 >
+  {canManageArchive && <button
+    className="small"
+    onClick={() => setArchiveActionTarget(v)}
+  >
+    Archivieren
+  </button>}
+
   <button
     className="small"
     onClick={() => {
@@ -7386,6 +7427,32 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
 
 </section>
 
+      <section id="vaccination-date-archive" className="card admin-archive-card">
+        <div className="archive-heading">
+          <div><span className="archive-kicker">Historie</span><h2>Archivierte Impftermine</h2></div>
+          <span className="status-badge">{archivedVaccinationDates.length} archiviert</span>
+        </div>
+        {archivedVaccinationDates.length === 0 ? <p className="archive-empty">Noch keine Impftermine archiviert.</p> : (
+          <div className="archive-list">
+            {archivedVaccinationDates.map(date => {
+              const dateParticipants = participants.filter(participant => String(participant.vaccination_date_id) === String(date.id) && isBindingRegistration(participant))
+              const animals = dateParticipants.reduce((sum, participant) => sum + Number(participant.animal_count || 0), 0)
+              const paid = dateParticipants.filter(participant => participant.payment_status === 'bezahlt').length
+              return <article className="archive-date" key={date.id}>
+                <div className="archive-date-main"><span className="status-badge paid">Archiviert</span><strong>{date.title}</strong><small>{formatGermanVaccinationDate(date.date)}</small></div>
+                <dl className="archive-metrics"><div><dt>Teilnehmer</dt><dd>{dateParticipants.length}</dd></div><div><dt>Tiere</dt><dd>{animals}</dd></div><div><dt>Bezahlt</dt><dd>{paid}</dd></div><div><dt>Offen</dt><dd>{dateParticipants.length - paid}</dd></div></dl>
+                <div className="archive-actions">
+                  <button className="small" onClick={() => setSelectedArchivedDate(date)}>Öffnen</button>
+                  <button className="small" onClick={() => pdfForVaccinationDate(date)}>PDF</button>
+                  <button className="small" onClick={() => cashReportForVaccinationDate(date)}>Kassenbericht</button>
+                  {canManageArchive && <button className="small" onClick={() => setArchiveActionTarget(date)}>Aus Archiv zurückholen</button>}
+                </div>
+              </article>
+            })}
+          </div>
+        )}
+      </section>
+
     <section id="participant-management" className="card admin-participant-management-card">
   <div
     className="table-head"
@@ -7421,8 +7488,8 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
 
     <ExportButtons
       participants={filtered.filter(isBindingRegistration)}
-      certificateParticipants={participants}
-      vaccinationDates={vaccinationDates}
+      certificateParticipants={activeParticipants}
+      vaccinationDates={activeVaccinationDates}
     />
   </div>
 
@@ -7582,6 +7649,25 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
   </div>
     </div>
 )}
+      {archiveActionTarget && (
+        <div className="modal" role="dialog" aria-modal="true" aria-labelledby="archive-confirmation-title">
+          <div className="modal-card archive-confirmation">
+            <h2 id="archive-confirmation-title">{archiveActionTarget.archived ? 'Diesen Impftermin wirklich wieder aktivieren?' : 'Diesen Impftermin wirklich archivieren?'}</h2>
+            <p>{archiveActionTarget.archived
+              ? 'Der Termin wird wieder in den normalen Verwaltungsbereich übernommen.'
+              : 'Der Termin wird aus dem laufenden Betrieb entfernt. Alle Teilnehmer-, Zahlungs-, Check-in- und Impfdaten bleiben vollständig erhalten und können weiterhin im Archiv eingesehen werden.'}</p>
+            <div className="archive-confirmation-actions"><button className="ghost" disabled={archiveActionBusy} onClick={() => setArchiveActionTarget(null)}>Abbrechen</button><button className="primary" disabled={archiveActionBusy} onClick={changeVaccinationDateArchiveStatus}>{archiveActionBusy ? 'Wird gespeichert …' : archiveActionTarget.archived ? 'Termin wiederherstellen' : 'Termin archivieren'}</button></div>
+          </div>
+        </div>
+      )}
+      {selectedArchivedDate && (
+        <div className="modal archive-detail-modal" role="dialog" aria-modal="true" aria-labelledby="archive-detail-title">
+          <div className="modal-card archive-detail-card">
+            <div className="archive-heading"><div><span className="status-badge paid">Archiviert · schreibgeschützt</span><h2 id="archive-detail-title">{selectedArchivedDate.title}</h2><p>{formatGermanVaccinationDate(selectedArchivedDate.date)}</p></div><button className="ghost" onClick={() => setSelectedArchivedDate(null)}>Schließen</button></div>
+            <div className="table-scroll"><table><thead><tr><th>Name / Kontakt</th><th>Adresse</th><th>TSK</th><th>Tiere / Impfstoff</th><th>Zahlung</th><th>Check-in</th></tr></thead><tbody>{participants.filter(participant => String(participant.vaccination_date_id) === String(selectedArchivedDate.id)).map(participant => <tr key={participant.id}><td data-label="Name / Kontakt"><strong>{participant.firstname} {participant.lastname}</strong><br/><small>{participant.email}<br/>{participant.phone || '-'}</small></td><td data-label="Adresse">{participant.street} {participant.housenumber}<br/>{participant.zipcode} {participant.city}</td><td data-label="TSK">{participant.tsk_number}</td><td data-label="Tiere / Impfstoff">{formatParticipantAnimals(participant)}<br/><small>{participant.vaccine} · {participant.is_member ? 'Mitglied' : 'Gast'}</small></td><td data-label="Zahlung">{participant.payment_status} · {participant.payment_method || '-'}<br/><small>{Number(participant.payment_amount || 0).toLocaleString('de-DE', { style: 'currency', currency: 'EUR' })}{participant.payment_date ? ` · ${new Date(participant.payment_date).toLocaleDateString('de-DE')}` : ''}</small></td><td data-label="Check-in">{participant.checked_in ? 'Eingecheckt' : 'Nicht eingecheckt'}<br/><small>{participant.checked_in_at ? new Date(participant.checked_in_at).toLocaleString('de-DE') : '-'}</small></td></tr>)}</tbody></table></div>
+          </div>
+        </div>
+      )}
     </main>
     </div>
   </div>

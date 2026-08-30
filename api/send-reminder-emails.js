@@ -51,7 +51,7 @@ async function handleSmartAssistant(req, res, supabase) {
   ] = await Promise.all([
     supabase.from('clubs').select('*').eq('id', clubId).single(),
     supabase.from('participants').select('id, firstname, lastname, email, phone, animal_type, animal_count, vaccine, payment_status, payment_method, registration_status, vaccination_date_id').eq('club_id', clubId),
-    supabase.from('vaccination_dates').select('*').eq('club_id', clubId).order('date', { ascending: true })
+    supabase.from('vaccination_dates').select('*').eq('club_id', clubId).eq('archived', false).order('date', { ascending: true })
   ])
   if (clubError || participantsError || appointmentsError) {
     throw clubError || participantsError || appointmentsError
@@ -158,6 +158,16 @@ async function handleSmartAssistant(req, res, supabase) {
 
 async function handleExistingReminder(req, res, supabase) {
   const { vaccinationDateId, type, newTime, newMeetingPoint } = req.body || {}
+  const { data: appointment } = await supabase
+    .from('vaccination_dates')
+    .select('id, club_id, archived')
+    .eq('id', vaccinationDateId)
+    .maybeSingle()
+  if (!appointment || appointment.archived) {
+    return res.status(409).json({ error: 'Für archivierte Impftermine können keine Erinnerungen versendet werden.' })
+  }
+  const user = await authenticateAdmin(req, supabase, appointment.club_id)
+  if (!user) return res.status(403).json({ error: 'Keine Berechtigung für diesen Verein.' })
   const { data: participants, error } = await supabase
     .from('participants')
     .select('*')

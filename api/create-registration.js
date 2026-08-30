@@ -156,6 +156,21 @@ async function handlePaymentCancellation(req, res) {
   if (!tokenData) return res.status(400).json({ error: 'Die Abbruchbestätigung ist ungültig oder abgelaufen.' })
 
   const supabase = createAdminSupabase()
+  const { data: participant } = await supabase
+    .from('participants')
+    .select('vaccination_date_id')
+    .eq('id', tokenData.participantId)
+    .maybeSingle()
+  if (participant?.vaccination_date_id) {
+    const { data: appointment } = await supabase
+      .from('vaccination_dates')
+      .select('archived')
+      .eq('id', participant.vaccination_date_id)
+      .maybeSingle()
+    if (appointment?.archived) {
+      return res.status(409).json({ error: 'Dieser Impftermin ist bereits abgeschlossen. Änderungen an der Anmeldung sind nicht mehr möglich.' })
+    }
+  }
   let updateQuery = supabase
     .from('participants')
     .update({ registration_status: 'cancelled' })
@@ -195,8 +210,11 @@ export default async function handler(req, res) {
     } = animalRegistration
     const supabase = createAdminSupabase()
     const { data: appointment, error: appointmentError } = await supabase
-      .from('vaccination_dates').select('club_id').eq('id', vaccinationDateId).single()
+      .from('vaccination_dates').select('club_id, archived').eq('id', vaccinationDateId).single()
     if (appointmentError || !appointment) return res.status(400).json({ error: 'Ungültiger Impftermin.' })
+    if (appointment.archived) {
+      return res.status(409).json({ error: 'Dieser Impftermin ist bereits abgeschlossen. Änderungen an der Anmeldung sind nicht mehr möglich.' })
+    }
     const normalizedEmail = normalizeEmail(input.email)
     const escapedEmail = normalizedEmail.replace(/[\\%_]/g, character => `\\${character}`)
     const { data: existingRegistration, error: duplicateError } = await supabase

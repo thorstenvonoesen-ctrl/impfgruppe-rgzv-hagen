@@ -91,12 +91,15 @@ function canManagePayments(memberships, clubId) {
 async function getAuthorizedAppointment(supabase, memberships, vaccinationDateId) {
   const { data: appointment, error } = await supabase
     .from('vaccination_dates')
-    .select('id, club_id, title, date')
+    .select('id, club_id, title, date, archived')
     .eq('id', vaccinationDateId)
     .single()
   if (error || !appointment) return { error: 'Impftermin nicht gefunden.', status: 404 }
   if (!canManageClub(memberships, appointment.club_id)) {
     return { error: 'Keine Berechtigung für diesen Verein.', status: 403 }
+  }
+  if (appointment.archived) {
+    return { error: 'Dieser Impftermin wurde archiviert. Der Check-in ist nicht mehr verfügbar.', status: 409 }
   }
   return { appointment }
 }

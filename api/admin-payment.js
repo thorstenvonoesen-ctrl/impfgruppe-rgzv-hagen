@@ -365,10 +365,18 @@ export default async function handler(req, res) {
     if (!participantId || typeof paid !== 'boolean') return res.status(400).json({ error: 'Ungültige Zahlungsanfrage.' })
     const { data: participant, error: participantError } = await supabase
       .from('participants')
-      .select('club_id, email, firstname, lastname, registration_status, payment_status, payment_method, payment_id')
+      .select('club_id, email, firstname, lastname, registration_status, payment_status, payment_method, payment_id, vaccination_date_id')
       .eq('id', participantId)
       .single()
     if (participantError || !participant) return res.status(404).json({ error: 'Teilnehmer nicht gefunden.' })
+    const { data: appointment } = await supabase
+      .from('vaccination_dates')
+      .select('archived')
+      .eq('id', participant.vaccination_date_id)
+      .maybeSingle()
+    if (appointment?.archived) {
+      return res.status(409).json({ error: 'Dieser Impftermin ist bereits abgeschlossen. Änderungen an der Anmeldung sind nicht mehr möglich.' })
+    }
     const { data: memberships } = await supabase.from('club_admin_memberships').select('club_id, role').eq('user_id', userResult.user.id).eq('active', true)
     if (!(memberships || []).some(member => member.role === 'superadmin' || member.club_id === participant.club_id)) return res.status(403).json({ error: 'Keine Berechtigung für diesen Verein.' })
     const providerPaymentMethods = new Set(['paypal', 'stripe', 'card', 'sepa', 'sepa_debit'])
