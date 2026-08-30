@@ -1,6 +1,6 @@
 import nodemailer from 'nodemailer'
 import QRCode from 'qrcode'
-import { createAdminSupabase } from './_supabase-admin.js'
+import { createAdminSupabase } from '../_supabase-admin.js'
 
 const clubMailTransporter = nodemailer.createTransport({
   host: process.env.SMTP_HOST,

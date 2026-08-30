@@ -1,4 +1,4 @@
-import { createAdminSupabase, createPaymentReturnToken } from './_supabase-admin.js'
+import { createAdminSupabase, createPaymentReturnToken } from '../_supabase-admin.js'
 
 const PAYPAL_API_BASE = 'https://api-m.paypal.com'
 const PAYPAL_ENABLED = false

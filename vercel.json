@@ -7,6 +7,30 @@
   ],
   "rewrites": [
     {
+      "source": "/api/paypal-create-order",
+      "destination": "/api/payment?handler=paypal-create-order"
+    },
+    {
+      "source": "/api/paypal-webhook",
+      "destination": "/api/payment?handler=paypal-webhook"
+    },
+    {
+      "source": "/api/send-payment-email",
+      "destination": "/api/payment?handler=send-payment-email"
+    },
+    {
+      "source": "/api/stripe-confirm-payment",
+      "destination": "/api/payment?handler=stripe-confirm-payment"
+    },
+    {
+      "source": "/api/stripe-create-checkout",
+      "destination": "/api/payment?handler=stripe-create-checkout"
+    },
+    {
+      "source": "/api/stripe-webhook",
+      "destination": "/api/payment?handler=stripe-webhook"
+    },
+    {
       "source": "/:slug",
       "destination": "/"
     }

@@ -1,6 +1,6 @@
 import { createHmac, timingSafeEqual } from 'node:crypto'
-import { createAdminSupabase, verifyPaymentReturnToken } from './_supabase-admin.js'
-import { sendParticipantEmail } from './send-payment-email.js'
+import { createAdminSupabase, verifyPaymentReturnToken } from '../server/_supabase-admin.js'
+import { sendParticipantEmail } from '../server/payment/send-payment-email.js'
 
 const fields = ['firstname', 'lastname', 'street', 'housenumber', 'zipcode', 'city', 'email', 'phone', 'tsk_number']
 const REGISTRATION_VACCINE = 'Newcastle'

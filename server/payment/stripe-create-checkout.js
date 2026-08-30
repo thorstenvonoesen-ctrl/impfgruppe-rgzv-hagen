@@ -1,5 +1,5 @@
 import Stripe from 'stripe'
-import { createAdminSupabase, createPaymentReturnToken } from './_supabase-admin.js'
+import { createAdminSupabase, createPaymentReturnToken } from '../_supabase-admin.js'
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY)
 const STRIPE_NEW_PAYMENTS_ENABLED = false

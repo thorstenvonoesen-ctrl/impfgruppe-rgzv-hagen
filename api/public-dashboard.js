@@ -1,4 +1,4 @@
-import { createAdminSupabase } from './_supabase-admin.js'
+import { createAdminSupabase } from '../server/_supabase-admin.js'
 
 function currentDateKey() {
   const parts = new Intl.DateTimeFormat('en-CA', {

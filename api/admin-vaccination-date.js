@@ -1,4 +1,4 @@
-import { createAdminSupabase, getBearerToken } from './_supabase-admin.js'
+import { createAdminSupabase, getBearerToken } from '../server/_supabase-admin.js'
 
 function isMissingArchiveColumn(error) {
   const detail = `${error?.code || ''} ${error?.message || ''} ${error?.details || ''}`.toLowerCase()

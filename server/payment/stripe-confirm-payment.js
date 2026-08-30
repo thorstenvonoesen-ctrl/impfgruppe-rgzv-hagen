@@ -1,5 +1,5 @@
 import Stripe from 'stripe'
-import { createAdminSupabase } from './_supabase-admin.js'
+import { createAdminSupabase } from '../_supabase-admin.js'
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY)
 

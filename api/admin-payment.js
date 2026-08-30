@@ -1,6 +1,6 @@
 import nodemailer from 'nodemailer'
-import { emailSignatureHtml } from './_email-signature.js'
-import { createAdminSupabase, getBearerToken } from './_supabase-admin.js'
+import { emailSignatureHtml } from '../server/_email-signature.js'
+import { createAdminSupabase, getBearerToken } from '../server/_supabase-admin.js'
 
 const clubMailTransporter = nodemailer.createTransport({
   host: process.env.SMTP_HOST,

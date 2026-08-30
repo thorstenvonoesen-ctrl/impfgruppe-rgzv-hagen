@@ -1,4 +1,4 @@
-import { createAdminSupabase, getBearerToken } from './_supabase-admin.js'
+import { createAdminSupabase, getBearerToken } from '../server/_supabase-admin.js'
 
 const SEARCH_FIELDS = ['firstname', 'lastname', 'email', 'phone', 'tsk_number']
 

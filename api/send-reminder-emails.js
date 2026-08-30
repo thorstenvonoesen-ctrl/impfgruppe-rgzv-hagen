@@ -1,5 +1,5 @@
 import nodemailer from 'nodemailer'
-import { createAdminSupabase, getBearerToken } from './_supabase-admin.js'
+import { createAdminSupabase, getBearerToken } from '../server/_supabase-admin.js'
 
 const clubMailTransporter = nodemailer.createTransport({
   host: process.env.SMTP_HOST,
