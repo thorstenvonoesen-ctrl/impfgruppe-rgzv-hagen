@@ -6505,17 +6505,23 @@ setNewDateNote('')
     setArchiveActionBusy(true)
     setDateFeedback('')
     const restoring = archiveActionTarget.archived === true
-    let updateQuery = supabase
-      .from('vaccination_dates')
-      .update({ archived: !restoring })
-      .eq('id', archiveActionTarget.id)
-      .eq('club_id', adminClubId)
-    if (!restoring) updateQuery = updateQuery.or('archived.eq.false,archived.is.null')
-    else updateQuery = updateQuery.eq('archived', true)
-    const { error } = await updateQuery
+    const { data: { session } } = await supabase.auth.getSession()
+    const response = await fetch('/api/admin-vaccination-date', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${session?.access_token || ''}`
+      },
+      body: JSON.stringify({
+        vaccinationDateId: archiveActionTarget.id,
+        clubId: adminClubId,
+        archived: !restoring
+      })
+    })
+    const result = await response.json().catch(() => ({}))
     setArchiveActionBusy(false)
-    if (error) {
-      setDateFeedback(restoring ? 'Impftermin konnte nicht wiederhergestellt werden.' : 'Impftermin konnte nicht archiviert werden.')
+    if (!response.ok) {
+      setDateFeedback(result.error || (restoring ? 'Impftermin konnte nicht wiederhergestellt werden.' : 'Impftermin konnte nicht archiviert werden.'))
       return
     }
     setArchiveActionTarget(null)
@@ -7198,7 +7204,7 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
         <label>Datum<input type="date" value={editingVaccinationDate.date || ''} onChange={event => setEditingVaccinationDate({ ...editingVaccinationDate, date: event.target.value })} /></label>
         <label>Hinweis oder Beschreibung<input value={editingVaccinationDate.note || ''} onChange={event => setEditingVaccinationDate({ ...editingVaccinationDate, note: event.target.value })} /></label>
         <VaccinationAddressFields value={editingVaccinationDate} onChange={address => setEditingVaccinationDate({ ...editingVaccinationDate, ...address })} />
-        {dateFeedback && <p className="vaccination-date-feedback">{dateFeedback}</p>}
+        {dateFeedback && <p className={`vaccination-date-feedback ${/konnte nicht|keine berechtigung|noch nicht eingerichtet/i.test(dateFeedback) ? 'error' : 'success'}`}>{dateFeedback}</p>}
         <div className="vaccination-modal-actions">
           <button className="primary" onClick={updateVaccinationDate}>Änderungen speichern</button>
           <button className="ghost" onClick={() => setEditingVaccinationDate(null)}>Abbrechen</button>
@@ -7328,7 +7334,7 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
   <button className="primary" onClick={addVaccinationDate}>
     Impftermin speichern
   </button>
-  {dateFeedback && <p className="vaccination-date-feedback">{dateFeedback}</p>}
+  {dateFeedback && <p className={`vaccination-date-feedback ${/konnte nicht|keine berechtigung|noch nicht eingerichtet/i.test(dateFeedback) ? 'error' : 'success'}`}>{dateFeedback}</p>}
         
 
 {activeVaccinationDates.map(v => (

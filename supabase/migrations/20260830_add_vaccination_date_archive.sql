@@ -36,6 +36,7 @@ begin
   end if;
 
   if tg_op = 'UPDATE' and old.archived is distinct from new.archived
+     and coalesce(current_setting('request.jwt.claim.role', true), '') <> 'service_role'
      and not exists (
        select 1
        from public.club_admin_memberships membership

@@ -1717,7 +1717,9 @@ body { background: #163a2f; }
 .vaccination-address-fields { display: grid; gap: 12px; margin: 16px 0; }
 .vaccination-address-fields label,.vaccination-edit-modal > label { display: grid; gap: 7px; color: rgba(237,245,241,.88); font-size: 13px; font-weight: 750; }
 .vaccination-address-fields .two { gap: 12px; }
-.vaccination-date-feedback { margin: 12px 0 0; color: #d1fae5; font-size: 14px; font-weight: 700; }
+.vaccination-date-feedback { width: fit-content; max-width: 100%; margin: 12px 0 0; padding: 8px 11px; border: 1px solid transparent; border-radius: 8px; font-size: 13px; font-weight: 750; line-height: 1.4; }
+.vaccination-date-feedback.success { color: #075f46; background: #e7f7f0; border-color: #b9e4d3; }
+.vaccination-date-feedback.error { color: #8e2435; background: #fff0f2; border-color: #efbdc5; }
 .vaccination-date-address { display: grid; gap: 2px; margin-top: 9px; padding-top: 8px; color: rgba(237,245,241,.7); border-top: 1px solid rgba(255,255,255,.1); }
 .vaccination-date-address small { font-size: 12px; line-height: 1.35; }
 .vaccination-edit-modal { display: grid; gap: 15px; width: min(700px, 100%); }
