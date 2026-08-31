@@ -5479,7 +5479,11 @@ function CheckinPanel({ participants, vaccinationDates, onChanged, adminRole }) 
         )
         return false
       }
-      setFeedback(checkedInValue ? successMessage : 'Check-in wurde zurückgesetzt.')
+      setFeedback(
+        result.warning || (checkedInValue && result.receipt?.issued
+          ? `${successMessage} Die Quittung ${result.receipt.number} wurde versendet.`
+          : checkedInValue ? successMessage : 'Check-in wurde zurückgesetzt.')
+      )
       setCandidate({ ...participant, ...result.participant })
       setParticipantOverrides(current => ({
         ...current,
@@ -5540,7 +5544,7 @@ function CheckinPanel({ participants, vaccinationDates, onChanged, adminRole }) 
         ...current,
         [participant.id]: { ...(current[participant.id] || {}), ...result.participant }
       }))
-      setFeedback('Die Barzahlung wurde erfasst und der Teilnehmer wurde eingecheckt.')
+      setFeedback(result.warning || 'Die Barzahlung wurde erfasst, der Teilnehmer wurde eingecheckt und die Quittung wurde versendet.')
       await onChanged()
     } catch {
       setFeedback('Die Zahlung und der Check-in konnten nicht gespeichert werden.')
@@ -5587,7 +5591,9 @@ function CheckinPanel({ participants, vaccinationDates, onChanged, adminRole }) 
         [participant.id]: { ...(current[participant.id] || {}), ...result.participant }
       }))
       setFeedback(
-        markPaid && checkIn
+        result.warning
+          ? result.warning
+          : markPaid && checkIn
           ? 'Zahlung und Check-in wurden gespeichert.'
           : markPaid
             ? 'Teilnehmer wurde als bezahlt markiert.'
@@ -6547,7 +6553,8 @@ setNewDateNote('')
     const result = await response.json().catch(() => ({}))
     if (!response.ok) { alert(result.error || 'Zahlungsstatus konnte nicht gespeichert werden.'); return }
     if (result.warning) alert(result.warning)
-    else if (paid && result.barPaymentRecorded) alert('Die Barzahlung wurde erfolgreich verbucht.')
+    else if (paid && result.receiptNumber) alert(`Die Barzahlung wurde verbucht und die Quittung ${result.receiptNumber} wurde versendet.`)
+    else if (paid && result.barPaymentRecorded) alert('Die Barzahlung wurde erfolgreich verbucht. Die Quittung wird nach dem Check-in erstellt.')
     else if (paid && result.emailSent) alert('Zahlung wurde verbucht und die Bestätigungsmail wurde versendet.')
     else if (paid && result.alreadyProcessed) alert('Die Zahlung ist bereits als bezahlt verbucht.')
     else alert('Der Zahlungsstatus wurde erfolgreich gespeichert.')
@@ -6562,6 +6569,26 @@ setNewDateNote('')
 
   load()
 }
+  async function downloadPaymentReceipt(participant) {
+    const { data: { session } } = await supabase.auth.getSession()
+    const response = await fetch('/api/admin-payment', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${session?.access_token || ''}` },
+      body: JSON.stringify({ action: 'download-payment-receipt', participantId: participant.id })
+    })
+    const result = await response.json().catch(() => ({}))
+    if (!response.ok || !result.pdfBase64) {
+      alert(result.error || 'Die Quittung konnte nicht geladen werden.')
+      return
+    }
+    const bytes = Uint8Array.from(atob(result.pdfBase64), character => character.charCodeAt(0))
+    const url = URL.createObjectURL(new Blob([bytes], { type: 'application/pdf' }))
+    const link = document.createElement('a')
+    link.href = url
+    link.download = result.filename || `${participant.receipt_number || 'Quittung'}.pdf`
+    link.click()
+    URL.revokeObjectURL(url)
+  }
   async function saveParticipant(p) {
    const clubId = adminClubId
   const { error } = await supabase
@@ -7540,6 +7567,7 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
               <td data-label="Name"><strong>{p.firstname} {p.lastname}</strong><div className="participant-row-actions">
                 <button className="small" onClick={()=>markPaid(p.id,p.payment_status!=='bezahlt')}>{p.payment_status==='bezahlt'?'Offen':'Bezahlt'}</button>
                 <button className="small" onClick={()=>setEditingParticipant(p)}>Bearbeiten</button>
+                {p.receipt_number && <button className="small" onClick={() => downloadPaymentReceipt(p)}>Quittung {p.receipt_number}</button>}
                 <button className="small" onClick={() => deleteParticipant(p.id)}>Löschen</button>
                 <button className="small" onClick={() =>
                   window.location.href =
@@ -7682,7 +7710,7 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
         <div className="modal archive-detail-modal" role="dialog" aria-modal="true" aria-labelledby="archive-detail-title">
           <div className="modal-card archive-detail-card">
             <div className="archive-heading"><div><span className="status-badge paid">Archiviert · schreibgeschützt</span><h2 id="archive-detail-title">{selectedArchivedDate.title}</h2><p>{formatGermanVaccinationDate(selectedArchivedDate.date)}</p></div><button className="ghost" onClick={() => setSelectedArchivedDate(null)}>Schließen</button></div>
-            <div className="table-scroll"><table><thead><tr><th>Name / Kontakt</th><th>Adresse</th><th>TSK</th><th>Tiere / Impfstoff</th><th>Zahlung</th><th>Check-in</th></tr></thead><tbody>{participants.filter(participant => String(participant.vaccination_date_id) === String(selectedArchivedDate.id)).map(participant => <tr key={participant.id}><td data-label="Name / Kontakt"><strong>{participant.firstname} {participant.lastname}</strong><br/><small>{participant.email}<br/>{participant.phone || '-'}</small></td><td data-label="Adresse">{participant.street} {participant.housenumber}<br/>{participant.zipcode} {participant.city}</td><td data-label="TSK">{participant.tsk_number}</td><td data-label="Tiere / Impfstoff">{formatParticipantAnimals(participant)}<br/><small>{participant.vaccine} · {participant.is_member ? 'Mitglied' : 'Gast'}</small></td><td data-label="Zahlung">{participant.payment_status} · {participant.payment_method || '-'}<br/><small>{Number(participant.payment_amount || 0).toLocaleString('de-DE', { style: 'currency', currency: 'EUR' })}{participant.payment_date ? ` · ${new Date(participant.payment_date).toLocaleDateString('de-DE')}` : ''}</small></td><td data-label="Check-in">{participant.checked_in ? 'Eingecheckt' : 'Nicht eingecheckt'}<br/><small>{participant.checked_in_at ? new Date(participant.checked_in_at).toLocaleString('de-DE') : '-'}</small></td></tr>)}</tbody></table></div>
+            <div className="table-scroll"><table><thead><tr><th>Name / Kontakt</th><th>Adresse</th><th>TSK</th><th>Tiere / Impfstoff</th><th>Zahlung</th><th>Check-in</th></tr></thead><tbody>{participants.filter(participant => String(participant.vaccination_date_id) === String(selectedArchivedDate.id)).map(participant => <tr key={participant.id}><td data-label="Name / Kontakt"><strong>{participant.firstname} {participant.lastname}</strong><br/><small>{participant.email}<br/>{participant.phone || '-'}</small></td><td data-label="Adresse">{participant.street} {participant.housenumber}<br/>{participant.zipcode} {participant.city}</td><td data-label="TSK">{participant.tsk_number}</td><td data-label="Tiere / Impfstoff">{formatParticipantAnimals(participant)}<br/><small>{participant.vaccine} · {participant.is_member ? 'Mitglied' : 'Gast'}</small></td><td data-label="Zahlung">{participant.payment_status} · {participant.payment_method || '-'}<br/><small>{Number(participant.payment_amount || 0).toLocaleString('de-DE', { style: 'currency', currency: 'EUR' })}{participant.payment_date ? ` · ${new Date(participant.payment_date).toLocaleDateString('de-DE')}` : ''}</small>{participant.receipt_number && <><br/><button className="small" onClick={() => downloadPaymentReceipt(participant)}>Quittung {participant.receipt_number}</button></>}</td><td data-label="Check-in">{participant.checked_in ? 'Eingecheckt' : 'Nicht eingecheckt'}<br/><small>{participant.checked_in_at ? new Date(participant.checked_in_at).toLocaleString('de-DE') : '-'}</small></td></tr>)}</tbody></table></div>
           </div>
         </div>
       )}

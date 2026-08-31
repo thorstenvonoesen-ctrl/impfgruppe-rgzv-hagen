@@ -1,6 +1,7 @@
 import nodemailer from 'nodemailer'
 import { emailSignatureHtml } from '../server/_email-signature.js'
 import { createAdminSupabase, getBearerToken } from '../server/_supabase-admin.js'
+import { ensurePaymentReceipt, getStoredPaymentReceipt } from '../server/payment/payment-receipt.js'
 
 const clubMailTransporter = nodemailer.createTransport({
   host: process.env.SMTP_HOST,
@@ -41,6 +42,29 @@ export default async function handler(req, res) {
     const supabase = createAdminSupabase()
     const { data: userResult, error: userError } = await supabase.auth.getUser(accessToken)
     if (userError || !userResult.user) return res.status(401).json({ error: 'Ungültige Anmeldung.' })
+    if (action === 'download-payment-receipt') {
+      const participantId = req.body?.participantId
+      if (!participantId) return res.status(400).json({ error: 'Teilnehmer-ID fehlt.' })
+      const { data: participant, error: participantError } = await supabase
+        .from('participants')
+        .select('club_id, receipt_number')
+        .eq('id', participantId)
+        .single()
+      if (participantError || !participant?.receipt_number) {
+        return res.status(404).json({ error: 'Für diesen Teilnehmer ist keine Quittung hinterlegt.' })
+      }
+      const { data: memberships, error: membershipError } = await supabase
+        .from('club_admin_memberships')
+        .select('club_id, role')
+        .eq('user_id', userResult.user.id)
+        .eq('active', true)
+      if (membershipError) throw membershipError
+      if (!(memberships || []).some(member => member.role === 'superadmin' || member.club_id === participant.club_id)) {
+        return res.status(403).json({ error: 'Keine Berechtigung für diesen Verein.' })
+      }
+      const { receipt, pdf } = await getStoredPaymentReceipt(participantId)
+      return res.status(200).json({ filename: `${receipt.receipt_number}.pdf`, pdfBase64: pdf.toString('base64') })
+    }
     if (
       action === 'list-admin-memberships' ||
       action === 'get-admin-membership-detail' ||
@@ -365,7 +389,7 @@ export default async function handler(req, res) {
     if (!participantId || typeof paid !== 'boolean') return res.status(400).json({ error: 'Ungültige Zahlungsanfrage.' })
     const { data: participant, error: participantError } = await supabase
       .from('participants')
-      .select('club_id, email, firstname, lastname, registration_status, payment_status, payment_method, payment_id, vaccination_date_id')
+      .select('club_id, email, firstname, lastname, registration_status, payment_status, payment_method, payment_id, vaccination_date_id, checked_in')
       .eq('id', participantId)
       .single()
     if (participantError || !participant) return res.status(404).json({ error: 'Teilnehmer nicht gefunden.' })
@@ -434,6 +458,25 @@ export default async function handler(req, res) {
     if (!updatedParticipant) return res.status(409).json({ error: 'Der Zahlungsstatus wurde zwischenzeitlich geändert. Bitte die Ansicht neu laden.' })
 
     if (paid && isConfirmedBarRegistration) {
+      if (participant.checked_in) {
+        try {
+          const result = await ensurePaymentReceipt(participantId)
+          return res.status(200).json({
+            success: true,
+            emailSent: Boolean(result.receipt.receipt_email_sent_at),
+            receiptNumber: result.receipt.receipt_number,
+            barPaymentRecorded: true
+          })
+        } catch (receiptError) {
+          console.error('PAYMENT_RECEIPT_FAILED', { participantId, message: receiptError?.message })
+          return res.status(200).json({
+            success: true,
+            emailSent: false,
+            barPaymentRecorded: true,
+            warning: 'Die Barzahlung wurde verbucht, die Quittung konnte jedoch nicht versendet werden.'
+          })
+        }
+      }
       return res.status(200).json({ success: true, emailSent: false, barPaymentRecorded: true })
     }
 
@@ -479,6 +522,9 @@ export default async function handler(req, res) {
     }
     if (action === 'delete-administrator') {
       return res.status(500).json({ error: 'Der Administrator konnte nicht gelöscht werden.' })
+    }
+    if (action === 'download-payment-receipt') {
+      return res.status(500).json({ error: 'Die Quittung konnte nicht geladen werden.' })
     }
     return res.status(500).json({ error: 'Zahlungsstatus konnte nicht gespeichert werden.' })
   }

@@ -1,4 +1,5 @@
 import { createAdminSupabase, getBearerToken } from '../server/_supabase-admin.js'
+import { ensurePaymentReceipt } from '../server/payment/payment-receipt.js'
 
 const SEARCH_FIELDS = ['firstname', 'lastname', 'email', 'phone', 'tsk_number']
 
@@ -301,14 +302,17 @@ export default async function handler(req, res) {
         })
       }
 
-      if (markPaid && participant.payment_status !== 'bezahlt' && participant.email) {
-        await fetch(`https://${req.headers.host}/api/send-payment-email`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ participantId: participant.id })
-        }).catch(() => null)
+      let receipt = null
+      if (updated.checked_in && updated.payment_status === 'bezahlt') {
+        try {
+          const result = await ensurePaymentReceipt(participant.id)
+          receipt = { issued: true, number: result.receipt.receipt_number, emailSent: Boolean(result.receipt.receipt_email_sent_at) }
+        } catch (receiptError) {
+          console.error('PAYMENT_RECEIPT_FAILED', { participantId: participant.id, message: receiptError?.message })
+          receipt = { issued: false, emailSent: false, warning: 'Zahlung und Check-in wurden gespeichert, die Quittung konnte jedoch nicht versendet werden.' }
+        }
       }
-      return res.status(200).json({ success: true, participant: updated })
+      return res.status(200).json({ success: true, participant: updated, receipt, warning: receipt?.warning })
     }
 
     const { token, vaccinationDateId, checkedIn = true, allowOpenPayment = false } = req.body || {}
@@ -360,9 +364,21 @@ export default async function handler(req, res) {
       .maybeSingle()
     if (updateError) throw updateError
     if (!updated) return res.status(409).json({ error: 'Dieser Teilnehmer ist bereits eingecheckt.' })
+    let receipt = null
+    if (checkedIn && updated.payment_status === 'bezahlt') {
+      try {
+        const result = await ensurePaymentReceipt(participant.id)
+        receipt = { issued: true, number: result.receipt.receipt_number, emailSent: Boolean(result.receipt.receipt_email_sent_at) }
+      } catch (receiptError) {
+        console.error('PAYMENT_RECEIPT_FAILED', { participantId: participant.id, message: receiptError?.message })
+        receipt = { issued: false, emailSent: false, warning: 'Der Check-in wurde gespeichert, die Quittung konnte jedoch nicht versendet werden.' }
+      }
+    }
     return res.status(200).json({
       success: true,
-      participant: formatQrParticipant(updated, appointment)
+      participant: formatQrParticipant(updated, appointment),
+      receipt,
+      warning: receipt?.warning
     })
   } catch (error) {
     console.error('Check-in request failed:', error)

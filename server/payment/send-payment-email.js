@@ -185,17 +185,12 @@ Diese E-Mail wurde automatisch über das Anmeldesystem des RGZV Hagen erstellt.
   <strong>Impfstoff:</strong> ${escapeHtml(participant.vaccine || 'Newcastle')}
 </p>
 
-<p>
-  <strong>Zahlungsart:</strong> Barzahlung vor Ort<br>
-  Die Teilnahmegebühr wird erst am Impftermin vor Ort bezahlt. Der Zahlungsstatus bleibt bis zur Bezahlung <strong>offen</strong>.
-</p>
-
 <p>Bitte informieren Sie uns rechtzeitig, falls Sie den Termin nicht wahrnehmen können.</p>
 
 <div style="margin:30px 0;text-align:center;">
   <img src="cid:${qrCodeContentId}" alt="Persönlicher QR-Code für den Check-in" width="320" height="320" style="display:block;width:100%;max-width:320px;height:auto;margin:0 auto;">
   <p style="margin:16px auto 0;max-width:520px;">
-    Bitte bringen Sie diesen QR-Code am Impftag mit. Der Impfwart scannt ihn zur schnellen Anmeldung. Die Barzahlung bleibt bis zur Bezahlung vor Ort offen.
+    Bitte bringen Sie diesen QR-Code am Impftag mit. Der Impfwart scannt ihn zur schnellen Anmeldung.
   </p>
 </div>
 
