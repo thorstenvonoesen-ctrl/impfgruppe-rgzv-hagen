@@ -1,18 +1,10 @@
-import nodemailer from 'nodemailer'
+import { clubMailTransporter as transporter, mailFrom } from '../server/mail-transport.js'
 import { emailSignatureHtml } from '../server/_email-signature.js'
 import { createAdminSupabase, getBearerToken } from '../server/_supabase-admin.js'
 
 const TEST_RECIPIENT = 'thorsten-von-oesen@t-online.de'
 
-const transporter = nodemailer.createTransport({
-  host: process.env.SMTP_HOST,
-  port: Number(process.env.SMTP_PORT),
-  secure: true,
-  auth: {
-    user: process.env.SMTP_USER,
-    pass: process.env.SMTP_PASS
-  }
-})
+
 
 function formatGermanDate(value) {
   const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(value || ''))
@@ -98,9 +90,32 @@ export default async function handler(req, res) {
     const filenameDate = deutschesDatum.replaceAll('.', '-')
     const subject = `Sammelimpfbescheinigung für den Impftermin vom ${deutschesDatum} – Bitte um Prüfung und Unterzeichnung`
 
-    const info = await transporter.sendMail({
-      from: `"RGZV Hagen und Umgebung seit 1903 e.V." <${process.env.SMTP_USER}>`,
-      to: process.env.VET_RECIPIENT_EMAIL || TEST_RECIPIENT,
+    const info = await transporter.sendMail(buildVetCertificateMail(deutschesDatum, pdfContent, process.env.VET_RECIPIENT_EMAIL || TEST_RECIPIENT))
+    await supabase
+      .from('vaccination_dates')
+      .update({ vet_certificate_sent_at: new Date().toISOString() })
+      .eq('id', appointment.id)
+
+    return res.status(200).json({
+      success: true,
+      message: 'Die Sammelimpfbescheinigung wurde erfolgreich versendet.',
+      messageId: info.messageId
+    })
+  } catch (error) {
+    console.error('Tierarztversand fehlgeschlagen:', error)
+    return res.status(500).json({
+      success: false,
+      error: 'Die Sammelimpfbescheinigung konnte nicht versendet werden.'
+    })
+  }
+}
+
+export function buildVetCertificateMail(deutschesDatum, pdfContent, recipient) {
+  const filenameDate = deutschesDatum.replaceAll(".", "-")
+  const subject = `Sammelimpfbescheinigung für den Impftermin vom ${deutschesDatum} – Bitte um Prüfung und Unterzeichnung`
+  return {
+      from: mailFrom(),
+      to: recipient,
       subject,
       attachments: [{
         filename: `Sammelimpfbescheinigung_${filenameDate}.pdf`,
@@ -171,22 +186,5 @@ sehr geehrte Damen und Herren,</p>
           RGZV Hagen und Umgebung seit 1903 e.V. erstellt.
         </p>
       `
-    })
-    await supabase
-      .from('vaccination_dates')
-      .update({ vet_certificate_sent_at: new Date().toISOString() })
-      .eq('id', appointment.id)
-
-    return res.status(200).json({
-      success: true,
-      message: 'Die Sammelimpfbescheinigung wurde erfolgreich versendet.',
-      messageId: info.messageId
-    })
-  } catch (error) {
-    console.error('Tierarztversand fehlgeschlagen:', error)
-    return res.status(500).json({
-      success: false,
-      error: 'Die Sammelimpfbescheinigung konnte nicht versendet werden.'
-    })
-  }
+    }
 }

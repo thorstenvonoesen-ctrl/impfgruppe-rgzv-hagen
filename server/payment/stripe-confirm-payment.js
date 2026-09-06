@@ -1,3 +1,4 @@
+import { paymentMailHeaders } from './mail-authorization.js'
 import Stripe from 'stripe'
 import { createAdminSupabase } from '../_supabase-admin.js'
 
@@ -144,7 +145,7 @@ export default async function handler(req, res) {
     const emailResponse = participant.email
       ? await fetch(`https://${req.headers.host}/api/send-payment-email`, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: { 'Content-Type': 'application/json', ...paymentMailHeaders(participant.id) },
           body: JSON.stringify({ participantId: participant.id })
         })
       : null

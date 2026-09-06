@@ -1,13 +1,7 @@
-import nodemailer from 'nodemailer'
+import { enqueueMail, drainMail } from '../mail-delivery.js'
 import { jsPDF } from 'jspdf'
 import { createAdminSupabase } from '../_supabase-admin.js'
 
-const clubMailTransporter = nodemailer.createTransport({
-  host: process.env.SMTP_HOST,
-  port: Number(process.env.SMTP_PORT),
-  secure: true,
-  auth: { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS }
-})
 
 function escapeHtml(value) {
   return String(value ?? '')
@@ -128,7 +122,7 @@ export function buildPaymentReceiptEmailHtml(receipt) {
 async function loadStoredReceipt(supabase, participantId) {
   const { data, error } = await supabase
     .from('participants')
-    .select('id, email, club_id, receipt_number, receipt_issued_at, receipt_snapshot, receipt_email_sent_at')
+    .select('id, email, club_id, vaccination_date_id, receipt_number, receipt_issued_at, receipt_snapshot, receipt_email_sent_at')
     .eq('id', participantId)
     .single()
   if (error || !data?.receipt_number) throw error || new Error('Quittung nicht gefunden.')
@@ -143,17 +137,13 @@ export async function ensurePaymentReceipt(participantId, { sendEmail = true } =
   const pdf = buildPaymentReceiptPdf(receipt)
 
   if (sendEmail && receipt.email && !receipt.receipt_email_sent_at) {
-    const info = await clubMailTransporter.sendMail({
-      from: `"RGZV Hagen und Umgebung seit 1903 e.V." <${process.env.SMTP_USER}>`,
-      to: receipt.email,
-      subject: `Ihre Quittung ${receipt.receipt_number} über die Teilnahmegebühr`,
-      html: buildPaymentReceiptEmailHtml(receipt),
-      attachments: [{ filename: `${receipt.receipt_number}.pdf`, content: pdf, contentType: 'application/pdf' }]
-    })
-    if (!info?.messageId) throw new Error('Quittung konnte nicht versendet werden.')
-    const { error } = await supabase.from('participants').update({ receipt_email_sent_at: new Date().toISOString() }).eq('id', participantId).is('receipt_email_sent_at', null)
-    if (error) throw error
-    receipt.receipt_email_sent_at = new Date().toISOString()
+    await enqueueMail({ event_key: `receipt:${receipt.receipt_number}`, club_id: receipt.club_id, appointment_id: receipt.vaccination_date_id, participant_id: participantId, kind: 'receipt', recipient: receipt.email.trim().toLowerCase(), payload: { receipt } }, supabase)
+    await drainMail({ participantId, db: supabase, limit: 3 })
+    const { data: delivery, error } = await supabase.from('mail_deliveries').select('status,sent_at').eq('event_key', `receipt:${receipt.receipt_number}`).single()
+    if (error || delivery?.status !== 'sent') throw new Error('Quittung ist zum Versand vorgemerkt.')
+    const marker = await supabase.from('participants').update({ receipt_email_sent_at: delivery.sent_at }).eq('id', participantId).is('receipt_email_sent_at', null)
+    if (marker.error) throw marker.error
+    receipt.receipt_email_sent_at = delivery.sent_at
   }
 
   return { receipt, pdf }

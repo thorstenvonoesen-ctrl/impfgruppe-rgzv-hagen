@@ -1,6 +1,8 @@
 import { createHmac, timingSafeEqual } from 'node:crypto'
 import { createAdminSupabase, verifyPaymentReturnToken } from '../server/_supabase-admin.js'
-import { sendParticipantEmail } from '../server/payment/send-payment-email.js'
+import { drainMail } from '../server/mail-delivery.js'
+import { canEditRegistration, validEmail, publicBaseUrl } from '../server/mail-rules.js'
+import manageRegistration from '../server/manage-registration.js'
 
 const fields = ['firstname', 'lastname', 'street', 'housenumber', 'zipcode', 'city', 'email', 'phone', 'tsk_number']
 const REGISTRATION_VACCINE = 'Newcastle'
@@ -187,6 +189,9 @@ async function handlePaymentCancellation(req, res) {
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' })
+  if (req.body?.action === 'manage-registration') {
+    try { return await manageRegistration(req, res) } catch { return res.status(500).json({ error: 'Die Anmeldung konnte nicht verarbeitet werden.' }) }
+  }
   if (req.body?.action === 'lookup-participant') return handleParticipantLookup(req, res)
   if (req.body?.action === 'cancel-payment') return handlePaymentCancellation(req, res)
 
@@ -199,7 +204,7 @@ export default async function handler(req, res) {
     if (animalRegistration.error) {
       return res.status(400).json({ error: animalRegistration.error })
     }
-    const paymentMethod = normalizeRegistrationPaymentMethod(input.payment_method)
+    const paymentMethod = 'bar'
     if (!paymentMethod) {
       return res.status(400).json({ error: 'Die ausgewählte Zahlungsart ist nicht zulässig.' })
     }
@@ -210,12 +215,15 @@ export default async function handler(req, res) {
     } = animalRegistration
     const supabase = createAdminSupabase()
     const { data: appointment, error: appointmentError } = await supabase
-      .from('vaccination_dates').select('club_id, archived').eq('id', vaccinationDateId).single()
+      .from('vaccination_dates').select('*').eq('id', vaccinationDateId).single()
     if (appointmentError || !appointment) return res.status(400).json({ error: 'Ungültiger Impftermin.' })
     if (appointment.archived) {
       return res.status(409).json({ error: 'Dieser Impftermin ist bereits abgeschlossen. Änderungen an der Anmeldung sind nicht mehr möglich.' })
     }
     const normalizedEmail = normalizeEmail(input.email)
+    if (!validEmail(normalizedEmail)) return res.status(400).json({ error: 'Ungültige E-Mail-Adresse.' })
+    if (!canEditRegistration(appointment)) return res.status(409).json({ error: 'Die Anmeldung für diesen Impftermin ist geschlossen.' })
+    publicBaseUrl()
     const escapedEmail = normalizedEmail.replace(/[\\%_]/g, character => `\\${character}`)
     const { data: existingRegistration, error: duplicateError } = await supabase
       .from('participants')
@@ -238,6 +246,7 @@ export default async function handler(req, res) {
     const participant = Object.fromEntries(fields.map(field => [field, typeof input[field] === 'string' ? input[field].trim() : input[field]]))
     const { data, error } = await supabase.from('participants').insert({
       ...participant,
+      email: normalizedEmail,
       vaccine: REGISTRATION_VACCINE,
       animal_type: animalType,
       animal_count: animalCount,
@@ -255,14 +264,11 @@ export default async function handler(req, res) {
     let emailSent
     if (paymentMethod === 'bar') {
       try {
-        const emailResult = await sendParticipantEmail({
-          participantId: data.id,
-          emailType: 'bar-registration'
-        })
-        emailSent = Boolean(emailResult?.success)
+        const emailResult = await drainMail({ participantId: data.id, limit: 1, db: supabase })
+        emailSent = emailResult.sent > 0
       } catch (emailError) {
         emailSent = false
-        console.error('Anmeldebestätigung für Barzahlung konnte nicht versendet werden:', emailError)
+        console.error('REGISTRATION_MAIL_PENDING', { participantId: data.id })
       }
     }
 

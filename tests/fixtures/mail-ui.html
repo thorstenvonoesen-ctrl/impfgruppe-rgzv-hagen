@@ -1,0 +1,28 @@
+<!doctype html><html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>E-Mail-Oberfläche – ausschließlich lokale Testdaten</title></head><body><div id="root"></div><script type="module">
+import React from 'react';
+import { createRoot } from 'react-dom/client';
+import ParticipantManagement from '/ParticipantManagement.jsx';
+import { MailCampaign, MailTestPanel } from '/MailAdmin.jsx';
+import { supabase } from '/supabase.js';
+import '/styles.css';
+const appointment={id:'fixture',title:'TEST Impftermin 10:00',date:'2099-06-20',street:'Musterstraße',house_number:'1',postal_code:'12345',city:'Musterstadt'};
+let participant={firstname:'Max',lastname:'Mustermann',email:'fixture@example.invalid',street:'Musterstraße',housenumber:'1',zipcode:'12345',city:'Musterstadt',phone:'',tsk_number:'TEST-123',chicken_count:8,bantam_count:2,turkey_count:0,animal_count:10,vaccine:'Newcastle',payment_status:'offen',payment_amount:10,registration_status:'bar_registered',mail_revision:0};
+let editable=true;
+// Every application request is intercepted locally. No database or SMTP access.
+window.fetch=async (_url,options)=>{
+ const body=JSON.parse(options.body); let result={};
+ if(body.action==='manage-registration'){
+  if(body.operation==='update'){participant={...participant,...body.changes,mail_revision:participant.mail_revision+1};}
+  if(body.operation==='cancel'){participant.registration_status='cancelled';editable=false;}
+  result={participant,appointment,editable,emailSent:body.operation!=='view'};
+ }else if(body.action==='test-config')result={recipient:'fixture@example.invalid'};
+ else if(body.action==='preview-campaign')result={count:3,previewToken:'fixture',appointment};
+ else if(body.action==='send-campaign')result={queued:3,sent:3};
+ else if(body.action==='mail-status')result={deliveries:[]};
+ else result={recipient:'fixture@example.invalid',sent:0};
+ return {ok:true,json:async()=>result};
+};
+supabase.auth.getSession=async()=>({data:{session:{access_token:'fixture'}}});
+const mode=new URLSearchParams(location.search).get('mode');
+createRoot(document.getElementById('root')).render(mode==='campaign'?React.createElement(MailCampaign,{appointment,kind:'appointment-change',onClose:()=>{}}):mode==='test'?React.createElement(MailTestPanel,{clubId:'fixture'}):React.createElement(ParticipantManagement,{token:'fixture'}));
+</script></body></html>

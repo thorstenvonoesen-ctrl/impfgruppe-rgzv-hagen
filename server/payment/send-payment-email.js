@@ -1,16 +1,9 @@
-import nodemailer from 'nodemailer'
+import { clubMailTransporter as clubMailTransporter, mailFrom } from '../mail-transport.js'
 import QRCode from 'qrcode'
+import { authorizedPaymentMail } from './mail-authorization.js'
 import { createAdminSupabase } from '../_supabase-admin.js'
 
-const clubMailTransporter = nodemailer.createTransport({
-  host: process.env.SMTP_HOST,
-  port: Number(process.env.SMTP_PORT),
-  secure: true,
-  auth: {
-    user: process.env.SMTP_USER,
-    pass: process.env.SMTP_PASS
-  }
-})
+
 const qrCodeContentId = 'participant-checkin-qr'
 const participantAnimalCountFields = [
   ['chicken_count', 'Hühner'],
@@ -79,6 +72,9 @@ export async function sendParticipantEmail({ participantId, emailType = 'payment
     }
 
     const isBarRegistration = emailType === 'bar-registration'
+    if (!isBarRegistration && participant.payment_status !== 'bezahlt') {
+      throw Object.assign(new Error('Es liegt keine bestätigte Zahlung vor.'), { statusCode: 409 })
+    }
     if (isBarRegistration && (
       participant.payment_method !== 'bar' ||
       participant.payment_status !== 'offen'
@@ -212,7 +208,7 @@ Diese E-Mail wurde automatisch über das Anmeldesystem des RGZV Hagen erstellt.
 
     if (isBarRegistration) {
       await clubMailTransporter.sendMail({
-        from: `"RGZV Hagen und Umgebung seit 1903 e.V." <${process.env.SMTP_USER}>`,
+        from: mailFrom(),
         to: email,
         subject: 'Ihre Anmeldung zum Impftermin ist erfolgreich eingegangen',
         attachments: [{
@@ -227,7 +223,7 @@ Diese E-Mail wurde automatisch über das Anmeldesystem des RGZV Hagen erstellt.
 
     try {
       const info = await clubMailTransporter.sendMail({
-        from: `"RGZV Hagen und Umgebung seit 1903 e.V." <${process.env.SMTP_USER}>`,
+        from: mailFrom(),
         to: email,
         subject: 'Zahlung erfolgreich eingegangen',
         attachments: [{
@@ -266,6 +262,7 @@ export default async function handler(req, res) {
 
   try {
     const { participantId, emailType } = req.body || {}
+    if (!authorizedPaymentMail(req, participantId) || emailType === 'bar-registration') return res.status(403).json({ error: 'Nicht autorisiert.' })
     if (!participantId) {
       return res.status(400).json({ error: 'Teilnehmer-ID fehlt.' })
     }

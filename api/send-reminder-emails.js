@@ -1,15 +1,8 @@
-import nodemailer from 'nodemailer'
+import { authorizeMailAdmin, handleMailCampaign, isCronRequest, runReminderCron } from '../server/mail-workflows.js'
+import { sendTestMail, testRecipient } from '../server/mail-test.js'
+import { drainMail } from '../server/mail-delivery.js'
 import { createAdminSupabase, getBearerToken } from '../server/_supabase-admin.js'
 
-const clubMailTransporter = nodemailer.createTransport({
-  host: process.env.SMTP_HOST,
-  port: Number(process.env.SMTP_PORT),
-  secure: true,
-  auth: {
-    user: process.env.SMTP_USER,
-    pass: process.env.SMTP_PASS
-  }
-})
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 const normalizeEmail = value => String(value || '').trim().toLowerCase()
 const escapeHtml = value => String(value || '').replace(/[&<>"']/g, character => ({
@@ -169,57 +162,31 @@ async function handleSmartAssistant(req, res, supabase) {
   })
 }
 
-async function handleExistingReminder(req, res, supabase) {
-  const { vaccinationDateId, type, newTime, newMeetingPoint } = req.body || {}
-  const { data: appointment } = await supabase
-    .from('vaccination_dates')
-    .select('id, club_id, archived')
-    .eq('id', vaccinationDateId)
-    .maybeSingle()
-  if (!appointment || appointment.archived) {
-    return res.status(409).json({ error: 'Für archivierte Impftermine können keine Erinnerungen versendet werden.' })
-  }
-  const user = await authenticateAdmin(req, supabase, appointment.club_id)
-  if (!user) return res.status(403).json({ error: 'Keine Berechtigung für diesen Verein.' })
-  const { data: participants, error } = await supabase
-    .from('participants')
-    .select('*')
-    .eq('vaccination_date_id', vaccinationDateId)
-    .in('registration_status', ['completed', 'bar_registered'])
-  if (error) return res.status(500).json({ error: error.message })
-  let sent = 0
-  for (const participant of participants || []) {
-    const isTimeChange = type === 'time'
-    const subject = isTimeChange
-      ? 'Änderung der Uhrzeit Ihres Impftermins'
-      : 'Änderung des Treffpunkts Ihres Impftermins'
-    const detail = isTimeChange
-      ? `<p><strong>Neue Uhrzeit:</strong> ${escapeHtml(newTime)}</p>`
-      : `<p><strong>Neuer Treffpunkt:</strong> ${escapeHtml(newMeetingPoint)}</p>`
-    await clubMailTransporter.sendMail({
-      from: `"RGZV Hagen und Umgebung seit 1903 e.V." <${process.env.SMTP_USER}>`,
-      to: participant.email,
-      subject,
-      html: `<h2>${isTimeChange ? 'Änderung der Uhrzeit' : 'Änderung des Treffpunkts'}</h2>
-        <p>Hallo ${escapeHtml(participant.firstname)} ${escapeHtml(participant.lastname)},</p>
-        <p>${isTimeChange ? 'Die Uhrzeit' : 'Der Treffpunkt'} Ihres Impftermins wurde geändert.</p>
-        ${detail}
-        <p>Mit freundlichen Grüßen<br>RGZV Hagen und Umgebung seit 1903 e.V.</p>`
-    })
-    sent += 1
-  }
-  return res.status(200).json({ success: true, sent })
-}
-
+export const config = { maxDuration: 60 }
 export default async function handler(req, res) {
-  const supabase = createAdminSupabase()
+  res.setHeader('Cache-Control', 'no-store')
   try {
+    const supabase = createAdminSupabase()
+    if (req.method === 'GET') {
+      if (!isCronRequest(req)) return res.status(401).json({ error: 'Nicht autorisiert.' })
+      return res.status(200).json(await runReminderCron(supabase))
+    }
     if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' })
-    const action = req.body?.action
+    const { action, clubId } = req.body || {}
     if (action === 'smart-assistant') return await handleSmartAssistant(req, res, supabase)
-    return await handleExistingReminder(req, res, supabase)
+    if (['preview-campaign','send-campaign'].includes(action)) return await handleMailCampaign(req, res, supabase)
+    if (!clubId || !await authorizeMailAdmin(req, supabase, clubId)) return res.status(403).json({ error: 'Keine Berechtigung.' })
+    if (action === 'test-config') return res.status(200).json({ recipient: testRecipient() })
+    if (action === 'test-mail') return res.status(200).json(await sendTestMail(req.body.kind))
+    if (action === 'retry-pending') return res.status(200).json(await drainMail({ clubId, db: supabase }))
+    if (action === 'mail-status') {
+      const { data, error } = await supabase.from('mail_deliveries').select('id,kind,status,attempts,created_at,sent_at,error_code').eq('club_id', clubId).order('created_at', { ascending: false }).limit(100)
+      if (error) throw error
+      return res.status(200).json({ deliveries: data })
+    }
+    return res.status(400).json({ error: 'Ungültige Versandaktion.' })
   } catch (error) {
-    const status = error.code === 'TEST_APPOINTMENT' ? 400 : error.code === 'NOT_FIRST_REGULAR' ? 409 : 500
-    return res.status(status).json({ error: error.message || 'Erinnerungs-E-Mail konnte nicht verarbeitet werden.' })
+    console.error('MAIL_REQUEST_FAILED', { code: error.code || 'MAIL_ERROR' })
+    return res.status(500).json({ error: 'E-Mail-Anfrage fehlgeschlagen. Versandstatus prüfen; Konfiguration und Migration müssen eingerichtet sein.' })
   }
 }

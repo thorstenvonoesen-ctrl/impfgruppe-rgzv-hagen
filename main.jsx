@@ -1,3 +1,5 @@
+import ParticipantManagement from './ParticipantManagement.jsx'
+import { MailCampaign, MailTestPanel } from './MailAdmin.jsx'
 import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { createRoot } from 'react-dom/client'
@@ -225,6 +227,7 @@ const [showForm, setShowForm] = useState(false)
       if (finalFrame) window.cancelAnimationFrame(finalFrame)
     }
   }, [page])
+  if (page.startsWith('#manage=')) return <ParticipantManagement token={page.slice(8)} />
   if (location.pathname === '/admin-invite') return <AdminInvitePassword />
   if (page === '#info') return <InfoPage />
   if (page === '#info-newcastle') return <InfoNewcastle />
@@ -4501,6 +4504,8 @@ setClub(clubData)
   console.log("data =", data)
 
   setVaccinationDates(data || [])
+  const requestedDate = new URLSearchParams(window.location.search).get('vaccinationDateId')
+  if (requestedDate && (data || []).some(date => String(date.id) === requestedDate)) setForm(current => ({ ...current, vaccination_date_id: requestedDate }))
 }
 useEffect(() => {
   loadDates()
@@ -5948,9 +5953,7 @@ function AdminDashboard({ onLogout, logoutError, adminContext }) {
   const [statusFilter, setStatusFilter] = useState('all')
   const [loading, setLoading] = useState(true)
   const [mailDialogOpen, setMailDialogOpen] = useState(false)
-  const [mailType, setMailType] = useState('')
-  const [newTime, setNewTime] = useState('')
-const [newMeetingPoint, setNewMeetingPoint] = useState('')
+  const [campaignKind, setCampaignKind] = useState('appointment-change')
 const [selectedDate, setSelectedDate] = useState(null)
   const [editingParticipant, setEditingParticipant] = useState(null)
   const [vaccinationDates, setVaccinationDates] = useState([])
@@ -6329,45 +6332,8 @@ const [selectedClub, setSelectedClub] = useState(null)
       setAdministratorDetailLoading(false)
     }
   }
-  async function sendReminderMail() {
-  if (!selectedDate) return
-
-  try {
-    const response = await fetch('/api/send-reminder-emails', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        vaccinationDateId: selectedDate.id,
-        type: mailType,
-        newTime,
-        newMeetingPoint,
-      }),
-    })
-
-    const result = await response.json()
-
-    if (!response.ok) {
-      alert(result.error || 'Fehler beim Versenden der E-Mail.')
-      return
-    }
-if (result.sent === 0) {
-  alert('Für diesen Impftermin wurden keine bezahlten Teilnehmer gefunden.')
-  return
-}
-    alert(`${result.sent} Erinnerungs-E-Mail(s) erfolgreich versendet.`)
-    setMailDialogOpen(false)
-    setMailType('')
-    setNewTime('')
-    setNewMeetingPoint('')
-  } catch (err) {
-    console.error(err)
-    alert('Serverfehler beim Versenden der E-Mails.')
-  }
-}
   const isTestVaccinationDate = vaccinationDate =>
-    Object.values(vaccinationDate || {}).some(
+    vaccinationDate?.is_test === true || Object.values(vaccinationDate || {}).some(
       value => typeof value === 'string' && value.toLowerCase().includes('test')
     )
 
@@ -7151,58 +7117,7 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
     </div>
   )}
 
-  {mailDialogOpen && (
-    <div className="modal">
-      <div className="card">
-        <h2>E-Mail versenden</h2>
-
-        <button className="primary" onClick={() => setMailType('time')}>
-          Uhrzeit geändert
-        </button>
-
-        <button className="primary" onClick={() => setMailType('location')}>
-          Treffpunkt geändert
-        </button>
-
-        {mailType === 'time' && (
-          <input
-            type="text"
-            placeholder="Neue Uhrzeit"
-            value={newTime}
-            onChange={e => setNewTime(e.target.value)}
-          />
-        )}
-
-        {mailType === 'location' && (
-          <input
-            type="text"
-            placeholder="Neuer Treffpunkt"
-            value={newMeetingPoint}
-            onChange={e => setNewMeetingPoint(e.target.value)}
-          />
-        )}
-
-        <button
-          className="primary"
-          onClick={sendReminderMail}
-          disabled={
-            (mailType === 'time' && !newTime) ||
-            (mailType === 'location' && !newMeetingPoint)
-          }
-        >
-          E-Mail senden
-        </button>
-
-        <button
-          className="ghost"
-          onClick={() => setMailDialogOpen(false)}
-        >
-          Abbrechen
-        </button>
-      </div>
-    </div>
-  )}
-
+  {mailDialogOpen && selectedDate && <MailCampaign appointment={selectedDate} kind={campaignKind} onClose={() => setMailDialogOpen(false)} />}
   {vetSendDate && (
     <div className="modal">
       <section className="modal-card vet-send-modal" role="dialog" aria-modal="true" aria-labelledby="vet-send-title">
@@ -7333,6 +7248,7 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
     </div>
   ))}
 </section>
+      <MailTestPanel clubId={adminClubId} />
       <section id="appointment-management" className="card admin-appointment-management-card">
   <h2>Impftermin anlegen</h2>
   <div className="appointment-create-grid">
@@ -7431,15 +7347,10 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
     Kassenbericht
   </button>
 
-  <button
-  className="small"
-  onClick={() => {
-    setSelectedDate(v)
-    setMailDialogOpen(true)
-  }}
->
-  E-Mail
-</button>
+  {!isTestVaccinationDate(v) && <>
+    <button className="small" onClick={() => { setSelectedDate(v); setCampaignKind('appointment-change'); setMailDialogOpen(true) }}>Teilnehmer über Änderung informieren</button>
+    <button className="small" onClick={() => { setSelectedDate(v); setCampaignKind('new-appointment'); setMailDialogOpen(true) }}>Frühere Teilnehmer informieren</button>
+  </>}
 
   <button
     className="small"
@@ -7891,6 +7802,9 @@ function VaccinationAddressFields({ value, onChange }) {
   const update = field => event => onChange({ ...value, [field]: event.target.value })
   return (
     <div className="vaccination-address-fields">
+      <label>Uhrzeit<input type="time" value={(value.time || value.title?.match(/\b([01]?\d|2[0-3]):[0-5]\d\b/)?.[0] || '').slice(0,5)} onChange={event => onChange({ ...value, time: event.target.value || null })} /></label>
+      <label>Anmeldeschluss (optional)<input type="datetime-local" value={value.registration_closes_at ? new Date(new Date(value.registration_closes_at).getTime() - new Date(value.registration_closes_at).getTimezoneOffset() * 60000).toISOString().slice(0,16) : ''} onChange={event => onChange({ ...value, registration_closes_at: event.target.value ? new Date(event.target.value).toISOString() : null })} /></label>
+      <label><input type="checkbox" checked={Boolean(value.registration_closed)} onChange={event => onChange({ ...value, registration_closed: event.target.checked })} /> Anmeldung geschlossen</label>
       <label>Veranstaltungsort<input value={value.venue_name || ''} onChange={update('venue_name')} placeholder="z. B. Vereinsheim RGZV Hagen" /></label>
       <div className="two">
         <label>Straße<input value={value.street || ''} onChange={update('street')} /></label>

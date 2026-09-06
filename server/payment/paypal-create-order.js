@@ -1,3 +1,4 @@
+import { paymentMailHeaders } from './mail-authorization.js'
 import { createAdminSupabase, createPaymentReturnToken } from '../_supabase-admin.js'
 
 const PAYPAL_API_BASE = 'https://api-m.paypal.com'
@@ -101,7 +102,7 @@ async function sendPaymentEmail(req, participant) {
   if (!participant.email) return false
   const response = await fetch(`https://${req.headers.host}/api/send-payment-email`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: { 'Content-Type': 'application/json', ...paymentMailHeaders(participant.id) },
     body: JSON.stringify({ participantId: participant.id })
   })
   return response.ok

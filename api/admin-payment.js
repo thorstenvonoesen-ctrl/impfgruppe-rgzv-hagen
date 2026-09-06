@@ -1,17 +1,10 @@
-import nodemailer from 'nodemailer'
+import { paymentMailHeaders } from '../server/payment/mail-authorization.js'
+import { clubMailTransporter as clubMailTransporter, mailFrom } from '../server/mail-transport.js'
 import { emailSignatureHtml } from '../server/_email-signature.js'
 import { createAdminSupabase, getBearerToken } from '../server/_supabase-admin.js'
 import { ensurePaymentReceipt, getStoredPaymentReceipt } from '../server/payment/payment-receipt.js'
 
-const clubMailTransporter = nodemailer.createTransport({
-  host: process.env.SMTP_HOST,
-  port: Number(process.env.SMTP_PORT),
-  secure: true,
-  auth: {
-    user: process.env.SMTP_USER,
-    pass: process.env.SMTP_PASS
-  }
-})
+
 
 function escapeHtml(value) {
   return String(value || '')
@@ -287,7 +280,7 @@ export default async function handler(req, res) {
         }
         try {
           await clubMailTransporter.sendMail({
-            from: `"RGZV Hagen und Umgebung seit 1903 e.V." <${process.env.SMTP_USER}>`,
+            from: mailFrom(),
             to: email,
             subject: 'Einladung zum Adminbereich des Impfgruppenmanagers',
             html: `
@@ -484,7 +477,7 @@ export default async function handler(req, res) {
       try {
         const emailResponse = await fetch(`https://${req.headers.host}/api/send-payment-email`, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: { 'Content-Type': 'application/json', ...paymentMailHeaders(participantId) },
           body: JSON.stringify({ participantId })
         })
         if (!emailResponse.ok) {
