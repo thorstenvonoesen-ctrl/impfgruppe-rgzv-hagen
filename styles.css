@@ -6120,8 +6120,8 @@ header {
 .checkin-live-stat.warning { border-color: rgba(240,100,123,.32); background: rgba(240,100,123,.12); }
 .checkin-live-stat.warning strong { color: #ffc4ce; }
 .checkin-filter-bar { border-color: rgba(142,234,240,.25); background: rgba(24,184,201,.09); }
-.checkin-status { color: #ffc4ce; background: rgba(240,100,123,.15); border-color: rgba(240,100,123,.24); }
-.checkin-status.done { color: #b9f5df; background: rgba(17,140,105,.2); border-color: rgba(79,211,166,.24); }
+.checkin-status { color: #8b1635; background: rgba(240,100,123,.15); border-color: rgba(240,100,123,.24); }
+.checkin-status.done { color: #075239; background: rgba(17,140,105,.2); border-color: rgba(79,211,166,.24); }
 .checkin-payment-warning { background: linear-gradient(145deg,rgba(118,69,0,.62),rgba(32,39,78,.9)); }
 
 /* Informations-, Vereins- und Rechtseiten */
