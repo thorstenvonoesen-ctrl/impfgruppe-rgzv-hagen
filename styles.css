@@ -8257,3 +8257,57 @@ footer a { color: var(--aurora-blue) !important; }
 .archive-detail-card { width: min(1180px,96vw); max-width: 1180px; max-height: 92vh; overflow: auto; }
 @media (max-width: 980px) { .archive-date { grid-template-columns: 1fr; }.archive-actions { justify-content: flex-start; } }
 @media (max-width: 620px) { .admin .admin-workspace-content .admin-dashboard-layout > .admin-archive-card { padding: 18px 16px; }.archive-heading { align-items: flex-start; flex-direction: column; }.archive-confirmation-actions { flex-direction: column; }.archive-metrics { grid-template-columns: repeat(2,minmax(0,1fr)); }.archive-actions button,.archive-confirmation-actions button { width: 100%; } }
+
+/* Scoped layout for the email test and delivery-status card. */
+.mail-test-panel,
+.admin .admin-workspace-content .admin-dashboard-layout > .mail-test-panel {
+  grid-column: 1 / -1;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 22px 24px;
+}
+.mail-test-panel > p {
+  max-width: 100%;
+  margin: 14px 0;
+  line-height: 1.55;
+  overflow-wrap: anywhere;
+  word-break: normal;
+}
+.mail-test-panel > p:empty { display: none; }
+.mail-test-panel .mail-test-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
+  gap: 10px;
+}
+.mail-test-panel .mail-test-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.mail-test-panel button.small {
+  min-width: 0;
+  max-width: 100%;
+  height: auto;
+  min-height: 42px;
+  margin: 0;
+  padding: 10px 14px;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  word-break: normal;
+  line-height: 1.4;
+  text-align: center;
+}
+.mail-test-panel .mail-test-grid > button { width: 100%; }
+.mail-test-panel .table-wrap { min-width: 0; max-width: 100%; overflow: visible; }
+.mail-test-panel table { width: 100%; min-width: 0; table-layout: fixed; }
+.mail-test-panel th,
+.mail-test-panel td { white-space: normal; overflow-wrap: anywhere; padding: 10px 8px; }
+@media (max-width: 620px) {
+  .mail-test-panel,
+  .admin .admin-workspace-content .admin-dashboard-layout > .mail-test-panel { padding: 18px 16px; }
+  .mail-test-panel .mail-test-grid { grid-template-columns: minmax(0, 1fr); }
+  .mail-test-panel .mail-test-actions { display: grid; grid-template-columns: minmax(0, 1fr); }
+}

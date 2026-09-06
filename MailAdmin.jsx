@@ -53,13 +53,13 @@ export function MailTestPanel({ clubId }) {
       else setMessage(action === 'test-mail' ? `Testmail versendet an ${result.recipient}.` : `${result.sent} vorgemerkte Nachrichten versendet.`)
     } catch (e) { setMessage(e.message) } finally { setBusy(false) }
   }
-  return <section className="card">
+  return <section className="card mail-test-panel">
     <button className="small" disabled={busy || !clubId} onClick={() => open ? setOpen(false) : run('test-config')}>E-Mail-Test und Versandstatus</button>
     <p role="status">{message}</p>
     {open && <>
       <p>{recipient ? `Alle Testmails gehen ausschließlich an ${recipient}.` : 'Testversand deaktiviert: MAIL_TEST_RECIPIENT muss mit Ihrer eigenen Testadresse konfiguriert werden.'} Es werden nur Musterdaten verwendet.</p>
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>{types.map(([kind,label]) => <button className="small" key={kind} disabled={busy || !recipient} onClick={() => { if (window.confirm(`Diese Testmail ausschließlich an ${recipient} senden?`)) run('test-mail', kind) }}>{label} testen</button>)}</div>
-      <p><button className="small" disabled={busy} onClick={() => run('mail-status')}>Versandstatus laden</button> <button className="small" disabled={busy} onClick={() => run('retry-pending')}>Offene Zustellungen fortsetzen</button></p>
+      <div className="mail-test-grid">{types.map(([kind,label]) => <button className="small" key={kind} disabled={busy || !recipient} onClick={() => { if (window.confirm(`Diese Testmail ausschließlich an ${recipient} senden?`)) run('test-mail', kind) }}>{label} testen</button>)}</div>
+      <p className="mail-test-actions"><button className="small" disabled={busy} onClick={() => run('mail-status')}>Versandstatus laden</button> <button className="small" disabled={busy} onClick={() => run('retry-pending')}>Offene Zustellungen fortsetzen</button></p>
       <p>Unklare Zustellungen werden nicht automatisch erneut gesendet. Sie müssen zuerst anhand des SMTP-Protokolls geprüft werden.</p>
       {deliveries.length > 0 && <div className="table-wrap"><table><thead><tr><th>Mailtyp</th><th>Status</th><th>Versuche</th><th>Zeitpunkt</th></tr></thead><tbody>{deliveries.map(row => <tr key={row.id}><td>{types.find(([kind]) => kind === row.kind)?.[1] || row.kind}</td><td>{row.status}{row.error_code ? ` (${row.error_code})` : ''}</td><td>{row.attempts}</td><td>{new Date(row.sent_at || row.created_at).toLocaleString('de-DE')}</td></tr>)}</tbody></table></div>}
     </>}
