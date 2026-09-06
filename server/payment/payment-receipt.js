@@ -110,7 +110,7 @@ export function buildPaymentReceiptEmailHtml(receipt) {
   <strong>Betrag:</strong> ${escapeHtml(formatAmount(snapshot.amount))}<br>
   <strong>Zahlungsart:</strong> ${escapeHtml(paymentMethodLabel(snapshot.paymentMethod))}<br>
   <strong>Zahlungsdatum:</strong> ${escapeHtml(formatDate(snapshot.paymentDate, true))}<br>
-  <strong>Impftermin:</strong> ${escapeHtml(snapshot.appointmentTitle || 'Impftermin')} am ${escapeHtml(formatDate(`${snapshot.appointmentDate}T12:00:00`))}
+  <strong>Newcastle-Impftermin:</strong> ${escapeHtml(snapshot.appointmentTitle || 'Newcastle-Impftermin')} am ${escapeHtml(formatDate(`${snapshot.appointmentDate}T12:00:00`))}
 </p>
 <p>Die zugehörige Quittung finden Sie als PDF im Anhang dieser E-Mail.</p>
 <p>Mit freundlichen Grüßen</p>

@@ -88,7 +88,7 @@ export default async function handler(req, res) {
       ''
     )
     const filenameDate = deutschesDatum.replaceAll('.', '-')
-    const subject = `Sammelimpfbescheinigung für den Impftermin vom ${deutschesDatum} – Bitte um Prüfung und Unterzeichnung`
+    const subject = `Sammelimpfbescheinigung für den Newcastle-Impftermin vom ${deutschesDatum} – Bitte um Prüfung und Unterzeichnung`
 
     const info = await transporter.sendMail(buildVetCertificateMail(deutschesDatum, pdfContent, process.env.VET_RECIPIENT_EMAIL || TEST_RECIPIENT))
     await supabase
@@ -112,7 +112,7 @@ export default async function handler(req, res) {
 
 export function buildVetCertificateMail(deutschesDatum, pdfContent, recipient) {
   const filenameDate = deutschesDatum.replaceAll(".", "-")
-  const subject = `Sammelimpfbescheinigung für den Impftermin vom ${deutschesDatum} – Bitte um Prüfung und Unterzeichnung`
+  const subject = `Sammelimpfbescheinigung für den Newcastle-Impftermin vom ${deutschesDatum} – Bitte um Prüfung und Unterzeichnung`
   return {
       from: mailFrom(),
       to: recipient,
@@ -127,12 +127,12 @@ export function buildVetCertificateMail(deutschesDatum, pdfContent, recipient) {
 sehr geehrte Damen und Herren,</p>
 
         <p>
-          anbei übersenden wir Ihnen die Sammelimpfbescheinigung für den Impftermin vom <strong>${deutschesDatum}</strong>
+          anbei übersenden wir Ihnen die Sammelimpfbescheinigung für den Newcastle-Impftermin vom <strong>${deutschesDatum}</strong>
           mit der freundlichen Bitte um Prüfung und Unterzeichnung.
         </p>
 
         <p>
-          Die Bescheinigung wurde auf Grundlage der für diesen Impftermin eingegangenen Anmeldungen erstellt
+          Die Bescheinigung wurde auf Grundlage der für diesen Newcastle-Impftermin eingegangenen Anmeldungen erstellt
           und enthält die gemeldeten Teilnehmerdaten einschließlich der relevanten Angaben für die Durchführung
           der Impfung.
         </p>

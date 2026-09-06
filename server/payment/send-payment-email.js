@@ -162,14 +162,14 @@ Diese E-Mail wurde automatisch über das Anmeldesystem des RGZV Hagen erstellt.
       `
 
     const barRegistrationHtml = isBarRegistration ? `
-<h2>Ihre Anmeldung zum Impftermin ist erfolgreich eingegangen</h2>
+<h2>Ihre Anmeldung zum Newcastle-Impftermin ist erfolgreich eingegangen</h2>
 
 <p>Hallo ${escapeHtml(firstname)} ${escapeHtml(lastname)},</p>
 
 <p>vielen Dank für Ihre Anmeldung zur Newcastle-Impfung beim RGZV Hagen.</p>
 
 <p>
-  <strong>Impftermin:</strong> ${escapeHtml(appointment.title || 'Impftermin')}<br>
+  <strong>Newcastle-Impftermin:</strong> ${escapeHtml(appointment.title || 'Newcastle-Impftermin')}<br>
   <strong>Datum:</strong> ${escapeHtml(formatAppointmentDate(appointment.date))}<br>
   <strong>Uhrzeit:</strong> ${escapeHtml(appointmentTime(appointment.title))}
 </p>
@@ -210,7 +210,7 @@ Diese E-Mail wurde automatisch über das Anmeldesystem des RGZV Hagen erstellt.
       await clubMailTransporter.sendMail({
         from: mailFrom(),
         to: email,
-        subject: 'Ihre Anmeldung zum Impftermin ist erfolgreich eingegangen',
+        subject: 'Ihre Anmeldung zum Newcastle-Impftermin ist erfolgreich eingegangen',
         attachments: [{
           filename: 'check-in-qr-code.png',
           content: qrCode,
