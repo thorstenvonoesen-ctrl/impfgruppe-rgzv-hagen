@@ -7,7 +7,7 @@ import { normalizeEmail, validEmail } from './mail-rules.js'
 
 export const testKinds = ['registration','changed','cancelled','reminder-7d','reminder-24h','receipt','appointment-change','vet','new-appointment']
 export function testRecipient() {
-  const email = normalizeEmail(process.env.MAIL_TEST_RECIPIENT)
+  const email = normalizeEmail(process.env.SMTP_USER)
   return validEmail(email) ? email : null
 }
 export async function buildTestMail(kind, recipient) {
@@ -32,7 +32,7 @@ export async function buildTestMail(kind, recipient) {
 }
 export async function sendTestMail(kind, transport = clubMailTransporter) {
   const recipient = testRecipient()
-  if (!recipient) throw new Error('MAIL_TEST_RECIPIENT muss mit Ihrer eigenen Test-E-Mail-Adresse konfiguriert werden.')
+  if (!recipient) throw new Error('SMTP_USER muss eine gültige E-Mail-Adresse enthalten.')
   const result = await transport.sendMail(await buildTestMail(kind, recipient))
   if (!result?.messageId || result.rejected?.length) throw new Error('Testversand nicht bestätigt.')
   return { success: true, recipient }
