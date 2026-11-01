@@ -1,3 +1,4 @@
+import { saveVaccinationDate } from './vaccination-date-save.js'
 import ParticipantManagement from './ParticipantManagement.jsx'
 import { MailCampaign, MailTestPanel } from './MailAdmin.jsx'
 import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
@@ -6426,51 +6427,31 @@ setIsVaccinationDay(
     setLoading(false)
   }
   async function addVaccinationDate() {
-  if (!newDate || !newDateTitle) return
-
-  setDateFeedback('')
-  const { data, error } = await supabase
-    .from('vaccination_dates')
-    .insert([
-  {
-    club_id: adminClubId,
-    title: newDateTitle,
-    date: newDate,
-    note: newDateNote,
-    ...newDateAddress
-  }
-])
-    .select('*')
-    .single()
-
-  if (error) {
-    setDateFeedback('Impftermin konnte nicht gespeichert werden.')
-    return
-  }
-  setNewDate('')
-    setNewDateTitle('')
-setNewDateNote('')
-  setNewDateAddress(emptyVaccinationAddress())
-  setDateFeedback('Impftermin wurde gespeichert.')
-  await load()
-}
-  async function updateVaccinationDate() {
-    if (!editingVaccinationDate?.date || !editingVaccinationDate?.title) return
     setDateFeedback('')
-    const clubId = adminClubId
-    const { id, club_id, created_at, ...updates } = editingVaccinationDate
-    const { error } = await supabase
-      .from('vaccination_dates')
-      .update(updates)
-      .eq('id', id)
-      .eq('club_id', clubId)
-    if (error) {
-      setDateFeedback('Impftermin konnte nicht aktualisiert werden.')
-      return
+    try {
+      await saveVaccinationDate(supabase, adminClubId, {
+        title: newDateTitle, date: newDate, note: newDateNote, ...newDateAddress
+      })
+      setNewDate('')
+      setNewDateTitle('')
+      setNewDateNote('')
+      setNewDateAddress(emptyVaccinationAddress())
+      setDateFeedback('Impftermin wurde gespeichert.')
+      await load()
+    } catch (error) {
+      setDateFeedback('Impftermin konnte nicht gespeichert werden. ' + error.message)
     }
-    setEditingVaccinationDate(null)
-    setDateFeedback('Impftermin wurde aktualisiert.')
-    load()
+  }
+  async function updateVaccinationDate() {
+    setDateFeedback('')
+    try {
+      await saveVaccinationDate(supabase, adminClubId, editingVaccinationDate)
+      setEditingVaccinationDate(null)
+      setDateFeedback('Impftermin wurde aktualisiert.')
+      await load()
+    } catch (error) {
+      setDateFeedback('Impftermin konnte nicht aktualisiert werden. ' + error.message)
+    }
   }
   async function changeVaccinationDateArchiveStatus() {
     if (!canManageArchive || !archiveActionTarget || archiveActionBusy) return

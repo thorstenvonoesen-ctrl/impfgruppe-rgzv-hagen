@@ -1,0 +1,279 @@
+{
+  "columns": 22,
+  "rows": 21,
+  "cell_mm": 6.13,
+  "entries": [
+    {
+      "number": 1,
+      "answer": "BEWERTUNG",
+      "row": 0,
+      "column": 4,
+      "direction": "senkrecht",
+      "clue": "Fachliches Urteil auf der Schaukarte."
+    },
+    {
+      "number": 2,
+      "answer": "KATALOG",
+      "row": 0,
+      "column": 6,
+      "direction": "senkrecht",
+      "clue": "Verzeichnis der Tiere und Aussteller."
+    },
+    {
+      "number": 3,
+      "answer": "KAMM",
+      "row": 0,
+      "column": 10,
+      "direction": "waagerecht",
+      "clue": "Kopfschmuck in Rosen- oder Erbsenform."
+    },
+    {
+      "number": 3,
+      "answer": "KUEKEN",
+      "row": 0,
+      "column": 10,
+      "direction": "senkrecht",
+      "clue": "Jungvogel unmittelbar nach dem Schlupf."
+    },
+    {
+      "number": 4,
+      "answer": "ZUECHTER",
+      "row": 1,
+      "column": 8,
+      "direction": "senkrecht",
+      "clue": "Plant Verpaarungen und wählt Nachzucht aus."
+    },
+    {
+      "number": 5,
+      "answer": "TAUBE",
+      "row": 2,
+      "column": 6,
+      "direction": "waagerecht",
+      "clue": "Vogel mit Rassegruppen wie den Kröpfern."
+    },
+    {
+      "number": 6,
+      "answer": "VOLIERE",
+      "row": 2,
+      "column": 15,
+      "direction": "senkrecht",
+      "clue": "Mit Netz oder Gitter geschützter Flugraum."
+    },
+    {
+      "number": 7,
+      "answer": "EHRENPREIS",
+      "row": 3,
+      "column": 1,
+      "direction": "senkrecht",
+      "clue": "Besondere Auszeichnung auf einer Schau."
+    },
+    {
+      "number": 8,
+      "answer": "FEDER",
+      "row": 4,
+      "column": 12,
+      "direction": "senkrecht",
+      "clue": "Einzelgebilde aus Kiel und Fahne."
+    },
+    {
+      "number": 9,
+      "answer": "ZUCHT",
+      "row": 4,
+      "column": 18,
+      "direction": "senkrecht",
+      "clue": "Gezielte Verpaarung und Auslese."
+    },
+    {
+      "number": 10,
+      "answer": "HENNE",
+      "row": 5,
+      "column": 8,
+      "direction": "waagerecht",
+      "clue": "Weibliches Zuchttier bei den Hühnern."
+    },
+    {
+      "number": 11,
+      "answer": "MELDUNG",
+      "row": 6,
+      "column": 0,
+      "direction": "waagerecht",
+      "clue": "Formelle Anmeldung eines Schautiers."
+    },
+    {
+      "number": 12,
+      "answer": "VEREIN",
+      "row": 6,
+      "column": 20,
+      "direction": "senkrecht",
+      "clue": "Zusammenschluss mit gemeinsamem Zuchtziel."
+    },
+    {
+      "number": 13,
+      "answer": "PREISRICHTER",
+      "row": 7,
+      "column": 10,
+      "direction": "waagerecht",
+      "clue": "Beurteilt Schautiere nach dem Standard."
+    },
+    {
+      "number": 14,
+      "answer": "ZUCHTBUCH",
+      "row": 9,
+      "column": 9,
+      "direction": "senkrecht",
+      "clue": "Dokumentation von Abstammung und Paarung."
+    },
+    {
+      "number": 15,
+      "answer": "BRUTEI",
+      "row": 9,
+      "column": 14,
+      "direction": "senkrecht",
+      "clue": "Für die Nachzucht vorgesehenes Ei."
+    },
+    {
+      "number": 16,
+      "answer": "MAUSER",
+      "row": 9,
+      "column": 17,
+      "direction": "senkrecht",
+      "clue": "Natürlicher Wechsel des Federkleids."
+    },
+    {
+      "number": 17,
+      "answer": "GELEGE",
+      "row": 10,
+      "column": 0,
+      "direction": "waagerecht",
+      "clue": "Alle zu einer Brut gehörenden Eier."
+    },
+    {
+      "number": 18,
+      "answer": "GEFLUEGEL",
+      "row": 10,
+      "column": 4,
+      "direction": "senkrecht",
+      "clue": "Sammelbegriff für Hühner, Enten und Gänse."
+    },
+    {
+      "number": 19,
+      "answer": "SCHLUPF",
+      "row": 10,
+      "column": 11,
+      "direction": "senkrecht",
+      "clue": "Befreiung des Jungtiers aus der Eischale."
+    },
+    {
+      "number": 20,
+      "answer": "KAEFIG",
+      "row": 10,
+      "column": 16,
+      "direction": "waagerecht",
+      "clue": "Einzelunterbringung auf der Geflügelschau."
+    },
+    {
+      "number": 21,
+      "answer": "HAHN",
+      "row": 12,
+      "column": 9,
+      "direction": "waagerecht",
+      "clue": "Männliches Zuchttier bei den Hühnern."
+    },
+    {
+      "number": 22,
+      "answer": "GEFIEDER",
+      "row": 13,
+      "column": 13,
+      "direction": "waagerecht",
+      "clue": "Gesamtheit aller Federn eines Vogels."
+    },
+    {
+      "number": 23,
+      "answer": "RING",
+      "row": 13,
+      "column": 20,
+      "direction": "senkrecht",
+      "clue": "Geschlossene Kennzeichnung am Lauf."
+    },
+    {
+      "number": 24,
+      "answer": "BRUT",
+      "row": 14,
+      "column": 9,
+      "direction": "waagerecht",
+      "clue": "Entwicklung im Ei unter Wärmeeinwirkung."
+    },
+    {
+      "number": 25,
+      "answer": "FARBSCHLAG",
+      "row": 16,
+      "column": 11,
+      "direction": "waagerecht",
+      "clue": "Farbvariante innerhalb einer Rasse."
+    },
+    {
+      "number": 26,
+      "answer": "RASSE",
+      "row": 16,
+      "column": 13,
+      "direction": "senkrecht",
+      "clue": "Zuchtgruppe mit gefestigten Erbmerkmalen."
+    },
+    {
+      "number": 27,
+      "answer": "STALL",
+      "row": 16,
+      "column": 15,
+      "direction": "senkrecht",
+      "clue": "Geschützter Raum für die Nachtruhe."
+    },
+    {
+      "number": 28,
+      "answer": "STANDARD",
+      "row": 18,
+      "column": 13,
+      "direction": "waagerecht",
+      "clue": "Verbindliches Idealbild einer Rasse."
+    },
+    {
+      "number": 29,
+      "answer": "AUSSTELLUNG",
+      "row": 20,
+      "column": 8,
+      "direction": "waagerecht",
+      "clue": "Öffentliche Schau von Zuchttieren."
+    }
+  ],
+  "solution_cells": [
+    {
+      "row": 12,
+      "column": 11,
+      "index": 1,
+      "letter": "H"
+    },
+    {
+      "row": 12,
+      "column": 10,
+      "index": 2,
+      "letter": "A"
+    },
+    {
+      "row": 16,
+      "column": 4,
+      "index": 3,
+      "letter": "G"
+    },
+    {
+      "row": 8,
+      "column": 15,
+      "index": 4,
+      "letter": "E"
+    },
+    {
+      "row": 11,
+      "column": 20,
+      "index": 5,
+      "letter": "N"
+    }
+  ]
+}
