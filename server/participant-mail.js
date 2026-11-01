@@ -1,4 +1,5 @@
 import QRCode from 'qrcode'
+import { makeCheckinUrl } from '../checkin-links.js'
 import { emailSignatureHtml } from './_email-signature.js'
 import { appointmentAddress, appointmentTime, canEditRegistration, escapeHtml as e, formatDate, managementUrl, money, publicBaseUrl } from './mail-rules.js'
 
@@ -40,7 +41,8 @@ export async function buildParticipantMail(kind, p, a, { test = false, clubSlug,
       const url = test ? 'https://example.invalid/test-verwaltung' : managementUrl(p.id)
       if (['registration', 'changed'].includes(kind) || canEditRegistration(a, p)) html += `<p><a style="display:inline-block;padding:14px 20px;background:#123c2b;color:white;border-radius:6px" href="${e(url)}">Meine Anmeldung verwalten</a></p>`
       if (!p.checkin_token && !test) throw new Error('Check-in-Token fehlt.')
-      attachments.push({ filename: 'check-in-qr-code.png', content: await QRCode.toBuffer(test ? 'TEST-KEIN-ECHTER-CHECKIN' : p.checkin_token, { width: 320, margin: 2, errorCorrectionLevel: 'M' }), cid: 'participant-checkin-qr' })
+      const checkinLink=test?'https://example.invalid/#checkin=TEST-KEIN-ECHTER-CHECKIN':makeCheckinUrl(publicBaseUrl(),p.checkin_token)
+      attachments.push({ filename: 'check-in-qr-code.png', content: await QRCode.toBuffer(checkinLink, { width: 320, margin: 2, errorCorrectionLevel: 'M' }), cid: 'participant-checkin-qr' })
       html += '<p><img src="cid:participant-checkin-qr" width="320" height="320" alt="Persönlicher Check-in-QR-Code"></p><p>Bitte bringen Sie diesen QR-Code am Impftag mit. Er dient dem Check-in und ist kein Verwaltungslink.</p>'
     }
   }

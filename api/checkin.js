@@ -1,5 +1,6 @@
 import { createAdminSupabase, getBearerToken } from '../server/_supabase-admin.js'
 import { ensurePaymentReceipt } from '../server/payment/payment-receipt.js'
+import { parseCheckinToken } from '../checkin-links.js'
 
 const SEARCH_FIELDS = ['firstname', 'lastname', 'email', 'phone', 'tsk_number']
 
@@ -80,7 +81,7 @@ async function authenticateAdmin(req, supabase) {
 }
 
 function canManageClub(memberships, clubId) {
-  return memberships.some(member => member.role === 'superadmin' || member.club_id === clubId)
+  return memberships.some(member => member.role === 'superadmin' || (['clubadmin','checkin_admin'].includes(member.role)&&member.club_id === clubId))
 }
 
 function canManagePayments(memberships, clubId) {
@@ -162,18 +163,35 @@ async function searchParticipants(supabase, clubId, selectedVaccinationDateId, r
     .slice(0, 50)
 }
 
-export default async function handler(req, res) {
+export function createCheckinHandler({createDb=createAdminSupabase,issueReceipt=ensurePaymentReceipt}={}) {
+return async function handler(req, res) {
+  res.setHeader('Cache-Control','no-store')
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' })
 
   try {
-    const supabase = createAdminSupabase()
+    const supabase = createDb()
     const authentication = await authenticateAdmin(req, supabase)
     if (authentication.error) return res.status(authentication.status).json({ error: authentication.error })
     const { user, memberships } = authentication
     const { action = 'qr-checkin' } = req.body || {}
 
+    if(action==='qr-resolve') {
+      const token=parseCheckinToken(req.body?.token)
+      if(!token)return res.status(400).json({error:'Ungültiger Check-in-QR-Code.'})
+      const {data:participant,error}=await supabase.from('participants')
+        .select('id,firstname,lastname,club_id,vaccination_date_id,payment_status,payment_method,payment_amount,checked_in,checked_in_at')
+        .eq('checkin_token',token).in('registration_status',['completed','bar_registered']).maybeSingle()
+      if(error)throw error
+      if(!participant || !canManageClub(memberships,participant.club_id))return res.status(404).json({error:'QR-Code nicht gefunden oder keine Berechtigung für diesen Verein.'})
+      const authorization=await getAuthorizedAppointment(supabase,memberships,participant.vaccination_date_id)
+      if(authorization.error)return res.status(authorization.status).json({error:authorization.error})
+      if(authorization.appointment.club_id!==participant.club_id)return res.status(403).json({error:'QR-Code und Impftermin sind nicht demselben Verein zugeordnet.'})
+      return res.status(200).json({participant:formatQrParticipant(participant,authorization.appointment)})
+    }
+
     if (action === 'qr-preview') {
-      const { token, vaccinationDateId } = req.body || {}
+      const { vaccinationDateId } = req.body || {}
+      const token=parseCheckinToken(req.body?.token)
       if (!token || !vaccinationDateId) {
         return res.status(400).json({ error: 'Die Teilnehmerdaten konnten nicht geladen werden.' })
       }
@@ -305,7 +323,7 @@ export default async function handler(req, res) {
       let receipt = null
       if (updated.checked_in && updated.payment_status === 'bezahlt') {
         try {
-          const result = await ensurePaymentReceipt(participant.id)
+          const result = await issueReceipt(participant.id)
           receipt = { issued: true, number: result.receipt.receipt_number, emailSent: Boolean(result.receipt.receipt_email_sent_at) }
         } catch (receiptError) {
           console.error('PAYMENT_RECEIPT_FAILED', { participantId: participant.id, message: receiptError?.message })
@@ -315,7 +333,9 @@ export default async function handler(req, res) {
       return res.status(200).json({ success: true, participant: updated, receipt, warning: receipt?.warning })
     }
 
-    const { token, vaccinationDateId, checkedIn = true, allowOpenPayment = false } = req.body || {}
+    if(action!=='qr-checkin')return res.status(400).json({error:'Ungültige Check-in-Aktion.'})
+    const { vaccinationDateId, checkedIn = true, allowOpenPayment = false } = req.body || {}
+    const token=parseCheckinToken(req.body?.token)
     if (!token || !vaccinationDateId || typeof checkedIn !== 'boolean' || typeof allowOpenPayment !== 'boolean') {
       return res.status(400).json({ error: 'Ungültige Check-in-Anfrage.' })
     }
@@ -367,7 +387,7 @@ export default async function handler(req, res) {
     let receipt = null
     if (checkedIn && updated.payment_status === 'bezahlt') {
       try {
-        const result = await ensurePaymentReceipt(participant.id)
+        const result = await issueReceipt(participant.id)
         receipt = { issued: true, number: result.receipt.receipt_number, emailSent: Boolean(result.receipt.receipt_email_sent_at) }
       } catch (receiptError) {
         console.error('PAYMENT_RECEIPT_FAILED', { participantId: participant.id, message: receiptError?.message })
@@ -381,7 +401,10 @@ export default async function handler(req, res) {
       warning: receipt?.warning
     })
   } catch (error) {
-    console.error('Check-in request failed:', error)
-    return res.status(500).json({ error: 'Check-in konnte nicht verarbeitet werden.' })
+    const code=/^(?:[0-9A-Z]{5}|PGRST\d{3})$/.test(error?.code||'')?error.code:'CHECKIN_ERROR'
+    console.error('CHECKIN_FAILED',{code})
+    return res.status(500).json({ error: ['42703','PGRST204'].includes(code)?'Die Datenbank ist für den Check-in nicht vollständig eingerichtet. Bitte die Check-in-Migration anwenden.':'Check-in konnte nicht verarbeitet werden.' })
   }
 }
+}
+export default createCheckinHandler()

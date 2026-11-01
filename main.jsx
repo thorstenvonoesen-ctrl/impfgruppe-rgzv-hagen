@@ -1,5 +1,7 @@
 import { saveVaccinationDate, vaccinationDateError } from './vaccination-date-save.js'
 import ParticipantManagement from './ParticipantManagement.jsx'
+import QrCheckinLanding from './QrCheckinLanding.jsx'
+import {parseCheckinToken,makeCheckinUrl} from './checkin-links.js'
 import ClubMemberManagement from './ClubMemberManagement.jsx'
 import MembershipTariff, { tariffContext } from './MembershipTariff.jsx'
 import { deleteParticipantRegistration } from './participant-delete.js'
@@ -232,6 +234,7 @@ const [showForm, setShowForm] = useState(false)
     }
   }, [page])
   if (page.startsWith('#manage=')) return <ParticipantManagement token={page.slice(8)} />
+  if (page.startsWith('#checkin=')) return <Admin checkinToken={page.slice(9)} />
   if (location.pathname === '/admin-invite') return <AdminInvitePassword />
   if (page === '#info') return <InfoPage />
   if (page === '#info-newcastle') return <InfoNewcastle />
@@ -5398,7 +5401,7 @@ function CheckinPanel({ participants, vaccinationDates, onChanged, adminRole }) 
   async function showQr(participant) {
     setCandidate(participant)
     setFeedback('')
-    setQrImage(await QRCode.toDataURL(participant.checkin_token, { width: 280, margin: 1, color: { dark: '#123c2b', light: '#ffffff' } }))
+    setQrImage(await QRCode.toDataURL(makeCheckinUrl(window.location.origin,participant.checkin_token), { width: 280, margin: 1, color: { dark: '#123c2b', light: '#ffffff' } }))
   }
   async function startScanner() {
     if (!dateId) return setFeedback('Bitte wählen Sie zuerst einen Impftermin.')
@@ -5424,6 +5427,8 @@ function CheckinPanel({ participants, vaccinationDates, onChanged, adminRole }) 
   }
 
   async function loadScannedParticipant(token) {
+    token=parseCheckinToken(token)
+    if(!token){setCandidate(null);setFeedback('Ungültiger Check-in-QR-Code.');return}
     try {
       const { data: { session } } = await supabase.auth.getSession()
       const response = await fetch('/api/checkin', {
@@ -5850,7 +5855,7 @@ function AdminPresence() {
   )
 }
 
-function Admin() {
+function Admin({checkinToken}={}) {
   const [logged, setLogged] = useState(false)
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -5954,6 +5959,7 @@ if (!data.session) {
       <Footer />
     </div>
   )
+  if(checkinToken!==undefined)return <QrCheckinLanding token={checkinToken} onLogout={logout} logoutError={logoutError}/>
   return <AdminDashboard adminContext={adminContext} onLogout={logout} logoutError={logoutError} />
 }
 

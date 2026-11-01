@@ -1,5 +1,7 @@
 import { clubMailTransporter as clubMailTransporter, mailFrom } from '../mail-transport.js'
 import QRCode from 'qrcode'
+import { makeCheckinUrl } from '../../checkin-links.js'
+import { publicBaseUrl } from '../mail-rules.js'
 import { authorizedPaymentMail } from './mail-authorization.js'
 import { createAdminSupabase } from '../_supabase-admin.js'
 
@@ -84,7 +86,7 @@ export async function sendParticipantEmail({ participantId, emailType = 'payment
       throw error
     }
 
-    const qrCode = await QRCode.toBuffer(checkinToken, {
+    const qrCode = await QRCode.toBuffer(makeCheckinUrl(publicBaseUrl(),checkinToken), {
       type: 'png',
       width: 320,
       margin: 2,

@@ -13,7 +13,7 @@ process.env.SUPABASE_SERVICE_ROLE_KEY = 'unit-test-secret-not-a-real-key'
 process.env.APP_URL = 'https://app.example.invalid'
 const id = '11111111-1111-4111-8111-111111111111'
 const a = { id: 'appointment', club_id: 'club', title: 'ND Impfung 10:00', date: '2099-06-20', venue_name: 'Vereinshaus', street: 'Musterstraße', house_number: '1', postal_code: '12345', city: 'Musterstadt' }
-const p = { id, club_id: 'club', email: 'fixture@example.invalid', firstname: 'Max <script>', lastname: 'Mustermann', tsk_number: 'TSK-TEST', chicken_count: 8, bantam_count: 2, turkey_count: 0, animal_count: 10, vaccine: 'Newcastle', payment_status: 'offen', payment_amount: 10, registration_status: 'bar_registered', checkin_token: 'fixture-qr' }
+const p = { id, club_id: 'club', email: 'fixture@example.invalid', firstname: 'Max <script>', lastname: 'Mustermann', tsk_number: 'TSK-TEST', chicken_count: 8, bantam_count: 2, turkey_count: 0, animal_count: 10, vaccine: 'Newcastle', payment_status: 'offen', payment_amount: 10, registration_status: 'bar_registered', checkin_token: 'a'.repeat(64) }
 
 test('management tokens are registration-specific and reject forged links', () => {
   const token = managementToken(id)

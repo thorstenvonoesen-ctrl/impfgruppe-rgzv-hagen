@@ -43,7 +43,8 @@ den Verein. OTP-Begrenzungen bleiben unabhängig von der normalen Anmeldung.
    Migrationen auf Verdacht nachziehen. Diese Datei enthält die notwendigen Teile
    in Reihenfolge 01 (Terminfelder), 03 (Mail), 04 (bestehende Mitgliedergrundlage),
    05 (Bestätigungen), 06 (verifizierte Tarife), 08 (Entkopplung), 09 (SMTP-Status),
-   10 (vollständige Entfernung der Anfragebegrenzung). Abschließend lädt
+   10 (vollständige Entfernung der Anfragebegrenzung), 11 (normalisierter Mitgliedertarif),
+   12 (Check-in-Voraussetzungen). Abschließend lädt
    `NOTIFY pgrst, 'reload schema'` den API-Cache neu.
 3. Die unten stehenden Schema-/Rechteprüfungen ausführen. Erst danach den aktuellen
    Code dieses Arbeitsstands als **Production** auf Vercel bereitstellen. Ein lokaler

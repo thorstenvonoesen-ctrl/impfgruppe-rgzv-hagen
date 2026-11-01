@@ -278,7 +278,8 @@ return async function handler(req, res) {
       payment_method: paymentMethod === 'bar' ? 'bar' : null,
       registration_status: paymentMethod === 'bar' ? 'bar_registered' : 'pending_payment'
     }, { transport, reference, tariff: { member_code: String(memberCode||''), verified_email: tariff.verifiedEmail, tariff_review_required:tariff.reviewRequired===true } })
-    console.info('REGISTRATION_SAVED',{reference,participantId:data.id,emailStatus:data.emailStatus})
+    console.info('REGISTRATION_SAVED',{reference,participantId:data.id,emailStatus:data.emailStatus,
+      quotedTariffSource:tariff.source,paymentAmount:Number(data.payment_amount),tariffReviewRequired:data.tariff_review_required===true})
 
     return res.status(201).json({
       participantId: data.id,
