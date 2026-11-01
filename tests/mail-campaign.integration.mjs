@@ -87,7 +87,7 @@ try {
   const body={action:'preview-campaign',vaccinationDateId:target,kind:'new-appointment'}
   let result=await request(body)
   assert.equal(result.code,500);assert.equal(result.body.code,'42P01')
-  const repair=await migration('20261102_repair_mail_campaign_queue')
+  const repair=await migration('20261103_complete_mail_queue_repair')
   await pg.exec(repair);await pg.exec(repair)
   // Only service role can access the queue or call the mutating RPCs.
   await pg.exec('set role authenticated')

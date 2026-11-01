@@ -1,5 +1,6 @@
 import { saveVaccinationDate, vaccinationDateError } from './vaccination-date-save.js'
 import ParticipantManagement from './ParticipantManagement.jsx'
+import ClubMemberManagement from './ClubMemberManagement.jsx'
 import { MailCampaign, MailTestPanel } from './MailAdmin.jsx'
 import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
@@ -6003,6 +6004,7 @@ const [selectedClub, setSelectedClub] = useState(null)
   const activeClub = selectedClub || clubs.find(club => club.id === adminClubId) || null
   const dashboardClubId = activeClub?.id || adminClubId
   const canManageArchive = adminContext?.role === 'clubadmin' || adminContext?.role === 'superadmin'
+  const canManageMembers = adminContext?.role === 'clubadmin' || adminContext?.role === 'superadmin'
   async function openAdminManagement() {
     if (adminContext?.role !== 'superadmin') return
     setAdminManagementOpen(true)
@@ -7153,6 +7155,7 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
         <a className={activeAdminSection === 'participants' ? 'active' : ''} href="#participant-management" onClick={event => { event.preventDefault(); setActiveAdminSection('participants'); document.getElementById('participant-management')?.scrollIntoView({ behavior: 'smooth', block: 'start' }) }}><span>04</span>Teilnehmer</a>
         <a className={activeAdminSection === 'archive' ? 'active' : ''} href="#vaccination-date-archive" onClick={event => { event.preventDefault(); setActiveAdminSection('archive'); document.getElementById('vaccination-date-archive')?.scrollIntoView({ behavior: 'smooth', block: 'start' }) }}><span>05</span>Archiv</a>
         {adminContext?.role === 'superadmin' && <button className={activeAdminSection === 'administration' ? 'active' : ''} type="button" onClick={() => { setActiveAdminSection('administration'); openAdminManagement() }}><span>06</span>Adminverwaltung</button>}
+        {canManageMembers && <button className={activeAdminSection === 'members' ? 'active' : ''} type="button" onClick={() => { setActiveAdminSection('members'); document.getElementById('club-member-management')?.scrollIntoView({ behavior: 'smooth', block: 'start' }) }}><span>07</span>Mitgliederverwaltung</button>}
       </nav>
       <div className="admin-workspace-nav-bottom">
         <a href="/Bedienungsanleitung-Impfgruppenmanager.pdf" download><Download size={16}/>Bedienungsanleitung</a>
@@ -7217,6 +7220,7 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
         </div>
         </div>
       </section>
+      {activeAdminSection === 'members' && canManageMembers && dashboardClubId && <ClubMemberManagement key={dashboardClubId} clubId={dashboardClubId} />}
       <div id="admin-checkin" className="admin-checkin-anchor"><CheckinPanel participants={bindingParticipants} vaccinationDates={activeVaccinationDates} onChanged={load} adminRole={adminContext?.role} /></div>
       <section className="card admin-appointments-card">
   <h2>Anmeldungen pro Impftermin</h2>

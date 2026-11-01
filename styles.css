@@ -8311,3 +8311,9 @@ footer a { color: var(--aurora-blue) !important; }
   .mail-test-panel .mail-test-grid { grid-template-columns: minmax(0, 1fr); }
   .mail-test-panel .mail-test-actions { display: grid; grid-template-columns: minmax(0, 1fr); }
 }
+.club-member-management { scroll-margin-top: 110px; }
+.club-member-management .member-editor { margin: 20px 0; }
+.club-member-management fieldset { border: 0; padding: 0; min-width: 0; }
+.club-member-management textarea { width: 100%; box-sizing: border-box; }
+.club-member-management .member-import { margin-top: 24px; }
+.club-member-management summary { cursor: pointer; font-weight: 600; }

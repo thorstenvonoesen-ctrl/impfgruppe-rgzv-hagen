@@ -1,0 +1,15 @@
+<!doctype html><html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Mitgliederverwaltung – lokale Musterdaten</title></head><body><main class="page admin"><p>Lokale UI-Prüfung mit Musterdaten, ohne Supabase-Verbindung.</p><button id="csv-fixture">CSV-Testdatei auswählen</button><div id="root"></div></main><script type="module">
+import React from 'react';
+import {createRoot} from 'react-dom/client';
+import ClubMemberManagement from '/ClubMemberManagement.jsx';
+import '/styles.css';
+let rows=[{id:'fixture',club_id:'club',firstname:'Max',lastname:'Mustermann',email:'max@example.invalid',member_number:'001',notes:'Musterdaten',is_active:true,updated_at:'1'}];
+let revision=1;
+const db={from(){let update,insert,single=false,start=0,end=49,filters=[];const q={
+ select(){return q},eq(k,v){filters.push(r=>r[k]===v);return q},ilike(_k,v){const term=v.slice(1,-1).toLowerCase();filters.push(r=>`${r.firstname} ${r.lastname} ${r.email}`.toLowerCase().includes(term));return q},
+ order(){return q},range(a,b){start=a;end=b;return q},update(p){update=p;return q},insert(p){insert=p;return q},single(){single=true;return q},
+ then(resolve){let result=rows.filter(r=>filters.every(f=>f(r)));if(insert){if(rows.some(r=>r.email===insert.email))return resolve({error:{code:'23505'}});const r={...insert,id:String(++revision),updated_at:String(revision)};rows.push(r);result=[r]}if(update){if(rows.some(r=>r.id!==result[0]?.id&&r.email===update.email))return resolve({error:{code:'23505'}});result.forEach(r=>Object.assign(r,update,{updated_at:String(++revision)}))}resolve({data:single?structuredClone(result[0]):structuredClone(result.slice(start,end+1)),count:result.length,error:null})}
+ };return q},async rpc(_name,{target_club,members}){let inserted=0,skipped=0;for(const member of members){if(rows.some(r=>r.email===member.email||(member.member_number&&r.member_number===member.member_number))){skipped++;continue}rows.push({...member,club_id:target_club,id:String(++revision),updated_at:String(revision)});inserted++}return {data:{inserted,skipped},error:null}}};
+document.getElementById('csv-fixture').onclick=()=>{const input=document.querySelector('input[type=file]');const transfer=new DataTransfer();transfer.items.add(new File(['Vorname;Nachname;E-Mail;Aktiv\nAda;Mustermann;ada@example.invalid;inaktiv\nMax;Mustermann;max@example.invalid;aktiv'],'fixture.csv',{type:'text/csv'}));input.files=transfer.files;document.querySelector('details').open=true;input.dispatchEvent(new Event('change',{bubbles:true}));};
+createRoot(document.getElementById('root')).render(React.createElement(ClubMemberManagement,{clubId:'club',db}));
+</script></body></html>

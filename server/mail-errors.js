@@ -7,7 +7,7 @@ export function mailFailure(error) {
   const code = error?.code
   if (error?.publicMessage) return { code, error: error.publicMessage }
   const messages = {
-    '42P01': 'Die Versandtabellen fehlen. Bitte die Migration 20261102_repair_mail_campaign_queue.sql in Supabase ausführen.',
+    '42P01': 'Die Versandtabellen fehlen. Bitte die Migration 20261103_complete_mail_queue_repair.sql in Supabase ausführen.',
     PGRST205: 'Die Versandtabellen fehlen im API-Schema. Bitte die Mail-Migration ausführen und den PostgREST-Schemacache neu laden.',
     '42883': 'Eine Versandfunktion fehlt. Bitte die Mail-Migrationen in Supabase ausführen.',
     PGRST202: 'Eine Versandfunktion fehlt im API-Schema. Bitte die Mail-Migrationen ausführen und den Schemacache neu laden.',

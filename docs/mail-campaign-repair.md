@@ -1,5 +1,10 @@
 # Rundversand an frühere Teilnehmer: Reparatur und Bereitstellung
 
+Aktuelle vollständige Reparatur auch für Teilinstallationen:
+`supabase/migrations/20261103_complete_mail_queue_repair.sql`.
+Ausführung und Erhalt historischer Daten: siehe `docs/mail-queue-sql-editor.md`.
+Die nachfolgend beschriebene Datei vom 02.11. ist die frühere Grundreparatur.
+
 ## Befund und produktiver Zugriff
 
 Die bisherige Meldung stammt aus dem pauschalen Catch in
