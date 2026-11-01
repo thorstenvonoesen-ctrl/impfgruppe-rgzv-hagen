@@ -47,10 +47,13 @@ export function MailTestPanel({ clubId }) {
   async function run(action, kind) {
     setBusy(true)
     try {
-      const result = await mailRequest({ action, clubId, kind })
+      const result = await mailRequest({ action, clubId, ...(action === 'retry-delivery' ? { deliveryId: kind } : { kind }) })
       if (action === 'test-config') { setRecipient(result.recipient); setOpen(true) }
       else if (action === 'mail-status') { setDeliveries(result.deliveries); setMessage(result.deliveries.length ? 'Versandstatus aktualisiert.' : 'Keine Versandaufträge für diesen Verein vorhanden.') }
-      else setMessage(action === 'test-mail' ? `Testmail versendet an ${result.recipient}.` : `${result.sent} an den Mailserver übergeben, ${result.failed || 0} fehlgeschlagen, ${result.uncertain || 0} unklar. Versandstatus erneut laden.`)
+      else {
+        setMessage(action === 'test-mail' ? `Testmail versendet an ${result.recipient}.` : `${result.sent} an den Mailserver übergeben, ${result.failed || 0} fehlgeschlagen, ${result.uncertain || 0} unklar.`)
+        if (action === 'retry-delivery' || action === 'retry-pending') setDeliveries((await mailRequest({ action: 'mail-status', clubId })).deliveries)
+      }
     } catch (e) { setMessage(e.message) } finally { setBusy(false) }
   }
   return <section className="card mail-test-panel">
@@ -61,7 +64,7 @@ export function MailTestPanel({ clubId }) {
       <div className="mail-test-grid">{types.map(([kind,label]) => <button className="small" key={kind} disabled={busy || !recipient} onClick={() => { if (window.confirm(`Diese Testmail ausschließlich an ${recipient} senden?`)) run('test-mail', kind) }}>{label} testen</button>)}</div>
       <p className="mail-test-actions"><button className="small" disabled={busy} onClick={() => run('mail-status')}>Versandstatus laden</button> <button className="small" disabled={busy} onClick={() => run('retry-pending')}>Offene Zustellungen fortsetzen</button></p>
       <p>Unklare Zustellungen werden nicht automatisch erneut gesendet. Sie müssen zuerst anhand des SMTP-Protokolls geprüft werden.</p>
-      {deliveries.length > 0 && <div className="table-wrap"><table><thead><tr><th>Mailtyp</th><th>Status</th><th>Versuche</th><th>Zeitpunkt</th></tr></thead><tbody>{deliveries.map(row => <tr key={row.id}><td>{types.find(([kind]) => kind === row.kind)?.[1] || row.kind}</td><td>{({ pending: 'Vorgemerkt', sending: 'Wird versendet', sent: 'An Mailserver übergeben', failed: 'Fehlgeschlagen', uncertain: 'Zustellung unklar', skipped: 'Übersprungen' })[row.status] || row.status}{row.error ? ` – ${row.error}` : ''}</td><td>{row.attempts}</td><td>{new Date(row.sent_at || row.created_at).toLocaleString('de-DE')}</td></tr>)}</tbody></table></div>}
+      {deliveries.length > 0 && <div className="table-wrap"><table><thead><tr><th>Mailtyp</th><th>Empfänger</th><th>Status</th><th>Versuche</th><th>Zeitpunkt</th></tr></thead><tbody>{deliveries.map(row => <tr key={row.id}><td>{types.find(([kind]) => kind === row.kind)?.[1] || row.kind}</td><td>{row.recipient}</td><td>{({ pending: 'Vorgemerkt', sending: 'Wird versendet', sent: 'An Mailserver übergeben', failed: 'Fehlgeschlagen', uncertain: 'Zustellung unklar', skipped: 'Übersprungen' })[row.status] || row.status}{row.error ? ` – ${row.error}` : ''}{row.status === 'failed' && <button className="small" disabled={busy} onClick={() => run('retry-delivery', row.id)}>Erneut versuchen</button>}</td><td>{row.attempts}</td><td>{new Date(row.sent_at || row.created_at).toLocaleString('de-DE')}</td></tr>)}</tbody></table></div>}
     </>}
   </section>
 }

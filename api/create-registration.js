@@ -1,6 +1,6 @@
 import { createHmac, timingSafeEqual } from 'node:crypto'
 import { createAdminSupabase, verifyPaymentReturnToken } from '../server/_supabase-admin.js'
-import { drainMail } from '../server/mail-delivery.js'
+import { saveRegistrationWithConfirmation } from '../server/registration-confirmation.js'
 import { canEditRegistration, validEmail, publicBaseUrl } from '../server/mail-rules.js'
 import manageRegistration from '../server/manage-registration.js'
 
@@ -187,7 +187,9 @@ async function handlePaymentCancellation(req, res) {
   return res.status(200).json({ success: true, cancelled: Boolean(data) })
 }
 
-export default async function handler(req, res) {
+export const config = { maxDuration: 60 }
+export function createRegistrationHandler({ createDb = createAdminSupabase, transport } = {}) {
+return async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' })
   if (req.body?.action === 'manage-registration') {
     try { return await manageRegistration(req, res) } catch { return res.status(500).json({ error: 'Die Anmeldung konnte nicht verarbeitet werden.' }) }
@@ -213,7 +215,7 @@ export default async function handler(req, res) {
       total: animalCount,
       animalType
     } = animalRegistration
-    const supabase = createAdminSupabase()
+    const supabase = createDb()
     const { data: appointment, error: appointmentError } = await supabase
       .from('vaccination_dates').select('*').eq('id', vaccinationDateId).single()
     if (appointmentError || !appointment) return res.status(400).json({ error: 'Ungültiger Impftermin.' })
@@ -244,7 +246,7 @@ export default async function handler(req, res) {
     const { data: club } = await supabase.from('clubs').select('member_code').eq('id', appointment.club_id).single()
     const isMember = Boolean(memberCode && club?.member_code && memberCode.trim().toUpperCase() === club.member_code.trim().toUpperCase())
     const participant = Object.fromEntries(fields.map(field => [field, typeof input[field] === 'string' ? input[field].trim() : input[field]]))
-    const { data, error } = await supabase.from('participants').insert({
+    const data = await saveRegistrationWithConfirmation(supabase, {
       ...participant,
       email: normalizedEmail,
       vaccine: REGISTRATION_VACCINE,
@@ -258,26 +260,23 @@ export default async function handler(req, res) {
       payment_amount: isMember ? 5 : 10,
       payment_method: paymentMethod === 'bar' ? 'bar' : null,
       registration_status: paymentMethod === 'bar' ? 'bar_registered' : 'pending_payment'
-    }).select('id, payment_amount').single()
-    if (error) throw error
-
-    let emailSent
-    if (paymentMethod === 'bar') {
-      try {
-        const emailResult = await drainMail({ participantId: data.id, limit: 1, db: supabase })
-        emailSent = emailResult.sent > 0
-      } catch (emailError) {
-        emailSent = false
-        console.error('REGISTRATION_MAIL_PENDING', { participantId: data.id })
-      }
-    }
+    }, { transport })
 
     return res.status(201).json({
       participantId: data.id,
       paymentAmount: Number(data.payment_amount),
-      ...(paymentMethod === 'bar' ? { emailSent } : {})
+      emailSent: data.emailSent,
+      emailStatus: data.emailStatus
     })
   } catch (error) {
+    const code = ['PGRST202','42883','42P01','PGRST205','PGRST204','42703','42501','23505','23514','23502','22023','55000','P0001'].includes(error?.code) ? error.code : 'REGISTRATION_FAILURE'
+    console.error('REGISTRATION_FAILED', { code })
+    if (['PGRST202','42883','42P01','PGRST205'].includes(code)) return res.status(503).json({ error: 'Die Anmeldung ist vorübergehend nicht verfügbar. Die Einrichtung des Bestätigungsversands muss durch die Administration abgeschlossen werden.' })
+    if (code === '23505') return res.status(409).json({ error: 'Für diese E-Mail-Adresse besteht bereits eine Anmeldung zu diesem Impftermin.' })
+    if (code === '55000' && error.message === 'Die Anmeldung ist geschlossen.') return res.status(409).json({ error: 'Die Anmeldung für diesen Impftermin ist geschlossen.' })
     return res.status(500).json({ error: 'Anmeldung konnte nicht gespeichert werden.' })
   }
 }
+}
+
+export default createRegistrationHandler()

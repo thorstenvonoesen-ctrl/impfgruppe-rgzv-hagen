@@ -2,6 +2,7 @@ import { createAdminSupabase } from './_supabase-admin.js'
 import { clubMailTransporter, mailFrom } from './mail-transport.js'
 import { activeStatuses, isTestAppointment, reminderDue, validEmail } from './mail-rules.js'
 import { buildParticipantMail } from './participant-mail.js'
+import { mailFailure } from './mail-errors.js'
 
 export function failureStatus(error) {
   // Only explicit rejections / failures before SMTP DATA are safe to retry.
@@ -81,18 +82,19 @@ export async function deliverMail(id, { db = createAdminSupabase(), transport = 
   } catch (error) {
     const status = accepted ? 'sent' : smtpStarted ? failureStatus(error) : 'failed'
     const result = await db.from('mail_deliveries').update({ status, ...(accepted ? { sent_at: new Date().toISOString() } : {}), error_code: accepted ? 'MARKER_UPDATE' : String(error.code || 'MAIL_FAILURE').slice(0, 60), next_attempt_at: new Date(Date.now() + 15 * 60000).toISOString() }).eq('id', id)
-    console.error('MAIL_DELIVERY', { id, status, markerSaved: !result.error })
+    console.error('MAIL_DELIVERY', { id, status, code: mailFailure(error).code, markerSaved: !result.error })
     return { sent: accepted, status }
   }
 }
 
-export async function drainMail({ participantId, clubId, appointmentId, kind, transport = clubMailTransporter, limit = 20, budgetMs = 40000, db = createAdminSupabase() } = {}) {
+export async function drainMail({ participantId, clubId, appointmentId, deliveryId, kind, transport = clubMailTransporter, limit = 20, budgetMs = 40000, db = createAdminSupabase() } = {}) {
   // A worker crash may occur after SMTP accepted DATA. Never blindly retry it.
   const scoped = query => {
     if (participantId) query = query.eq('participant_id', participantId)
     if (clubId) query = query.eq('club_id', clubId)
     if (appointmentId) query = query.eq('appointment_id', appointmentId)
     if (kind) query = query.eq('kind', kind)
+    if (deliveryId) query = query.eq('id', deliveryId)
     return query
   }
   const stale = await scoped(db.from('mail_deliveries').update({ status: 'uncertain', error_code: 'INTERRUPTED' }).eq('status', 'sending').lt('claimed_at', new Date(Date.now() - 10 * 60000).toISOString()))

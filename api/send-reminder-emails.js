@@ -174,7 +174,7 @@ return async function handler(req, res) {
     }
     if (req.method === 'GET') {
       if (!isCronRequest(req)) return res.status(401).json({ error: 'Nicht autorisiert.' })
-      return res.status(200).json(await runReminderCron(supabase))
+      return res.status(200).json(await runReminderCron(supabase, { transport }))
     }
     if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' })
     const { action, clubId } = req.body || {}
@@ -184,8 +184,20 @@ return async function handler(req, res) {
     if (action === 'test-config') return res.status(200).json({ recipient: testRecipient() })
     if (action === 'test-mail') return res.status(200).json(await sendTestMail(req.body.kind, transport))
     if (action === 'retry-pending') return res.status(200).json(await drainMail({ clubId, db: supabase, transport }))
+    if (action === 'recover-confirmation') {
+      const { data: job, error } = await supabase.rpc('ensure_registration_confirmation', { target_club: clubId, target_participant: req.body.participantId })
+      if (error) throw error
+      if (['sent','uncertain','sending','skipped'].includes(job.status)) return res.status(200).json({ status: job.status, sent: 0, unchanged: true })
+      return res.status(200).json({ status: job.status, ...await drainMail({ clubId, deliveryId: job.id, kind: 'registration', limit: 1, db: supabase, transport }) })
+    }
+    if (action === 'retry-delivery') {
+      const { data: retry, error } = await supabase.rpc('retry_failed_mail_delivery', { target_club: clubId, delivery_id: req.body.deliveryId })
+      if (error) throw error
+      if (!retry) return res.status(409).json({ error: 'Diese Nachricht ist nicht mehr fehlgeschlagen. Versandstatus neu laden. Erfolgreiche oder unklare Zustellungen werden nicht erneut gesendet.' })
+      return res.status(200).json(await drainMail({ clubId, participantId: retry.participant_id || undefined, appointmentId: retry.appointment_id || undefined, kind: retry.kind, limit: 1, db: supabase, transport, deliveryId: req.body.deliveryId }))
+    }
     if (action === 'mail-status') {
-      const { data, error } = await supabase.from('mail_deliveries').select('id,kind,status,attempts,created_at,sent_at,error_code').eq('club_id', clubId).order('created_at', { ascending: false }).limit(100)
+      const { data, error } = await supabase.from('mail_deliveries').select('id,kind,recipient,status,attempts,created_at,sent_at,error_code').eq('club_id', clubId).order('created_at', { ascending: false }).limit(100)
       if (error) throw error
       return res.status(200).json({ deliveries: (data || []).map(row => ({ ...row, error_code: row.error_code ? mailFailure({ code: row.error_code }).code : null, error: row.error_code ? mailFailure({ code: row.error_code }).error : null })) })
     }

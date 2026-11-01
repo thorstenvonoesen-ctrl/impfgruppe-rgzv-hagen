@@ -5239,7 +5239,7 @@ function SignupSuccessOverlay({ emailSent, showMembershipInvitation, onHome, onA
         </div>
         <h2 id="signup-success-title">Anmeldung erfolgreich!</h2>
         <p>Vielen Dank für Ihre Anmeldung.<br />Ihre Daten wurden erfolgreich gespeichert.</p>
-        {emailSent && <p className="signup-success-email">Eine Bestätigungs-E-Mail wurde an Ihre E-Mail-Adresse versendet.</p>}
+        <p className="signup-success-email">{emailSent ? 'Die Bestätigungs-E-Mail wurde an den Mailserver übergeben. Bitte prüfen Sie auch Ihren Spamordner.' : 'Ihre Anmeldung ist gespeichert. Der Versand der Bestätigungs-E-Mail konnte noch nicht bestätigt werden. Bitte wenden Sie sich an den Verein, falls sie ausbleibt.'}</p>
         {showMembershipInvitation && <MembershipInvitationCard />}
         <div className="signup-success-actions">
           <button ref={homeButtonRef} type="button" className="signup-success-home" onClick={() => leave(onHome)}>Zur Startseite</button>
@@ -6522,6 +6522,19 @@ setIsVaccinationDay(
 
   load()
 }
+  async function recoverConfirmation(participant) {
+    if (!window.confirm(`Bestätigung für ${participant.firstname} ${participant.lastname} nachholen? Bereits versendete oder unklare Nachrichten werden nicht erneut gesendet.`)) return
+    try {
+      const { data: { session } } = await supabase.auth.getSession()
+      const response = await fetch('/api/send-reminder-emails', {
+        method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${session?.access_token || ''}` },
+        body: JSON.stringify({ action: 'recover-confirmation', clubId: adminClubId, participantId: participant.id })
+      })
+      const result = await response.json()
+      if (!response.ok) throw new Error(result.error || 'Die Bestätigung konnte nicht geprüft werden.')
+      alert(result.sent ? 'Bestätigung an den Mailserver übergeben.' : 'Kein erneuter Versand bestätigt. Bitte den E-Mail-Versandstatus prüfen; fehlgeschlagene Zustellungen können dort erneut versucht werden.')
+    } catch (error) { alert(error.message) }
+  }
   async function downloadPaymentReceipt(participant) {
     const { data: { session } } = await supabase.auth.getSession()
     const response = await fetch('/api/admin-payment', {
@@ -7467,6 +7480,7 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
               <td data-label="Name"><strong>{p.firstname} {p.lastname}</strong><div className="participant-row-actions">
                 <button className="small" onClick={()=>markPaid(p.id,p.payment_status!=='bezahlt')}>{p.payment_status==='bezahlt'?'Offen':'Bezahlt'}</button>
                 <button className="small" onClick={()=>setEditingParticipant(p)}>Bearbeiten</button>
+                {canManageMembers && <button className="small" onClick={() => recoverConfirmation(p)}>Bestätigung nachholen</button>}
                 {p.receipt_number && <button className="small" onClick={() => downloadPaymentReceipt(p)}>Quittung {p.receipt_number}</button>}
                 <button className="small" onClick={() => deleteParticipant(p.id)}>Löschen</button>
                 <button className="small" onClick={() =>

@@ -13,6 +13,7 @@ export function mailFailure(error) {
     PGRST202: 'Eine Versandfunktion fehlt im API-Schema. Bitte die Mail-Migrationen ausführen und den Schemacache neu laden.',
     '42703': 'Eine benötigte Datenbankspalte fehlt. Bitte Termin-, Teilnehmerstatus- und Mail-Migrationen prüfen.',
     PGRST204: 'Eine benötigte Datenbankspalte fehlt im API-Schema. Bitte die Migrationen anwenden und den Schemacache neu laden.',
+    '22023': 'Die Bestätigung kann für diese Anmeldung nicht nachgeholt werden. Vereinszuordnung, Anmeldestatus, Terminarchiv und Check-in-Grundlage prüfen.',
     '42501': 'Der Server darf die Versanddaten nicht lesen oder schreiben. SUPABASE_SERVICE_ROLE_KEY und Datenbankberechtigungen prüfen.',
     EAUTH: 'Die SMTP-Anmeldung wurde abgelehnt. SMTP_USER und SMTP_PASS in Vercel prüfen.',
     SMTP_CONFIG: 'Die SMTP-Konfiguration ist unvollständig oder ungültig. SMTP_HOST, SMTP_PORT, SMTP_USER und SMTP_PASS in Vercel prüfen.',

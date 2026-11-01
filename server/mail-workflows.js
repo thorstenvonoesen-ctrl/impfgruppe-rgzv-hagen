@@ -30,10 +30,11 @@ export function isCronRequest(req) {
   return expected.length === actual.length && timingSafeEqual(expected, actual)
 }
 
-export async function runReminderCron(db) {
+export async function runReminderCron(db, { transport } = {}) {
   const { data: queued, error } = await db.rpc('queue_due_reminders')
-  if (error) throw error
-  return { queued, ...await drainMail({ db }) }
+  // Missing reminder setup must not block existing registration confirmations.
+  if (error) console.error('REMINDER_QUEUE_FAILED', { code: mailFailure(error).code })
+  return { queued: queued || 0, ...(error ? { reminderError: mailFailure(error).error } : {}), ...await drainMail({ db, transport }) }
 }
 
 const digest = value => createHash('sha256').update(JSON.stringify(value)).digest('hex')
