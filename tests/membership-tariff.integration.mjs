@@ -44,6 +44,7 @@ try{
   await pg.exec('alter table participants add column checked_in_at timestamptz,add column checked_in_by text')
   await pg.exec(await migration('20261108_resilient_registration'))
   await pg.exec(await migration('20261109_membership_rate_limit_repair'))
+  await pg.exec(await migration('20261110_remove_membership_request_limits'))
   assert.equal(Number(await scalar('select payment_amount from participants where id=$1',[legacy])),4.2)
   assert.deepEqual(await scalar('select jsonb_agg(m order by id) from club_members m'),membersBefore)
   const signup={vaccination_date_id:date,firstname:'Fixture',lastname:'Person',tsk_number:'FIXTURE',chicken_count:2,bantam_count:0,turkey_count:0}
@@ -77,8 +78,8 @@ try{
   // Verification sends the same generic flow even for nonmembers; bounded guesses.
   const challenge=await request({action:'membership-challenge',email:'guess@example.invalid',vaccinationDateId:date})
   assert.equal(challenge.code,200)
-  assert.equal((await request({action:'membership-challenge',email:'guess@example.invalid',vaccinationDateId:date})).code,429)
   const correct=mails.at(-1).text.match(/\b\d{8}\b/)[0]
+  assert.equal((await request({action:'membership-challenge',email:'guess@example.invalid',vaccinationDateId:date})).code,200)
   for(let i=0;i<5;i++)assert.equal((await request({action:'membership-verify',email:'guess@example.invalid',vaccinationDateId:date,challengeId:challenge.body.challengeId,code:'00000000'})).code,400)
   assert.equal((await request({action:'membership-verify',email:'guess@example.invalid',vaccinationDateId:date,challengeId:challenge.body.challengeId,code:correct})).code,400)
   assert.equal(await scalar('select count(*)::int from membership_email_challenges where code_hash=$1',[correct]),0)
@@ -104,14 +105,14 @@ try{
   // Hourly OTP caps remain independent from the binding signup endpoint.
   await pg.query(`insert into membership_email_challenges(id,club_id,appointment_id,email_hash,code_hash,created_at)
     select gen_random_uuid(),$1,$2,repeat('a',64),repeat('b',64),now()-interval '2 minutes'*n from generate_series(1,3) n`,[club,date])
-  assert.equal(await scalar('select reserve_membership_challenge(gen_random_uuid(),$1,$2,$3,$4)',[club,date,'a'.repeat(64),'b'.repeat(64)]),false)
+  assert.equal(await scalar('select reserve_membership_challenge(gen_random_uuid(),$1,$2,$3,$4)',[club,date,'a'.repeat(64),'b'.repeat(64)]),true)
   await pg.query(`insert into membership_email_challenges(id,club_id,appointment_id,email_hash,code_hash)
     select gen_random_uuid(),$1,$2,repeat('c',64),repeat('d',64) from generate_series(1,200)`,[club,date])
   // The previous shared 200/hour counter no longer blocks another member.
   assert.equal((await request({action:'membership-challenge',email:'rate-capped@example.invalid',vaccinationDateId:date})).code,200)
   await pg.query(`insert into membership_email_challenges(id,club_id,appointment_id,email_hash,code_hash)
     select gen_random_uuid(),$1,$2,repeat('c',64),repeat('d',64) from generate_series(1,800)`,[club,date])
-  assert.equal((await request({action:'membership-challenge',email:'rate-capped@example.invalid',vaccinationDateId:date})).code,429)
+  assert.equal((await request({action:'membership-challenge',email:'rate-capped@example.invalid',vaccinationDateId:date})).code,200)
   result=await request({...signup,email:'rate-capped@example.invalid'})
   assert.equal(result.code,201);assert.equal(result.body.paymentAmount,15)
   result=await request({...signup,email:'code-rate-capped@example.invalid',member_code:'KEEP-CODE'})

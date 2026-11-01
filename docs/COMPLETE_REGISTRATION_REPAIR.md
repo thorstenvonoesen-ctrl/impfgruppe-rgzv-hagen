@@ -42,7 +42,8 @@ den Verein. OTP-Begrenzungen bleiben unabhängig von der normalen Anmeldung.
    `supabase/repair/COMPLETE_REGISTRATION_REPAIR.sql` ausführen. Keine anderen alten
    Migrationen auf Verdacht nachziehen. Diese Datei enthält die notwendigen Teile
    in Reihenfolge 01 (Terminfelder), 03 (Mail), 04 (bestehende Mitgliedergrundlage),
-   05 (Bestätigungen), 06 (verifizierte Tarife), 08 (Entkopplung), 09 (Anfragebegrenzung). Abschließend lädt
+   05 (Bestätigungen), 06 (verifizierte Tarife), 08 (Entkopplung), 09 (SMTP-Status),
+   10 (vollständige Entfernung der Anfragebegrenzung). Abschließend lädt
    `NOTIFY pgrst, 'reload schema'` den API-Cache neu.
 3. Die unten stehenden Schema-/Rechteprüfungen ausführen. Erst danach den aktuellen
    Code dieses Arbeitsstands als **Production** auf Vercel bereitstellen. Ein lokaler
@@ -168,4 +169,4 @@ Versand-Constraint, Mitgliederabfrage, SMTP/URL-Konfiguration und parallele Wied
 Er prüft außerdem echte `service_role`-Rechte, Vereinsgrenzen, Bestandsdaten und die
 unveränderte Definition der Löschfunktion. Der separate Löschtest prüft weiterhin
 vier Datenbankvarianten. Mitgliedertests prüfen aktive/inaktive/fremde Mitglieder,
-Gast/Code, Nachweisbindung, Rate-Limits und unveränderte Bestandsbeträge.
+Gast/Code, Nachweisbindung, unbegrenzte Code-Anfragen und unveränderte Bestandsbeträge.

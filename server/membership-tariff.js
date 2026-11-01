@@ -75,10 +75,7 @@ export async function handleMembershipRequest(req,res,db,{transport=clubMailTran
     if(reserved.error) throw reserved.error
     if(!reserved.data?.allowed) {
       if(reserved.data?.reason==='INVALID_SCOPE') return res.status(400).json({error:'Bitte einen gültigen Impftermin auswählen.'})
-      const retryAfter=Math.max(1,Number(reserved.data?.retryAfter)||60)
-      res.setHeader('Retry-After',String(retryAfter))
-      const label=reserved.data?.reason==='CLUB_SAFETY_LIMIT'?'Die E-Mail-Prüfung ist wegen ungewöhnlich vieler Versandversuche vorübergehend begrenzt.':'Für diese E-Mail-Adresse wurden zu viele Bestätigungscodes angefordert.'
-      return res.status(429).json({retryAfter,error:`${label} Bitte in ${retryAfter} Sekunden erneut versuchen. Die Anmeldung und der Mitgliedercode bleiben verfügbar.`})
+      return res.status(503).json({error:'Die Mitgliederprüfung ist noch nicht aktuell eingerichtet. Bitte die Administration verständigen: Die Migration zum Entfernen der Anfragebegrenzung fehlt. Anmeldung und Mitgliedercode bleiben verfügbar.'})
     }
     // Identical flow for all addresses; membership is never disclosed before verification.
     let outcome='sent',smtpError

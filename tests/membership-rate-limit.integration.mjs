@@ -31,6 +31,8 @@ try {
   const before=await scalar('select to_jsonb(c) from membership_email_challenges c where id=$1',[legacy])
   const migration=await readFile(new URL('../supabase/migrations/20261109_membership_rate_limit_repair.sql',import.meta.url),'utf8')
   await pg.exec(migration);await pg.exec(migration)
+  const unlimited=await readFile(new URL('../supabase/migrations/20261110_remove_membership_request_limits.sql',import.meta.url),'utf8')
+  await pg.exec(unlimited);await pg.exec(unlimited)
   assert.deepEqual(await scalar('select to_jsonb(c) from membership_email_challenges c where id=$1',[legacy]),{...before,send_state:null})
   // Definite SMTP failure is released immediately, and its code cannot verify.
   let failedCode
@@ -42,8 +44,8 @@ try {
   result=await request('retry@example.invalid');assert.equal(result.code,200)
   const code=mails.at(-1).text.match(/\b\d{8}\b/)[0],challenge=result.body.challengeId
   result=await request(' RETRY@EXAMPLE.INVALID ')
-  assert.equal(result.code,429);assert.ok(result.body.retryAfter>0&&result.body.retryAfter<=60)
-  assert.equal(result.headers['Retry-After'],String(result.body.retryAfter))
+  assert.equal(result.code,200)
+  assert.equal(result.headers['Retry-After'],undefined)
   // Cooldown does not block verification of the already delivered code.
   result=await verify('retry@example.invalid',challenge,code)
   assert.equal(result.code,200);assert.ok(validMembershipProof(result.body.token,club,date,'retry@example.invalid'))
@@ -52,23 +54,25 @@ try {
   assert.equal((await request('another@example.invalid')).code,200)
   assert.equal((await request('retry@example.invalid',{body:{vaccinationDateId:otherDate}})).code,200)
   const parallel=await Promise.all([request('parallel@example.invalid'),request('parallel@example.invalid')])
-  assert.deepEqual(parallel.map(r=>r.code).sort(),[200,429])
-  // Technical failures have a distinct 6/10-minute safety budget, not 3 mails/hour.
+  assert.deepEqual(parallel.map(r=>r.code).sort(),[200,200])
+  assert.notEqual(parallel[0].body.challengeId,parallel[1].body.challengeId)
+  // Even repeated technical failures cannot lock the address.
   for(let n=0;n<6;n++)assert.equal((await request('broken@example.invalid',{transport:rejected})).code,503)
   result=await request('broken@example.invalid')
-  assert.equal(result.code,429);assert.ok(result.body.retryAfter>590&&result.body.retryAfter<=600)
-  // Ambiguous SMTP acceptance must not free a reservation and risk repeated mail.
+  assert.equal(result.code,200)
+  // Ambiguous SMTP is recorded; a deliberate new request is still allowed.
   const unclear={async sendMail(){throw Object.assign(new Error('fixture'),{code:'ETIMEDOUT',command:'DATA'})}}
   assert.equal((await request('uncertain@example.invalid',{transport:unclear})).code,503)
-  assert.equal((await request('uncertain@example.invalid')).code,429)
+  assert.equal((await request('uncertain@example.invalid')).code,200)
   assert.equal(await scalar("select count(*)::int from membership_email_challenges where send_state='uncertain'"),1)
-  // Three confirmed mails still enforce the existing hourly per-address limit.
+  // Historic counters never block new requests, including the legacy RPC.
   const hourly='a'.repeat(64)
   await pg.query(`insert into membership_email_challenges(id,club_id,appointment_id,email_hash,code_hash,created_at,send_state)
     select gen_random_uuid(),$1,$2,$3,repeat('b',64),now()-interval '2 minutes'*n,'sent' from generate_series(1,3) n`,[club,date,hourly])
   const reserve=(digest,c=club,d=date)=>db.rpc('reserve_membership_challenge_v2',{challenge_id:randomUUID(),target_club:c,target_appointment:d,email_digest:digest,otp_digest:'b'.repeat(64)})
   let quota=await reserve(hourly)
-  assert.equal(quota.data.allowed,false);assert.ok(quota.data.retryAfter>3200&&quota.data.retryAfter<=3240)
+  assert.equal(quota.data.allowed,true)
+  assert.equal((await db.rpc('reserve_membership_challenge',{challenge_id:randomUUID(),target_club:club,target_appointment:date,email_digest:hourly,otp_digest:'b'.repeat(64)})).data,true)
   // Former 200/hour club limit no longer rejects ordinary new members.
   await pg.query(`insert into membership_email_challenges(id,club_id,appointment_id,email_hash,code_hash,send_state)
     select gen_random_uuid(),$1,$2,repeat('c',64),repeat('d',64),'sent' from generate_series(1,200)`,[club,date])
@@ -76,7 +80,7 @@ try {
   await pg.query(`insert into membership_email_challenges(id,club_id,appointment_id,email_hash,code_hash,send_state)
     select gen_random_uuid(),$1,$2,repeat('c',64),repeat('d',64),'sent' from generate_series(1,1000)`,[club,date])
   quota=await reserve('d'.repeat(64))
-  assert.equal(quota.data.reason,'CLUB_SAFETY_LIMIT');assert.ok(quota.data.retryAfter>0)
+  assert.equal(quota.data.allowed,true);assert.equal(quota.data.retryAfter,undefined)
   assert.equal((await reserve('d'.repeat(64),other,otherDate)).data.allowed,true)
   await pg.exec('set role authenticated')
   assert.equal((await reserve('f'.repeat(64))).error.code,'42501')
@@ -84,5 +88,5 @@ try {
   assert.equal(await scalar('select count(*)::int from participants'),0)
   assert.equal(await scalar('select count(*)::int from club_members'),0)
   assert.equal(await scalar('select member_price from clubs where id=$1',[club]),'5')
-  console.log('PASS: failed SMTP release; separate technical budget; ambiguous result retained; countdown/header; same-IP/address/club isolation; concurrent requests; hourly/emergency caps; OTP replay; migration repeat; private RPC. No real SMTP.')
+  console.log('PASS: no cooldown/quotas after success, failure or uncertain SMTP; old counters ignored; same-IP/address/club requests; concurrent fresh codes; legacy RPC; OTP replay protection; repeat migration; private RPC. No real SMTP.')
 } finally {await pg.close()}

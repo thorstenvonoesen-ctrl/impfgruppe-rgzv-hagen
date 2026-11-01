@@ -61,7 +61,7 @@ const names=['20261101_repair_vaccination_date_save_fields','20261103_complete_m
 const strip=sql=>sql.replace(/^begin;\s*$/gmi,'').replace(/^commit;\s*$/gmi,'')
 let bundle='-- COMPLETE REGISTRATION REPAIR. Run this ONE file as postgres in the correct Supabase SQL Editor.\n-- No historical participant deletion, no SMTP, no changes to delete_participant_registration.\nbegin;\nset local lock_timeout=\'5s\';\n'+core
 for(const name of names)bundle+=`\n-- SOURCE: ${name}\n`+strip(await read(name))
-bundle+='\n-- FINAL RESILIENCE OVERRIDES\n'+strip(hardening)+'\n-- Membership rate-limit repair\n'+strip(await read('20261109_membership_rate_limit_repair'))+'\ngrant select on public.club_members to service_role;\nnotify pgrst,\'reload schema\';\ncommit;\n'
+bundle+='\n-- FINAL RESILIENCE OVERRIDES\n'+strip(hardening)+'\n-- Membership send status\n'+strip(await read('20261109_membership_rate_limit_repair'))+'\n-- Remove all membership request limits\n'+strip(await read('20261110_remove_membership_request_limits'))+'\ngrant select on public.club_members to service_role;\nnotify pgrst,\'reload schema\';\ncommit;\n'
 await mkdir(new URL('supabase/repair/',root),{recursive:true})
 await writeFile(new URL('supabase/repair/COMPLETE_REGISTRATION_REPAIR.sql',root),bundle)
 console.log('Generated resilient migration and single-transaction repair bundle.')

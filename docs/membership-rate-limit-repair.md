@@ -1,5 +1,9 @@
 # Mitgliederprüfung: Anfragebegrenzung
 
+> Historischer Stand, durch ausdrücklichen Auftrag aufgehoben. Aktuell gilt
+> [Mitgliederprüfung ohne Anfragebegrenzung](membership-unlimited-requests.md).
+> Migration 10 muss zuletzt ausgeführt werden; keine Limits aus diesem Dokument erneut installieren.
+
 ## Befund
 
 Der bisherige Code reservierte einen Datenbanksatz **vor** dem SMTP-Aufruf und
