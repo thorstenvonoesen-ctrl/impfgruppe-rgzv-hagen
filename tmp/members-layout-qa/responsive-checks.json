@@ -1,0 +1,62 @@
+[
+  {
+    "clientWidth": 1425,
+    "dashboardWidth": 1377,
+    "formColumns": "655px 655px",
+    "gridColumn": "1 / -1",
+    "overflowingControls": [],
+    "pageWidth": 1425,
+    "panelWidth": 1377,
+    "viewport": 1440
+  },
+  {
+    "clientWidth": 1009,
+    "dashboardWidth": 977,
+    "formColumns": "455px 455px",
+    "gridColumn": "1 / -1",
+    "overflowingControls": [],
+    "pageWidth": 1009,
+    "panelWidth": 977,
+    "viewport": 1024
+  },
+  {
+    "clientWidth": 753,
+    "dashboardWidth": 721,
+    "formColumns": "327px 327px",
+    "gridColumn": "1 / -1",
+    "overflowingControls": [],
+    "pageWidth": 753,
+    "panelWidth": 721,
+    "viewport": 768
+  },
+  {
+    "clientWidth": 605,
+    "dashboardWidth": 573,
+    "formColumns": "536px",
+    "gridColumn": "1 / -1",
+    "overflowingControls": [],
+    "pageWidth": 605,
+    "panelWidth": 573,
+    "viewport": 620
+  },
+  {
+    "clientWidth": 360,
+    "dashboardWidth": 339,
+    "formColumns": "301.429px",
+    "gridColumn": "1 / -1",
+    "overflowingControls": [],
+    "pageWidth": 360,
+    "panelWidth": 339,
+    "viewport": 375
+  },
+  {
+    "clientWidth": 305,
+    "dashboardWidth": 283,
+    "formColumns": "246px",
+    "gridColumn": "1 / -1",
+    "overflowingControls": [],
+    "pageWidth": 305,
+    "panelWidth": 283,
+    "viewport": 320
+  }
+]

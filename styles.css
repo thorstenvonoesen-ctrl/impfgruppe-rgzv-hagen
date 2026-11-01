@@ -8311,9 +8311,73 @@ footer a { color: var(--aurora-blue) !important; }
   .mail-test-panel .mail-test-grid { grid-template-columns: minmax(0, 1fr); }
   .mail-test-panel .mail-test-actions { display: grid; grid-template-columns: minmax(0, 1fr); }
 }
-.club-member-management { scroll-margin-top: 110px; }
-.club-member-management .member-editor { margin: 20px 0; }
-.club-member-management fieldset { border: 0; padding: 0; min-width: 0; }
-.club-member-management textarea { width: 100%; box-sizing: border-box; }
-.club-member-management .member-import { margin-top: 24px; }
-.club-member-management summary { cursor: pointer; font-weight: 600; }
+/* Members are a full-width dashboard section, not one of its twelve tracks. */
+.club-member-management,
+.admin .admin-workspace-content .admin-dashboard-layout > .club-member-management {
+  grid-column: 1 / -1;
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 24px;
+  scroll-margin-top: 110px;
+}
+.club-member-management > *,
+.club-member-management label,
+.club-member-management .member-editor,
+.club-member-management .member-import > * { min-width: 0; max-width: 100%; box-sizing: border-box; }
+.club-member-management p { line-height: 1.6; overflow-wrap: anywhere; }
+.club-member-management .actions { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin: 18px 0; }
+.club-member-management button {
+  min-width: 0;
+  max-width: 100%;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  line-height: 1.4;
+}
+.club-member-management .actions button { width: auto; flex: 0 1 auto; white-space: normal; }
+.club-member-management .member-editor { margin: 24px 0; }
+.club-member-management fieldset { display: grid; gap: 16px; border: 0; padding: 0; min-width: 0; }
+.club-member-management label { display: block; }
+.club-member-management .two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.club-member-management input:not([type="checkbox"]),
+.club-member-management textarea { width: 100%; min-width: 0; max-width: 100%; box-sizing: border-box; }
+.club-member-management input[type="checkbox"] { width: auto; margin-right: 8px; vertical-align: middle; }
+.club-member-management textarea { display: block; padding: 12px; resize: vertical; font: inherit; color: inherit; background: #f8f9fd; border: 1px solid #d8deed; border-radius: 14px; }
+.club-member-management .table-scroll { width: 100%; min-width: 0; max-width: 100%; overflow-x: auto; }
+.club-member-management table { width: 100%; min-width: 0; table-layout: fixed; }
+.club-member-management th,
+.club-member-management td { vertical-align: top; white-space: normal; overflow-wrap: anywhere; }
+.club-member-management > .table-scroll th:nth-child(1) { width: 20%; }
+.club-member-management > .table-scroll th:nth-child(2) { width: 28%; }
+.club-member-management > .table-scroll th:nth-child(3) { width: 14%; }
+.club-member-management > .table-scroll th:nth-child(4) { width: 10%; }
+.club-member-management > .table-scroll th:nth-child(5) { width: 28%; }
+.club-member-management td button { margin: 0 6px 6px 0; }
+.club-member-management .member-import { margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--aurora-border, #d8deed); }
+.club-member-management summary { cursor: pointer; font-weight: 600; overflow-wrap: anywhere; }
+.club-member-management .member-import > button { margin: 12px 8px 0 0; }
+.club-member-management caption { padding: 12px; text-align: left; }
+
+@media (max-width: 620px) {
+  .club-member-management,
+  .admin .admin-workspace-content .admin-dashboard-layout > .club-member-management { padding: 20px 16px; }
+  .club-member-management .two { grid-template-columns: minmax(0, 1fr); }
+  .club-member-management .actions button { width: 100%; flex-basis: 100%; }
+  .club-member-management .member-import > button { width: 100%; margin-right: 0; }
+  /* The list already supplies data-labels; stack each member into a readable card. */
+  .club-member-management > .table-scroll { overflow: visible; border: 0; background: transparent; }
+  .club-member-management > .table-scroll table,
+  .club-member-management > .table-scroll tbody,
+  .club-member-management > .table-scroll tr,
+  .club-member-management > .table-scroll td { display: block; width: 100%; box-sizing: border-box; }
+  .club-member-management > .table-scroll table { background: transparent; }
+  .club-member-management > .table-scroll thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+  .club-member-management > .table-scroll tbody { display: grid; gap: 12px; }
+  .club-member-management > .table-scroll tr { padding: 8px 0; border: 1px solid var(--aurora-border, #d8deed); border-radius: 12px; background: #fff; }
+  .club-member-management > .table-scroll td { padding: 8px 14px; border: 0; }
+  .club-member-management > .table-scroll td::before { content: attr(data-label); display: block; margin-bottom: 4px; color: #667087; font-size: 11px; font-weight: 700; text-transform: uppercase; }
+  .club-member-management > .table-scroll td[colspan]::before { display: none; }
+  .club-member-management .member-import table { min-width: 440px; }
+}
