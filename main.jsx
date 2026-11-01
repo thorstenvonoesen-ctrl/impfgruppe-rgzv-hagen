@@ -2,6 +2,7 @@ import { saveVaccinationDate, vaccinationDateError } from './vaccination-date-sa
 import ParticipantManagement from './ParticipantManagement.jsx'
 import ClubMemberManagement from './ClubMemberManagement.jsx'
 import MembershipTariff, { tariffContext } from './MembershipTariff.jsx'
+import { deleteParticipantRegistration } from './participant-delete.js'
 import { MailCampaign, MailTestPanel } from './MailAdmin.jsx'
 import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
@@ -5953,6 +5954,8 @@ if (!data.session) {
 }
 
 function AdminDashboard({ onLogout, logoutError, adminContext }) {
+  const [deletingParticipantId, setDeletingParticipantId] = useState(null)
+  const [participantDeleteFeedback, setParticipantDeleteFeedback] = useState(null)
   const [activeAdminSection, setActiveAdminSection] = useState('overview')
   const [participants, setParticipants] = useState([])
   const [isVaccinationDay, setIsVaccinationDay] = useState(false)
@@ -6586,14 +6589,19 @@ setIsVaccinationDay(
   }
 }
   async function deleteParticipant(id) {
-  if (!confirm('Teilnehmer wirklich löschen?')) return
-const clubId = adminClubId
-  await supabase
-    .from('participants')
-    .delete()
-    .eq('id', id)
-.eq('club_id', clubId)
-  load()
+    if (deletingParticipantId || !canManageArchive) return
+    if (!confirm('Diese einzelne Teilnehmeranmeldung einschließlich ihrer Versandaufträge und Versandprotokolle wirklich löschen?')) return
+    setDeletingParticipantId(id)
+    setParticipantDeleteFeedback(null)
+    try {
+      await deleteParticipantRegistration(supabase, adminClubId, id)
+      setParticipants(current => current.filter(participant => String(participant.id) !== String(id)))
+      if (editingParticipant?.id === id) setEditingParticipant(null)
+      setParticipantDeleteFeedback({ error: false, message: 'Die ausgewählte Anmeldung und ihre zugehörigen Versanddaten wurden gelöscht.' })
+      await load()
+    } catch (error) {
+      setParticipantDeleteFeedback({ error: true, message: error.message })
+    } finally { setDeletingParticipantId(null) }
   }
   const activeVaccinationDates = vaccinationDates.filter(date => date.archived !== true)
   const archivedVaccinationDates = vaccinationDates
@@ -7417,6 +7425,7 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
       </section>
 
     <section id="participant-management" className="card admin-participant-management-card">
+      {participantDeleteFeedback && <p role={participantDeleteFeedback.error ? 'alert' : 'status'} className={`vaccination-date-feedback ${participantDeleteFeedback.error ? 'error' : 'success'}`}>{participantDeleteFeedback.message}</p>}
   <div
     className="table-head"
     style={{
@@ -7487,7 +7496,7 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
                 <button className="small" onClick={()=>setEditingParticipant(p)}>Bearbeiten</button>
                 {canManageMembers && <button className="small" onClick={() => recoverConfirmation(p)}>Bestätigung nachholen</button>}
                 {p.receipt_number && <button className="small" onClick={() => downloadPaymentReceipt(p)}>Quittung {p.receipt_number}</button>}
-                <button className="small" onClick={() => deleteParticipant(p.id)}>Löschen</button>
+                {canManageArchive && <button className="small" disabled={deletingParticipantId !== null} onClick={() => deleteParticipant(p.id)}>{deletingParticipantId === p.id ? 'Wird gelöscht …' : 'Löschen'}</button>}
                 <button className="small" onClick={() =>
                   window.location.href =
                     `mailto:${p.email}` +
