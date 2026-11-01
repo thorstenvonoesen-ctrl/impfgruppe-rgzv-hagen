@@ -42,7 +42,7 @@ den Verein. OTP-Begrenzungen bleiben unabhängig von der normalen Anmeldung.
    `supabase/repair/COMPLETE_REGISTRATION_REPAIR.sql` ausführen. Keine anderen alten
    Migrationen auf Verdacht nachziehen. Diese Datei enthält die notwendigen Teile
    in Reihenfolge 01 (Terminfelder), 03 (Mail), 04 (bestehende Mitgliedergrundlage),
-   05 (Bestätigungen), 06 (verifizierte Tarife), 08 (Entkopplung). Abschließend lädt
+   05 (Bestätigungen), 06 (verifizierte Tarife), 08 (Entkopplung), 09 (Anfragebegrenzung). Abschließend lädt
    `NOTIFY pgrst, 'reload schema'` den API-Cache neu.
 3. Die unten stehenden Schema-/Rechteprüfungen ausführen. Erst danach den aktuellen
    Code dieses Arbeitsstands als **Production** auf Vercel bereitstellen. Ein lokaler
@@ -155,6 +155,7 @@ node scripts/build-registration-repair.mjs
 npm test
 node tests/registration-confirmation.integration.mjs
 node tests/membership-tariff.integration.mjs
+node tests/membership-rate-limit.integration.mjs
 node tests/participant-delete.integration.mjs
 node tests/mail-campaign.integration.mjs
 npm run build

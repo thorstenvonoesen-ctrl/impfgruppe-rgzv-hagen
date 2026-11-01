@@ -1,6 +1,8 @@
 import { createHmac, randomInt, randomUUID, timingSafeEqual } from 'node:crypto'
 import { normalizeEmail, validEmail } from './mail-rules.js'
 import { clubMailTransporter, mailFrom } from './mail-transport.js'
+import { failureStatus } from './mail-delivery.js'
+import { mailFailure } from './mail-errors.js'
 
 const secret = () => {
   if (!process.env.SUPABASE_SERVICE_ROLE_KEY) throw new Error('Serverkonfiguration fehlt.')
@@ -69,12 +71,28 @@ export async function handleMembershipRequest(req,res,db,{transport=clubMailTran
   const digest=emailHash(a.club_id,email)
   if(action==='membership-challenge') {
     const id=randomUUID(),otp=String(randomInt(10000000,100000000))
-    const reserved=await db.rpc('reserve_membership_challenge',{challenge_id:id,target_club:a.club_id,target_appointment:a.id,email_digest:digest,otp_digest:codeHash(id,digest,otp)})
+    const reserved=await db.rpc('reserve_membership_challenge_v2',{challenge_id:id,target_club:a.club_id,target_appointment:a.id,email_digest:digest,otp_digest:codeHash(id,digest,otp)})
     if(reserved.error) throw reserved.error
-    if(!reserved.data) return res.status(429).json({error:'Zu viele Anfragen. Bitte warten und später erneut versuchen.'})
+    if(!reserved.data?.allowed) {
+      if(reserved.data?.reason==='INVALID_SCOPE') return res.status(400).json({error:'Bitte einen gültigen Impftermin auswählen.'})
+      const retryAfter=Math.max(1,Number(reserved.data?.retryAfter)||60)
+      res.setHeader('Retry-After',String(retryAfter))
+      const label=reserved.data?.reason==='CLUB_SAFETY_LIMIT'?'Die E-Mail-Prüfung ist wegen ungewöhnlich vieler Versandversuche vorübergehend begrenzt.':'Für diese E-Mail-Adresse wurden zu viele Bestätigungscodes angefordert.'
+      return res.status(429).json({retryAfter,error:`${label} Bitte in ${retryAfter} Sekunden erneut versuchen. Die Anmeldung und der Mitgliedercode bleiben verfügbar.`})
+    }
     // Identical flow for all addresses; membership is never disclosed before verification.
-    const info=await transport.sendMail({from:mailFrom(),to:email,subject:'Ihre E-Mail-Bestätigung für den Impfgruppenmanager',text:`Ihr Bestätigungscode lautet: ${otp}\nEr ist 10 Minuten gültig. Geben Sie ihn nur im Impfgruppenmanager ein. Falls Sie keinen Code angefordert haben, ignorieren Sie diese Nachricht.`})
-    if(!info?.messageId||info.rejected?.length) throw fail('Der Bestätigungscode konnte nicht sicher versendet werden. Bitte später erneut versuchen.')
+    let outcome='sent',smtpError
+    try {
+      const info=await transport.sendMail({from:mailFrom(),to:email,subject:'Ihre E-Mail-Bestätigung für den Impfgruppenmanager',text:`Ihr Bestätigungscode lautet: ${otp}\nEr ist 10 Minuten gültig. Geben Sie ihn nur im Impfgruppenmanager ein. Falls Sie keinen Code angefordert haben, ignorieren Sie diese Nachricht.`})
+      if(info?.rejected?.length) throw Object.assign(new Error('SMTP rejected recipient'),{code:'EENVELOPE'})
+      if(!info?.messageId) throw Object.assign(new Error('SMTP result unclear'),{code:'MAIL_FAILURE'})
+    } catch(error) {smtpError=error;outcome=failureStatus(error)==='failed'?'failed':'uncertain'}
+    const finished=await db.rpc('finish_membership_challenge',{challenge_id:id,target_club:a.club_id,outcome})
+    if(finished.error||!finished.data) console.error('MEMBERSHIP_SEND_STATUS_FAILED',{code:mailFailure(finished.error).code})
+    if(smtpError) {
+      console.error('MEMBERSHIP_CODE_SEND_FAILED',{code:mailFailure(smtpError).code,outcome})
+      return res.status(503).json({error:outcome==='failed'?'Der Bestätigungscode konnte aus technischen Gründen nicht versendet werden. Bitte erneut versuchen; die Anmeldung und der Mitgliedercode bleiben verfügbar.':'Die Übergabe des Bestätigungscodes konnte nicht sicher bestätigt werden. Bitte zunächst das Postfach prüfen. Die Anmeldung und der Mitgliedercode bleiben verfügbar.'})
+    }
     return res.status(200).json({challengeId:id,message:'Der Bestätigungscode wurde an die angegebene E-Mail-Adresse versendet.'})
   }
   if(action==='membership-verify') {

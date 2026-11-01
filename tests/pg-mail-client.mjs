@@ -1,6 +1,6 @@
 // Test-only Supabase adapter backed by isolated real PostgreSQL.
 export function pgMailClient(pg, clubId) {
-  const ident = value => { if (!/^[a-z_]+$/.test(value)) throw new Error('Invalid fixture identifier'); return value }
+  const ident = value => { if (!/^[a-z_][a-z_0-9]*$/.test(value)) throw new Error('Invalid fixture identifier'); return value }
   return {
     auth: { getUser: async token => ({ data: { user: token === 'fixture-admin' ? { id: clubId } : null } }) },
     async rpc(name,args={}) {

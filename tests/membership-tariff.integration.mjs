@@ -43,6 +43,7 @@ try{
   const newMigration=await migration('20261106_verified_member_tariffs');await pg.exec(newMigration);await pg.exec(newMigration)
   await pg.exec('alter table participants add column checked_in_at timestamptz,add column checked_in_by text')
   await pg.exec(await migration('20261108_resilient_registration'))
+  await pg.exec(await migration('20261109_membership_rate_limit_repair'))
   assert.equal(Number(await scalar('select payment_amount from participants where id=$1',[legacy])),4.2)
   assert.deepEqual(await scalar('select jsonb_agg(m order by id) from club_members m'),membersBefore)
   const signup={vaccination_date_id:date,firstname:'Fixture',lastname:'Person',tsk_number:'FIXTURE',chicken_count:2,bantam_count:0,turkey_count:0}
@@ -106,6 +107,10 @@ try{
   assert.equal(await scalar('select reserve_membership_challenge(gen_random_uuid(),$1,$2,$3,$4)',[club,date,'a'.repeat(64),'b'.repeat(64)]),false)
   await pg.query(`insert into membership_email_challenges(id,club_id,appointment_id,email_hash,code_hash)
     select gen_random_uuid(),$1,$2,repeat('c',64),repeat('d',64) from generate_series(1,200)`,[club,date])
+  // The previous shared 200/hour counter no longer blocks another member.
+  assert.equal((await request({action:'membership-challenge',email:'rate-capped@example.invalid',vaccinationDateId:date})).code,200)
+  await pg.query(`insert into membership_email_challenges(id,club_id,appointment_id,email_hash,code_hash)
+    select gen_random_uuid(),$1,$2,repeat('c',64),repeat('d',64) from generate_series(1,800)`,[club,date])
   assert.equal((await request({action:'membership-challenge',email:'rate-capped@example.invalid',vaccinationDateId:date})).code,429)
   result=await request({...signup,email:'rate-capped@example.invalid'})
   assert.equal(result.code,201);assert.equal(result.body.paymentAmount,15)
