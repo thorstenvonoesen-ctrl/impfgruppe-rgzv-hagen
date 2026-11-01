@@ -2,6 +2,7 @@ import { authorizeMailAdmin, handleMailCampaign, isCronRequest, runReminderCron 
 import { sendTestMail, testRecipient } from '../server/mail-test.js'
 import { drainMail } from '../server/mail-delivery.js'
 import { createAdminSupabase, getBearerToken } from '../server/_supabase-admin.js'
+import { mailFailure, mailError } from '../server/mail-errors.js'
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 const normalizeEmail = value => String(value || '').trim().toLowerCase()
@@ -163,10 +164,14 @@ async function handleSmartAssistant(req, res, supabase) {
 }
 
 export const config = { maxDuration: 60 }
-export default async function handler(req, res) {
+export function createMailHandler({ createDb = createAdminSupabase, transport, validateConfig } = {}) {
+return async function handler(req, res) {
   res.setHeader('Cache-Control', 'no-store')
   try {
-    const supabase = createAdminSupabase()
+    let supabase
+    try { supabase = createDb() } catch {
+      throw mailError('SUPABASE_CONFIG', 'Die Supabase-Serverkonfiguration fehlt oder ist ungültig. SUPABASE_URL und SUPABASE_SERVICE_ROLE_KEY in Vercel prüfen.')
+    }
     if (req.method === 'GET') {
       if (!isCronRequest(req)) return res.status(401).json({ error: 'Nicht autorisiert.' })
       return res.status(200).json(await runReminderCron(supabase))
@@ -174,19 +179,23 @@ export default async function handler(req, res) {
     if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' })
     const { action, clubId } = req.body || {}
     if (action === 'smart-assistant') return await handleSmartAssistant(req, res, supabase)
-    if (['preview-campaign','send-campaign'].includes(action)) return await handleMailCampaign(req, res, supabase)
+    if (['preview-campaign','send-campaign'].includes(action)) return await handleMailCampaign(req, res, supabase, { transport, validateConfig })
     if (!clubId || !await authorizeMailAdmin(req, supabase, clubId)) return res.status(403).json({ error: 'Keine Berechtigung.' })
     if (action === 'test-config') return res.status(200).json({ recipient: testRecipient() })
-    if (action === 'test-mail') return res.status(200).json(await sendTestMail(req.body.kind))
-    if (action === 'retry-pending') return res.status(200).json(await drainMail({ clubId, db: supabase }))
+    if (action === 'test-mail') return res.status(200).json(await sendTestMail(req.body.kind, transport))
+    if (action === 'retry-pending') return res.status(200).json(await drainMail({ clubId, db: supabase, transport }))
     if (action === 'mail-status') {
       const { data, error } = await supabase.from('mail_deliveries').select('id,kind,status,attempts,created_at,sent_at,error_code').eq('club_id', clubId).order('created_at', { ascending: false }).limit(100)
       if (error) throw error
-      return res.status(200).json({ deliveries: data })
+      return res.status(200).json({ deliveries: (data || []).map(row => ({ ...row, error_code: row.error_code ? mailFailure({ code: row.error_code }).code : null, error: row.error_code ? mailFailure({ code: row.error_code }).error : null })) })
     }
     return res.status(400).json({ error: 'Ungültige Versandaktion.' })
   } catch (error) {
-    console.error('MAIL_REQUEST_FAILED', { code: error.code || 'MAIL_ERROR' })
-    return res.status(500).json({ error: 'E-Mail-Anfrage fehlgeschlagen. Versandstatus prüfen; Konfiguration und Migration müssen eingerichtet sein.' })
+    const failure = mailFailure(error)
+    console.error('MAIL_REQUEST_FAILED', { code: failure.code })
+    return res.status(500).json(failure)
   }
 }
+}
+
+export default createMailHandler()

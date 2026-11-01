@@ -66,7 +66,7 @@ export function previousRecipients(participants, appointments, target) {
   const recipients = new Map()
   for (const p of participants) {
     const email = normalizeEmail(p.email)
-    if (!p.checked_in || !activeStatuses.includes(p.registration_status) || !eligible.has(p.vaccination_date_id) || !validEmail(email)) continue
+    if (p.club_id !== target.club_id || !p.checked_in || !activeStatuses.includes(p.registration_status) || !eligible.has(p.vaccination_date_id) || !validEmail(email)) continue
     const old = recipients.get(email)
     const name = `${p.firstname || ''} ${p.lastname || ''}`.trim()
     recipients.set(email, { email, firstname: old && old.name !== name ? '' : p.firstname, lastname: old && old.name !== name ? '' : p.lastname, name: old && old.name !== name ? '' : name })

@@ -2,6 +2,9 @@ import { createHash, createHmac, timingSafeEqual } from 'node:crypto'
 import { getBearerToken } from './_supabase-admin.js'
 import { activeStatuses, canEditRegistration, isTestAppointment, normalizeEmail, previousRecipients, validEmail } from './mail-rules.js'
 import { drainMail } from './mail-delivery.js'
+import { smtpOptions } from './mail-transport.js'
+import { mailError, mailFailure } from './mail-errors.js'
+import { publicBaseUrl } from './mail-rules.js'
 
 export async function allRows(makeQuery) {
   const rows = []
@@ -49,7 +52,10 @@ export function checkPreviewToken(token, fingerprint) {
   return actual.length === expected.length && timingSafeEqual(actual, expected)
 }
 
-export async function handleMailCampaign(req, res, db) {
+export async function handleMailCampaign(req, res, db, { transport, validateConfig = () => {
+  smtpOptions()
+  try { publicBaseUrl() } catch { throw mailError('APP_URL_CONFIG', 'Die öffentliche App-Adresse fehlt oder ist ungültig. APP_URL in Vercel konfigurieren.') }
+} } = {}) {
   const { vaccinationDateId, kind, changes = [], previewToken, action } = req.body
   if (!['new-appointment','appointment-change'].includes(kind)) return res.status(400).json({ error: 'Ungültiger Versandtyp.' })
   const result = await db.from('vaccination_dates').select('*').eq('id', vaccinationDateId).maybeSingle()
@@ -64,7 +70,7 @@ export async function handleMailCampaign(req, res, db) {
   let people
   if (kind === 'new-appointment') {
     const dates = await allRows(() => db.from('vaccination_dates').select('*').eq('club_id', a.club_id).lt('date', a.date).order('id'))
-    const past = await allRows(() => db.from('participants').select('firstname,lastname,email,checked_in,registration_status,vaccination_date_id').eq('club_id', a.club_id).eq('checked_in', true).in('registration_status', activeStatuses).order('id'))
+    const past = await allRows(() => db.from('participants').select('club_id,firstname,lastname,email,checked_in,registration_status,vaccination_date_id').eq('club_id', a.club_id).eq('checked_in', true).in('registration_status', activeStatuses).order('id'))
     people = previousRecipients(past, dates, a)
   } else {
     people = await allRows(() => db.from('participants').select('*').eq('club_id', a.club_id).eq('vaccination_date_id', a.id).in('registration_status', activeStatuses).order('id'))
@@ -74,6 +80,8 @@ export async function handleMailCampaign(req, res, db) {
   const batchKey = kind === 'new-appointment' ? `${kind}:${a.id}` : `${kind}:${a.id}:${digest(details)}`
   const existing = await db.from('mail_batches').select('id,created_at').eq('id', batchKey).maybeSingle()
   if (existing.error) throw existing.error
+  // Fail before confirming/creating any new jobs. Never contact SMTP for preview.
+  if (!existing.data) validateConfig()
   const fingerprint = digest({ batchKey, details, changes: [...changes].sort(), recipients: people.map(p => normalizeEmail(p.email)).sort() })
   if (action === 'preview-campaign') return res.status(200).json({ count: people.length, alreadyQueued: Boolean(existing.data), previewToken: makePreviewToken(fingerprint), appointment: details })
   if (!checkPreviewToken(previewToken, fingerprint)) return res.status(409).json({ error: 'Vorschau abgelaufen oder Empfängerliste/Termin geändert. Bitte erneut prüfen.' })
@@ -82,5 +90,9 @@ export async function handleMailCampaign(req, res, db) {
   if (!deliveries.length) return res.status(400).json({ error: 'Keine passenden Empfänger vorhanden.' })
   const queued = await db.rpc('create_mail_batch', { batch_key: batchKey, target_club: a.club_id, target_appointment: a.id, mail_kind: kind, deliveries })
   if (queued.error) throw queued.error
-  return res.status(200).json({ queued: queued.data ? deliveries.length : 0, ...await drainMail({ clubId: a.club_id, db }) })
+  try {
+    return res.status(200).json({ queued: queued.data ? deliveries.length : 0, alreadyQueued: !queued.data, ...await drainMail({ clubId: a.club_id, appointmentId: a.id, kind, db, transport }) })
+  } catch (error) {
+    throw mailError('QUEUE_SAVED', `Der Rundversand ist bereits vorgemerkt. Bitte den Versandstatus prüfen und offene Zustellungen dort fortsetzen. ${mailFailure(error).error}`)
+  }
 }

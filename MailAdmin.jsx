@@ -4,7 +4,7 @@ import { supabase } from './supabase.js'
 async function mailRequest(body) {
   const { data: { session } } = await supabase.auth.getSession()
   const response = await fetch('/api/send-reminder-emails', { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${session?.access_token || ''}` }, body: JSON.stringify(body) })
-  const result = await response.json()
+  const result = await response.json().catch(() => ({ error: 'Die E-Mail-API hat keine gültige Antwort geliefert. Bei einem Zeitlimit zuerst den Versandstatus prüfen.' }))
   if (!response.ok) throw new Error(result.error || 'Versand fehlgeschlagen.')
   return result
 }
@@ -21,7 +21,7 @@ export function MailCampaign({ appointment, kind, onClose }) {
     try {
       const result = await mailRequest({ action, vaccinationDateId: appointment.id, kind, changes, previewToken: preview?.previewToken })
       if (action === 'preview-campaign') setPreview(result)
-      else { setPreview(null); setMessage(`${result.queued} Nachrichten vorgemerkt, davon ${result.sent} jetzt versendet. Weitere Zustellungen werden automatisch verarbeitet.`) }
+      else { setPreview(null); setMessage(`${result.queued} Nachrichten neu vorgemerkt, ${result.sent} an den Mailserver übergeben, ${result.failed || 0} fehlgeschlagen, ${result.uncertain || 0} unklar. Versandstatus prüfen; offene Zustellungen können dort fortgesetzt werden.`) }
     } catch (e) { setMessage(e.message); setPreview(null) } finally { setBusy(false) }
   }
   return <div className="modal"><section className="card" role="dialog" aria-modal="true" aria-labelledby="mail-campaign-title">
@@ -49,8 +49,8 @@ export function MailTestPanel({ clubId }) {
     try {
       const result = await mailRequest({ action, clubId, kind })
       if (action === 'test-config') { setRecipient(result.recipient); setOpen(true) }
-      else if (action === 'mail-status') setDeliveries(result.deliveries)
-      else setMessage(action === 'test-mail' ? `Testmail versendet an ${result.recipient}.` : `${result.sent} vorgemerkte Nachrichten versendet.`)
+      else if (action === 'mail-status') { setDeliveries(result.deliveries); setMessage(result.deliveries.length ? 'Versandstatus aktualisiert.' : 'Keine Versandaufträge für diesen Verein vorhanden.') }
+      else setMessage(action === 'test-mail' ? `Testmail versendet an ${result.recipient}.` : `${result.sent} an den Mailserver übergeben, ${result.failed || 0} fehlgeschlagen, ${result.uncertain || 0} unklar. Versandstatus erneut laden.`)
     } catch (e) { setMessage(e.message) } finally { setBusy(false) }
   }
   return <section className="card mail-test-panel">
@@ -61,7 +61,7 @@ export function MailTestPanel({ clubId }) {
       <div className="mail-test-grid">{types.map(([kind,label]) => <button className="small" key={kind} disabled={busy || !recipient} onClick={() => { if (window.confirm(`Diese Testmail ausschließlich an ${recipient} senden?`)) run('test-mail', kind) }}>{label} testen</button>)}</div>
       <p className="mail-test-actions"><button className="small" disabled={busy} onClick={() => run('mail-status')}>Versandstatus laden</button> <button className="small" disabled={busy} onClick={() => run('retry-pending')}>Offene Zustellungen fortsetzen</button></p>
       <p>Unklare Zustellungen werden nicht automatisch erneut gesendet. Sie müssen zuerst anhand des SMTP-Protokolls geprüft werden.</p>
-      {deliveries.length > 0 && <div className="table-wrap"><table><thead><tr><th>Mailtyp</th><th>Status</th><th>Versuche</th><th>Zeitpunkt</th></tr></thead><tbody>{deliveries.map(row => <tr key={row.id}><td>{types.find(([kind]) => kind === row.kind)?.[1] || row.kind}</td><td>{row.status}{row.error_code ? ` (${row.error_code})` : ''}</td><td>{row.attempts}</td><td>{new Date(row.sent_at || row.created_at).toLocaleString('de-DE')}</td></tr>)}</tbody></table></div>}
+      {deliveries.length > 0 && <div className="table-wrap"><table><thead><tr><th>Mailtyp</th><th>Status</th><th>Versuche</th><th>Zeitpunkt</th></tr></thead><tbody>{deliveries.map(row => <tr key={row.id}><td>{types.find(([kind]) => kind === row.kind)?.[1] || row.kind}</td><td>{({ pending: 'Vorgemerkt', sending: 'Wird versendet', sent: 'An Mailserver übergeben', failed: 'Fehlgeschlagen', uncertain: 'Zustellung unklar', skipped: 'Übersprungen' })[row.status] || row.status}{row.error ? ` – ${row.error}` : ''}</td><td>{row.attempts}</td><td>{new Date(row.sent_at || row.created_at).toLocaleString('de-DE')}</td></tr>)}</tbody></table></div>}
     </>}
   </section>
 }

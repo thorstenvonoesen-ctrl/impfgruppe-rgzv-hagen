@@ -5,7 +5,7 @@ import { buildParticipantMail } from './participant-mail.js'
 
 export function failureStatus(error) {
   // Only explicit rejections / failures before SMTP DATA are safe to retry.
-  if (Number(error.responseCode) >= 400 || ['EAUTH', 'ECONNECTION', 'EDNS', 'EENVELOPE'].includes(error.code) || ['CONN', 'EHLO', 'HELO', 'AUTH', 'MAIL FROM', 'RCPT TO'].includes(error.command)) return 'failed'
+  if (Number(error.responseCode) >= 400 || ['SMTP_CONFIG', 'EAUTH', 'ECONNECTION', 'EDNS', 'EENVELOPE'].includes(error.code) || ['CONN', 'EHLO', 'HELO', 'AUTH', 'MAIL FROM', 'RCPT TO'].includes(error.command)) return 'failed'
   return 'uncertain'
 }
 
@@ -53,7 +53,8 @@ export async function deliverMail(id, { db = createAdminSupabase(), transport = 
       if (date.error) throw date.error
       const { canEditRegistration } = await import('./mail-rules.js')
       if (!date.data || isTestAppointment(date.data) || !canEditRegistration(date.data)) {
-        await db.from('mail_deliveries').update({ status: 'skipped' }).eq('id', id)
+        const skipped = await db.from('mail_deliveries').update({ status: 'skipped' }).eq('id', id)
+        if (skipped.error) throw skipped.error
         return { sent: false, skipped: true }
       }
       a = date.data
@@ -85,21 +86,29 @@ export async function deliverMail(id, { db = createAdminSupabase(), transport = 
   }
 }
 
-export async function drainMail({ participantId, clubId, limit = 20, budgetMs = 40000, db = createAdminSupabase() } = {}) {
+export async function drainMail({ participantId, clubId, appointmentId, kind, transport = clubMailTransporter, limit = 20, budgetMs = 40000, db = createAdminSupabase() } = {}) {
   // A worker crash may occur after SMTP accepted DATA. Never blindly retry it.
-  const stale = await db.from('mail_deliveries').update({ status: 'uncertain', error_code: 'INTERRUPTED' }).eq('status', 'sending').lt('claimed_at', new Date(Date.now() - 10 * 60000).toISOString())
+  const scoped = query => {
+    if (participantId) query = query.eq('participant_id', participantId)
+    if (clubId) query = query.eq('club_id', clubId)
+    if (appointmentId) query = query.eq('appointment_id', appointmentId)
+    if (kind) query = query.eq('kind', kind)
+    return query
+  }
+  const stale = await scoped(db.from('mail_deliveries').update({ status: 'uncertain', error_code: 'INTERRUPTED' }).eq('status', 'sending').lt('claimed_at', new Date(Date.now() - 10 * 60000).toISOString()))
   if (stale.error) throw stale.error
   let query = db.from('mail_deliveries').select('id').in('status', ['pending', 'failed']).lt('attempts', 5).lte('next_attempt_at', new Date().toISOString()).order('created_at').limit(limit)
-  if (participantId) query = query.eq('participant_id', participantId)
-  if (clubId) query = query.eq('club_id', clubId)
-  const { data, error } = await query
+  const { data, error } = await scoped(query)
   if (error) throw error
-  let sent = 0
+  let sent = 0, failed = 0, uncertain = 0, skipped = 0
   const start = Date.now()
   for (const row of data || []) {
     if (Date.now() - start > budgetMs) break
-    const result = await deliverMail(row.id, { db })
+    const result = await deliverMail(row.id, { db, transport })
     if (result.sent) sent++
+    if (result.status === 'failed') failed++
+    if (result.status === 'uncertain') uncertain++
+    if (result.skipped) skipped++
   }
-  return { sent }
+  return { sent, failed, uncertain, skipped }
 }
