@@ -1,4 +1,4 @@
-import { saveVaccinationDate } from './vaccination-date-save.js'
+import { saveVaccinationDate, vaccinationDateError } from './vaccination-date-save.js'
 import ParticipantManagement from './ParticipantManagement.jsx'
 import { MailCampaign, MailTestPanel } from './MailAdmin.jsx'
 import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
@@ -6408,13 +6408,17 @@ const { data, error } = await supabase
   .eq('club_id', clubId)
   .order('created_at', { ascending: false })
       if (!error) setParticipants(data || [])
-      const { data: dates } = await supabase
+      const { data: dates, error: datesError } = await supabase
   .from('vaccination_dates')
   .select('*')
   .eq('club_id', clubId)
   .order('date', { ascending: true })
 
-setVaccinationDates(dates || [])
+if (datesError) {
+  setDateFeedback(`Impftermine konnten nicht geladen werden. ${vaccinationDateError(datesError)}`)
+} else {
+  setVaccinationDates(dates || [])
+}
       await loadSmartAssistant()
       const nextDate = dates?.find(date => date.archived !== true)?.date
 
@@ -7258,7 +7262,7 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
   <button className="primary" onClick={addVaccinationDate}>
     Impftermin speichern
   </button>
-  {dateFeedback && <p className={`vaccination-date-feedback ${/konnte nicht|keine berechtigung|noch nicht eingerichtet/i.test(dateFeedback) ? 'error' : 'success'}`}>{dateFeedback}</p>}
+  {dateFeedback && <p role="status" className={`vaccination-date-feedback ${/konnte nicht|konnten nicht|keine berechtigung|noch nicht eingerichtet/i.test(dateFeedback) ? 'error' : 'success'}`}>{dateFeedback}</p>}
         
 
 {activeVaccinationDates.map(v => (
