@@ -1,5 +1,8 @@
 # Öffentliche Anmeldung: Speicherkorrektur und Diagnose
 
+> Historischer Reparaturstand. Für die aktuelle Bereitstellung ausschließlich die
+> [vollständige Reparaturlösung](COMPLETE_REGISTRATION_REPAIR.md) verwenden.
+
 ## Zugriff und belegte Ursache
 
 Die produktive Vercel-Logabfrage wurde erneut mit `403 Forbidden` abgewiesen;

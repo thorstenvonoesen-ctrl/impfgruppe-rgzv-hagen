@@ -5,7 +5,7 @@ export function pgMailClient(pg, clubId) {
     auth: { getUser: async token => ({ data: { user: token === 'fixture-admin' ? { id: clubId } : null } }) },
     async rpc(name,args={}) {
       try {
-        const values=Object.values(args).map(v=>typeof v==='object'?JSON.stringify(v):v)
+        const values=Object.values(args).map(v=>v!==null&&typeof v==='object'?JSON.stringify(v):v)
         const rows=(await pg.query(`select to_jsonb(r) item from ${ident(name)}(${values.map((_,i)=>`$${i+1}`).join(',')}) r`,values)).rows
         return {data:name==='claim_mail_delivery'?rows.map(r=>r.item):rows[0]?.item,error:null}
       } catch(error) {return {data:null,error}}

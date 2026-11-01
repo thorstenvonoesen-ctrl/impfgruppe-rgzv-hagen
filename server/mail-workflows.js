@@ -5,6 +5,7 @@ import { drainMail } from './mail-delivery.js'
 import { smtpOptions } from './mail-transport.js'
 import { mailError, mailFailure } from './mail-errors.js'
 import { publicBaseUrl } from './mail-rules.js'
+import { reconcileRegistrationConfirmations } from './registration-confirmation.js'
 
 export async function allRows(makeQuery) {
   const rows = []
@@ -31,10 +32,11 @@ export function isCronRequest(req) {
 }
 
 export async function runReminderCron(db, { transport } = {}) {
+  const recovery=await reconcileRegistrationConfirmations(db)
   const { data: queued, error } = await db.rpc('queue_due_reminders')
   // Missing reminder setup must not block existing registration confirmations.
   if (error) console.error('REMINDER_QUEUE_FAILED', { code: mailFailure(error).code })
-  return { queued: queued || 0, ...(error ? { reminderError: mailFailure(error).error } : {}), ...await drainMail({ db, transport }) }
+  return { ...recovery,queued: queued || 0, ...(error ? { reminderError: mailFailure(error).error } : {}), ...await drainMail({ db, transport }) }
 }
 
 const digest = value => createHash('sha256').update(JSON.stringify(value)).digest('hex')

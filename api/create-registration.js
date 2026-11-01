@@ -260,7 +260,7 @@ return async function handler(req, res) {
       return res.status(409).json({ error: 'Für diese E-Mail-Adresse besteht bereits eine verbindliche Anmeldung zu diesem Impftermin.' })
     }
     stage='TARIFF_LOOKUP'
-    const tariff = await registrationTariff(supabase,{clubId:appointment.club_id,appointmentId:appointment.id,email:normalizedEmail,memberCode,proof:input.membership_proof})
+    const tariff = await registrationTariff(supabase,{clubId:appointment.club_id,appointmentId:appointment.id,email:normalizedEmail,memberCode,proof:input.membership_proof,deferMembershipFailure:true})
     const participant = Object.fromEntries(fields.map(field => [field, typeof input[field] === 'string' ? input[field].trim() : input[field]]))
     stage='REGISTRATION_COMMIT'
     const data = await saveRegistrationWithConfirmation(supabase, {
@@ -277,14 +277,16 @@ return async function handler(req, res) {
       payment_amount: tariff.amount,
       payment_method: paymentMethod === 'bar' ? 'bar' : null,
       registration_status: paymentMethod === 'bar' ? 'bar_registered' : 'pending_payment'
-    }, { transport, reference, tariff: { member_code: String(memberCode||''), verified_email: tariff.verifiedEmail } })
+    }, { transport, reference, tariff: { member_code: String(memberCode||''), verified_email: tariff.verifiedEmail, tariff_review_required:tariff.reviewRequired===true } })
     console.info('REGISTRATION_SAVED',{reference,participantId:data.id,emailStatus:data.emailStatus})
 
     return res.status(201).json({
       participantId: data.id,
       paymentAmount: Number(data.payment_amount),
       emailSent: data.emailSent,
-      emailStatus: data.emailStatus
+      emailStatus: data.emailStatus,
+      tariffReviewRequired:data.tariff_review_required===true,
+      notice:data.tariff_review_required===true?'Ihre Anmeldung ist verbindlich gespeichert. Die Mitgliedschaft konnte noch nicht abschließend geprüft werden; der ausgewiesene reguläre Betrag ist bis zur Klärung durch den Verein vorläufig.':null
     })
   } catch (error) {
     if (error.publicMessage) return res.status(400).json({error:error.publicMessage})

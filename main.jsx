@@ -4331,6 +4331,7 @@ function PublicSignup() {
   const [countdown, setCountdown] = useState('')
   const [showPaymentSuccess, setShowPaymentSuccess] = useState(false)
   const [confirmationEmailSent, setConfirmationEmailSent] = useState(false)
+  const [registrationNotice,setRegistrationNotice] = useState('')
   const [showMembershipInvitation, setShowMembershipInvitation] = useState(false)
   const [reuseLookup, setReuseLookup] = useState({ status: 'idle', email: '', token: '' })
   const [reuseConfirmation, setReuseConfirmation] = useState('')
@@ -4674,6 +4675,7 @@ useEffect(() => {
         participantId = result.participantId
         paymentAmount = Number(result.paymentAmount ?? 10)
         registrationEmailSent = Boolean(result.emailSent)
+        setRegistrationNotice(result.notice||'')
       } else {
         paymentAmount = 10
         const animalType = participantAnimalCountFields
@@ -5102,6 +5104,7 @@ if (!showForm) {
   {showPaymentSuccess && (
     <SignupSuccessOverlay
       emailSent={confirmationEmailSent}
+      notice={registrationNotice}
       showMembershipInvitation={showMembershipInvitation}
       onHome={() => {
         setShowPaymentSuccess(false)
@@ -5190,7 +5193,7 @@ function MembershipInvitationCard() {
   )
 }
 
-function SignupSuccessOverlay({ emailSent, showMembershipInvitation, onHome, onAnother }) {
+function SignupSuccessOverlay({ emailSent, notice, showMembershipInvitation, onHome, onAnother }) {
   const homeButtonRef = useRef(null)
   const onHomeRef = useRef(onHome)
   const leaveTimerRef = useRef(null)
@@ -5246,6 +5249,7 @@ function SignupSuccessOverlay({ emailSent, showMembershipInvitation, onHome, onA
         <h2 id="signup-success-title">Anmeldung erfolgreich!</h2>
         <p>Vielen Dank für Ihre Anmeldung.<br />Ihre Daten wurden erfolgreich gespeichert.</p>
         <p className="signup-success-email">{emailSent ? 'Die Bestätigungs-E-Mail wurde an den Mailserver übergeben. Bitte prüfen Sie auch Ihren Spamordner.' : 'Ihre Anmeldung ist gespeichert. Der Versand der Bestätigungs-E-Mail konnte noch nicht bestätigt werden. Bitte wenden Sie sich an den Verein, falls sie ausbleibt.'}</p>
+        {notice && <p role="status">{notice}</p>}
         {showMembershipInvitation && <MembershipInvitationCard />}
         <div className="signup-success-actions">
           <button ref={homeButtonRef} type="button" className="signup-success-home" onClick={() => leave(onHome)}>Zur Startseite</button>

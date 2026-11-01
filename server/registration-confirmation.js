@@ -2,7 +2,7 @@ import { drainMail } from './mail-delivery.js'
 import { mailFailure } from './mail-errors.js'
 
 export async function saveRegistrationWithConfirmation(db, participant, { transport, tariff, reference } = {}) {
-  // The RPC commits the registration and its unique mail job together.
+  // The RPC commits the registration plus durable intent even if the outbox fails.
   const { data, error } = await db.rpc(tariff ? 'register_with_tariff_confirmation' : 'register_with_confirmation', { registration: { ...participant, ...tariff } })
   if (error) throw error
   if (!data?.id) throw Object.assign(new Error('Registration RPC returned no participant.'), { code: 'REGISTRATION_RESULT' })
@@ -18,4 +18,10 @@ export async function saveRegistrationWithConfirmation(db, participant, { transp
     console.error('REGISTRATION_MAIL_PENDING', { reference, participantId: data.id, code: mailFailure(mailError).code })
   }
   return { ...data, emailSent, emailStatus }
+}
+
+export async function reconcileRegistrationConfirmations(db,{clubId=null,participantId=null}={}) {
+  const {data,error}=await db.rpc('reconcile_registration_confirmations',{target_club:clubId,target_participant:participantId,batch_limit:100})
+  if(error){console.error('REGISTRATION_OUTBOX_RECONCILE_FAILED',{code:mailFailure(error).code});return {reconciled:0,reconcileError:mailFailure(error).error}}
+  return {reconciled:Number(data||0)}
 }

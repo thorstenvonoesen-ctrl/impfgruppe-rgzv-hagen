@@ -32,7 +32,7 @@ export async function verifiedActiveMember(db,{clubId,appointmentId,email,proof}
   if(error) throw error
   return Boolean(data)
 }
-export async function registrationTariff(db,{clubId,appointmentId,email,memberCode,proof}) {
+export async function registrationTariff(db,{clubId,appointmentId,email,memberCode,proof,deferMembershipFailure=false}) {
   const {data:club,error}=await db.from('clubs').select('member_code,member_price,guest_price').eq('id',clubId).single()
   if(error) throw error
   const memberPrice=Number(club.member_price??5),guestPrice=Number(club.guest_price??10)
@@ -40,9 +40,18 @@ export async function registrationTariff(db,{clubId,appointmentId,email,memberCo
   const code=String(memberCode||'').trim().toUpperCase()
   const byCode=Boolean(code && club.member_code && code===club.member_code.trim().toUpperCase())
   if(byCode) return {amount:memberPrice,source:'code',isMember:true,verifiedEmail:null}
-  if(proof && !validMembershipProof(proof,clubId,appointmentId,email)) throw fail('Die E-Mail-Bestätigung ist abgelaufen oder passt nicht zu dieser Anmeldung. Bitte erneut bestätigen.')
+  if(proof && !validMembershipProof(proof,clubId,appointmentId,email)) {
+    if(deferMembershipFailure) return {amount:guestPrice,source:'guest',isMember:false,verifiedEmail:null,reviewRequired:true}
+    throw fail('Die E-Mail-Bestätigung ist abgelaufen oder passt nicht zu dieser Anmeldung. Bitte erneut bestätigen.')
+  }
   const verified=validMembershipProof(proof,clubId,appointmentId,email)
-  const member=verified && await verifiedActiveMember(db,{clubId,appointmentId,email,proof})
+  let member=false
+  try {member=verified && await verifiedActiveMember(db,{clubId,appointmentId,email,proof})}
+  catch(error){
+    if(!deferMembershipFailure) throw error
+    console.error('MEMBERSHIP_DEFERRED',{code:/^(?:[A-Z0-9]{5}|PGRST\d{3})$/.test(error?.code||'')?error.code:'LOOKUP_FAILED'})
+    return {amount:guestPrice,source:'guest',isMember:false,verifiedEmail:verified?normalizeEmail(email):null,reviewRequired:true}
+  }
   return {amount:member?memberPrice:guestPrice,source:member?'verified_member':'guest',isMember:Boolean(member),verifiedEmail:verified?normalizeEmail(email):null}
 }
 

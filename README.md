@@ -1,5 +1,7 @@
 # Anmeldung Impfgruppe RGZV Hagen
 
+Für die Reparatur der öffentlichen Anmeldung gilt die [vollständige Bereitstellungsanleitung](docs/COMPLETE_REGISTRATION_REPAIR.md) mit einem einzigen SQL-Paket für Supabase und den erforderlichen Vercel-Schritten.
+
 Saubere Vite/React-App ohne Unterordner-Probleme beim GitHub-Upload.
 
 ## Upload in GitHub

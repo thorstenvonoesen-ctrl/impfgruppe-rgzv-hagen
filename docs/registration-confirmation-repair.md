@@ -1,5 +1,8 @@
 # Bestätigung nach Anmeldung: Befund und Bereitstellung
 
+> Historischer Reparaturstand. Für die aktuelle Bereitstellung ausschließlich die
+> [vollständige Reparaturlösung](COMPLETE_REGISTRATION_REPAIR.md) verwenden.
+
 ## Nachgewiesener Fehlerpfad
 
 Der bisherige Registrierungsendpunkt speicherte den Teilnehmer direkt und rief

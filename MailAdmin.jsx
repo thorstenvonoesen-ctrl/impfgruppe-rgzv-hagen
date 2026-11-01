@@ -44,15 +44,27 @@ export function MailTestPanel({ clubId }) {
   const [busy, setBusy] = useState(false)
   const [message, setMessage] = useState('')
   const [deliveries, setDeliveries] = useState([])
+  const confirmationWarning = result => [
+    result.pendingConfirmations ? `${result.pendingConfirmations >= 100 ? 'Mindestens ' : ''}${result.pendingConfirmations} Bestätigungen warten auf die Erstellung eines Versandauftrags. Nach Datenbankreparatur „Offene Zustellungen fortsetzen“ verwenden.` : '',
+    result.confirmationQueueWarning || '', result.reconcileError || ''
+  ].filter(Boolean).join(' ')
   async function run(action, kind) {
     setBusy(true)
     try {
       const result = await mailRequest({ action, clubId, ...(action === 'retry-delivery' ? { deliveryId: kind } : { kind }) })
       if (action === 'test-config') { setRecipient(result.recipient); setOpen(true) }
-      else if (action === 'mail-status') { setDeliveries(result.deliveries); setMessage(result.deliveries.length ? 'Versandstatus aktualisiert.' : 'Keine Versandaufträge für diesen Verein vorhanden.') }
+      else if (action === 'mail-status') {
+        setDeliveries(result.deliveries)
+        setMessage([result.deliveries.length ? 'Versandstatus aktualisiert.' : 'Keine Versandaufträge für diesen Verein vorhanden.', confirmationWarning(result)].filter(Boolean).join(' '))
+      }
       else {
         setMessage(action === 'test-mail' ? `Testmail versendet an ${result.recipient}.` : `${result.sent} an den Mailserver übergeben, ${result.failed || 0} fehlgeschlagen, ${result.uncertain || 0} unklar.`)
-        if (action === 'retry-delivery' || action === 'retry-pending') setDeliveries((await mailRequest({ action: 'mail-status', clubId })).deliveries)
+        if (action === 'retry-delivery' || action === 'retry-pending') {
+          const status=await mailRequest({ action: 'mail-status', clubId })
+          setDeliveries(status.deliveries)
+          const warning=confirmationWarning({...status,reconcileError:result.reconcileError})
+          if(warning)setMessage(message=>`${message} ${warning}`)
+        }
       }
     } catch (e) { setMessage(e.message) } finally { setBusy(false) }
   }

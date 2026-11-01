@@ -3,6 +3,7 @@ import { sendTestMail, testRecipient } from '../server/mail-test.js'
 import { drainMail } from '../server/mail-delivery.js'
 import { createAdminSupabase, getBearerToken } from '../server/_supabase-admin.js'
 import { mailFailure, mailError } from '../server/mail-errors.js'
+import { reconcileRegistrationConfirmations } from '../server/registration-confirmation.js'
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 const normalizeEmail = value => String(value || '').trim().toLowerCase()
@@ -183,7 +184,7 @@ return async function handler(req, res) {
     if (!clubId || !await authorizeMailAdmin(req, supabase, clubId)) return res.status(403).json({ error: 'Keine Berechtigung.' })
     if (action === 'test-config') return res.status(200).json({ recipient: testRecipient() })
     if (action === 'test-mail') return res.status(200).json(await sendTestMail(req.body.kind, transport))
-    if (action === 'retry-pending') return res.status(200).json(await drainMail({ clubId, db: supabase, transport }))
+    if (action === 'retry-pending') return res.status(200).json({ ...await reconcileRegistrationConfirmations(supabase,{clubId}),...await drainMail({ clubId, db: supabase, transport }) })
     if (action === 'recover-confirmation') {
       const { data: job, error } = await supabase.rpc('ensure_registration_confirmation', { target_club: clubId, target_participant: req.body.participantId })
       if (error) throw error
@@ -199,7 +200,12 @@ return async function handler(req, res) {
     if (action === 'mail-status') {
       const { data, error } = await supabase.from('mail_deliveries').select('id,kind,recipient,status,attempts,created_at,sent_at,error_code').eq('club_id', clubId).order('created_at', { ascending: false }).limit(100)
       if (error) throw error
-      return res.status(200).json({ deliveries: (data || []).map(row => ({ ...row, error_code: row.error_code ? mailFailure({ code: row.error_code }).code : null, error: row.error_code ? mailFailure({ code: row.error_code }).error : null })) })
+      const pending=await supabase.from('participants').select('id,confirmation_error_code').eq('club_id',clubId).eq('confirmation_job_state','pending').limit(100)
+      return res.status(200).json({
+        pendingConfirmations:pending.data?.length||0,
+        confirmationQueueWarning:pending.error?'Bestätigungs-Vormerkungen konnten nicht geprüft werden. Vollständiges Anmelde-Reparaturpaket und Serverkonfiguration prüfen.':null,
+        deliveries: (data || []).map(row => ({ ...row, error_code: row.error_code ? mailFailure({ code: row.error_code }).code : null, error: row.error_code ? mailFailure({ code: row.error_code }).error : null }))
+      })
     }
     return res.status(400).json({ error: 'Ungültige Versandaktion.' })
   } catch (error) {

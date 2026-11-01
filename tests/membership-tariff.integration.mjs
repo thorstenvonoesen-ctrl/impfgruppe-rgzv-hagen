@@ -41,6 +41,8 @@ try{
   const legacy=await scalar("insert into participants(firstname,lastname,email,tsk_number,animal_count,animal_type,chicken_count,bantam_count,turkey_count,vaccine,club_id,vaccination_date_id,payment_method,registration_status,payment_amount) values('Legacy','Person','legacy@example.invalid','FIXTURE',1,'Hühner',1,0,0,'Newcastle',$1,$2,'bar','bar_registered',4.20) returning id",[club,date])
   const membersBefore=await scalar('select jsonb_agg(m order by id) from club_members m')
   const newMigration=await migration('20261106_verified_member_tariffs');await pg.exec(newMigration);await pg.exec(newMigration)
+  await pg.exec('alter table participants add column checked_in_at timestamptz,add column checked_in_by text')
+  await pg.exec(await migration('20261108_resilient_registration'))
   assert.equal(Number(await scalar('select payment_amount from participants where id=$1',[legacy])),4.2)
   assert.deepEqual(await scalar('select jsonb_agg(m order by id) from club_members m'),membersBefore)
   const signup={vaccination_date_id:date,firstname:'Fixture',lastname:'Person',tsk_number:'FIXTURE',chicken_count:2,bantam_count:0,turkey_count:0}
@@ -54,9 +56,13 @@ try{
   assert.equal((await request({...signup,email:'member@example.invalid',membership_proof:token})).code,409)
   // A different address, purpose/scope or old token cannot transfer the discount.
   assert.equal((await quote('victim@example.invalid',token)).code,400)
-  assert.equal((await request({...signup,email:'victim@example.invalid',membership_proof:token})).code,400)
+  const mismatched=await request({...signup,email:'victim@example.invalid',membership_proof:token})
+  assert.equal(mismatched.code,201);assert.equal(mismatched.body.paymentAmount,12.25)
+  assert.equal(mismatched.body.tariffReviewRequired,true)
   const expired=makeMembershipProof(club,date,'expired@example.invalid',Date.now()-21*60000).token
-  assert.equal((await request({...signup,email:'expired@example.invalid',membership_proof:expired})).code,400)
+  const expiredSignup=await request({...signup,email:'expired@example.invalid',membership_proof:expired})
+  assert.equal(expiredSignup.code,201);assert.equal(expiredSignup.body.paymentAmount,12.25)
+  assert.equal(expiredSignup.body.tariffReviewRequired,true)
   const inactiveToken=await verify('inactive@example.invalid')
   assert.equal((await quote('inactive@example.invalid',inactiveToken)).body.amount,12.25)
   assert.equal((await request({...signup,email:'inactive@example.invalid',membership_proof:inactiveToken})).body.paymentAmount,12.25)
@@ -93,6 +99,17 @@ try{
   // Configured zero is a valid price, not a signal to substitute a hard-coded default.
   await pg.query('update clubs set member_price=0 where id=$1',[club])
   result=await request({...signup,email:'free-code@example.invalid',member_code:'KEEP-CODE'})
+  assert.equal(result.code,201);assert.equal(result.body.paymentAmount,0)
+  // Hourly OTP caps remain independent from the binding signup endpoint.
+  await pg.query(`insert into membership_email_challenges(id,club_id,appointment_id,email_hash,code_hash,created_at)
+    select gen_random_uuid(),$1,$2,repeat('a',64),repeat('b',64),now()-interval '2 minutes'*n from generate_series(1,3) n`,[club,date])
+  assert.equal(await scalar('select reserve_membership_challenge(gen_random_uuid(),$1,$2,$3,$4)',[club,date,'a'.repeat(64),'b'.repeat(64)]),false)
+  await pg.query(`insert into membership_email_challenges(id,club_id,appointment_id,email_hash,code_hash)
+    select gen_random_uuid(),$1,$2,repeat('c',64),repeat('d',64) from generate_series(1,200)`,[club,date])
+  assert.equal((await request({action:'membership-challenge',email:'rate-capped@example.invalid',vaccinationDateId:date})).code,429)
+  result=await request({...signup,email:'rate-capped@example.invalid'})
+  assert.equal(result.code,201);assert.equal(result.body.paymentAmount,15)
+  result=await request({...signup,email:'code-rate-capped@example.invalid',member_code:'KEEP-CODE'})
   assert.equal(result.code,201);assert.equal(result.body.paymentAmount,0)
   // Server-only verification and registration RPCs, and private challenge data.
   await pg.exec('set role authenticated')

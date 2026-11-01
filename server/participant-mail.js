@@ -35,6 +35,7 @@ export async function buildParticipantMail(kind, p, a, { test = false, clubSlug,
     html += `<p><strong>Angemeldete Tiere:</strong><br>${animals}<br><strong>Gesamtzahl:</strong> ${Number(p.animal_count || 0)}<br><strong>Impfstoff:</strong> ${e(p.vaccine || 'Newcastle')}</p>`
     if (kind !== 'cancelled') {
       html += `<p>${p.payment_status === 'bezahlt' ? '<strong>Bezahlt</strong>' : `<strong>Offener Betrag:</strong> ${e(money(p.payment_amount))}<br>Zahlung: vor Ort in bar`}</p>`
+      if (p.tariff_review_required) html += '<p>Die Mitgliedschaft konnte noch nicht abschließend geprüft werden. Der ausgewiesene reguläre Betrag ist bis zur Klärung durch den Verein vorläufig; Ihre Anmeldung ist verbindlich gespeichert.</p>'
       if (kind === 'changed') html += `<p><strong>Kontaktdaten:</strong><br>${e(p.firstname)} ${e(p.lastname)}<br>${e(p.street)} ${e(p.housenumber)}<br>${e(p.zipcode)} ${e(p.city)}<br>${e(p.email)}<br>${e(p.phone)}<br>TSK-Betriebsnummer: ${e(p.tsk_number)}</p>`
       const url = test ? 'https://example.invalid/test-verwaltung' : managementUrl(p.id)
       if (['registration', 'changed'].includes(kind) || canEditRegistration(a, p)) html += `<p><a style="display:inline-block;padding:14px 20px;background:#123c2b;color:white;border-radius:6px" href="${e(url)}">Meine Anmeldung verwalten</a></p>`
