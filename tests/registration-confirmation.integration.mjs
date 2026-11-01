@@ -27,9 +27,9 @@ async function request(handler,body,authenticated=false) {
 }
 try {
   await pg.exec(`create role anon;create role authenticated;create role service_role bypassrls;
-    create table clubs(id uuid primary key,slug text,member_code text);
+    create table clubs(id uuid primary key,slug text,member_code text,member_price numeric default 5,guest_price numeric default 10);
     create table club_admin_memberships(user_id uuid,club_id uuid,role text,active boolean);
-    insert into clubs values('${club}','fixture-club','KEEP-CODE'),('${other}','other','OTHER');
+    insert into clubs(id,slug,member_code) values('${club}','fixture-club','KEEP-CODE'),('${other}','other','OTHER');
     insert into club_admin_memberships values('${club}','${club}','clubadmin',true);
     create table vaccination_dates(id uuid primary key default gen_random_uuid(),club_id uuid,title text,date date,archived boolean default false);`)
   const base=await readFile(new URL('../supabase-schema.sql',import.meta.url),'utf8')
@@ -50,6 +50,8 @@ try {
   assert.equal(await scalar('select count(*)::int from participants'),1)
   const repair=await migration('20261105_registration_confirmation_outbox')
   await pg.exec(repair);await pg.exec(repair)
+  await pg.exec('create table club_members(id uuid primary key default gen_random_uuid(),club_id uuid,email text,is_active boolean); alter table participants add column mail_revision integer not null default 0;')
+  await pg.exec(await migration('20261106_verified_member_tariffs'))
   assert.equal(await scalar('select count(*)::int from mail_deliveries'),0) // no historical backfill
   let result=await request(handler,body)
   assert.equal(result.code,201);assert.equal(result.body.emailSent,true);assert.equal(result.body.paymentAmount,5)
@@ -81,7 +83,7 @@ try {
   const afterRecovery=sent.length
   assert.equal((await request(admin,{action:'recover-confirmation',clubId:club,participantId:old},true)).body.unchanged,true)
   assert.equal(sent.length,afterRecovery)
-  assert.deepEqual(await scalar('select to_jsonb(p) from participants p where id=$1',[old]),oldSnapshot)
+  assert.deepEqual(await scalar('select to_jsonb(p) from participants p where id=$1',[old]),{...oldSnapshot,mail_revision:0,tariff_source:null,tariff_verified_email:null})
   // Missing reminder function does not prevent the cron from delivering confirmations.
   await pg.query("insert into participants(firstname,lastname,email,tsk_number,animal_count,vaccine,club_id,vaccination_date_id,payment_method,registration_status) values('Cron','Fixture','cron@example.invalid','FIXTURE',1,'Newcastle',$1,$2,'bar','bar_registered')",[club,date])
   const cron=await runReminderCron(db,{transport})

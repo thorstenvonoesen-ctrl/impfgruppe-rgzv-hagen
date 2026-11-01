@@ -8381,3 +8381,7 @@ footer a { color: var(--aurora-blue) !important; }
   .club-member-management > .table-scroll td[colspan]::before { display: none; }
   .club-member-management .member-import table { min-width: 440px; }
 }
+.membership-tariff { min-width: 0; padding: 14px; border: 1px solid var(--aurora-border, #d8deed); border-radius: 12px; background: #f8f9fd; }
+.membership-tariff p { margin: 0 0 10px; line-height: 1.5; }
+.membership-tariff button { max-width: 100%; white-space: normal; overflow-wrap: anywhere; margin: 6px 0; }
+.membership-tariff input { min-width: 0; width: 100%; box-sizing: border-box; }

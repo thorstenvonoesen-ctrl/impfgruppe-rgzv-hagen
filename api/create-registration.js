@@ -3,6 +3,7 @@ import { createAdminSupabase, verifyPaymentReturnToken } from '../server/_supaba
 import { saveRegistrationWithConfirmation } from '../server/registration-confirmation.js'
 import { canEditRegistration, validEmail, publicBaseUrl } from '../server/mail-rules.js'
 import manageRegistration from '../server/manage-registration.js'
+import { handleMembershipRequest, registrationTariff } from '../server/membership-tariff.js'
 
 const fields = ['firstname', 'lastname', 'street', 'housenumber', 'zipcode', 'city', 'email', 'phone', 'tsk_number']
 const REGISTRATION_VACCINE = 'Newcastle'
@@ -192,10 +193,17 @@ export function createRegistrationHandler({ createDb = createAdminSupabase, tran
 return async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' })
   if (req.body?.action === 'manage-registration') {
-    try { return await manageRegistration(req, res) } catch { return res.status(500).json({ error: 'Die Anmeldung konnte nicht verarbeitet werden.' }) }
+    try { return await manageRegistration(req, res, {db:createDb(),transport}) } catch { return res.status(500).json({ error: 'Die Anmeldung konnte nicht verarbeitet werden.' }) }
   }
   if (req.body?.action === 'lookup-participant') return handleParticipantLookup(req, res)
   if (req.body?.action === 'cancel-payment') return handlePaymentCancellation(req, res)
+  if (['membership-challenge','membership-verify','registration-price'].includes(req.body?.action)) {
+    try { return await handleMembershipRequest(req,res,createDb(),{transport}) }
+    catch (error) {
+      console.error('MEMBERSHIP_VERIFICATION_FAILED',{code:['EAUTH','SMTP_CONFIG','PGRST202','42P01','42883'].includes(error.code)?error.code:'VERIFICATION_ERROR'})
+      return res.status(error.publicMessage?400:503).json({error:error.publicMessage||'Die E-Mail-Prüfung ist derzeit nicht verfügbar. Bitte später erneut versuchen oder den gültigen Mitgliedercode verwenden.'})
+    }
+  }
 
   try {
     const { vaccination_date_id: vaccinationDateId, member_code: memberCode, ...input } = req.body || {}
@@ -243,8 +251,7 @@ return async function handler(req, res) {
     if (existingRegistration) {
       return res.status(409).json({ error: 'Für diese E-Mail-Adresse besteht bereits eine verbindliche Anmeldung zu diesem Impftermin.' })
     }
-    const { data: club } = await supabase.from('clubs').select('member_code').eq('id', appointment.club_id).single()
-    const isMember = Boolean(memberCode && club?.member_code && memberCode.trim().toUpperCase() === club.member_code.trim().toUpperCase())
+    const tariff = await registrationTariff(supabase,{clubId:appointment.club_id,appointmentId:appointment.id,email:normalizedEmail,memberCode,proof:input.membership_proof})
     const participant = Object.fromEntries(fields.map(field => [field, typeof input[field] === 'string' ? input[field].trim() : input[field]]))
     const data = await saveRegistrationWithConfirmation(supabase, {
       ...participant,
@@ -255,12 +262,12 @@ return async function handler(req, res) {
       ...animalCounts,
       vaccination_date_id: vaccinationDateId,
       club_id: appointment.club_id,
-      is_member: isMember,
+      is_member: tariff.isMember,
       payment_status: 'offen',
-      payment_amount: isMember ? 5 : 10,
+      payment_amount: tariff.amount,
       payment_method: paymentMethod === 'bar' ? 'bar' : null,
       registration_status: paymentMethod === 'bar' ? 'bar_registered' : 'pending_payment'
-    }, { transport })
+    }, { transport, tariff: { member_code: String(memberCode||''), verified_email: tariff.verifiedEmail } })
 
     return res.status(201).json({
       participantId: data.id,
@@ -269,6 +276,7 @@ return async function handler(req, res) {
       emailStatus: data.emailStatus
     })
   } catch (error) {
+    if (error.publicMessage) return res.status(400).json({error:error.publicMessage})
     const code = ['PGRST202','42883','42P01','PGRST205','PGRST204','42703','42501','23505','23514','23502','22023','55000','P0001'].includes(error?.code) ? error.code : 'REGISTRATION_FAILURE'
     console.error('REGISTRATION_FAILED', { code })
     if (['PGRST202','42883','42P01','PGRST205'].includes(code)) return res.status(503).json({ error: 'Die Anmeldung ist vorübergehend nicht verfügbar. Die Einrichtung des Bestätigungsversands muss durch die Administration abgeschlossen werden.' })

@@ -1,6 +1,7 @@
 import { saveVaccinationDate, vaccinationDateError } from './vaccination-date-save.js'
 import ParticipantManagement from './ParticipantManagement.jsx'
 import ClubMemberManagement from './ClubMemberManagement.jsx'
+import MembershipTariff, { tariffContext } from './MembershipTariff.jsx'
 import { MailCampaign, MailTestPanel } from './MailAdmin.jsx'
 import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
@@ -4316,6 +4317,8 @@ window.location.href = `/${slug}`
   )
 }
 function PublicSignup() {
+  const [membershipVerification, setMembershipVerification] = useState(null)
+  const [tariffQuote, setTariffQuote] = useState(null)
   const [form, setForm] = useState(emptyForm())
   const [vaccinationDates, setVaccinationDates] = useState([])
   const [club, setClub] = useState(null)
@@ -4660,6 +4663,7 @@ useEffect(() => {
           body: JSON.stringify({
             ...formData,
             member_code,
+            membership_proof: membershipVerification?.email === form.email.trim().toLowerCase() && membershipVerification?.appointmentId === form.vaccination_date_id ? membershipVerification.token : undefined,
             vaccination_date_id: form.vaccination_date_id,
             payment_method: paymentMethod
           })
@@ -4667,7 +4671,7 @@ useEffect(() => {
         const result = await response.json()
         if (!response.ok) throw new Error(result.error || 'Anmeldung konnte nicht gespeichert werden.')
         participantId = result.participantId
-        paymentAmount = Number(result.paymentAmount || 10)
+        paymentAmount = Number(result.paymentAmount ?? 10)
         registrationEmailSent = Boolean(result.emailSent)
       } else {
         paymentAmount = 10
@@ -4970,6 +4974,7 @@ if (!showForm) {
               <Input label="Mitgliedercode (optional)" name="member_code" value={form.member_code} onChange={update}/>
             </div>
             <p className="signup-field-note">Optional: Mitglieder Ihres Vereins erhalten bei Eingabe eines gültigen Mitgliedscodes automatisch den vergünstigten Preis.</p>
+            <MembershipTariff email={form.email} appointmentId={form.vaccination_date_id} memberCode={form.member_code} onVerification={setMembershipVerification} onQuote={setTariffQuote} />
 
           {reuseLookup.status === 'checking' && (
             <p className="signup-reuse-status" role="status">Frühere Anmeldung wird geprüft …</p>
@@ -5086,7 +5091,7 @@ if (!showForm) {
           <div><dt>Tierbestand</dt><dd>{animalTotal > 0 ? `${animalTotal} Tiere` : 'Noch keine Anzahl'}</dd></div>
           <div><dt>Impfstoff</dt><dd>Newcastle-Impfung</dd></div>
           <div><dt>Zahlungsart</dt><dd>Barzahlung vor Ort</dd></div>
-          <div><dt>Teilnahmegebühr</dt><dd>{club?.guest_price ?? 10} € Gäste · {club?.member_price ?? 5} € Mitglieder</dd></div>
+          <div><dt>Teilnahmegebühr</dt><dd>{tariffQuote?.context === tariffContext(form.email,form.vaccination_date_id,form.member_code) ? `${Number(tariffQuote.amount).toLocaleString('de-DE',{style:'currency',currency:'EUR'})} · ${tariffQuote.source === 'guest' ? 'Regulärer Tarif' : tariffQuote.source === 'code' ? 'Mitgliedercode akzeptiert' : 'Mitgliedertarif bestätigt'}` : `${club?.guest_price ?? 10} € regulär · ${club?.member_price ?? 5} € bei bestätigter Mitgliedschaft oder gültigem Code`}</dd></div>
         </dl>
       </aside>
       </div>

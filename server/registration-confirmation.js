@@ -1,9 +1,9 @@
 import { drainMail } from './mail-delivery.js'
 import { mailFailure } from './mail-errors.js'
 
-export async function saveRegistrationWithConfirmation(db, participant, { transport } = {}) {
+export async function saveRegistrationWithConfirmation(db, participant, { transport, tariff } = {}) {
   // The RPC commits the registration and its unique mail job together.
-  const { data, error } = await db.rpc('register_with_confirmation', { registration: participant })
+  const { data, error } = await db.rpc(tariff ? 'register_with_tariff_confirmation' : 'register_with_confirmation', { registration: { ...participant, ...tariff } })
   if (error) throw error
   if (!data?.id) throw Object.assign(new Error('Registration RPC returned no participant.'), { code: 'REGISTRATION_RESULT' })
   let emailSent = false

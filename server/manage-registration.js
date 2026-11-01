@@ -1,6 +1,7 @@
 import { createAdminSupabase } from './_supabase-admin.js'
 import { canEditRegistration, normalizeEmail, validEmail, verifyManagementToken } from './mail-rules.js'
 import { drainMail } from './mail-delivery.js'
+import { verifiedActiveMember } from './membership-tariff.js'
 
 export const contactFields = ['firstname', 'lastname', 'street', 'housenumber', 'zipcode', 'city', 'email', 'phone', 'tsk_number']
 export function cleanManagementChanges(input) {
@@ -18,11 +19,10 @@ export function cleanManagementChanges(input) {
   return changes
 }
 
-export default async function manageRegistration(req, res) {
+export async function manageRegistration(req, res, { db = createAdminSupabase(), transport } = {}) {
   res.setHeader('Cache-Control', 'no-store')
   const id = verifyManagementToken(req.body?.token)
   if (!id) return res.status(403).json({ error: 'Dieser Verwaltungslink ist ungültig.' })
-  const db = createAdminSupabase()
   const { data: p, error } = await db.from('participants').select('*').eq('id', id).maybeSingle()
   if (error) throw error
   if (!p) return res.status(404).json({ error: 'Anmeldung nicht gefunden.' })
@@ -35,11 +35,16 @@ export default async function manageRegistration(req, res) {
     if (!['update', 'cancel'].includes(req.body.operation)) return res.status(400).json({ error: 'Ungültige Aktion.' })
     let changes
     try { changes = req.body.operation === 'update' ? cleanManagementChanges(req.body.changes) : {} } catch (e) { return res.status(400).json({ error: e.message }) }
+    if (req.body.operation === 'update' && p.tariff_source === 'verified_member' && changes.email !== normalizeEmail(p.email)) {
+      if (!await verifiedActiveMember(db,{clubId:p.club_id,appointmentId:a.id,email:changes.email,proof:req.body.membership_proof})) return res.status(400).json({error:'Die neue E-Mail-Adresse muss bestätigt und einem aktiven Mitglied zugeordnet sein. Der bereits berechnete Betrag wird nicht nachträglich geändert.'})
+      changes.verified_email = changes.email
+    }
     const result = await db.rpc('manage_registration', { target_id: id, expected_revision: req.body.revision, operation: req.body.operation, changes })
     if (result.error) return res.status(409).json({ error: 'Speichern nicht möglich. Anmeldeschluss oder zwischenzeitliche Änderung: Bitte neu laden.' })
     saved = result.data
-    try { emailSent = (await drainMail({ participantId: id, limit: 3, db })).sent > 0 } catch { emailSent = false }
+    try { emailSent = (await drainMail({ participantId: id, limit: 3, db, transport })).sent > 0 } catch { emailSent = false }
   }
-  const visible = [...contactFields, 'animal_type','animal_count','chicken_count','bantam_count','turkey_count','vaccine','payment_status','payment_amount','registration_status','mail_revision']
-  return res.status(200).json({ participant: Object.fromEntries(visible.map(key => [key,saved[key]])), appointment: { title: a.title, date: a.date, time: a.time, venue_name: a.venue_name, street: a.street, house_number: a.house_number, postal_code: a.postal_code, city: a.city }, editable: canEditRegistration(a, saved), emailSent })
+  const visible = [...contactFields, 'animal_type','animal_count','chicken_count','bantam_count','turkey_count','vaccine','payment_status','payment_amount','registration_status','mail_revision','tariff_source']
+  return res.status(200).json({ participant: Object.fromEntries(visible.map(key => [key,saved[key]])), appointment: { id:a.id, title: a.title, date: a.date, time: a.time, venue_name: a.venue_name, street: a.street, house_number: a.house_number, postal_code: a.postal_code, city: a.city }, editable: canEditRegistration(a, saved), emailSent })
 }
+export default manageRegistration

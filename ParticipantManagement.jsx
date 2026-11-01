@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import MembershipTariff from './MembershipTariff.jsx'
 
 const fields = [['firstname','Vorname'],['lastname','Nachname'],['email','E-Mail'],['street','Straße'],['housenumber','Hausnummer'],['zipcode','PLZ'],['city','Ort'],['phone','Telefon'],['tsk_number','TSK-Betriebsnummer']]
 const animals = [['chicken_count','Hühner'],['bantam_count','Zwerghühner'],['turkey_count','Puten']]
@@ -8,8 +9,9 @@ export default function ParticipantManagement({ token }) {
   const [form, setForm] = useState({})
   const [busy, setBusy] = useState(false)
   const [message, setMessage] = useState('')
+  const [membershipVerification,setMembershipVerification] = useState(null)
   async function request(operation, signal) {
-    const response = await fetch('/api/create-registration', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'manage-registration', token, operation, revision: data?.participant.mail_revision, changes: form }), signal })
+    const response = await fetch('/api/create-registration', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'manage-registration', token, operation, revision: data?.participant.mail_revision, changes: form, membership_proof: membershipVerification?.email===form.email?.trim().toLowerCase() && membershipVerification?.appointmentId===data?.appointment.id ? membershipVerification.token:undefined }), signal })
     const result = await response.json()
     if (!response.ok) throw new Error(result.error || 'Anfrage fehlgeschlagen.')
     return result
@@ -51,12 +53,14 @@ export default function ParticipantManagement({ token }) {
       <form onSubmit={e => { e.preventDefault(); save('update') }} className="form">
         <fieldset disabled={busy || !data.editable} style={{ border: 0, padding: 0 }}>
           {fields.map(([key,label]) => <label key={key} style={{ display: 'block', marginBottom: 10 }}>{label}<input name={key} type={key === 'email' ? 'email' : 'text'} required={['firstname','lastname','email','tsk_number'].includes(key)} value={form[key] || ''} onChange={e => setForm({ ...form, [key]: e.target.value })}/></label>)}
+          {data.participant.tariff_source==='verified_member' && form.email?.trim().toLowerCase()!==data.participant.email?.trim().toLowerCase() && <MembershipTariff email={form.email} appointmentId={a.id} onVerification={setMembershipVerification} showTariff={false} />}
           {animals.map(([key,label]) => <label key={key} style={{ display: 'block', marginBottom: 10 }}>{label}<input type="number" min="0" max="1000000" step="1" value={form[key] ?? 0} onChange={e => setForm({ ...form, [key]: e.target.value })}/></label>)}
           <p>Gesamtzahl: {animals.reduce((sum,[key]) => sum + Number(form[key] || 0),0)} · Impfstoff: {form.vaccine}</p>
           {data.editable && <button className="primary" type="submit">{busy ? 'Wird gespeichert …' : 'Änderungen speichern'}</button>}
         </fieldset>
       </form>
       <p>{form.payment_status === 'bezahlt' ? 'Bezahlt' : `Offener Betrag: ${Number(form.payment_amount || 0).toLocaleString('de-DE',{style:'currency',currency:'EUR'})} – Zahlung: vor Ort in bar`}</p>
+      <p>Der bei Ihrer Anmeldung berechnete Betrag bleibt bei Änderungen erhalten.</p>
       {data.editable && <button className="ghost" disabled={busy} onClick={() => save('cancel')}>Anmeldung stornieren</button>}
     </>}
   </section></main>
