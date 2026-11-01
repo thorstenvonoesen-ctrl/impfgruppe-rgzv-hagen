@@ -30,7 +30,14 @@ export async function manageRegistration(req, res, { db = createAdminSupabase(),
   if (dateError) throw dateError
   let saved = p
   let emailSent
-  if (req.body.operation !== 'view') {
+  if (req.body.operation === 'confirm-member-tariff') {
+    if (!canEditRegistration(a,p)) return res.status(409).json({error:'Diese Anmeldung benötigt eine manuelle Abrechnungsprüfung.'})
+    if (!await verifiedActiveMember(db,{clubId:p.club_id,appointmentId:a.id,email:p.email,proof:req.body.membership_proof})) return res.status(403).json({error:'Bitte die gespeicherte E-Mail-Adresse erneut bestätigen. Eine aktive Mitgliedschaft ist erforderlich.'})
+    const result=await db.rpc('correct_verified_member_tariff',{target_id:p.id,target_club:p.club_id,verified_email:normalizeEmail(p.email),expected_amount:p.payment_amount})
+    if(result.error)return res.status(409).json({error:'Tarifkorrektur nicht möglich. Betrag, Zahlungsstatus und Vereinszuordnung durch die Administration prüfen lassen.'})
+    saved=result.data
+    emailSent=false // An explicit correction never resends an existing confirmation.
+  } else if (req.body.operation !== 'view') {
     if (!canEditRegistration(a, p)) return res.status(409).json({ error: 'Die Anmeldung kann nicht mehr geändert oder storniert werden.' })
     if (!['update', 'cancel'].includes(req.body.operation)) return res.status(400).json({ error: 'Ungültige Aktion.' })
     let changes
@@ -44,7 +51,7 @@ export async function manageRegistration(req, res, { db = createAdminSupabase(),
     saved = result.data
     try { emailSent = (await drainMail({ participantId: id, limit: 3, db, transport })).sent > 0 } catch { emailSent = false }
   }
-  const visible = [...contactFields, 'animal_type','animal_count','chicken_count','bantam_count','turkey_count','vaccine','payment_status','payment_amount','registration_status','mail_revision','tariff_source']
+  const visible = [...contactFields, 'animal_type','animal_count','chicken_count','bantam_count','turkey_count','vaccine','payment_status','payment_amount','registration_status','mail_revision','tariff_source','is_member','tariff_review_required']
   return res.status(200).json({ participant: Object.fromEntries(visible.map(key => [key,saved[key]])), appointment: { id:a.id, title: a.title, date: a.date, time: a.time, venue_name: a.venue_name, street: a.street, house_number: a.house_number, postal_code: a.postal_code, city: a.city }, editable: canEditRegistration(a, saved), emailSent })
 }
 export default manageRegistration

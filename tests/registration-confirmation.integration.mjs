@@ -59,6 +59,25 @@ try {
   await pg.exec(repair)
   assert.equal(await scalar("select pg_get_functiondef('delete_participant_registration(uuid,uuid)'::regprocedure)"),deleteDefinition)
   assert.equal(await scalar('select count(*)::int from mail_deliveries'),0) // no historical backfill
+  // Actual 5/10 euro flow with a legacy mixed-case member address and fresh OTP.
+  await pg.exec(`alter table club_members disable trigger club_members_normalize;
+    insert into club_members(club_id,firstname,lastname,email,is_active) values('${club}','Fixture','Member','Verified-Member@Example.Invalid',true);
+    alter table club_members enable trigger club_members_normalize;`)
+  const memberEmail='verified-member@example.invalid'
+  const challenge=await request(handler,{action:'membership-challenge',email:memberEmail,vaccinationDateId:date})
+  assert.equal(challenge.code,200)
+  const otp=sent.at(-1).text.match(/\b\d{8}\b/)[0]
+  const verified=await request(handler,{action:'membership-verify',email:memberEmail,vaccinationDateId:date,challengeId:challenge.body.challengeId,code:otp})
+  assert.equal(verified.code,200)
+  const quote=await request(handler,{action:'registration-price',email:memberEmail,vaccinationDateId:date,proof:verified.body.token})
+  assert.equal(quote.body.amount,5)
+  const memberSignup=await request(handler,{...body,email:memberEmail,member_code:'',membership_proof:verified.body.token})
+  assert.equal(memberSignup.code,201);assert.equal(memberSignup.body.paymentAmount,5)
+  assert.match(sent.at(-1).html,/5,00/)
+  assert.equal(Number(await scalar('select payment_amount from participants where id=$1',[memberSignup.body.participantId])),5)
+  const memberReload=await request(handler,{action:'manage-registration',operation:'view',token:managementToken(memberSignup.body.participantId)})
+  assert.equal(Number(memberReload.body.participant.payment_amount),5);assert.equal(memberReload.body.participant.is_member,true)
+  sent.length=0 // assertions below count subsequent simulated sends only
   let result=await request(handler,body)
   assert.equal(result.code,201);assert.equal(result.body.emailSent,true);assert.equal(result.body.paymentAmount,5)
   assert.equal(sent.length,1);assert.equal(sent[0].to,'new@example.invalid')

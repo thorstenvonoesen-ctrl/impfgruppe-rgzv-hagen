@@ -31,7 +31,7 @@ try{
     create table club_admin_memberships(user_id uuid,club_id uuid,role text,active boolean);
     create table vaccination_dates(id uuid primary key default gen_random_uuid(),club_id uuid,title text,date date,archived boolean default false);
     create table club_members(id uuid primary key default gen_random_uuid(),club_id uuid,email text,is_active boolean);
-    insert into club_members(club_id,email,is_active) values('${club}','member@example.invalid',true),('${club}','inactive@example.invalid',false),('${other}','foreign@example.invalid',true),('${club}','second@example.invalid',true);`)
+    insert into club_members(club_id,email,is_active) values('${club}','member@example.invalid',true),('${club}','inactive@example.invalid',false),('${other}','foreign@example.invalid',true),('${club}','second@example.invalid',true),('${club}',' Mixed@Example.Invalid ',true);`)
   const base=await readFile(new URL('../supabase-schema.sql',import.meta.url),'utf8');await pg.exec(base.split('alter table participants')[0])
   await pg.exec(`alter table participants add column club_id uuid,add column vaccination_date_id uuid,add column registration_status text,add column animal_type text,
     add column chicken_count integer,add column bantam_count integer,add column turkey_count integer,add column checkin_token text default gen_random_uuid()::text,
@@ -45,10 +45,30 @@ try{
   await pg.exec(await migration('20261108_resilient_registration'))
   await pg.exec(await migration('20261109_membership_rate_limit_repair'))
   await pg.exec(await migration('20261110_remove_membership_request_limits'))
+  // Reproduce exact-match failure on a legacy row without rewriting member data.
+  assert.equal(await scalar("select exists(select 1 from club_members where club_id=$1 and email='mixed@example.invalid' and is_active)",[club]),false)
+  const baseline={firstname:'Mixed',lastname:'Fixture',email:'mixed@example.invalid',tsk_number:'FIXTURE',animal_count:1,chicken_count:1,bantam_count:0,turkey_count:0,vaccine:'Newcastle',club_id:club,vaccination_date_id:date,payment_method:'bar',payment_status:'offen',registration_status:'bar_registered',verified_email:'mixed@example.invalid'}
+  const wrong=await scalar('select register_with_tariff_confirmation($1)',[JSON.stringify(baseline)])
+  assert.equal(Number(wrong.payment_amount),12.25)
+  const normalization=await migration('20261111_normalized_member_tariff')
+  await pg.exec(normalization);await pg.exec(normalization)
   assert.equal(Number(await scalar('select payment_amount from participants where id=$1',[legacy])),4.2)
   assert.deepEqual(await scalar('select jsonb_agg(m order by id) from club_members m'),membersBefore)
   const signup={vaccination_date_id:date,firstname:'Fixture',lastname:'Person',tsk_number:'FIXTURE',chicken_count:2,bantam_count:0,turkey_count:0}
   const quote=async(email,proof,memberCode)=>request({action:'registration-price',email,vaccinationDateId:date,proof,memberCode})
+  const mixedProof=await verify('mixed@example.invalid')
+  assert.equal((await quote(' MIXED@EXAMPLE.INVALID ',mixedProof)).body.amount,6.75)
+  const correctTariff=proof=>request({action:'manage-registration',operation:'confirm-member-tariff',token:managementToken(wrong.id),membership_proof:proof,changes:{firstname:'MUST NOT CHANGE',payment_amount:0}})
+  assert.equal((await correctTariff(undefined)).code,403)
+  const beforeCorrection=await scalar('select to_jsonb(p) from participants p where id=$1',[wrong.id])
+  const mailCount=mails.length
+  const corrected=await correctTariff(mixedProof)
+  assert.equal(corrected.code,200);assert.equal(Number(corrected.body.participant.payment_amount),6.75)
+  assert.equal(mails.length,mailCount)
+  const afterCorrection=await scalar('select to_jsonb(p) from participants p where id=$1',[wrong.id])
+  for(const [key,value] of Object.entries(beforeCorrection))if(!['payment_amount','is_member','tariff_source','tariff_verified_email','tariff_review_required'].includes(key))assert.deepEqual(afterCorrection[key],value)
+  assert.equal((await correctTariff(mixedProof)).code,200)
+  assert.equal(await scalar('select count(*)::int from member_tariff_corrections'),1)
   let result=await quote('member@example.invalid');assert.equal(result.body.amount,12.25) // email alone grants nothing
   const token=await verify('member@example.invalid')
   result=await quote(' MEMBER@EXAMPLE.INVALID ',token);assert.equal(result.body.amount,6.75);assert.equal(result.body.source,'verified_member')
@@ -123,7 +143,7 @@ try{
   await assert.rejects(scalar('select register_with_tariff_confirmation($1)',[JSON.stringify(signup)]),e=>e.code==='42501')
   await pg.exec('reset role')
   const snapshot=await scalar('select jsonb_agg(p order by id) from participants p')
-  await pg.exec(newMigration)
+  await pg.exec(newMigration);await pg.exec(normalization)
   assert.deepEqual(await scalar('select jsonb_agg(p order by id) from participants p'),snapshot)
   assert.equal(await scalar('select member_code from clubs where id=$1',[club]),'KEEP-CODE')
   console.log('PASS: email ownership OTP, proof scope/expiry/replay, rate/guess limits; active/inactive/foreign/guest/code tariffs; configured amounts in database and email; forged input rejected; legacy/edit/paid snapshots; reverified address change; private RPCs; repeat migration. No real SMTP.')

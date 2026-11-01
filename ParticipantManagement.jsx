@@ -11,7 +11,8 @@ export default function ParticipantManagement({ token }) {
   const [message, setMessage] = useState('')
   const [membershipVerification,setMembershipVerification] = useState(null)
   async function request(operation, signal) {
-    const response = await fetch('/api/create-registration', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'manage-registration', token, operation, revision: data?.participant.mail_revision, changes: form, membership_proof: membershipVerification?.email===form.email?.trim().toLowerCase() && membershipVerification?.appointmentId===data?.appointment.id ? membershipVerification.token:undefined }), signal })
+    const proofEmail=operation==='confirm-member-tariff'?data?.participant.email:form.email
+    const response = await fetch('/api/create-registration', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'manage-registration', token, operation, revision: data?.participant.mail_revision, changes: form, membership_proof: membershipVerification?.email===proofEmail?.trim().toLowerCase() && membershipVerification?.appointmentId===data?.appointment.id ? membershipVerification.token:undefined }), signal })
     const result = await response.json()
     if (!response.ok) throw new Error(result.error || 'Anfrage fehlgeschlagen.')
     return result
@@ -38,7 +39,7 @@ export default function ParticipantManagement({ token }) {
     try {
       const result = await request(operation)
       show(result)
-      setMessage(`${operation === 'cancel' ? 'Ihre Anmeldung wurde storniert.' : 'Ihre Anmeldung wurde gespeichert.'} ${result.emailSent ? 'Die Bestätigung wurde versendet.' : 'Der E-Mail-Versand wird verarbeitet.'}`)
+      setMessage(operation==='confirm-member-tariff'?'Der Mitgliedertarif wurde nach bestätigter Mitgliedschaft übernommen. Andere Anmeldedaten wurden nicht geändert. Es wurde keine weitere E-Mail versendet.':`${operation === 'cancel' ? 'Ihre Anmeldung wurde storniert.' : 'Ihre Anmeldung wurde gespeichert.'} ${result.emailSent ? 'Die Bestätigung wurde versendet.' : 'Der E-Mail-Versand wird verarbeitet.'}`)
     } catch (e) { setMessage(e.message) } finally { setBusy(false) }
   }
   const a = data?.appointment
@@ -61,6 +62,12 @@ export default function ParticipantManagement({ token }) {
       </form>
       <p>{form.payment_status === 'bezahlt' ? 'Bezahlt' : `Offener Betrag: ${Number(form.payment_amount || 0).toLocaleString('de-DE',{style:'currency',currency:'EUR'})} – Zahlung: vor Ort in bar`}</p>
       <p>Der bei Ihrer Anmeldung berechnete Betrag bleibt bei Änderungen erhalten.</p>
+      {data.editable && !data.participant.is_member && data.participant.payment_status==='offen' && <section>
+        <h3>Mitgliedertarif prüfen</h3>
+        <p>Für eine gezielte Tarifkorrektur bestätigen Sie die bereits gespeicherte E-Mail-Adresse. Andere Anmeldedaten bleiben erhalten.</p>
+        <MembershipTariff email={data.participant.email} appointmentId={a.id} onVerification={setMembershipVerification} showTariff={false} />
+        <button type="button" className="ghost" disabled={busy||!membershipVerification} onClick={()=>save('confirm-member-tariff')}>Bestätigten Mitgliedertarif übernehmen</button>
+      </section>}
       {data.editable && <button className="ghost" disabled={busy} onClick={() => save('cancel')}>Anmeldung stornieren</button>}
     </>}
   </section></main>

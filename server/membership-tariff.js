@@ -30,7 +30,7 @@ export function validMembershipProof(token,clubId,appointmentId,email,now=Date.n
 }
 export async function verifiedActiveMember(db,{clubId,appointmentId,email,proof}) {
   if(!validMembershipProof(proof,clubId,appointmentId,email)) return false
-  const {data,error}=await db.from('club_members').select('id').eq('club_id',clubId).eq('email',normalizeEmail(email)).eq('is_active',true).maybeSingle()
+  const {data,error}=await db.rpc('active_club_member_matches',{target_club:clubId,verified_email:normalizeEmail(email)})
   if(error) throw error
   return Boolean(data)
 }
