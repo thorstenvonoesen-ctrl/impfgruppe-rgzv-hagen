@@ -17,6 +17,7 @@ export function mailFailure(error) {
     '42501': 'Der Server darf die Versanddaten nicht lesen oder schreiben. SUPABASE_SERVICE_ROLE_KEY und Datenbankberechtigungen prüfen.',
     EAUTH: 'Die SMTP-Anmeldung wurde abgelehnt. SMTP_USER und SMTP_PASS in Vercel prüfen.',
     SMTP_CONFIG: 'Die SMTP-Konfiguration ist unvollständig oder ungültig. SMTP_HOST, SMTP_PORT, SMTP_USER und SMTP_PASS in Vercel prüfen.',
+    APP_URL_CONFIG: 'Die öffentliche App-Adresse fehlt oder ist ungültig. APP_URL oder die unterstützte Produktions-URL in Vercel prüfen und neu bereitstellen.',
     EDNS: 'Der SMTP-Servername konnte nicht aufgelöst werden. SMTP_HOST prüfen.',
     ECONNECTION: 'Die Verbindung zum SMTP-Server ist fehlgeschlagen. Host, Port und TLS prüfen.',
     ESOCKET: 'Die sichere SMTP-Verbindung ist fehlgeschlagen. Host, Port und TLS prüfen.',

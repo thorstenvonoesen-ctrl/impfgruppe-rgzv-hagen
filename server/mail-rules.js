@@ -54,10 +54,14 @@ export function verifyManagementToken(token) {
 }
 export function publicBaseUrl() {
   const raw = process.env.APP_URL || process.env.PUBLIC_APP_URL || process.env.SITE_URL || process.env.VITE_APP_URL || (process.env.VERCEL_PROJECT_PRODUCTION_URL && `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`)
-  if (!raw) throw new Error('Öffentliche App-Adresse fehlt (APP_URL oder VERCEL_PROJECT_PRODUCTION_URL).')
-  const url = new URL(raw)
-  if (url.protocol !== 'https:' && url.hostname !== 'localhost') throw new Error('Ungültige App-Adresse.')
-  return url.origin
+  try {
+    if (!raw) throw new Error('missing')
+    const url = new URL(raw)
+    if (url.protocol !== 'https:' && url.hostname !== 'localhost') throw new Error('invalid')
+    return url.origin
+  } catch {
+    throw Object.assign(new Error('Öffentliche App-Adresse fehlt oder ist ungültig.'),{code:'APP_URL_CONFIG'})
+  }
 }
 export const managementUrl = id => `${publicBaseUrl()}/#manage=${managementToken(id)}`
 

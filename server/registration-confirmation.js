@@ -1,7 +1,7 @@
 import { drainMail } from './mail-delivery.js'
 import { mailFailure } from './mail-errors.js'
 
-export async function saveRegistrationWithConfirmation(db, participant, { transport, tariff } = {}) {
+export async function saveRegistrationWithConfirmation(db, participant, { transport, tariff, reference } = {}) {
   // The RPC commits the registration and its unique mail job together.
   const { data, error } = await db.rpc(tariff ? 'register_with_tariff_confirmation' : 'register_with_confirmation', { registration: { ...participant, ...tariff } })
   if (error) throw error
@@ -15,7 +15,7 @@ export async function saveRegistrationWithConfirmation(db, participant, { transp
     emailStatus = job.data.status
     emailSent = emailStatus === 'sent'
   } catch (mailError) {
-    console.error('REGISTRATION_MAIL_PENDING', { participantId: data.id, code: mailFailure(mailError).code })
+    console.error('REGISTRATION_MAIL_PENDING', { reference, participantId: data.id, code: mailFailure(mailError).code })
   }
   return { ...data, emailSent, emailStatus }
 }

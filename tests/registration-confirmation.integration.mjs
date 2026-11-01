@@ -93,9 +93,37 @@ try {
   assert.equal(result.body.emailStatus,'uncertain')
   const unclearId=await scalar("select id from mail_deliveries where recipient='unclear@example.invalid'")
   assert.equal((await request(admin,{action:'retry-delivery',clubId:club,deliveryId:unclearId},true)).code,409)
+  // Regression: mail URL configuration must not prevent committing the signup.
+  const urlKeys=['APP_URL','PUBLIC_APP_URL','SITE_URL','VITE_APP_URL','VERCEL_PROJECT_PRODUCTION_URL']
+  const originalUrls=Object.fromEntries(urlKeys.map(key=>[key,process.env[key]]))
+  const beforeMissingUrl=sent.length
+  let missingUrlId
+  try {
+    for(const key of urlKeys)delete process.env[key]
+    result=await request(handler,{...body,email:'missing-url@example.invalid'})
+    assert.equal(result.code,201);assert.equal(result.body.emailSent,false);assert.equal(result.body.emailStatus,'failed')
+    missingUrlId=await scalar("select id from mail_deliveries where recipient='missing-url@example.invalid'")
+    assert.equal(await scalar('select error_code from mail_deliveries where id=$1',[missingUrlId]),'APP_URL_CONFIG')
+    assert.equal(sent.length,beforeMissingUrl) // builder rejects before SMTP is contacted
+    assert.equal((await request(handler,{...body,email:'missing-url@example.invalid'})).code,409)
+    assert.equal(await scalar("select count(*)::int from participants where email='missing-url@example.invalid'"),1)
+  } finally {
+    for(const key of urlKeys){if(originalUrls[key]===undefined)delete process.env[key];else process.env[key]=originalUrls[key]}
+  }
+  assert.equal((await request(admin,{action:'retry-delivery',clubId:club,deliveryId:missingUrlId},true)).body.sent,1)
+  assert.equal(sent.length,beforeMissingUrl+1)
+  // A partially deployed RPC must expose a schema error and roll back both records.
+  await pg.exec('alter table participants rename column tariff_source to fixture_missing_tariff_source')
+  try {
+    result=await request(handler,{...body,email:'missing-column@example.invalid'})
+    assert.equal(result.code,503);assert.match(result.body.error,/Datenbank.*nicht vollständig eingerichtet/)
+    assert.ok(result.body.reference)
+    assert.equal(await scalar("select count(*)::int from participants where email='missing-column@example.invalid'"),0)
+    assert.equal(await scalar("select count(*)::int from mail_deliveries where recipient='missing-column@example.invalid'"),0)
+  } finally {await pg.exec('alter table participants rename column fixture_missing_tariff_source to tariff_source')}
   // If queue persistence fails, the participant INSERT is rolled back too.
   await pg.exec("alter table mail_deliveries add constraint fixture_failure check (recipient <> 'rollback@example.invalid')")
-  assert.equal((await request(handler,{...body,email:'rollback@example.invalid'})).code,500)
+  assert.equal((await request(handler,{...body,email:'rollback@example.invalid'})).code,503)
   assert.equal(await scalar("select count(*)::int from participants where email='rollback@example.invalid'"),0)
   await pg.exec('set role authenticated')
   await assert.rejects(scalar('select register_with_confirmation($1)',[JSON.stringify(body)]),e=>e.code==='42501')
@@ -104,5 +132,5 @@ try {
   await pg.exec(repair)
   assert.deepEqual(await scalar('select jsonb_agg(d order by id) from mail_deliveries d'),protocols)
   assert.equal(await scalar('select member_code from clubs where id=$1',[club]),'KEEP-CODE')
-  console.log('PASS: missing-trigger failure reproduced; registration API atomic outbox and fake SMTP; member/guest prices preserved; duplicate request; failed SMTP and audited admin retry; targeted recovery; reminder-independent cron; uncertain safety; rollback; permissions; repeat migration. No real emails.')
+  console.log('PASS: registration/outbox, missing APP_URL does not block saving, failed mail retries after URL repair, missing RPC/column diagnostics and atomic rollback, duplicates, configured tariffs unchanged, permissions and repeat migrations. No real emails.')
 }finally{await pg.close()}

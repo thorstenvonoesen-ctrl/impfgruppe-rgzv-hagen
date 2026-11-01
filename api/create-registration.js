@@ -1,9 +1,10 @@
-import { createHmac, timingSafeEqual } from 'node:crypto'
+import { createHmac, timingSafeEqual, randomUUID } from 'node:crypto'
 import { createAdminSupabase, verifyPaymentReturnToken } from '../server/_supabase-admin.js'
 import { saveRegistrationWithConfirmation } from '../server/registration-confirmation.js'
-import { canEditRegistration, validEmail, publicBaseUrl } from '../server/mail-rules.js'
+import { canEditRegistration, validEmail } from '../server/mail-rules.js'
 import manageRegistration from '../server/manage-registration.js'
 import { handleMembershipRequest, registrationTariff } from '../server/membership-tariff.js'
+import { registrationFailure } from '../server/registration-errors.js'
 
 const fields = ['firstname', 'lastname', 'street', 'housenumber', 'zipcode', 'city', 'email', 'phone', 'tsk_number']
 const REGISTRATION_VACCINE = 'Newcastle'
@@ -205,6 +206,8 @@ return async function handler(req, res) {
     }
   }
 
+  const reference=randomUUID()
+  let stage='VALIDATE_REQUEST'
   try {
     const { vaccination_date_id: vaccinationDateId, member_code: memberCode, ...input } = req.body || {}
     if (!vaccinationDateId || !input.firstname || !input.lastname || !input.email || !input.tsk_number) {
@@ -223,17 +226,22 @@ return async function handler(req, res) {
       total: animalCount,
       animalType
     } = animalRegistration
+    stage='SERVER_CONFIG'
     const supabase = createDb()
+    stage='APPOINTMENT_LOOKUP'
     const { data: appointment, error: appointmentError } = await supabase
       .from('vaccination_dates').select('*').eq('id', vaccinationDateId).single()
-    if (appointmentError || !appointment) return res.status(400).json({ error: 'Ungültiger Impftermin.' })
+    if (appointmentError) throw appointmentError
+    if (!appointment) return res.status(400).json({ error: 'Ungültiger Impftermin.' })
     if (appointment.archived) {
       return res.status(409).json({ error: 'Dieser Impftermin ist bereits abgeschlossen. Änderungen an der Anmeldung sind nicht mehr möglich.' })
     }
     const normalizedEmail = normalizeEmail(input.email)
     if (!validEmail(normalizedEmail)) return res.status(400).json({ error: 'Ungültige E-Mail-Adresse.' })
     if (!canEditRegistration(appointment)) return res.status(409).json({ error: 'Die Anmeldung für diesen Impftermin ist geschlossen.' })
-    publicBaseUrl()
+    // Public mail links are validated by the mail builder after the atomic commit.
+    // A broken APP_URL must not discard a valid registration and its durable job.
+    stage='DUPLICATE_LOOKUP'
     const escapedEmail = normalizedEmail.replace(/[\\%_]/g, character => `\\${character}`)
     const { data: existingRegistration, error: duplicateError } = await supabase
       .from('participants')
@@ -251,8 +259,10 @@ return async function handler(req, res) {
     if (existingRegistration) {
       return res.status(409).json({ error: 'Für diese E-Mail-Adresse besteht bereits eine verbindliche Anmeldung zu diesem Impftermin.' })
     }
+    stage='TARIFF_LOOKUP'
     const tariff = await registrationTariff(supabase,{clubId:appointment.club_id,appointmentId:appointment.id,email:normalizedEmail,memberCode,proof:input.membership_proof})
     const participant = Object.fromEntries(fields.map(field => [field, typeof input[field] === 'string' ? input[field].trim() : input[field]]))
+    stage='REGISTRATION_COMMIT'
     const data = await saveRegistrationWithConfirmation(supabase, {
       ...participant,
       email: normalizedEmail,
@@ -267,7 +277,8 @@ return async function handler(req, res) {
       payment_amount: tariff.amount,
       payment_method: paymentMethod === 'bar' ? 'bar' : null,
       registration_status: paymentMethod === 'bar' ? 'bar_registered' : 'pending_payment'
-    }, { transport, tariff: { member_code: String(memberCode||''), verified_email: tariff.verifiedEmail } })
+    }, { transport, reference, tariff: { member_code: String(memberCode||''), verified_email: tariff.verifiedEmail } })
+    console.info('REGISTRATION_SAVED',{reference,participantId:data.id,emailStatus:data.emailStatus})
 
     return res.status(201).json({
       participantId: data.id,
@@ -277,12 +288,9 @@ return async function handler(req, res) {
     })
   } catch (error) {
     if (error.publicMessage) return res.status(400).json({error:error.publicMessage})
-    const code = ['PGRST202','42883','42P01','PGRST205','PGRST204','42703','42501','23505','23514','23502','22023','55000','P0001'].includes(error?.code) ? error.code : 'REGISTRATION_FAILURE'
-    console.error('REGISTRATION_FAILED', { code })
-    if (['PGRST202','42883','42P01','PGRST205'].includes(code)) return res.status(503).json({ error: 'Die Anmeldung ist vorübergehend nicht verfügbar. Die Einrichtung des Bestätigungsversands muss durch die Administration abgeschlossen werden.' })
-    if (code === '23505') return res.status(409).json({ error: 'Für diese E-Mail-Adresse besteht bereits eine Anmeldung zu diesem Impftermin.' })
-    if (code === '55000' && error.message === 'Die Anmeldung ist geschlossen.') return res.status(409).json({ error: 'Die Anmeldung für diesen Impftermin ist geschlossen.' })
-    return res.status(500).json({ error: 'Anmeldung konnte nicht gespeichert werden.' })
+    const failure=registrationFailure(error,stage)
+    console.error('REGISTRATION_FAILED',{reference,...failure.diagnostic})
+    return res.status(failure.status).json({error:`${failure.text} Referenz: ${reference}`,reference})
   }
 }
 }
