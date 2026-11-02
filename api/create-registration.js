@@ -1,4 +1,5 @@
 import { createHmac, timingSafeEqual, randomUUID } from 'node:crypto'
+import { waitUntil } from '@vercel/functions'
 import { createAdminSupabase, verifyPaymentReturnToken } from '../server/_supabase-admin.js'
 import { saveRegistrationWithConfirmation } from '../server/registration-confirmation.js'
 import { canEditRegistration, validEmail } from '../server/mail-rules.js'
@@ -190,7 +191,7 @@ async function handlePaymentCancellation(req, res) {
 }
 
 export const config = { maxDuration: 60 }
-export function createRegistrationHandler({ createDb = createAdminSupabase, transport } = {}) {
+export function createRegistrationHandler({ createDb = createAdminSupabase, transport, scheduleMail } = {}) {
 return async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' })
   if (req.body?.action === 'manage-registration') {
@@ -277,7 +278,7 @@ return async function handler(req, res) {
       payment_amount: tariff.amount,
       payment_method: paymentMethod === 'bar' ? 'bar' : null,
       registration_status: paymentMethod === 'bar' ? 'bar_registered' : 'pending_payment'
-    }, { transport, reference, tariff: { member_code: String(memberCode||''), verified_email: tariff.verifiedEmail, tariff_review_required:tariff.reviewRequired===true } })
+    }, { transport, reference, scheduleMail, tariff: { member_code: String(memberCode||''), verified_email: tariff.verifiedEmail, tariff_review_required:tariff.reviewRequired===true } })
     console.info('REGISTRATION_SAVED',{reference,participantId:data.id,emailStatus:data.emailStatus,
       quotedTariffSource:tariff.source,paymentAmount:Number(data.payment_amount),tariffReviewRequired:data.tariff_review_required===true})
 
@@ -298,4 +299,4 @@ return async function handler(req, res) {
 }
 }
 
-export default createRegistrationHandler()
+export default createRegistrationHandler({ scheduleMail: waitUntil })

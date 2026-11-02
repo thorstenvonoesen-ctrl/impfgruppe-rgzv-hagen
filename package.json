@@ -14,6 +14,7 @@
   },
   "dependencies": {
     "@supabase/supabase-js": "latest",
+    "@vercel/functions": "^3.10.5",
     "@vitejs/plugin-react": "latest",
     "html5-qrcode": "^2.3.8",
     "jspdf": "latest",

@@ -181,6 +181,23 @@ try {
   await reconcileRegistrationConfirmations(db,{clubId:club})
   assert.equal((await drainMail({db,transport})).sent,1)
   // Concurrent retries serialize and leave exactly one participant and one job.
+  // A slow SMTP handoff must not hold the registration response open.
+  let releaseSmtp, smtpEntered
+  const smtpGate = new Promise(resolve => { releaseSmtp = resolve })
+  const smtpStarted = new Promise(resolve => { smtpEntered = resolve })
+  let background
+  const nonblocking = createRegistrationHandler({createDb:()=>db,
+    scheduleMail:task=>{background=task},
+    transport:{async sendMail(mail){smtpEntered();await smtpGate;return transport.sendMail(mail)}}})
+  const immediate = await request(nonblocking,{...body,email:'background@example.invalid'})
+  assert.equal(immediate.code,201)
+  assert.equal(immediate.body.emailSent,false)
+  assert.equal(immediate.body.emailStatus,'pending')
+  await smtpStarted
+  assert.equal(await scalar("select status from mail_deliveries where recipient='background@example.invalid'"),'sending')
+  releaseSmtp()
+  await background
+  assert.equal(await scalar("select status from mail_deliveries where recipient='background@example.invalid'"),'sent')
   const simultaneous=await Promise.all([request(handler,{...body,email:'concurrent@example.invalid'}),request(handler,{...body,email:'concurrent@example.invalid'})])
   assert.deepEqual(simultaneous.map(r=>r.code).sort(),[201,409])
   assert.equal(await scalar("select count(*)::int from participants where email='concurrent@example.invalid'"),1)

@@ -1,5 +1,27 @@
 # Mitgliedertarif und Smartphone-Check-in: Bereitstellung und Nachweise
 
+## Gezielte Nachprüfung am 02.11.2026
+
+Tarif- und QR-Reparaturen sind bereits vorhanden; keine weiteren Änderungen daran.
+Fehlende Ergänzung: Die Anmeldeantwort wartete bisher auf den unmittelbaren
+SMTP-Versuch. Dieser läuft nun mit `@vercel/functions` / `waitUntil` über denselben
+Worker im Hintergrund. Die Antwort meldet zunächst `emailStatus=pending`, nicht
+fälschlich eine erfolgreiche SMTP-Annahme. `REGISTRATION_MAIL_RESULT` protokolliert
+Status und Dauer des unmittelbaren Versandversuchs. Die Ursache der produktiven
+5–10 Minuten Verzögerung bleibt ohne Queue-/SMTP-Protokolle unbewiesen.
+
+Einmalig erfolgreich geprüft: 18 relevante Unit-Tests, Registrierungsintegration
+einschließlich wartendem Fake-SMTP bei bereits beantworteter Anmeldung,
+Mitgliedertarifintegration, Check-in-Integration und Produktionsbuild. Keine echten
+E-Mails oder produktiven Datenänderungen. Lokal läuft Node 24; vorgesehen ist Node 22.
+
+Keine neue SQL-Migration nötig. Vorhandenes vollständiges SQL-Paket einschließlich
+Migration 11 und 12 je installiertem Stand verwenden, danach aktuellen Code
+bereitstellen. Produktiv bleiben Migrationen, 5/10-Euro-Vereinstarife, HTTPS-APP_URL,
+SMTP-Zeiten und Smartphone-Login/Check-in zu prüfen. Bereits dokumentierte gesperrte
+Zugänge wurden nicht erneut abgefragt. Erforderlich sind berechtigter Projektzugang
+und Supabase-SQL-Zugriff; produktiver Erfolg wird weiterhin nicht behauptet.
+
 ## Belegte Befunde
 
 Der aktuelle Anwendungscode enthält die normalisierte Mitgliederprüfung aus Migration
