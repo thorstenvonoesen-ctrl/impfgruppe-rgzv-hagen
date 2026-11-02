@@ -8393,3 +8393,50 @@ footer a { color: var(--aurora-blue) !important; }
 .membership-tariff p { margin: 0 0 10px; line-height: 1.5; }
 .membership-tariff button { max-width: 100%; white-space: normal; overflow-wrap: anywhere; margin: 6px 0; }
 .membership-tariff input { min-width: 0; width: 100%; box-sizing: border-box; }
+.admin .admin-workspace-content .admin-dashboard-layout.admin-compact-layout {
+  grid-template-columns: minmax(0, 1fr);
+  align-content: start;
+  gap: 20px;
+}
+.admin .admin-workspace-content .admin-dashboard-layout.admin-compact-layout > * {
+  grid-column: 1 / -1 !important;
+  grid-row: auto !important;
+  min-width: 0;
+}
+.admin-section-heading { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+.admin-compact-layout > [hidden] { display: none !important; }
+.admin-section-heading h1 { margin: 4px 0; font-size: clamp(25px, 3vw, 36px); scroll-margin-top: 24px; }
+.admin-section-heading p { margin: 0; }
+.admin-compact-layout .card h2 { margin-top: 0; font-size: clamp(19px, 2vw, 25px); }
+.admin-create-appointment, .participant-export-actions { padding: 12px 0; }
+.admin-create-appointment summary, .participant-export-actions summary,
+.admin-mail-tools > summary, .info-compact-details > summary { cursor: pointer; font-weight: 750; line-height: 1.5; }
+.admin-create-appointment[open] > summary, .participant-export-actions[open] > summary,
+.admin-mail-tools[open] > summary, .info-compact-details[open] > summary { margin-bottom: 16px; }
+.admin .admin-compact-layout .admin-mail-tools { border-style: dashed !important; }
+.admin-compact-layout .participant-toolbar { display: grid !important; grid-template-columns: minmax(200px, 1fr) minmax(180px, .7fr); gap: 12px !important; }
+.participant-toolbar .search { min-width: 0; }
+.participant-toolbar > select { width: 100%; min-width: 0; min-height: 44px; }
+.participant-toolbar .participant-export-actions { grid-column: 1 / -1; border-top: 1px solid #ddd6ca; }
+.admin-compact-layout .date-card { gap: 16px; padding-block: 16px; }
+.admin-compact-layout .date-card > div:last-child { justify-content: flex-end; }
+.info-compact-details > summary { color: #17203f; }
+.info-compact-details .collective-info-heading { margin-top: 18px; }
+.info-compact-details .info-qr-fallback { margin-top: 24px; }
+@media (max-width: 820px) {
+  .admin-workspace-nav { position: static; grid-template-columns: 1fr auto; }
+  .admin-workspace-nav nav { grid-column: 1 / -1; grid-row: 2; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); overflow: visible; gap: 6px; }
+  .admin-workspace-nav nav button { min-width: 0; width: 100%; min-height: 44px; padding: 8px 6px; justify-content: center; white-space: normal; font-size: 12px; }
+  .admin-workspace-nav-bottom { grid-column: 2; grid-row: 1; }
+  .admin-section-heading h1 { scroll-margin-top: 16px; }
+}
+@media (max-width: 620px) {
+  .admin .admin-compact-layout .participant-toolbar { grid-template-columns: minmax(0, 1fr); }
+  .admin-compact-layout .date-card > div:last-child { width: 100%; justify-content: flex-start; gap: 8px !important; }
+  .admin-compact-layout .date-card button { flex: 1 1 130px; min-height: 44px; white-space: normal; }
+  .admin-compact-layout .participant-row-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+  .admin-compact-layout .participant-row-actions button { min-height: 44px; flex: 1 1 110px; white-space: normal; }
+  .admin .admin-compact-layout .admin-participant-management-card td { overflow-wrap: anywhere; padding: 10px 14px !important; }
+  .admin .admin-compact-layout .admin-participant-management-card td::before { position: static; display: block; width: auto; margin-bottom: 4px; font-size: 11px; }
+  .admin-workspace-nav-bottom a, .admin-workspace-nav-bottom button { width: auto; padding: 8px; font-size: 11px; min-height: 44px; }
+}

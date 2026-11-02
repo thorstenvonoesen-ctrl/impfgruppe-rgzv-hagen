@@ -68,8 +68,10 @@ export function MailTestPanel({ clubId }) {
       }
     } catch (e) { setMessage(e.message) } finally { setBusy(false) }
   }
-  return <section className="card mail-test-panel">
-    <button className="small" disabled={busy || !clubId} onClick={() => open ? setOpen(false) : run('test-config')}>E-Mail-Test und Versandstatus</button>
+  return <details className="card mail-test-panel admin-mail-tools">
+    <summary>E-Mail: Versandstatus und Tests</summary>
+    <p>Zusätzliche Versandwerkzeuge. Die regulären Bestätigungen werden automatisch versendet.</p>
+    <button className="small" disabled={busy || !clubId} onClick={() => open ? setOpen(false) : run('test-config')}>{open ? 'Versandwerkzeuge schließen' : 'Versandwerkzeuge öffnen'}</button>
     <p role="status">{message}</p>
     {open && <>
       <p>{recipient ? `Alle Testmails gehen ausschließlich an ${recipient}.` : 'Testversand deaktiviert: MAIL_TEST_RECIPIENT muss mit Ihrer eigenen Testadresse konfiguriert werden.'} Es werden nur Musterdaten verwendet.</p>
@@ -78,5 +80,5 @@ export function MailTestPanel({ clubId }) {
       <p>Unklare Zustellungen werden nicht automatisch erneut gesendet. Sie müssen zuerst anhand des SMTP-Protokolls geprüft werden.</p>
       {deliveries.length > 0 && <div className="table-wrap"><table><thead><tr><th>Mailtyp</th><th>Empfänger</th><th>Status</th><th>Versuche</th><th>Zeitpunkt</th></tr></thead><tbody>{deliveries.map(row => <tr key={row.id}><td>{types.find(([kind]) => kind === row.kind)?.[1] || row.kind}</td><td>{row.recipient}</td><td>{({ pending: 'Vorgemerkt', sending: 'Wird versendet', sent: 'An Mailserver übergeben', failed: 'Fehlgeschlagen', uncertain: 'Zustellung unklar', skipped: 'Übersprungen' })[row.status] || row.status}{row.error ? ` – ${row.error}` : ''}{row.status === 'failed' && <button className="small" disabled={busy} onClick={() => run('retry-delivery', row.id)}>Erneut versuchen</button>}</td><td>{row.attempts}</td><td>{new Date(row.sent_at || row.created_at).toLocaleString('de-DE')}</td></tr>)}</tbody></table></div>}
     </>}
-  </section>
+  </details>
 }

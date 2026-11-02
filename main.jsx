@@ -1548,10 +1548,6 @@ function ClubSelect() {
           </article>
         </section>
 
-        <section className="landing-closing">
-          <div><span>Bereit für den nächsten Termin?</span><h2>Jetzt Tiere für den nächsten Impftermin anmelden.</h2></div>
-          <a className="landing-button landing-button-light" href="#info">Zur Impfanmeldung <span>→</span></a>
-        </section>
       </main>
 
       <Footer showDeveloper />
@@ -3723,7 +3719,8 @@ function InfoAnmeldung() {
           </div>
         </section>
 
-        <section className="collective-info-section info-qr-security">
+        <details className="collective-info-section info-qr-security info-compact-details">
+          <summary>Datenschutz und Inhalt des QR-Codes</summary>
           <div className="collective-info-heading">
             <span className="collective-info-kicker">Datensparsam aufgebaut</span>
             <h2>Was im QR-Code enthalten ist</h2>
@@ -3738,9 +3735,10 @@ function InfoAnmeldung() {
             <article><span aria-hidden="true">✓</span><div><h3>Enthalten</h3><p>Nur der persönliche Check-in-Token zur sicheren Zuordnung durch das System.</p></div></article>
             <article><span aria-hidden="true">–</span><div><h3>Nicht enthalten</h3><p>Keine Namen, Kontaktdaten, Tierangaben, Zahlungsinformationen oder Termindetails.</p></div></article>
           </div>
-        </section>
+        </details>
 
-        <section className="collective-info-section collective-info-checklist info-qr-checklist">
+        <details className="collective-info-section collective-info-checklist info-qr-checklist info-compact-details">
+          <summary>QR-Code vorbereiten und Hilfe beim Scan</summary>
           <div className="collective-info-heading">
             <span className="collective-info-kicker">Gut vorbereitet</span>
             <h2>So klappt der Scan zuverlässig</h2>
@@ -3755,9 +3753,7 @@ function InfoAnmeldung() {
             <li><span>✓</span><div><strong>Alternativ ausdrucken</strong><p>Ein sauberer, unverknickter Ausdruck funktioniert ebenfalls.</p></div></li>
             <li><span>✓</span><div><strong>Code nicht bearbeiten</strong><p>Schneiden Sie den QR-Code nicht ab und überdecken Sie keine Bereiche.</p></div></li>
           </ul>
-        </section>
-
-        <section className="collective-info-section info-qr-fallback">
+        <div className="info-qr-fallback">
           <div className="collective-info-icon" aria-hidden="true">🧭</div>
           <div>
             <span className="collective-info-kicker">Wenn etwas nicht klappt</span>
@@ -3769,7 +3765,8 @@ function InfoAnmeldung() {
               Planen Sie dafür etwas zusätzliche Zeit ein.
             </p>
           </div>
-        </section>
+        </div>
+        </details>
 
         <section className="collective-info-section">
           <div className="collective-info-heading">
@@ -3785,18 +3782,8 @@ function InfoAnmeldung() {
           </div>
         </section>
 
-        <section className="collective-info-summary info-qr-summary">
-          <span className="collective-info-kicker">Zusammenfassung</span>
-          <h2>Weniger Papier, schneller am Ziel</h2>
-          <p>
-            Der persönliche QR-Code verbindet Ihre bestätigte Anmeldung mit
-            einem schnellen und nachvollziehbaren Check-in. Sie bringen nur die
-            E-Mail oder einen Ausdruck mit – den Rest übernimmt das System.
-          </p>
-        </section>
-
         <button className="collective-info-back" onClick={() => (window.location.hash = "#info")}>
-          ← Zurück
+          Zur Impfanmeldung
         </button>
       </main>
     </div>
@@ -5973,6 +5960,15 @@ function AdminDashboard({ onLogout, logoutError, adminContext }) {
   const [deletingParticipantId, setDeletingParticipantId] = useState(null)
   const [participantDeleteFeedback, setParticipantDeleteFeedback] = useState(null)
   const [activeAdminSection, setActiveAdminSection] = useState('overview')
+  const adminSections = [
+    ['overview', 'Übersicht'], ['checkin', 'Check-in'], ['appointments', 'Impftermine'],
+    ['participants', 'Teilnehmer'], ['archive', 'Archiv'],
+    ...(adminContext?.role === 'superadmin' ? [['administration', 'Adminverwaltung']] : []),
+    ...(['clubadmin', 'superadmin'].includes(adminContext?.role) ? [['members', 'Mitglieder']] : [])
+  ]
+  useEffect(() => {
+    document.getElementById('admin-workspace-title')?.scrollIntoView({ block: 'start' })
+  }, [activeAdminSection])
   const [participants, setParticipants] = useState([])
   const [isVaccinationDay, setIsVaccinationDay] = useState(false)
   const [q, setQ] = useState('')
@@ -6400,21 +6396,16 @@ const [selectedClub, setSelectedClub] = useState(null)
     setSmartAssistantOpen(false)
     if (task.action === 'participants') {
       if (task.id === 'open-payments') setStatusFilter('open')
-      document.getElementById('participant-management')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      setActiveAdminSection('participants')
       return
     }
     if (task.action === 'vet') {
       const nextDate = vaccinationDates.find(date => date.archived !== true && !isTestVaccinationDate(date) && date.date >= new Date().toISOString().slice(0, 10))
       if (nextDate && canSendVetCertificate(nextDate)) setVetSendDate(nextDate)
-      document.getElementById('appointment-management')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      setActiveAdminSection('appointments')
       return
     }
-    const targetId = task.action === 'appointments'
-      ? 'appointment-management'
-      : task.action === 'club'
-        ? 'admin-dashboard-top'
-        : 'admin-dashboard-top'
-    document.getElementById(targetId)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    setActiveAdminSection(task.action === 'appointments' ? 'appointments' : 'overview')
   }
 
   async function load() {
@@ -7191,13 +7182,11 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
         <div><strong>Impfgruppenmanager</strong><small>RGZV Hagen · Admin</small></div>
       </div>
       <nav>
-        <a className={activeAdminSection === 'overview' ? 'active' : ''} href="#admin-dashboard-top" onClick={event => { event.preventDefault(); setActiveAdminSection('overview'); document.getElementById('admin-dashboard-top')?.scrollIntoView({ behavior: 'smooth', block: 'start' }) }}><span>01</span>Übersicht</a>
-        <a className={activeAdminSection === 'checkin' ? 'active' : ''} href="#admin-checkin" onClick={event => { event.preventDefault(); setActiveAdminSection('checkin'); document.getElementById('admin-checkin')?.scrollIntoView({ behavior: 'smooth', block: 'start' }) }}><span>02</span>Check-in</a>
-        <a className={activeAdminSection === 'appointments' ? 'active' : ''} href="#appointment-management" onClick={event => { event.preventDefault(); setActiveAdminSection('appointments'); document.getElementById('appointment-management')?.scrollIntoView({ behavior: 'smooth', block: 'start' }) }}><span>03</span>Impftermine</a>
-        <a className={activeAdminSection === 'participants' ? 'active' : ''} href="#participant-management" onClick={event => { event.preventDefault(); setActiveAdminSection('participants'); document.getElementById('participant-management')?.scrollIntoView({ behavior: 'smooth', block: 'start' }) }}><span>04</span>Teilnehmer</a>
-        <a className={activeAdminSection === 'archive' ? 'active' : ''} href="#vaccination-date-archive" onClick={event => { event.preventDefault(); setActiveAdminSection('archive'); document.getElementById('vaccination-date-archive')?.scrollIntoView({ behavior: 'smooth', block: 'start' }) }}><span>05</span>Archiv</a>
-        {adminContext?.role === 'superadmin' && <button className={activeAdminSection === 'administration' ? 'active' : ''} type="button" onClick={() => { setActiveAdminSection('administration'); openAdminManagement() }}><span>06</span>Adminverwaltung</button>}
-        {canManageMembers && <button className={activeAdminSection === 'members' ? 'active' : ''} type="button" onClick={() => { setActiveAdminSection('members'); document.getElementById('club-member-management')?.scrollIntoView({ behavior: 'smooth', block: 'start' }) }}><span>07</span>Mitgliederverwaltung</button>}
+        {adminSections.map(([id, label], index) => <button key={id} type="button"
+          className={activeAdminSection === id ? 'active' : ''} aria-current={activeAdminSection === id ? 'page' : undefined}
+          onClick={() => { setActiveAdminSection(id); if (id === 'administration') openAdminManagement() }}>
+          <span>{String(index + 1).padStart(2, '0')}</span>{label}
+        </button>)}
       </nav>
       <div className="admin-workspace-nav-bottom">
         <a href="/Bedienungsanleitung-Impfgruppenmanager.pdf" download><Download size={16}/>Bedienungsanleitung</a>
@@ -7206,15 +7195,14 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
     </header>
 
     <div className="admin-workspace-content">
-    <main className="admin-wrap admin-dashboard-layout">
-      <section id="admin-dashboard-top" className="admin-overview">
-        <div className="admin-overview-lead">
-        <header className="admin-overview-heading">
-          <div className="admin-top-copy"><span>Arbeitsbereich</span><h1>Übersicht</h1><p>{activeClub?.name || 'RGZV Hagen'} · {adminContext?.role === 'superadmin' ? 'Superadmin' : adminContext?.role === 'checkin_admin' ? 'Check-in-Admin' : 'Vereinsadmin'}</p></div>
+    <main className="admin-wrap admin-dashboard-layout admin-compact-layout">
+        <header className="admin-section-heading">
+          <div className="admin-top-copy"><span>Arbeitsbereich</span><h1 id="admin-workspace-title" tabIndex={-1}>{adminSections.find(([id]) => id === activeAdminSection)?.[1] || 'Übersicht'}</h1><p>{activeClub?.name || 'RGZV Hagen'} · {adminContext?.role === 'superadmin' ? 'Superadmin' : adminContext?.role === 'checkin_admin' ? 'Check-in-Admin' : 'Vereinsadmin'}</p></div>
           <div className="admin-top-status"><span className="admin-top-status-dot"/>System bereit</div>
           {logoutError && <span className="admin-shell-error" role="alert">{logoutError}</span>}
         </header>
-
+      <section id="admin-dashboard-top" className="admin-overview" hidden={activeAdminSection !== 'overview'}>
+        <div className="admin-overview-lead">
         <div className="admin-overview-appointment">
           <span className="admin-overview-appointment-label">Aktueller Impftermin</span>
           {activeDashboardAppointment ? (
@@ -7263,8 +7251,8 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
         </div>
       </section>
       {activeAdminSection === 'members' && canManageMembers && dashboardClubId && <ClubMemberManagement key={dashboardClubId} clubId={dashboardClubId} />}
-      <div id="admin-checkin" className="admin-checkin-anchor"><CheckinPanel participants={bindingParticipants} vaccinationDates={activeVaccinationDates} onChanged={load} adminRole={adminContext?.role} /></div>
-      <section className="card admin-appointments-card">
+      {activeAdminSection === 'checkin' && <div id="admin-checkin" className="admin-checkin-anchor"><CheckinPanel participants={bindingParticipants} vaccinationDates={activeVaccinationDates} onChanged={load} adminRole={adminContext?.role} /></div>}
+      {activeAdminSection === 'appointments' && <><section className="card admin-appointments-card">
   <h2>Anmeldungen pro Impftermin</h2>
 
   {dateStats.map((d, index) => (
@@ -7279,12 +7267,14 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
     </div>
   ))}
 </section>
-      <MailTestPanel clubId={adminClubId} />
       <section id="appointment-management" className="card admin-appointment-management-card">
-  <h2>Impftermin anlegen</h2>
+  <h2>Aktive Impftermine</h2>
+  <details className="admin-create-appointment">
+  <summary>Impftermin anlegen</summary>
   <div className="appointment-create-grid">
   <input
     type="text"
+    aria-label="Titel des Impftermins"
     placeholder="Titel des Impftermins"
     value={newDateTitle}
     onChange={e => setNewDateTitle(e.target.value)}
@@ -7292,12 +7282,14 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
 
   <input
     type="date"
+    aria-label="Datum des Impftermins"
     value={newDate}
     onChange={e => setNewDate(e.target.value)}
   />
 
   <input
     type="text"
+    aria-label="Hinweis zum Impftermin (optional)"
     placeholder="Hinweis (optional)"
     value={newDateNote}
     onChange={e => setNewDateNote(e.target.value)}
@@ -7308,6 +7300,7 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
   <button className="primary" onClick={addVaccinationDate}>
     Impftermin speichern
   </button>
+  </details>
   {dateFeedback && <p role="status" className={`vaccination-date-feedback ${/konnte nicht|konnten nicht|keine berechtigung|noch nicht eingerichtet/i.test(dateFeedback) ? 'error' : 'success'}`}>{dateFeedback}</p>}
         
 
@@ -7413,8 +7406,9 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
 ))}
 
 </section>
-
-      <section id="vaccination-date-archive" className="card admin-archive-card">
+      <MailTestPanel clubId={adminClubId} /></>}
+      {activeAdminSection === 'administration' && adminContext?.role === 'superadmin' && <section className="card"><h2>Administratoren verwalten</h2><button type="button" className="primary" onClick={openAdminManagement}>Adminverwaltung öffnen</button></section>}
+      {activeAdminSection === 'archive' && <section id="vaccination-date-archive" className="card admin-archive-card">
         <div className="archive-heading">
           <div><span className="archive-kicker">Historie</span><h2>Archivierte Impftermine</h2></div>
           <span className="status-badge">{archivedVaccinationDates.length} archiviert</span>
@@ -7438,12 +7432,13 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
             })}
           </div>
         )}
-      </section>
+      </section>}
 
-    <section id="participant-management" className="card admin-participant-management-card">
+    {activeAdminSection === 'participants' && <section id="participant-management" className="card admin-participant-management-card">
+      <h2>Teilnehmer verwalten</h2>
       {participantDeleteFeedback && <p role={participantDeleteFeedback.error ? 'alert' : 'status'} className={`vaccination-date-feedback ${participantDeleteFeedback.error ? 'error' : 'success'}`}>{participantDeleteFeedback.message}</p>}
   <div
-    className="table-head"
+    className="table-head participant-toolbar"
     style={{
       display: 'flex',
       alignItems: 'center',
@@ -7455,13 +7450,14 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
     <div className="search" style={{ flex: '1' }}>
       <Search size={18} />
       <input
-        placeholder="Suchen..."
+        aria-label="Teilnehmer suchen" placeholder="Name, E-Mail oder TSK suchen"
         value={q}
         onChange={e => setQ(e.target.value)}
       />
     </div>
 
     <select
+      aria-label="Teilnehmer nach Zahlung oder Anmeldestatus filtern"
       value={statusFilter}
       onChange={e => setStatusFilter(e.target.value)}
     >
@@ -7474,11 +7470,11 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
       <option value="payment_failed">Zahlung fehlgeschlagen</option>
     </select>
 
-    <ExportButtons
+    <details className="participant-export-actions"><summary>Export und Bescheinigungen</summary><ExportButtons
       participants={filtered.filter(isBindingRegistration)}
       certificateParticipants={activeParticipants}
       vaccinationDates={activeVaccinationDates}
-    />
+    /></details>
   </div>
 
   {loading ? (
@@ -7548,7 +7544,7 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
               </td>
               <td data-label="Anmeldestatus"><span className={`status-badge ${isBindingRegistration(p) ? 'paid' : 'open'}`}>{registrationStatusLabels[p.registration_status] || p.registration_status}</span></td>
             </tr>))}</tbody></table></div>)}
-      </section>
+      </section>}
       {editingParticipant && (
   <div className="modal">
   <div className="modal-card">
