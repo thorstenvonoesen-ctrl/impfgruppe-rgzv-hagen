@@ -1,6 +1,7 @@
 import React,{useEffect,useState} from 'react'
 import {supabase} from './supabase.js'
 import {parseCheckinToken} from './checkin-links.js'
+import {previewCheckin} from './checkin-session.js'
 
 // Mounted only after the existing admin login. Resolving a QR never changes attendance.
 export default function QrCheckinLanding({token,onLogout,logoutError}) {
@@ -11,8 +12,10 @@ export default function QrCheckinLanding({token,onLogout,logoutError}) {
   const parsed=parseCheckinToken(token)
   async function request(action,extra={},signal) {
     const {data:{session}}=await supabase.auth.getSession()
-    const response=await fetch('/api/checkin',{method:'POST',headers:{'Content-Type':'application/json',Authorization:`Bearer ${session?.access_token||''}`},
-      body:JSON.stringify({action,token:parsed,...extra}),signal})
+    const response=action==='qr-resolve'
+      ?await previewCheckin({auth:supabase.auth,body:{action,token:parsed,...extra},signal})
+      :await fetch('/api/checkin',{method:'POST',headers:{'Content-Type':'application/json',Authorization:`Bearer ${session?.access_token||''}`},
+        body:JSON.stringify({action,token:parsed,...extra}),signal})
     const result=await response.json()
     if(!response.ok)throw new Error(result.error||'Check-in konnte nicht verarbeitet werden.')
     return result

@@ -2,6 +2,7 @@ import { saveVaccinationDate, vaccinationDateError } from './vaccination-date-sa
 import ParticipantManagement from './ParticipantManagement.jsx'
 import QrCheckinLanding from './QrCheckinLanding.jsx'
 import {parseCheckinToken,makeCheckinUrl} from './checkin-links.js'
+import {previewCheckin} from './checkin-session.js'
 import ClubMemberManagement from './ClubMemberManagement.jsx'
 import MembershipTariff, { tariffContext } from './MembershipTariff.jsx'
 import { deleteParticipantRegistration } from './participant-delete.js'
@@ -5410,19 +5411,27 @@ function CheckinPanel({ participants, vaccinationDates, onChanged, adminRole }) 
     setQrImage('')
     scannerBusyRef.current = false
     setScannerActive(true)
-    setFeedback('')
+    setFeedback('Kamera wird gestartet …')
     requestAnimationFrame(async () => {
-      const { Html5Qrcode } = await import('html5-qrcode')
-      const scanner = new Html5Qrcode('checkin-scanner')
-      scannerRef.current = scanner
-      await scanner.start({ facingMode: 'environment' }, { fps: 8, qrbox: { width: 230, height: 230 } }, async token => {
-        if (scannerBusyRef.current) return
-        scannerBusyRef.current = true
-        await scanner.stop().catch(() => {})
+      try {
+        const { Html5Qrcode } = await import('html5-qrcode')
+        const scanner = new Html5Qrcode('checkin-scanner')
+        scannerRef.current = scanner
+        await scanner.start({ facingMode: 'environment' }, { fps: 8, qrbox: { width: 230, height: 230 } }, async token => {
+          if (scannerBusyRef.current) return
+          scannerBusyRef.current = true
+          await scanner.stop().catch(() => {})
+          scannerRef.current = null
+          setScannerActive(false)
+          await loadScannedParticipant(token)
+        }, () => {})
+        setFeedback('Kamera bereit. Bitte den QR-Code in den Scanrahmen halten.')
+      } catch {
         scannerRef.current = null
+        scannerBusyRef.current = false
         setScannerActive(false)
-        await loadScannedParticipant(token)
-      }, () => {})
+        setFeedback('Kamera konnte nicht gestartet werden. Bitte den Kamerazugriff für diese Seite erlauben und den Scanner erneut starten.')
+      }
     })
   }
 
@@ -5430,12 +5439,9 @@ function CheckinPanel({ participants, vaccinationDates, onChanged, adminRole }) 
     token=parseCheckinToken(token)
     if(!token){setCandidate(null);setFeedback('Ungültiger Check-in-QR-Code.');return}
     try {
-      const { data: { session } } = await supabase.auth.getSession()
-      const response = await fetch('/api/checkin', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${session?.access_token || ''}` },
-        body: JSON.stringify({ action: 'qr-preview', token, vaccinationDateId: dateId })
-      })
+      setFeedback('QR-Code erkannt. Teilnehmer wird geladen …')
+      const response = await previewCheckin({ auth: supabase.auth,
+        body: { action: 'qr-preview', token, vaccinationDateId: dateId } })
       const result = await response.json().catch(() => ({}))
       if (!response.ok || !result.participant) {
         setCandidate(null)
