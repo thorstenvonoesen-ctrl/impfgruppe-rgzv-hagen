@@ -69,6 +69,12 @@ try {
   await db.exec('reset role')
   const deletion=await readFile(new URL('../supabase/migrations/20261114_delete_club_members.sql',import.meta.url),'utf8')
   await db.exec(deletion);await db.exec(deletion)
+  assert.equal(await scalar("select has_table_privilege('authenticated','public.club_members','DELETE')"),true)
+  // Reproduce the old repair bundle: the base migration revoked DELETE again.
+  await db.exec(sql)
+  assert.equal(await scalar("select has_table_privilege('authenticated','public.club_members','DELETE')"),false)
+  await db.exec(deletion)
+  assert.equal(await scalar("select has_table_privilege('authenticated','public.club_members','DELETE')"),true)
   for(const user of [checkin,inactive,other]) {
     await login(user)
     assert.equal((await db.query('delete from club_members where id=$1 returning id',[member.id])).rows.length,0)
