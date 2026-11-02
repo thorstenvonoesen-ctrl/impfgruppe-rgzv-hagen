@@ -2346,6 +2346,14 @@ tbody tr:hover { background: #fbf7f0 !important; }
 .checkin-result-details dt { color: var(--rgzv-muted) !important; }
 .checkin-result-details dd, .checkin-confirm strong { color: var(--rgzv-navy) !important; }
 .checkin-payment-warning { color: #74431f !important; background: #fbecd8 !important; border-color: #e8c69d !important; }
+/* The light warning surface needs explicit text colors, not inherited dark-panel colors. */
+.checkin-payment-warning h3,
+.checkin-payment-warning p,
+.checkin-payment-warning dt,
+.checkin-payment-warning dd,
+.checkin-payment-warning .checkin-payment-warning-label { color: #4b2b16 !important; }
+.checkin-payment-warning .checkin-payment-warning-label { background: #f4d4a8; }
+.checkin-payment-warning > div:not(.checkin-payment-warning-actions) { min-width: 0; overflow-wrap: anywhere; }
 
 /* Dialoge, Modals und Systemmeldungen */
 .modal { background: rgba(23,33,63,.55) !important; backdrop-filter: blur(7px); }
