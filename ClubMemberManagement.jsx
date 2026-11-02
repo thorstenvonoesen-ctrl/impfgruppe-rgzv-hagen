@@ -10,16 +10,22 @@ export default function ClubMemberManagement({ clubId, db = supabase }) {
   const [search, setSearch] = useState('')
   const [page, setPage] = useState(0)
   const [revision, setRevision] = useState(0)
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(false)
   const [busy, setBusy] = useState(false)
   const [form, setForm] = useState(null)
   const [message, setMessage] = useState('')
   const [error, setError] = useState('')
   const [csv, setCsv] = useState(null)
+  const searching = search.trim().length >= 2
 
   useEffect(() => { section.current?.scrollIntoView({ block: 'start' }) }, [])
   useEffect(() => {
+    if (!searching) {
+      setRows([]); setCount(0); setLoading(false)
+      return
+    }
     let cancelled = false
+    setRows([])
     setLoading(true)
     const timer = setTimeout(() => {
       service.list(clubId, search, page).then(result => {
@@ -28,7 +34,7 @@ export default function ClubMemberManagement({ clubId, db = supabase }) {
         .finally(() => { if (!cancelled) setLoading(false) })
     }, 200)
     return () => { cancelled = true; clearTimeout(timer) }
-  }, [service, clubId, search, page, revision])
+  }, [service, clubId, search, searching, page, revision])
 
   async function save(value) {
     if (busy) return
@@ -88,9 +94,9 @@ export default function ClubMemberManagement({ clubId, db = supabase }) {
         <div className="actions"><button type="submit" className="primary">{busy ? 'Wird gespeichert …' : 'Mitglied speichern'}</button><button type="button" className="ghost" onClick={() => setForm(null)}>Abbrechen</button></div>
       </fieldset>
     </form>}
-    <label>Mitglieder suchen<input type="search" placeholder="Name oder E-Mail-Adresse" value={search} onChange={event => { setSearch(event.target.value); setPage(0) }} /></label>
-    <p role="status">{loading ? 'Mitglieder werden geladen …' : `${count} Mitglieder gefunden`}</p>
-    {!loading && <div className="table-scroll"><table>
+    <label>Mitglieder suchen<input type="search" placeholder="Mindestens 2 Zeichen: Name oder E-Mail-Adresse" value={search} onChange={event => { setSearch(event.target.value); setPage(0); setRows([]); setLoading(event.target.value.trim().length >= 2) }} /></label>
+    <p role="status">{!searching ? 'Bitte mindestens zwei Zeichen eines Namens oder einer E-Mail-Adresse eingeben.' : loading ? 'Mitglieder werden geladen …' : count ? `${count} Mitglieder gefunden` : 'Keine passenden Mitglieder gefunden'}</p>
+    {searching && !loading && rows.length > 0 && <div className="table-scroll"><table>
       <thead><tr><th>Name</th><th>E-Mail-Adresse</th><th>Mitgliedsnummer</th><th>Status</th><th>Aktionen</th></tr></thead>
       <tbody>{rows.map(member => <tr key={member.id}>
         <td data-label="Name">{member.firstname} {member.lastname}</td>
@@ -98,13 +104,13 @@ export default function ClubMemberManagement({ clubId, db = supabase }) {
         <td data-label="Mitgliedsnummer">{member.member_number || '–'}</td>
         <td data-label="Status">{member.is_active ? 'Aktiv' : 'Inaktiv'}</td>
         <td data-label="Aktionen"><button className="small" type="button" disabled={busy} onClick={() => { setForm(member); setError(''); setMessage('') }}>Bearbeiten</button> <button className="small" type="button" disabled={busy} onClick={() => save({ ...member, is_active: !member.is_active })}>{member.is_active ? 'Deaktivieren' : 'Reaktivieren'}</button></td>
-      </tr>)}{rows.length === 0 && <tr><td colSpan={5}>Keine passenden Mitglieder vorhanden.</td></tr>}</tbody>
+      </tr>)}</tbody>
     </table></div>}
-    <div className="actions">
+    {searching && count > 50 && <div className="actions">
       <button className="small" disabled={busy || loading || page === 0} onClick={() => setPage(n => n - 1)}>Zurück</button>
       <span>Seite {page + 1}</span>
       <button className="small" disabled={busy || loading || (page + 1) * 50 >= count} onClick={() => setPage(n => n + 1)}>Weiter</button>
-    </div>
+    </div>}
     <details className="member-import">
       <summary>Mitglieder per CSV importieren</summary>
       <p>Spalten: Vorname, Nachname, E-Mail, Mitgliedsnummer, Aktiv, Bemerkungen. Die letzten drei Spalten sind optional. Ohne Statusangabe gilt die Mitgliedschaft als aktiv. Maximal 500 Datensätze pro Datei.</p>
