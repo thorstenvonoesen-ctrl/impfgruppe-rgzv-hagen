@@ -46,6 +46,19 @@ export default function ClubMemberManagement({ clubId, db = supabase }) {
       setRevision(n => n + 1)
     } catch (e) { setError(e.message) } finally { setBusy(false) }
   }
+  async function remove(member) {
+    if (busy || !window.confirm(`Mitglied „${member.firstname} ${member.lastname}“ dauerhaft löschen? Bestehende Impfregistrierungen, Zahlungen und Check-ins bleiben erhalten.`)) return
+    setBusy(true); setError(''); setMessage('')
+    try {
+      await service.remove(clubId, member)
+      setMessage('Mitglied wurde gelöscht.')
+      setForm(current => current?.id === member.id ? null : current)
+      setRows(current => current.filter(row => row.id !== member.id))
+      setCount(current => Math.max(0, current - 1))
+      if (rows.length === 1 && page > 0) setPage(current => current - 1)
+      setRevision(current => current + 1)
+    } catch (e) { setError(e.message) } finally { setBusy(false) }
+  }
   async function readCsv(file) {
     setCsv(null); setError(''); setMessage('')
     if (!file) return
@@ -103,7 +116,7 @@ export default function ClubMemberManagement({ clubId, db = supabase }) {
         <td data-label="E-Mail-Adresse">{member.email}</td>
         <td data-label="Mitgliedsnummer">{member.member_number || '–'}</td>
         <td data-label="Status">{member.is_active ? 'Aktiv' : 'Inaktiv'}</td>
-        <td data-label="Aktionen"><button className="small" type="button" disabled={busy} onClick={() => { setForm(member); setError(''); setMessage('') }}>Bearbeiten</button> <button className="small" type="button" disabled={busy} onClick={() => save({ ...member, is_active: !member.is_active })}>{member.is_active ? 'Deaktivieren' : 'Reaktivieren'}</button></td>
+        <td data-label="Aktionen"><button className="small" type="button" disabled={busy} onClick={() => { setForm(member); setError(''); setMessage('') }}>Bearbeiten</button> <button className="small" type="button" disabled={busy} onClick={() => remove(member)}>Löschen</button></td>
       </tr>)}</tbody>
     </table></div>}
     {searching && count > 50 && <div className="actions">

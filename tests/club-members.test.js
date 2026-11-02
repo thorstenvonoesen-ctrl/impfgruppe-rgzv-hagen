@@ -35,3 +35,15 @@ test('save scopes updates to club, row and revision; zero rows is never success'
   assert.match(memberError({code:'23505',message:'private data'}),/bereits vorhanden/)
   assert.doesNotMatch(memberError({message:'private data'}),/private data/)
 })
+
+test('delete affects only the selected member, club and revision; zero rows is not success', async()=>{
+  const filters=[]
+  let result={data:{id:'member'},error:null}
+  const q={delete(){return q},eq(k,v){filters.push([k,v]);return q},select(fields){assert.equal(fields,'id');return q},async single(){return result}}
+  const service=memberService({from(table){assert.equal(table,'club_members');return q}})
+  const member={id:'member',updated_at:'revision',club_id:'other'}
+  assert.deepEqual(await service.remove('club',member),{id:'member'})
+  assert.deepEqual(filters,[['club_id','club'],['id','member'],['updated_at','revision']])
+  result={data:null,error:null}
+  await assert.rejects(service.remove('club',member),/inzwischen geändert/)
+})

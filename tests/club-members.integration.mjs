@@ -67,6 +67,22 @@ try {
   await assert.rejects(db.query('select * from club_members'),e=>e.code==='42501')
   await assert.rejects(scalar('select import_club_members($1,$2)',[club,'[]']),e=>e.code==='42501')
   await db.exec('reset role')
+  const deletion=await readFile(new URL('../supabase/migrations/20261114_delete_club_members.sql',import.meta.url),'utf8')
+  await db.exec(deletion);await db.exec(deletion)
+  for(const user of [checkin,inactive,other]) {
+    await login(user)
+    assert.equal((await db.query('delete from club_members where id=$1 returning id',[member.id])).rows.length,0)
+  }
+  await db.exec('reset role;set role anon')
+  await assert.rejects(db.query('delete from club_members where id=$1',[member.id]),e=>e.code==='42501')
+  await login(admin)
+  const activeMatch=()=>scalar("select exists(select 1 from club_members where club_id=$1 and is_active and lower(trim(email))='max@example.invalid')",[club])
+  assert.equal(await activeMatch(),true)
+  assert.equal((await db.query('delete from club_members where id=$1 and club_id=$2 returning id',[member.id,other])).rows.length,0)
+  assert.equal((await db.query('delete from club_members where id=$1 and club_id=$2 returning id',[member.id,club])).rows.length,1)
+  assert.equal(await activeMatch(),false)
+  assert.equal(await scalar('select count(*)::int from club_members'),1)
+  await db.exec('reset role')
   assert.deepEqual(await scalar("select jsonb_build_object('clubs',(select jsonb_agg(c) from clubs c),'participants',(select jsonb_agg(p) from participants p),'dates',(select jsonb_agg(d) from vaccination_dates d))"),original)
   console.log('PASS: add/edit/deactivate/reactivate/search; CSV and repeat import; duplicate keys; atomic rollback; revision conflict; club/check-in/inactive/anonymous RLS; superadmin; migration repeat with existing members; codes, tariffs, participants and dates unchanged.')
 } finally {await db.close()}

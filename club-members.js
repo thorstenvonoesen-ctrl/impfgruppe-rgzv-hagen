@@ -96,6 +96,13 @@ export function memberService(db) {
       if (error || !data) throw new Error(memberError(error || { code: 'PGRST116' }))
       return data
     },
+    async remove(clubId, member) {
+      const { data, error } = await db.from('club_members').delete()
+        .eq('club_id', clubId).eq('id', member.id).eq('updated_at', member.updated_at)
+        .select('id').single()
+      if (error || !data) throw new Error(memberError(error || { code: 'PGRST116' }))
+      return data
+    },
     async import(clubId, rows) {
       const { data, error } = await db.rpc('import_club_members', { target_club: clubId, members: rows.map(cleanMember) })
       if (error) throw new Error(memberError(error))
