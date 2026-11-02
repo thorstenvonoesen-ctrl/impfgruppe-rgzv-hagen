@@ -42,19 +42,19 @@ export async function registrationTariff(db,{clubId,appointmentId,email,memberCo
   const code=String(memberCode||'').trim().toUpperCase()
   const byCode=Boolean(code && club.member_code && code===club.member_code.trim().toUpperCase())
   if(byCode) return {amount:memberPrice,source:'code',isMember:true,verifiedEmail:null}
-  if(proof && !validMembershipProof(proof,clubId,appointmentId,email)) {
-    if(deferMembershipFailure) return {amount:guestPrice,source:'guest',isMember:false,verifiedEmail:null,reviewRequired:true}
-    throw fail('Die E-Mail-Bestätigung ist abgelaufen oder passt nicht zu dieser Anmeldung. Bitte erneut bestätigen.')
-  }
   const verified=validMembershipProof(proof,clubId,appointmentId,email)
   let member=false
-  try {member=verified && await verifiedActiveMember(db,{clubId,appointmentId,email,proof})}
-  catch(error){
-    if(!deferMembershipFailure) throw error
-    console.error('MEMBERSHIP_DEFERRED',{code:/^(?:[A-Z0-9]{5}|PGRST\d{3})$/.test(error?.code||'')?error.code:'LOOKUP_FAILED'})
-    return {amount:guestPrice,source:'guest',isMember:false,verifiedEmail:verified?normalizeEmail(email):null,reviewRequired:true}
+  try {
+    const {data,error}=await db.rpc('active_club_member_matches',{target_club:clubId,verified_email:normalizeEmail(email)})
+    if(error)throw error
+    member=Boolean(data)
   }
-  return {amount:member?memberPrice:guestPrice,source:member?'verified_member':'guest',isMember:Boolean(member),verifiedEmail:verified?normalizeEmail(email):null}
+  catch(error){
+    console.error('MEMBERSHIP_LOOKUP_FAILED',{code:/^(?:[A-Z0-9]{5}|PGRST\d{3})$/.test(error?.code||'')?error.code:'LOOKUP_FAILED'})
+    throw fail('Der Mitgliedertarif kann gerade nicht geprüft werden. Bitte später erneut versuchen oder den Mitgliedercode verwenden. Es wurde keine Anmeldung zum Gasttarif gespeichert.')
+  }
+  // Legacy RPC field/source names are retained; eligibility now comes from the directory.
+  return {amount:member?memberPrice:guestPrice,source:member?'verified_member':'guest',isMember:member,verifiedEmail:member||verified?normalizeEmail(email):null}
 }
 
 export async function handleMembershipRequest(req,res,db,{transport=clubMailTransporter}={}) {

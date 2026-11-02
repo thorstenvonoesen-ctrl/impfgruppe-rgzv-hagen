@@ -49,9 +49,9 @@ export default function MembershipTariff({ email='', appointmentId, memberCode='
     } catch(error){if(scopeRef.current===requestScope) setMessage(error.message)}finally{setBusy(false)}
   }
   return <div className="membership-tariff">
-    <p>Den Mitgliedertarif können Sie über Ihre bestätigte E-Mail-Adresse erkennen lassen. Alternativ bleibt der Mitgliedercode gültig.</p>
+    <p>{showTariff?'Aktive Mitglieder werden anhand ihrer hinterlegten E-Mail-Adresse automatisch zum Mitgliedertarif zugeordnet. Ein E-Mail-Einmalcode ist dafür nicht erforderlich. Alternativ bleibt der Mitgliedercode gültig.':'Für die Änderung oder Korrektur einer bestehenden Anmeldung bestätigen Sie bitte Ihre E-Mail-Adresse.'}</p>
     {!appointmentId && <p>Bitte zuerst einen Impftermin auswählen.</p>}
-    <button type="button" className="ghost" disabled={busy||!appointmentId||!email.trim()} onClick={()=>verify('membership-challenge')}>{busy?'Wird geprüft …':currentProof?'E-Mail erneut bestätigen':'E-Mail für Mitgliederprüfung bestätigen'}</button>
+    <button type="button" className="ghost" disabled={busy||!appointmentId||!email.trim()} onClick={()=>verify('membership-challenge')}>{busy?'Wird geprüft …':currentProof?'E-Mail erneut bestätigen':showTariff?'E-Mail optional bestätigen':'E-Mail für Mitgliederprüfung bestätigen'}</button>
     {challenge?.scope===scope && <div>
       <label>Bestätigungscode aus Ihrer E-Mail<input inputMode="numeric" autoComplete="one-time-code" maxLength={8} value={code} onChange={event=>setCode(event.target.value.replace(/\D/g,''))} onKeyDown={event=>{if(event.key==='Enter'){event.preventDefault();if(code.length===8&&!busy)verify('membership-verify')}}} /></label>
       <button type="button" className="ghost" disabled={busy||code.length!==8} onClick={()=>verify('membership-verify')}>Code bestätigen</button>

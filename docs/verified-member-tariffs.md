@@ -1,5 +1,23 @@
 # Automatische Mitgliederzuordnung zusätzlich zum Mitgliedercode
 
+## Aktuelle Regel: automatische Zuordnung ohne Einmalcode
+
+Auf ausdrücklichen Wunsch genügt für neue Anmeldungen eine normalisierte
+E-Mail-Übereinstimmung mit einem aktiven Mitglied desselben Vereins. Der Server
+und die Tarif-RPC prüfen den Eintrag; Mitgliedercode und konfigurierte Vereinstarife
+bleiben erhalten. Einmalcodes bleiben für Änderungen/Korrekturen bestehender
+Anmeldungen verfügbar. Eine fehlgeschlagene Mitgliederprüfung speichert keinen
+ungeprüften Gasttarif. Bestehende Zahlungsdaten werden nicht neu berechnet.
+
+Bereitstellung: Migration `20261113_automatic_member_tariff.sql` nach Stand 08/11
+oder das aktualisierte vollständige Reparaturpaket ausführen, danach den Code
+bereitstellen. Die alten internen Bezeichnungen `verified_member` und
+`tariff_verified_email` bleiben kompatibel, belegen für neue Anmeldungen aber keine
+E-Mail-Inhaberschaft. Die folgende Beschreibung des verpflichtenden OTP-Nachweises
+ist historisch. Lokal geprüft: 5/10 Euro ohne OTP, Speicherung, Bestätigungsinhalt,
+inaktive/fremde Mitglieder, Code, wiederholte Migration und unveränderte Altbeträge.
+Produktive Migration und Abnahme stehen aus.
+
 ## Verhalten
 
 Die neue Anmeldung berücksichtigt die **in `clubs.member_price` und

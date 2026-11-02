@@ -164,12 +164,10 @@ try {
   await reconcileRegistrationConfirmations(db,{clubId:club})
   assert.equal((await drainMail({db,transport})).sent,0)
   assert.equal(await scalar("select count(*)::int from participants where email='rollback@example.invalid'"),1)
-  // Both JavaScript and SQL membership lookups fail without blocking signup.
+  // Membership outages must not save an unchecked guest tariff.
   await pg.exec('alter table club_members rename column is_active to fixture_active')
   result=await request(handler,{...body,email:'membership-outage@example.invalid',member_code:'',membership_proof:makeMembershipProof(club,date,'membership-outage@example.invalid').token})
-  assert.equal(result.code,201);assert.equal(result.body.paymentAmount,10);assert.equal(result.body.tariffReviewRequired,true)
-  assert.match(result.body.notice,/vorläufig/)
-  assert.match(sent.at(-1).html,/vorläufig/)
+  assert.equal(result.code,400);assert.match(result.body.error,/keine Anmeldung zum Gasttarif/)
   result=await request(handler,{...body,email:'code-during-outage@example.invalid'})
   assert.equal(result.code,201);assert.equal(result.body.paymentAmount,5);assert.equal(result.body.tariffReviewRequired,false)
   await pg.exec('alter table club_members rename column fixture_active to is_active')
