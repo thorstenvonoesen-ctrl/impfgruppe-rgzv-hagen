@@ -5754,6 +5754,14 @@ header {
 .checkin-result { border-radius: 12px; }
 .checkin-result:hover { background: rgba(255,255,255,.05); }
 .checkin-result-buttons button { min-height: 42px; border-radius: 11px; }
+/* Impftag: mobile Tippflächen und lange Beschriftungen, ohne Aktionsänderungen. */
+@media (max-width: 700px) {
+  .checkin-panel .checkin-actions input { min-width: 0; min-height: 44px; font-size: 16px; }
+  .checkin-panel button { min-height: 44px; white-space: normal; overflow-wrap: anywhere; }
+  .checkin-panel .checkin-live-stat { padding: 10px 8px !important; column-gap: 4px; }
+  .checkin-panel .checkin-live-stat span { white-space: normal; overflow: visible; overflow-wrap: normal; }
+  .checkin-panel .checkin-result-main, .checkin-panel .checkin-result-actions { min-width: 0; overflow-wrap: anywhere; }
+}
 .checkin-status { border: 1px solid rgba(255,210,170,.22); }
 .checkin-status.done { border-color: rgba(167,243,208,.22); }
 

@@ -14,6 +14,7 @@ window.fetch=async(url,options)=>{
   if(body.action==='smart-assistant')result={status:'green',tasks:[]};
   else if(body.action==='list-admin-memberships')result={administrators:[]};
   else if(body.action==='test-config')result={recipient:null};
+  else if(body.action==='search-participants')result={participants:body.vaccinationDateId===date.id&&`${participant.firstname} ${participant.lastname}`.toLowerCase().includes(String(body.query).toLowerCase())?[{...participant,vaccination_title:date.title,vaccination_date:date.date}]:[]};
   else if(body.action==='qr-preview'||body.action==='qr-resolve')result={participant:{...participant,vaccination_title:date.title,vaccination_date:date.date}};
   else throw new Error('Test verweigert schreibende oder unerwartete Anfrage: '+url);
   return{ok:true,status:200,json:async()=>result};

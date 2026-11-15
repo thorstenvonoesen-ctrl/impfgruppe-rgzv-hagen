@@ -5642,7 +5642,7 @@ function CheckinPanel({ participants, vaccinationDates, onChanged, adminRole }) 
         <div className="checkin-operation-copy"><strong>Teilnehmer finden</strong><span>Per QR-Code oder Direktsuche</span></div>
         <div className="checkin-actions">
           <button className="primary" type="button" onClick={startScanner}>QR-Code scannen</button>
-          <input value={query} onChange={event => { setQuery(event.target.value); setQuickFilter('') }} placeholder="Name, E-Mail, Telefon oder TSK suchen..." />
+          <input aria-label="Teilnehmer nach Name, E-Mail, Telefon oder TSK suchen" value={query} onChange={event => { setQuery(event.target.value); setQuickFilter('') }} placeholder="Name, E-Mail, Telefon oder TSK suchen..." />
         </div>
       </div>
       <div className="checkin-search-state" aria-live="polite">
