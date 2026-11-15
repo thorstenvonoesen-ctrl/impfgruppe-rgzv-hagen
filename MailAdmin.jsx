@@ -44,6 +44,8 @@ export function MailTestPanel({ clubId }) {
   const [busy, setBusy] = useState(false)
   const [message, setMessage] = useState('')
   const [deliveries, setDeliveries] = useState([])
+  const [deliverySearch, setDeliverySearch] = useState('')
+  const visibleDeliveries = deliveries.filter(row => [row.participantName,row.recipient,row.appointmentTitle,row.appointmentDate].join(' ').toLocaleLowerCase('de').includes(deliverySearch.trim().toLocaleLowerCase('de')))
   const confirmationWarning = result => [
     result.pendingConfirmations ? `${result.pendingConfirmations >= 100 ? 'Mindestens ' : ''}${result.pendingConfirmations} Bestätigungen warten auf die Erstellung eines Versandauftrags. Nach Datenbankreparatur „Offene Zustellungen fortsetzen“ verwenden.` : '',
     result.confirmationQueueWarning || '', result.reconcileError || ''
@@ -78,7 +80,19 @@ export function MailTestPanel({ clubId }) {
       <div className="mail-test-grid">{types.map(([kind,label]) => <button className="small" key={kind} disabled={busy || !recipient} onClick={() => { if (window.confirm(`Diese Testmail ausschließlich an ${recipient} senden?`)) run('test-mail', kind) }}>{label} testen</button>)}</div>
       <p className="mail-test-actions"><button className="small" disabled={busy} onClick={() => run('mail-status')}>Versandstatus laden</button> <button className="small" disabled={busy} onClick={() => run('retry-pending')}>Offene Zustellungen fortsetzen</button></p>
       <p>Unklare Zustellungen werden nicht automatisch erneut gesendet. Sie müssen zuerst anhand des SMTP-Protokolls geprüft werden.</p>
-      {deliveries.length > 0 && <div className="table-wrap"><table><thead><tr><th>Mailtyp</th><th>Empfänger</th><th>Status</th><th>Versuche</th><th>Zeitpunkt</th></tr></thead><tbody>{deliveries.map(row => <tr key={row.id}><td>{types.find(([kind]) => kind === row.kind)?.[1] || row.kind}</td><td>{row.recipient}</td><td>{({ pending: 'Vorgemerkt', sending: 'Wird versendet', sent: 'An Mailserver übergeben', failed: 'Fehlgeschlagen', uncertain: 'Zustellung unklar', skipped: 'Übersprungen' })[row.status] || row.status}{row.error ? ` – ${row.error}` : ''}{row.status === 'failed' && <button className="small" disabled={busy} onClick={() => run('retry-delivery', row.id)}>Erneut versuchen</button>}</td><td>{row.attempts}</td><td>{new Date(row.sent_at || row.created_at).toLocaleString('de-DE')}</td></tr>)}</tbody></table></div>}
+      {deliveries.length > 0 && <>
+        <label>Anmeldung im Versandstatus suchen<input type="search" placeholder="Name, E-Mail oder Impftermin" value={deliverySearch} onChange={event=>setDeliverySearch(event.target.value)} /></label>
+        <p>Die letzten 100 Versandaufträge. Bestätigungen und Erinnerungen sind dem jeweiligen Teilnehmer und Impftermin zugeordnet.</p>
+        <div className="table-wrap"><table>
+          <thead><tr><th>Anmeldung / Impftermin</th><th>Mailtyp</th><th>Empfänger</th><th>Status</th><th>Versuche</th><th>Zeitpunkt</th></tr></thead>
+          <tbody>{visibleDeliveries.map(row => <tr key={row.id}>
+            <td>{row.participantName || (row.participant_id ? 'Anmeldung nicht mehr vorhanden' : 'Ohne einzelne Anmeldung')}<br/>{row.appointmentTitle}{row.appointmentDate ? ` · ${row.appointmentDate.split('-').reverse().join('.')}` : ''}</td>
+            <td>{types.find(([kind]) => kind === row.kind)?.[1] || row.kind}</td><td>{row.recipient}</td>
+            <td>{({ pending: 'Vorgemerkt', sending: 'Wird versendet', sent: 'An Mailserver übergeben', failed: 'Fehlgeschlagen', uncertain: 'Zustellung unklar', skipped: 'Übersprungen' })[row.status] || row.status}{row.error ? ` – ${row.error}` : ''}{row.status === 'failed' && <button className="small" disabled={busy} onClick={() => run('retry-delivery', row.id)}>Erneut versuchen</button>}</td>
+            <td>{row.attempts}</td><td>{new Date(row.sent_at || row.created_at).toLocaleString('de-DE')}</td>
+          </tr>)}{!visibleDeliveries.length && <tr><td colSpan={6}>Keine passenden Versandaufträge gefunden.</td></tr>}</tbody>
+        </table></div>
+      </>}
     </>}
   </details>
 }

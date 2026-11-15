@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import MembershipTariff from './MembershipTariff.jsx'
+import { calendarDownloadPath } from './calendar-links.js'
 
 const fields = [['firstname','Vorname'],['lastname','Nachname'],['email','E-Mail'],['street','Straße'],['housenumber','Hausnummer'],['zipcode','PLZ'],['city','Ort'],['phone','Telefon'],['tsk_number','TSK-Betriebsnummer']]
 const animals = [['chicken_count','Hühner'],['bantam_count','Zwerghühner'],['turkey_count','Puten']]
@@ -11,10 +12,11 @@ export default function ParticipantManagement({ token }) {
   const [message, setMessage] = useState('')
   const [membershipVerification,setMembershipVerification] = useState(null)
   async function request(operation, signal) {
-    const proofEmail=operation==='confirm-member-tariff'?data?.participant.email:form.email
-    const response = await fetch('/api/create-registration', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'manage-registration', token, operation, revision: data?.participant.mail_revision, changes: form, membership_proof: membershipVerification?.email===proofEmail?.trim().toLowerCase() && membershipVerification?.appointmentId===data?.appointment.id ? membershipVerification.token:undefined }), signal })
-    const result = await response.json()
-    if (!response.ok) throw new Error(result.error || 'Anfrage fehlgeschlagen.')
+    const proofEmail=operation==='confirm-member-tariff'?data?.participant?.email:form.email
+    const response = await fetch('/api/create-registration', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'manage-registration', token, operation, revision: data?.participant?.mail_revision, changes: form, membership_proof: membershipVerification?.token && membershipVerification.email===proofEmail?.trim().toLowerCase() && membershipVerification.appointmentId===data?.appointment?.id ? membershipVerification.token:undefined }), signal })
+    const result = await response.json().catch(() => null)
+    if (response.status === 404 || (response.ok && (!result?.participant || !result?.appointment))) throw new Error('Diese Anmeldung ist nicht mehr vorhanden.')
+    if (!response.ok) throw new Error(result?.error && !/Cannot read|TypeError|ReferenceError|reading ['"]/.test(result.error) ? result.error : 'Die Anmeldung konnte nicht geladen werden. Bitte später erneut versuchen.')
     return result
   }
   function show(result) {
@@ -29,6 +31,7 @@ export default function ParticipantManagement({ token }) {
   useEffect(() => {
     const controller = new AbortController()
     setData(null)
+    setMessage('')
     request('view', controller.signal).then(show).catch(e => { if (e.name !== 'AbortError') setMessage(e.message) })
     return () => controller.abort()
   }, [token])
@@ -50,6 +53,7 @@ export default function ParticipantManagement({ token }) {
       <h2>{a.title}</h2>
       <p>{a.date?.split('-').reverse().join('.')} · {a.time || a.title?.match(/\b([01]?\d|2[0-3]):[0-5]\d\b/)?.[0] || 'Uhrzeit noch nicht angegeben'}</p>
       <p>{[a.venue_name, [a.street,a.house_number].filter(Boolean).join(' '), [a.postal_code,a.city].filter(Boolean).join(' ')].filter(Boolean).join(', ')}</p>
+      {['completed','bar_registered'].includes(data.participant.registration_status) && <p><a href={calendarDownloadPath(token)}>Im Kalender speichern</a></p>}
       <p>{data.participant.registration_status === 'cancelled' ? 'Storniert – für diesen Termin besteht keine aktive Anmeldung mehr.' : data.editable ? 'Sie können Ihre Angaben bearbeiten oder die Anmeldung stornieren.' : 'Die Anmeldung kann nicht mehr geändert oder storniert werden.'}</p>
       <form onSubmit={e => { e.preventDefault(); save('update') }} className="form">
         <fieldset disabled={busy || !data.editable} style={{ border: 0, padding: 0 }}>

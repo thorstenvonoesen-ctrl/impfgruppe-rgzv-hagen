@@ -1,7 +1,9 @@
 import QRCode from 'qrcode'
 import { makeCheckinUrl } from '../checkin-links.js'
+import { calendarDownloadPath } from '../calendar-links.js'
+import { buildAppointmentCalendar } from './appointment-calendar.js'
 import { emailSignatureHtml } from './_email-signature.js'
-import { appointmentAddress, appointmentTime, canEditRegistration, escapeHtml as e, formatDate, managementUrl, money, publicBaseUrl } from './mail-rules.js'
+import { appointmentAddress, appointmentTime, canEditRegistration, escapeHtml as e, formatDate, managementToken, managementUrl, money, publicBaseUrl } from './mail-rules.js'
 
 export const mailSubjects = {
   registration: 'Ihre Anmeldung zum Newcastle-Impftermin ist erfolgreich eingegangen',
@@ -40,9 +42,17 @@ export async function buildParticipantMail(kind, p, a, { test = false, clubSlug,
       if (kind === 'changed') html += `<p><strong>Kontaktdaten:</strong><br>${e(p.firstname)} ${e(p.lastname)}<br>${e(p.street)} ${e(p.housenumber)}<br>${e(p.zipcode)} ${e(p.city)}<br>${e(p.email)}<br>${e(p.phone)}<br>TSK-Betriebsnummer: ${e(p.tsk_number)}</p>`
       const url = test ? 'https://example.invalid/test-verwaltung' : managementUrl(p.id)
       if (['registration', 'changed'].includes(kind) || canEditRegistration(a, p)) html += `<p><a style="display:inline-block;padding:14px 20px;background:#123c2b;color:white;border-radius:6px" href="${e(url)}">Meine Anmeldung verwalten</a></p>`
+      if (['registration','changed'].includes(kind)) {
+        const calendar = buildAppointmentCalendar(a)
+        if (calendar) {
+          attachments.push({filename:'impftermin.ics',content:calendar,contentType:'text/calendar; charset=utf-8'})
+          const calendarUrl = test ? 'https://example.invalid/test-impftermin.ics' : `${publicBaseUrl()}${calendarDownloadPath(managementToken(p.id))}`
+          html += `<p><a href="${e(calendarUrl)}">Im Kalender speichern</a></p>`
+        }
+      }
       if (!p.checkin_token && !test) throw new Error('Check-in-Token fehlt.')
       const checkinLink=test?'https://example.invalid/#checkin=TEST-KEIN-ECHTER-CHECKIN':makeCheckinUrl(publicBaseUrl(),p.checkin_token)
-      attachments.push({ filename: 'check-in-qr-code.png', content: await QRCode.toBuffer(checkinLink, { width: 320, margin: 2, errorCorrectionLevel: 'M' }), cid: 'participant-checkin-qr' })
+      attachments.unshift({ filename: 'check-in-qr-code.png', content: await QRCode.toBuffer(checkinLink, { width: 320, margin: 2, errorCorrectionLevel: 'M' }), cid: 'participant-checkin-qr' })
       html += '<p><img src="cid:participant-checkin-qr" width="320" height="320" alt="Persönlicher Check-in-QR-Code"></p><p>Bitte bringen Sie diesen QR-Code am Impftag mit. Er dient dem Check-in und ist kein Verwaltungslink.</p>'
     }
   }

@@ -6,6 +6,7 @@ import { canEditRegistration, validEmail } from '../server/mail-rules.js'
 import manageRegistration from '../server/manage-registration.js'
 import { handleMembershipRequest, registrationTariff } from '../server/membership-tariff.js'
 import { registrationFailure } from '../server/registration-errors.js'
+import { serveRegistrationCalendar } from '../server/appointment-calendar.js'
 
 const fields = ['firstname', 'lastname', 'street', 'housenumber', 'zipcode', 'city', 'email', 'phone', 'tsk_number']
 const REGISTRATION_VACCINE = 'Newcastle'
@@ -193,6 +194,10 @@ async function handlePaymentCancellation(req, res) {
 export const config = { maxDuration: 60 }
 export function createRegistrationHandler({ createDb = createAdminSupabase, transport, scheduleMail } = {}) {
 return async function handler(req, res) {
+  if (req.method === 'GET' && req.query?.action === 'calendar') {
+    try { return await serveRegistrationCalendar(req, res, createDb()) }
+    catch { return res.status(503).json({error:'Der Kalendereintrag ist derzeit nicht verfügbar.'}) }
+  }
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' })
   if (req.body?.action === 'manage-registration') {
     try { return await manageRegistration(req, res, {db:createDb(),transport}) } catch { return res.status(500).json({ error: 'Die Anmeldung konnte nicht verarbeitet werden.' }) }

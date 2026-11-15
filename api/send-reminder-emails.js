@@ -198,13 +198,25 @@ return async function handler(req, res) {
       return res.status(200).json(await drainMail({ clubId, participantId: retry.participant_id || undefined, appointmentId: retry.appointment_id || undefined, kind: retry.kind, limit: 1, db: supabase, transport, deliveryId: req.body.deliveryId }))
     }
     if (action === 'mail-status') {
-      const { data, error } = await supabase.from('mail_deliveries').select('id,kind,recipient,status,attempts,created_at,sent_at,error_code').eq('club_id', clubId).order('created_at', { ascending: false }).limit(100)
+      const { data, error } = await supabase.from('mail_deliveries').select('id,participant_id,appointment_id,kind,recipient,status,attempts,created_at,sent_at,error_code').eq('club_id', clubId).order('created_at', { ascending: false }).limit(100)
       if (error) throw error
+      const participantIds = [...new Set((data || []).map(row => row.participant_id).filter(Boolean))]
+      const appointmentIds = [...new Set((data || []).map(row => row.appointment_id).filter(Boolean))]
+      const [people, dates] = await Promise.all([
+        participantIds.length ? supabase.from('participants').select('id,firstname,lastname').eq('club_id',clubId).in('id',participantIds) : {data:[]},
+        appointmentIds.length ? supabase.from('vaccination_dates').select('id,title,date').eq('club_id',clubId).in('id',appointmentIds) : {data:[]}
+      ])
+      const participants = new Map((people.data || []).map(person => [person.id,person]))
+      if (people.error || dates.error) throw people.error || dates.error
+      const appointments = new Map((dates.data || []).map(date => [date.id,date]))
       const pending=await supabase.from('participants').select('id,confirmation_error_code').eq('club_id',clubId).eq('confirmation_job_state','pending').limit(100)
       return res.status(200).json({
         pendingConfirmations:pending.data?.length||0,
         confirmationQueueWarning:pending.error?'Bestätigungs-Vormerkungen konnten nicht geprüft werden. Vollständiges Anmelde-Reparaturpaket und Serverkonfiguration prüfen.':null,
-        deliveries: (data || []).map(row => ({ ...row, error_code: row.error_code ? mailFailure({ code: row.error_code }).code : null, error: row.error_code ? mailFailure({ code: row.error_code }).error : null }))
+        deliveries: (data || []).map(row => ({ ...row,
+          participantName: [participants.get(row.participant_id)?.firstname,participants.get(row.participant_id)?.lastname].filter(Boolean).join(' '),
+          appointmentTitle: appointments.get(row.appointment_id)?.title || '', appointmentDate: appointments.get(row.appointment_id)?.date || '',
+          error_code: row.error_code ? mailFailure({ code: row.error_code }).code : null, error: row.error_code ? mailFailure({ code: row.error_code }).error : null }))
       })
     }
     return res.status(400).json({ error: 'Ungültige Versandaktion.' })

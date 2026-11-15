@@ -25,9 +25,10 @@ export async function manageRegistration(req, res, { db = createAdminSupabase(),
   if (!id) return res.status(403).json({ error: 'Dieser Verwaltungslink ist ungültig.' })
   const { data: p, error } = await db.from('participants').select('*').eq('id', id).maybeSingle()
   if (error) throw error
-  if (!p) return res.status(404).json({ error: 'Anmeldung nicht gefunden.' })
+  if (!p) return res.status(404).json({ error: 'Diese Anmeldung ist nicht mehr vorhanden.' })
   const { data: a, error: dateError } = await db.from('vaccination_dates').select('*').eq('id', p.vaccination_date_id).single()
   if (dateError) throw dateError
+  if (!a) return res.status(404).json({ error: 'Diese Anmeldung ist nicht mehr vorhanden.' })
   let saved = p
   let emailSent
   if (req.body.operation === 'confirm-member-tariff') {
