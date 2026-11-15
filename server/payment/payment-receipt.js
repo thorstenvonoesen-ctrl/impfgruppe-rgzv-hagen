@@ -114,7 +114,7 @@ export function buildPaymentReceiptEmailHtml(receipt) {
 </p>
 <p>Die zugehörige Quittung finden Sie als PDF im Anhang dieser E-Mail.</p>
 <p>Mit freundlichen Grüßen</p>
-<p>Rainer Koplin<br>Impfwart RGZV Hagen</p>
+<p>Thorsten von Oesen<br>1. Kassierer<br>RGZV Hagen und Umgebung</p>
 <hr style="margin-top:30px">
 <p style="font-size:12px;color:#666;">Diese E-Mail wurde automatisch über das Anmeldesystem des RGZV Hagen erstellt.</p>`
 }
