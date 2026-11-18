@@ -16,7 +16,8 @@ export async function buildTestMail(kind, recipient) {
   const participant = { id: 'test-only', firstname: 'Max', lastname: 'Mustermann', email: recipient, street: 'Musterstraße', housenumber: '1', zipcode: '12345', city: 'Musterstadt', tsk_number: 'TEST-123', phone: 'TEST', chicken_count: 8, bantam_count: 2, turkey_count: 0, animal_count: 10, vaccine: 'Newcastle', payment_status: 'offen', payment_amount: 10 }
   let mail
   if (kind === 'receipt') {
-    const receipt = { receipt_number: 'TEST-Q-000001', receipt_snapshot: { participantName: 'Max Mustermann (TEST)', clubName: 'RGZV Hagen – TEST', amount: 10, paymentMethod: 'bar', paymentDate: '2099-06-20T08:00:00Z', appointmentTitle: appointment.title, appointmentDate: appointment.date, issuedAt: '2099-06-20T08:01:00Z' } }
+    const appointmentDate = '2026-11-29'
+    const receipt = { receipt_number: 'TEST-Q-000001', receipt_snapshot: { participantName: 'Max Mustermann (TEST)', clubName: 'RGZV Hagen – TEST', amount: 10, paymentMethod: 'bar', paymentDate: `${appointmentDate}T08:00:00Z`, appointmentTitle: appointment.title, appointmentDate, issuedAt: `${appointmentDate}T08:01:00Z` } }
     mail = { subject: '[TEST] Ihre Quittung TEST-Q-000001 über die Teilnahmegebühr', html: buildPaymentReceiptEmailHtml(receipt), attachments: [{ filename: 'TEST-Quittung.pdf', content: buildPaymentReceiptPdf(receipt), contentType: 'application/pdf' }] }
   } else if (kind === 'vet') {
     const doc = new jsPDF()

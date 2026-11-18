@@ -101,6 +101,9 @@ export function buildPaymentReceiptPdf(receipt) {
 
 export function buildPaymentReceiptEmailHtml(receipt) {
   const snapshot = receipt.receipt_snapshot
+  const christmasGreeting = snapshot.appointmentDate === '2026-11-29' ? `
+<p>Der RGZV Hagen und Umgebung wünscht dir und deiner Familie einen schönen ersten Advent, eine gemütliche und besinnliche Weihnachtszeit sowie einen guten Start in ein gesundes und glückliches neues Jahr!</p>
+<p>Vielen Dank für dein Vertrauen und deine Teilnahme an unserer Impfgruppe. Wir freuen uns darauf, dich beim nächsten Impftermin am 10.01.2027 wiederzusehen.</p>` : ''
   return `
 <h2>Ihre Quittung über die Teilnahmegebühr</h2>
 <p>Hallo ${escapeHtml(snapshot.participantName)},</p>
@@ -112,7 +115,7 @@ export function buildPaymentReceiptEmailHtml(receipt) {
   <strong>Zahlungsdatum:</strong> ${escapeHtml(formatDate(snapshot.paymentDate, true))}<br>
   <strong>Newcastle-Impftermin:</strong> ${escapeHtml(snapshot.appointmentTitle || 'Newcastle-Impftermin')} am ${escapeHtml(formatDate(`${snapshot.appointmentDate}T12:00:00`))}
 </p>
-<p>Die zugehörige Quittung finden Sie als PDF im Anhang dieser E-Mail.</p>
+<p>Die zugehörige Quittung finden Sie als PDF im Anhang dieser E-Mail.</p>${christmasGreeting}
 <p>Mit freundlichen Grüßen</p>
 <p>Thorsten von Oesen<br>1. Kassierer<br>RGZV Hagen und Umgebung</p>
 <hr style="margin-top:30px">

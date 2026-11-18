@@ -93,7 +93,7 @@ async function addPdfWatermark(doc) {
 }
 const weatherPreviewCache = new Map()
 
-function PremiumBackground() {
+export function PremiumBackground() {
   const pointerLightRef = useRef(null)
 
   useEffect(() => {
@@ -788,13 +788,14 @@ function HomeBenefitInfoField({ benefit, index, isOpen, onOpen, onClose, onToggl
   )
 }
 
-function LiveSignupStats({ club }) {
+function LiveSignupStats({ club, preview = false }) {
   const [stats, setStats] = useState({ participants: 0, animals: 0, dates: [] })
-  const [ready, setReady] = useState(false)
+  const [ready, setReady] = useState(preview)
   const [openBenefitIndex, setOpenBenefitIndex] = useState(null)
   const benefitsRef = useRef(null)
 
   useEffect(() => {
+    if (preview) return
     let active = true
     async function loadStats() {
       if (!hasSupabase) {
@@ -813,7 +814,7 @@ function LiveSignupStats({ club }) {
     }
     loadStats()
     return () => { active = false }
-  }, [])
+  }, [preview])
 
   useEffect(() => {
     const closeOpenBenefit = event => {
@@ -833,8 +834,8 @@ function LiveSignupStats({ club }) {
         </div>
         <aside className="landing-appointment-metrics" aria-label="Aktuelle Anmeldezahlen">
           <span className="landing-metrics-label">Impfgruppe aktuell</span>
-          <div><span><Users size={19}/></span><strong>{ready ? <AnimatedMetric value={Number(stats.participants || 0)}/> : '–'}</strong><small>Geflügelhalter</small></div>
-          <div><span><Syringe size={19}/></span><strong>{ready ? <AnimatedMetric value={Number(stats.animals || 0)}/> : '–'}</strong><small>angemeldete Tiere</small></div>
+          <div><span><Users size={19}/></span><strong>{ready && !preview ? <AnimatedMetric value={Number(stats.participants || 0)}/> : '–'}</strong><small>Geflügelhalter</small></div>
+          <div><span><Syringe size={19}/></span><strong>{ready && !preview ? <AnimatedMetric value={Number(stats.animals || 0)}/> : '–'}</strong><small>angemeldete Tiere</small></div>
         </aside>
       </section>
 
@@ -872,12 +873,12 @@ function LiveSignupStats({ club }) {
     </>
   )
 }
-function ClubSelect() {
+export function ClubSelect({ heroVisual, preview = false }) {
   const [clubs, setClubs] = useState([])
 
   useEffect(() => {
     async function loadClubs() {
-      if (!hasSupabase) return
+      if (preview || !hasSupabase) return
       const { data } = await supabase
         .from('clubs')
         .select('id,name,slug,guest_price,member_price')
@@ -886,7 +887,7 @@ function ClubSelect() {
     }
 
     loadClubs()
-  }, [])
+  }, [preview])
 
   const currentClub = clubs.find(club => club.slug === getCurrentSlug()) || null
 
@@ -1505,7 +1506,7 @@ function ClubSelect() {
         }
       `}</style>
 
-      <Header />
+      <Header preview={preview} />
 
       <main className="landing-main">
         <section className="landing-hero">
@@ -1519,17 +1520,17 @@ function ClubSelect() {
             </div>
           </div>
 
-          <div className="landing-visual" aria-hidden="true">
+          {heroVisual ?? <div className="landing-visual" aria-hidden="true">
             <div className="landing-visual-orbit landing-visual-orbit-one" />
             <div className="landing-visual-orbit landing-visual-orbit-two" />
             <div className="landing-visual-center"><img src="/shield-orange.png" alt="" /></div>
             <span className="landing-visual-node landing-node-calendar"><CalendarDays size={25}/><small>Termin</small></span>
             <span className="landing-visual-node landing-node-qr"><QrCode size={25}/><small>QR-Code</small></span>
             <span className="landing-visual-node landing-node-check"><ScanLine size={25}/><small>Check-in</small></span>
-          </div>
+          </div>}
         </section>
 
-        <LiveSignupStats club={currentClub} />
+        <LiveSignupStats club={currentClub} preview={preview} />
 
         <section className="landing-editorial" aria-label="Informationen zur Impfung und zum Check-in">
           <article className="landing-newcastle-feature">
@@ -8336,7 +8337,7 @@ function PoultryQuiz() {
   )
 }
 
-function Header({ admin = false }) {
+function Header({ admin = false, preview = false }) {
   const showAdminLogin = !admin && window.location.hash !== '#admin'
   return (
     <header
@@ -8347,7 +8348,7 @@ function Header({ admin = false }) {
         borderBottom: '1px solid rgba(255,255,255,0.08)'
       } : undefined}
     >
-      {!hasSupabase && <p role="alert" style={{ margin: '0 0 10px', color: '#ffe1c2', fontSize: '13px', fontWeight: '700', textAlign: 'center' }}>{supabaseConfigMessage}</p>}
+      {!preview && !hasSupabase && <p role="alert" style={{ margin: '0 0 10px', color: '#ffe1c2', fontSize: '13px', fontWeight: '700', textAlign: 'center' }}>{supabaseConfigMessage}</p>}
       {admin ? (
         <div className="app-header-inner">
           <a className="app-header-brand" href="#" aria-label="Impfgruppenmanager Startseite">
@@ -8407,4 +8408,7 @@ function Footer({ showDeveloper = false }) {
   )
 }
 
-createRoot(document.getElementById('root')).render(<><PremiumBackground /><App /></>)
+const root = document.getElementById('root')
+if (!root.hasAttribute('data-preview')) {
+  createRoot(root).render(<><PremiumBackground /><App /></>)
+}

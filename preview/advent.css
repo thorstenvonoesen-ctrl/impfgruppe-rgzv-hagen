@@ -1,0 +1,78 @@
+.advent-wreath {
+  width: min(100%, 490px);
+  min-width: 0;
+  margin: 0;
+  justify-self: center;
+  text-align: center;
+}
+
+.advent-wreath img {
+  display: block;
+  width: 100%;
+  height: auto;
+  /* The lower mask preserves the wicks, candles and wreath in every state. */
+  mask-image: linear-gradient(transparent 32.4%, #000 34.2%), var(--advent-flame-mask);
+}
+
+.advent-wreath fieldset {
+  min-width: 0;
+  padding: 0;
+  margin: 10px 0 0;
+  border: 0;
+}
+
+.advent-wreath legend {
+  margin: 0 auto 8px;
+  color: var(--rgzv-muted);
+  font-size: .8rem;
+  font-weight: 700;
+}
+
+.advent-choices {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 6px;
+}
+
+.advent-choices label {
+  position: relative;
+  cursor: pointer;
+}
+
+.advent-choices input {
+  position: absolute;
+  opacity: 0;
+}
+
+.advent-choices span {
+  display: block;
+  padding: 6px 9px;
+  border: 1px solid var(--rgzv-border);
+  border-radius: 999px;
+  background: var(--rgzv-paper);
+  color: var(--rgzv-navy);
+  font-size: .8rem;
+  font-weight: 700;
+}
+
+.advent-choices input:checked + span {
+  border-color: var(--rgzv-navy);
+  background: var(--rgzv-navy);
+  color: white;
+}
+
+.advent-choices input:focus-visible + span {
+  outline: 2px solid var(--rgzv-navy);
+  outline-offset: 2px;
+}
+
+@media (max-width: 760px) {
+  .landing-hero:has(.advent-wreath) {
+    row-gap: 12px;
+  }
+
+  .advent-wreath {
+    max-width: 380px;
+  }
+}
