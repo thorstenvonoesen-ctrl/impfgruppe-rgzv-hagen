@@ -37,7 +37,7 @@ export function MailCampaign({ appointment, kind, onClose }) {
   </section></div>
 }
 
-const types = [['registration','Anmeldebestätigung'],['changed','Änderungsbestätigung'],['cancelled','Stornierungsbestätigung'],['reminder-7d','7-Tage-Erinnerung'],['reminder-24h','24-Stunden-Erinnerung'],['receipt','Quittung mit PDF'],['appointment-change','Terminänderung'],['vet','Tierarztmail mit PDF'],['new-appointment','Neuer Impftermin']]
+const types = [['registration','Anmeldebestätigung'],['changed','Änderungsbestätigung'],['cancelled','Stornierungsbestätigung'],['reminder-10d','10-Tage-Erinnerung'],['reminder-48h','48-Stunden-Erinnerung'],['receipt','Quittung mit PDF'],['appointment-change','Terminänderung'],['vet','Tierarztmail mit PDF'],['new-appointment','Neuer Impftermin']]
 export function MailTestPanel({ clubId }) {
   const [open, setOpen] = useState(false)
   const [recipient, setRecipient] = useState(null)

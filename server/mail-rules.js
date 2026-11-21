@@ -33,11 +33,16 @@ export function canEditRegistration(a, p = {}, now = Date.now()) {
 export function reminderDue(a, kind, now = Date.now()) {
   if (a.archived || isTestAppointment(a) || !appointmentTime(a)) return false
   const event = berlinInstant(a.date, appointmentTime(a))
-  const priorWeek = new Date(`${a.date}T12:00:00Z`)
-  priorWeek.setUTCDate(priorWeek.getUTCDate() - 7)
-  const due = kind === 'reminder-7d' ? berlinInstant(priorWeek.toISOString().slice(0,10), appointmentTime(a)) : event - 24 * 3600000
-  // A delayed job may catch up on the same day, never send a week-old reminder.
-  return now >= due && now < Math.min(due + 6 * 3600000, event)
+  if (!Number.isFinite(event)) return false
+  let due
+  if (kind === 'reminder-10d') {
+    const priorDate = new Date(`${a.date}T12:00:00Z`)
+    priorDate.setUTCDate(priorDate.getUTCDate() - 10)
+    due = berlinInstant(priorDate.toISOString().slice(0, 10), appointmentTime(a))
+  } else if (kind === 'reminder-48h') due = event - 48 * 3600000
+  else return false
+  // Hobby Cron runs at most daily and may be almost an hour late. Keep a due reminder eligible until the appointment, so a missed daily tick catches up without sending after the event.
+  return now >= due && now < event
 }
 
 function secret() {

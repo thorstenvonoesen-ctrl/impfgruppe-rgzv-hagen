@@ -23,14 +23,19 @@ export async function deliverMail(id, { db = createAdminSupabase(), transport = 
   let smtpStarted = false
   let accepted = false
   try {
+    if (job.kind.startsWith('reminder-') && !['reminder-10d', 'reminder-48h'].includes(job.kind)) {
+      const result = await db.from('mail_deliveries').update({ status: 'skipped' }).eq('id', id)
+      if (result.error) throw result.error
+      return { sent: false, skipped: true }
+    }
     if (!validEmail(job.recipient)) throw Object.assign(new Error('Invalid recipient'), { code: 'EENVELOPE' })
     let { participant: p, appointment: a } = job.payload
-    if (['registration', 'changed', 'reminder-7d', 'reminder-24h', 'appointment-change'].includes(job.kind)) {
+    if (['registration', 'changed', 'reminder-10d', 'reminder-48h', 'appointment-change'].includes(job.kind)) {
       const current = await db.from('participants').select('*').eq('id', job.participant_id).maybeSingle()
       const date = await db.from('vaccination_dates').select('*').eq('id', job.appointment_id).maybeSingle()
       if (current.error || date.error) throw new Error('Datensatz konnte nicht geprüft werden.')
       if (!current.data || !date.data || !activeStatuses.includes(current.data.registration_status) || date.data.archived ||
-          (['reminder-7d', 'reminder-24h', 'appointment-change'].includes(job.kind) && isTestAppointment(date.data))) {
+          (['reminder-10d', 'reminder-48h', 'appointment-change'].includes(job.kind) && isTestAppointment(date.data))) {
         const result = await db.from('mail_deliveries').update({ status: 'skipped' }).eq('id', id)
         if (result.error) throw result.error
         return { sent: false, skipped: true }
