@@ -9,8 +9,8 @@ export const mailSubjects = {
   registration: 'Ihre Anmeldung zum Newcastle-Impftermin ist erfolgreich eingegangen',
   changed: 'Ihre Anmeldung wurde geändert',
   cancelled: 'Ihre Anmeldung wurde storniert',
-  'reminder-10d': 'Erinnerung an Ihren Newcastle-Impftermin (10-Tage-Erinnerung)',
-  'reminder-48h': 'Erinnerung an Ihren Newcastle-Impftermin (48-Stunden-Erinnerung)',
+  'reminder-7d': 'Erinnerung an Ihren Newcastle-Impftermin (7-Tage-Erinnerung)',
+  'reminder-24h': 'Erinnerung an Ihren Newcastle-Impftermin (24-Stunden-Erinnerung)',
   'appointment-change': 'Wichtige Änderung zu Ihrem Newcastle-Impftermin',
   'new-appointment': 'Neuer Newcastle-Impftermin verfügbar'
 }
@@ -21,7 +21,7 @@ export async function buildParticipantMail(kind, p, a, { test = false, clubSlug,
   const intro = {
     registration: 'Ihre Anmeldung wurde erfolgreich erfasst.', changed: 'Ihre Änderungen wurden erfolgreich gespeichert. Hier finden Sie Ihre vollständigen aktuellen Anmeldedaten.',
     cancelled: 'Ihre Anmeldung wurde erfolgreich storniert. Für diesen Newcastle-Impftermin besteht keine aktive Anmeldung mehr.',
-    'reminder-10d': 'Dies ist die 10-Tage-Erinnerung zu Ihrem gebuchten Termin zur Newcastle-Impfung.', 'reminder-48h': 'Dies ist die 48-Stunden-Erinnerung zu Ihrem gebuchten Termin zur Newcastle-Impfung.',
+    'reminder-7d': 'Dies ist die 7-Tage-Erinnerung zu Ihrem gebuchten Termin zur Newcastle-Impfung.', 'reminder-24h': 'Dies ist die 24-Stunden-Erinnerung zu Ihrem gebuchten Termin zur Newcastle-Impfung.',
     'appointment-change': `Ihr Newcastle-Impftermin wurde geändert.${changes.length ? ` Geändert: ${changes.map(e).join(', ')}.` : ''} Bitte beachten Sie die aktuellen Angaben.`,
     'new-appointment': 'Ein neuer Newcastle-Impftermin steht zur Anmeldung zur Verfügung.'
   }[kind]

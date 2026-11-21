@@ -5,7 +5,7 @@ import { buildVetCertificateMail } from '../api/send-vet-certificate.js'
 import { clubMailTransporter, mailFrom } from './mail-transport.js'
 import { normalizeEmail, validEmail } from './mail-rules.js'
 
-export const testKinds = ['registration','changed','cancelled','reminder-10d','reminder-48h','receipt','appointment-change','vet','new-appointment']
+export const testKinds = ['registration','changed','cancelled','reminder-7d','reminder-24h','receipt','appointment-change','vet','new-appointment']
 export function testRecipient() {
   const email = normalizeEmail(process.env.MAIL_TEST_RECIPIENT)
   return validEmail(email) ? email : null

@@ -30,11 +30,11 @@ test('deadline, closure, archive, cancellation and check-in prohibit edits', () 
   assert.equal(canEditRegistration(a,{...p,registration_status:'cancelled'},now),false)
   assert.equal(canEditRegistration(a,p,berlinInstant(a.date,'10:00')),false)
 })
-test('10-day and 48-hour reminders calculate exact Berlin due times and catch up only before the event', () => {
+test('7-day and 24-hour reminders calculate exact Berlin due times and catch up only before the event', () => {
   const event = berlinInstant(a.date,'10:00')
-  const tenDayDue = berlinInstant('2099-06-10','10:00')
-  const fortyEightHourDue = event - 48*3600000
-  for (const [kind,due] of [['reminder-10d',tenDayDue],['reminder-48h',fortyEightHourDue]]) {
+  const sevenDayDue = berlinInstant('2099-06-13','10:00')
+  const twentyFourHourDue = event - 24*3600000
+  for (const [kind,due] of [['reminder-7d',sevenDayDue],['reminder-24h',twentyFourHourDue]]) {
     assert.equal(reminderDue(a,kind,due-1),false)
     assert.equal(reminderDue(a,kind,due),true)
     assert.equal(reminderDue(a,kind,due+25*3600000),true)
@@ -45,26 +45,26 @@ test('10-day and 48-hour reminders calculate exact Berlin due times and catch up
     assert.equal(reminderDue({...a,is_test:true},kind,due),false)
     assert.equal(reminderDue({...a,archived:true},kind,due),false)
   }
-  assert.equal(reminderDue(a,'reminder-7d',tenDayDue),false)
-  assert.equal(reminderDue(a,'reminder-24h',fortyEightHourDue),false)
+  assert.equal(reminderDue(a,'reminder-10d',sevenDayDue),false)
+  assert.equal(reminderDue(a,'reminder-48h',twentyFourHourDue),false)
 })
-test('10 calendar days and 48 elapsed hours remain correct across Berlin DST changes', () => {
+test('7 calendar days and 24 elapsed hours remain correct across Berlin DST changes', () => {
   const spring={...a,date:'2026-03-29'}
-  assert.equal(reminderDue(spring,'reminder-10d',Date.parse('2026-03-19T09:00:00Z')),true)
-  assert.equal(reminderDue(spring,'reminder-10d',Date.parse('2026-03-19T08:00:00Z')),false)
-  assert.equal(reminderDue(spring,'reminder-48h',Date.parse('2026-03-27T08:00:00Z')),true)
+  assert.equal(reminderDue(spring,'reminder-7d',Date.parse('2026-03-22T09:00:00Z')),true)
+  assert.equal(reminderDue(spring,'reminder-7d',Date.parse('2026-03-22T08:00:00Z')),false)
+  assert.equal(reminderDue(spring,'reminder-24h',Date.parse('2026-03-28T08:00:00Z')),true)
   const autumn={...a,date:'2026-11-01'}
-  assert.equal(reminderDue(autumn,'reminder-10d',Date.parse('2026-10-22T08:00:00Z')),true)
-  assert.equal(reminderDue(autumn,'reminder-48h',Date.parse('2026-10-30T09:00:00Z')),true)
+  assert.equal(reminderDue(autumn,'reminder-7d',Date.parse('2026-10-25T08:00:00Z')),true)
+  assert.equal(reminderDue(autumn,'reminder-24h',Date.parse('2026-10-31T09:00:00Z')),true)
 })
 test('reminder due instants follow each appointment time', () => {
   const evening={...a,date:'2026-11-29',time:'17:35'}
-  assert.equal(reminderDue(evening,'reminder-10d',berlinInstant('2026-11-19','17:35')),true)
-  assert.equal(reminderDue(evening,'reminder-10d',berlinInstant('2026-11-19','10:00')),false)
-  assert.equal(reminderDue(evening,'reminder-48h',berlinInstant('2026-11-27','17:35')),true)
+  assert.equal(reminderDue(evening,'reminder-7d',berlinInstant('2026-11-22','17:35')),true)
+  assert.equal(reminderDue(evening,'reminder-7d',berlinInstant('2026-11-22','10:00')),false)
+  assert.equal(reminderDue(evening,'reminder-24h',berlinInstant('2026-11-28','17:35')),true)
 })
 test('all participant details, cash amount, distinct link and QR appear in confirmations', async () => {
-  for (const kind of ['registration','changed','reminder-10d','reminder-48h','appointment-change']) {
+  for (const kind of ['registration','changed','reminder-7d','reminder-24h','appointment-change']) {
     const mail = await buildParticipantMail(kind,p,a)
     for (const text of ['Max &lt;script&gt;','20.06.2099','10:00','Musterstraße','Hühner: 8','Zwerghühner: 2','Gesamtzahl','Newcastle','10,00','vor Ort in bar','Meine Anmeldung verwalten']) assert.ok(mail.html.includes(text), `${kind}: ${text}`)
     assert.match(mail.html, /#manage=/)
@@ -80,7 +80,7 @@ test('all participant details, cash amount, distinct link and QR appear in confi
   assert.doesNotMatch(cancelled.html, /#manage=/)
 })
 test('closed registration reminder has QR but no management button', async () => {
-  const mail = await buildParticipantMail('reminder-48h',p,{...a,registration_closed:true})
+  const mail = await buildParticipantMail('reminder-24h',p,{...a,registration_closed:true})
   assert.equal(mail.attachments.length,1)
   assert.doesNotMatch(mail.html, /Meine Anmeldung verwalten/)
 })
@@ -164,7 +164,7 @@ test('parallel workers atomically claim a delivery only once',async()=>{
   assert.equal(count,1);assert.equal(jobs[0].status,'sent')
 })
 test('legacy reminder kinds are skipped and never sent under the new schedule',async()=>{
-  const jobs=[{...fixtureJob('legacy'),kind:'reminder-7d'}];const db=memoryDb(jobs);let count=0
+  const jobs=[{...fixtureJob('legacy'),kind:'reminder-10d'}];const db=memoryDb(jobs);let count=0
   const result=await deliverMail('legacy',{db,transport:{sendMail:async()=>{count++;return {messageId:'fake'}}}})
   assert.equal(result.skipped,true);assert.equal(count,0);assert.equal(jobs[0].status,'skipped')
 })

@@ -35,11 +35,11 @@ export function reminderDue(a, kind, now = Date.now()) {
   const event = berlinInstant(a.date, appointmentTime(a))
   if (!Number.isFinite(event)) return false
   let due
-  if (kind === 'reminder-10d') {
+  if (kind === 'reminder-7d') {
     const priorDate = new Date(`${a.date}T12:00:00Z`)
-    priorDate.setUTCDate(priorDate.getUTCDate() - 10)
+    priorDate.setUTCDate(priorDate.getUTCDate() - 7)
     due = berlinInstant(priorDate.toISOString().slice(0, 10), appointmentTime(a))
-  } else if (kind === 'reminder-48h') due = event - 48 * 3600000
+  } else if (kind === 'reminder-24h') due = event - 24 * 3600000
   else return false
   // Hobby Cron runs at most daily and may be almost an hour late. Keep a due reminder eligible until the appointment, so a missed daily tick catches up without sending after the event.
   return now >= due && now < event
