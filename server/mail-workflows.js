@@ -36,7 +36,21 @@ export async function runReminderCron(db, { transport } = {}) {
   const { data: queued, error } = await db.rpc('queue_due_reminders')
   // Missing reminder setup must not block existing registration confirmations.
   if (error) console.error('REMINDER_QUEUE_FAILED', { code: mailFailure(error).code })
-  return { ...recovery,queued: queued || 0, ...(error ? { reminderError: mailFailure(error).error } : {}), ...await drainMail({ db, transport }) }
+  const drainStarted = Date.now()
+  const reminders = await drainMail({ db, transport, kinds: ['reminder-7d', 'reminder-24h'], limit: 1000, concurrency: 5, budgetMs: 40000 })
+  const remainingBudget = Math.max(0, 40000 - (Date.now() - drainStarted))
+  const other = remainingBudget > 0
+    ? await drainMail({ db, transport, limit: 1000, concurrency: 5, budgetMs: remainingBudget })
+    : { sent: 0, failed: 0, uncertain: 0, skipped: 0 }
+  return {
+    ...recovery,
+    queued: queued || 0,
+    ...(error ? { reminderError: mailFailure(error).error } : {}),
+    sent: reminders.sent + other.sent,
+    failed: reminders.failed + other.failed,
+    uncertain: reminders.uncertain + other.uncertain,
+    skipped: reminders.skipped + other.skipped
+  }
 }
 
 const digest = value => createHash('sha256').update(JSON.stringify(value)).digest('hex')

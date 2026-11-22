@@ -92,7 +92,7 @@ export async function deliverMail(id, { db = createAdminSupabase(), transport = 
   }
 }
 
-export async function drainMail({ participantId, clubId, appointmentId, deliveryId, kind, transport = clubMailTransporter, limit = 20, budgetMs = 40000, db = createAdminSupabase() } = {}) {
+export async function drainMail({ participantId, clubId, appointmentId, deliveryId, kind, kinds, transport = clubMailTransporter, limit = 20, concurrency = 1, budgetMs = 40000, db = createAdminSupabase() } = {}) {
   // A worker crash may occur after SMTP accepted DATA. Never blindly retry it.
   const scoped = query => {
     if (participantId) query = query.eq('participant_id', participantId)
@@ -104,18 +104,30 @@ export async function drainMail({ participantId, clubId, appointmentId, delivery
   }
   const stale = await scoped(db.from('mail_deliveries').update({ status: 'uncertain', error_code: 'INTERRUPTED' }).eq('status', 'sending').lt('claimed_at', new Date(Date.now() - 10 * 60000).toISOString()))
   if (stale.error) throw stale.error
-  let query = db.from('mail_deliveries').select('id').in('status', ['pending', 'failed']).lt('attempts', 5).lte('next_attempt_at', new Date().toISOString()).order('created_at').limit(limit)
-  const { data, error } = await scoped(query)
-  if (error) throw error
   let sent = 0, failed = 0, uncertain = 0, skipped = 0
   const start = Date.now()
-  for (const row of data || []) {
-    if (Date.now() - start > budgetMs) break
-    const result = await deliverMail(row.id, { db, transport })
-    if (result.sent) sent++
-    if (result.status === 'failed') failed++
-    if (result.status === 'uncertain') uncertain++
-    if (result.skipped) skipped++
+  const workers = Math.max(1, Math.min(10, Math.floor(concurrency) || 1))
+  let budgetExpired = false
+  while (Date.now() - start < budgetMs) {
+    let query = db.from('mail_deliveries').select('id').in('status', ['pending', 'failed']).lt('attempts', 5).lte('next_attempt_at', new Date().toISOString()).order('created_at').limit(limit)
+    if (kinds?.length) query = query.in('kind', kinds)
+    const { data, error } = await scoped(query)
+    if (error) throw error
+    if (!data?.length) break
+    let cursor = 0
+    const runWorker = async () => {
+      while (cursor < data.length) {
+        if (Date.now() - start >= budgetMs) { budgetExpired = true; return }
+        const row = data[cursor++]
+        const result = await deliverMail(row.id, { db, transport })
+        if (result.sent) sent++
+        if (result.status === 'failed') failed++
+        if (result.status === 'uncertain') uncertain++
+        if (result.skipped) skipped++
+      }
+    }
+    await Promise.all(Array.from({ length: Math.min(workers, data.length) }, runWorker))
+    if (budgetExpired) break
   }
   return { sent, failed, uncertain, skipped }
 }

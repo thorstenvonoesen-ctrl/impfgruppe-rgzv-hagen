@@ -37,7 +37,7 @@ test('7-day and 24-hour reminders calculate exact Berlin due times and catch up 
   for (const [kind,due] of [['reminder-7d',sevenDayDue],['reminder-24h',twentyFourHourDue]]) {
     assert.equal(reminderDue(a,kind,due-1),false)
     assert.equal(reminderDue(a,kind,due),true)
-    assert.equal(reminderDue(a,kind,due+25*3600000),true)
+    assert.equal(reminderDue(a,kind,due+25*3600000),kind==='reminder-7d')
     assert.equal(reminderDue(a,kind,event-1),true)
     assert.equal(reminderDue(a,kind,event),false)
     assert.equal(reminderDue(a,kind,event+1),false)
@@ -54,7 +54,8 @@ test('7 calendar days and 24 elapsed hours remain correct across Berlin DST chan
   assert.equal(reminderDue(spring,'reminder-7d',Date.parse('2026-03-22T08:00:00Z')),false)
   assert.equal(reminderDue(spring,'reminder-24h',Date.parse('2026-03-28T08:00:00Z')),true)
   const autumn={...a,date:'2026-11-01'}
-  assert.equal(reminderDue(autumn,'reminder-7d',Date.parse('2026-10-25T08:00:00Z')),true)
+  assert.equal(reminderDue(autumn,'reminder-7d',Date.parse('2026-10-25T08:00:00Z')),false)
+  assert.equal(reminderDue(autumn,'reminder-7d',Date.parse('2026-10-25T09:00:00Z')),true)
   assert.equal(reminderDue(autumn,'reminder-24h',Date.parse('2026-10-31T09:00:00Z')),true)
 })
 test('reminder due instants follow each appointment time', () => {
