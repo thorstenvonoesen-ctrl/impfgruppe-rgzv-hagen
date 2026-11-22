@@ -8293,10 +8293,43 @@ footer a { color: var(--aurora-blue) !important; }
   word-break: normal;
 }
 .mail-test-panel > p:empty { display: none; }
-.mail-test-panel .mail-test-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
+.mail-test-menu { position: relative; display: inline-block; margin: 4px 0 10px; }
+.mail-test-menu > summary {
+  cursor: pointer;
+  list-style: none;
+  min-height: 42px;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
   gap: 10px;
+  padding: 10px 14px;
+  border: 1px solid #cbd2df;
+  border-radius: 8px;
+  background: #fff;
+  color: #17203f;
+  font-weight: 700;
+}
+.mail-test-menu > summary::-webkit-details-marker { display: none; }
+.mail-test-menu > summary::after { content: '▾'; }
+.mail-test-menu[open] > summary::after { content: '▴'; }
+.mail-test-menu-popup {
+  position: absolute;
+  z-index: 20;
+  top: calc(100% + 6px);
+  left: 0;
+  display: grid;
+  grid-template-columns: minmax(220px, 1fr);
+  gap: 4px;
+  width: max-content;
+  min-width: min(280px, calc(100vw - 48px));
+  max-width: calc(100vw - 48px);
+  max-height: min(60vh, 420px);
+  overflow-y: auto;
+  padding: 8px;
+  border: 1px solid #cbd2df;
+  border-radius: 10px;
+  background: #fff;
+  box-shadow: 0 12px 32px rgb(23 32 63 / 18%);
 }
 .mail-test-panel .mail-test-actions {
   display: flex;
@@ -8316,7 +8349,7 @@ footer a { color: var(--aurora-blue) !important; }
   line-height: 1.4;
   text-align: center;
 }
-.mail-test-panel .mail-test-grid > button { width: 100%; }
+.mail-test-panel .mail-test-menu-popup > button { width: 100%; text-align: left; }
 .mail-test-panel .table-wrap { min-width: 0; max-width: 100%; overflow: visible; }
 .mail-test-panel table { width: 100%; min-width: 0; table-layout: fixed; }
 .mail-test-panel th,
@@ -8324,7 +8357,9 @@ footer a { color: var(--aurora-blue) !important; }
 @media (max-width: 620px) {
   .mail-test-panel,
   .admin .admin-workspace-content .admin-dashboard-layout > .mail-test-panel { padding: 18px 16px; }
-  .mail-test-panel .mail-test-grid { grid-template-columns: minmax(0, 1fr); }
+  .mail-test-menu { width: 100%; }
+  .mail-test-menu > summary { justify-content: space-between; }
+  .mail-test-menu-popup { width: 100%; min-width: 0; box-sizing: border-box; }
   .mail-test-panel .mail-test-actions { display: grid; grid-template-columns: minmax(0, 1fr); }
 }
 /* Members are a full-width dashboard section, not one of its twelve tracks. */

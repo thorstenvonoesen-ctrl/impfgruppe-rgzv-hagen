@@ -77,7 +77,12 @@ export function MailTestPanel({ clubId }) {
     <p role="status">{message}</p>
     {open && <>
       <p>{recipient ? `Alle Testmails gehen ausschließlich an ${recipient}.` : 'Testversand deaktiviert: MAIL_TEST_RECIPIENT muss mit Ihrer eigenen Testadresse konfiguriert werden.'} Es werden nur Musterdaten verwendet.</p>
-      <div className="mail-test-grid">{types.map(([kind,label]) => <button className="small" key={kind} disabled={busy || !recipient} onClick={() => { if (window.confirm(`Diese Testmail ausschließlich an ${recipient} senden?`)) run('test-mail', kind) }}>{label} testen</button>)}</div>
+      <details className="mail-test-menu">
+        <summary aria-label="Testmail-Funktion auswählen">Testmail-Funktion auswählen</summary>
+        <div className="mail-test-menu-popup" role="group" aria-label="Verfügbare Testmails">
+          {types.map(([kind,label]) => <button className="small" key={kind} disabled={busy || !recipient} onClick={() => { if (window.confirm(`Diese Testmail ausschließlich an ${recipient} senden?`)) run('test-mail', kind) }}>{label} testen</button>)}
+        </div>
+      </details>
       <p className="mail-test-actions"><button className="small" disabled={busy} onClick={() => run('mail-status')}>Versandstatus laden</button> <button className="small" disabled={busy} onClick={() => run('retry-pending')}>Offene Zustellungen fortsetzen</button></p>
       <p>Unklare Zustellungen werden nicht automatisch erneut gesendet. Sie müssen zuerst anhand des SMTP-Protokolls geprüft werden.</p>
       {deliveries.length > 0 && <>
