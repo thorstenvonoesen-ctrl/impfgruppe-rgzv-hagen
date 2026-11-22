@@ -45,22 +45,23 @@ export function MailTestPanel({ clubId }) {
   const [message, setMessage] = useState('')
   const [deliveries, setDeliveries] = useState([])
   const [deliverySearch, setDeliverySearch] = useState('')
+  const [reminderDate, setReminderDate] = useState('2026-11-29')
   const visibleDeliveries = deliveries.filter(row => [row.participantName,row.recipient,row.appointmentTitle,row.appointmentDate].join(' ').toLocaleLowerCase('de').includes(deliverySearch.trim().toLocaleLowerCase('de')))
   const confirmationWarning = result => [
     result.pendingConfirmations ? `${result.pendingConfirmations >= 100 ? 'Mindestens ' : ''}${result.pendingConfirmations} Bestätigungen warten auf die Erstellung eines Versandauftrags. Nach Datenbankreparatur „Offene Zustellungen fortsetzen“ verwenden.` : '',
     result.confirmationQueueWarning || '', result.reconcileError || ''
   ].filter(Boolean).join(' ')
-  async function run(action, kind) {
+  async function run(action, kind, extra = {}) {
     setBusy(true)
     try {
-      const result = await mailRequest({ action, clubId, ...(action === 'retry-delivery' ? { deliveryId: kind } : { kind }) })
+      const result = await mailRequest({ action, clubId, ...(action === 'retry-delivery' ? { deliveryId: kind } : { kind }), ...extra })
       if (action === 'test-config') { setRecipient(result.recipient); setOpen(true) }
       else if (action === 'mail-status') {
         setDeliveries(result.deliveries)
         setMessage([result.deliveries.length ? 'Versandstatus aktualisiert.' : 'Keine Versandaufträge für diesen Verein vorhanden.', confirmationWarning(result)].filter(Boolean).join(' '))
       }
       else {
-        setMessage(action === 'test-mail' ? `Testmail versendet an ${result.recipient}.` : `${result.sent} an den Mailserver übergeben, ${result.failed || 0} fehlgeschlagen, ${result.uncertain || 0} unklar.`)
+        setMessage(action === 'test-mail' ? `Testmail versendet an ${result.recipient}.` : action === 'send-due-reminders' ? `${result.appointmentTitle} · ${result.appointmentDate.split('-').reverse().join('.')}: ${result.sent} Erinnerungen an den Mailserver übergeben, ${result.failed || 0} fehlgeschlagen, ${result.uncertain || 0} unklar.` : `${result.sent} an den Mailserver übergeben, ${result.failed || 0} fehlgeschlagen, ${result.uncertain || 0} unklar.`)
         if (action === 'retry-delivery' || action === 'retry-pending') {
           const status=await mailRequest({ action: 'mail-status', clubId })
           setDeliveries(status.deliveries)
@@ -84,6 +85,7 @@ export function MailTestPanel({ clubId }) {
         </div>
       </details>
       <p className="mail-test-actions"><button className="small" disabled={busy} onClick={() => run('mail-status')}>Versandstatus laden</button> <button className="small" disabled={busy} onClick={() => run('retry-pending')}>Offene Zustellungen fortsetzen</button></p>
+      <div className="mail-test-actions"><label>Fällige Erinnerungen für Impftermin am <input type="date" value={reminderDate} onChange={event => setReminderDate(event.target.value)} /></label> <button className="small" disabled={busy || !reminderDate} onClick={() => { if (window.confirm(`Nur fällige Erinnerungen für angemeldete Teilnehmer am ${reminderDate.split('-').reverse().join('.') } anstoßen? Andere E-Mail-Arten und Termine bleiben unberührt.`)) run('send-due-reminders', null, { appointmentDate: reminderDate }) }}>Fällige Erinnerungen jetzt senden</button></div>
       <p>Unklare Zustellungen werden nicht automatisch erneut gesendet. Sie müssen zuerst anhand des SMTP-Protokolls geprüft werden.</p>
       {deliveries.length > 0 && <>
         <label>Anmeldung im Versandstatus suchen<input type="search" placeholder="Name, E-Mail oder Impftermin" value={deliverySearch} onChange={event=>setDeliverySearch(event.target.value)} /></label>

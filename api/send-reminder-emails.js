@@ -184,6 +184,20 @@ return async function handler(req, res) {
     if (!clubId || !await authorizeMailAdmin(req, supabase, clubId)) return res.status(403).json({ error: 'Keine Berechtigung.' })
     if (action === 'test-config') return res.status(200).json({ recipient: testRecipient() })
     if (action === 'test-mail') return res.status(200).json(await sendTestMail(req.body.kind, transport))
+    if (action === 'send-due-reminders') {
+      const appointmentDate = String(req.body.appointmentDate || '')
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(appointmentDate)) return res.status(400).json({ error: 'Bitte ein gültiges Impftermin-Datum angeben.' })
+      const { data: dates, error: dateError } = await supabase.from('vaccination_dates').select('id,title,date,archived').eq('club_id', clubId).eq('date', appointmentDate)
+      if (dateError) throw dateError
+      const appointments = (dates || []).filter(item => !item.archived && !isTestAppointment(item))
+      if (appointments.length !== 1) return res.status(404).json({ error: 'Für dieses Datum wurde nicht genau ein aktiver Impftermin gefunden. Es wurde nichts versendet.' })
+      const berlinToday = new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Berlin', year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date())
+      if (appointmentDate <= berlinToday) return res.status(400).json({ error: 'Manuell können nur Erinnerungen für einen zukünftigen Impftermin ausgelöst werden.' })
+      const { error: queueError } = await supabase.rpc('queue_due_reminders')
+      if (queueError) throw queueError
+      const result = await drainMail({ clubId, appointmentId: appointments[0].id, kinds: ['reminder-7d', 'reminder-24h'], limit: 1000, concurrency: 5, budgetMs: 40000, db: supabase, transport })
+      return res.status(200).json({ appointmentTitle: appointments[0].title, appointmentDate, ...result })
+    }
     if (action === 'retry-pending') return res.status(200).json({ ...await reconcileRegistrationConfirmations(supabase,{clubId}),...await drainMail({ clubId, db: supabase, transport }) })
     if (action === 'recover-confirmation') {
       const { data: job, error } = await supabase.rpc('ensure_registration_confirmation', { target_club: clubId, target_participant: req.body.participantId })
