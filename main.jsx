@@ -4864,7 +4864,7 @@ if (!showForm) {
   }}
 >
   10 € für Gäste<br />
-  5 € für Mitglieder des {club?.name || 'Vereins'} mit gültigem Mitgliedscode
+  5 € für Mitglieder des {club?.name || 'Vereins'}
 </p>
       <aside className="participation-fee-notice" role="note">
         <span className="participation-fee-notice-icon" aria-hidden="true">!</span>
@@ -4964,7 +4964,7 @@ if (!showForm) {
             <div className="signup-step-heading"><span>01</span><div><h3>Ihre Daten</h3><p>Persönliche Angaben, Anschrift und Halterdaten</p></div></div>
             <div className="signup-fields-row signup-fields-row-three signup-personal-row"><Input label="Vorname" name="firstname" value={form.firstname} onChange={update} required/><Input label="Nachname" name="lastname" value={form.lastname} onChange={update} required/><Input label="E-Mail" name="email" type="email" value={form.email} onChange={update} onBlur={checkPreviousRegistration} required/></div>
             <div className="signup-fields-row signup-address-row"><Input label="Straße" name="street" value={form.street} onChange={update}/><Input label="Hausnummer" name="housenumber" value={form.housenumber} onChange={update}/><Input label="PLZ" name="zipcode" value={form.zipcode} onChange={update}/><Input label="Ort" name="city" value={form.city} onChange={update}/></div>
-            <div className="signup-fields-row signup-fields-row-three signup-holder-row">
+            <div className="signup-fields-row signup-holder-row">
               <Input label="Telefon" name="phone" value={form.phone} onChange={update}/>
               <label htmlFor="signup-tsk-number">
                 <span>TSK-Betriebsnummer <span aria-hidden="true">*</span></span>
@@ -4972,9 +4972,10 @@ if (!showForm) {
                   aria-describedby="signup-tsk-hint" value={form.tsk_number} onChange={update} required/>
                 <small id="signup-tsk-hint" className="signup-input-hint">Nur Ziffern, z. B. beginnend mit 276059</small>
               </label>
-              <Input label="Mitgliedercode (optional)" name="member_code" value={form.member_code} onChange={update}/>
+              <div hidden>
+                <Input label="Mitgliedercode (optional)" name="member_code" value={form.member_code} onChange={update}/>
+              </div>
             </div>
-            <p className="signup-field-note">Optional: Mitglieder Ihres Vereins erhalten bei Eingabe eines gültigen Mitgliedscodes automatisch den vergünstigten Preis.</p>
             <MembershipTariff email={form.email} appointmentId={form.vaccination_date_id} memberCode={form.member_code} onVerification={setMembershipVerification} onQuote={setTariffQuote} />
 
           {reuseLookup.status === 'checking' && (
@@ -5092,7 +5093,7 @@ if (!showForm) {
           <div><dt>Tierbestand</dt><dd>{animalTotal > 0 ? `${animalTotal} Tiere` : 'Noch keine Anzahl'}</dd></div>
           <div><dt>Impfstoff</dt><dd>Newcastle-Impfung</dd></div>
           <div><dt>Zahlungsart</dt><dd>Barzahlung vor Ort</dd></div>
-          <div><dt>Teilnahmegebühr</dt><dd>{tariffQuote?.context === tariffContext(form.email,form.vaccination_date_id,form.member_code) ? `${Number(tariffQuote.amount).toLocaleString('de-DE',{style:'currency',currency:'EUR'})} · ${tariffQuote.source === 'guest' ? 'Regulärer Tarif' : tariffQuote.source === 'code' ? 'Mitgliedercode akzeptiert' : 'Mitgliedertarif bestätigt'}` : `${club?.guest_price ?? 10} € regulär · ${club?.member_price ?? 5} € bei bestätigter Mitgliedschaft oder gültigem Code`}</dd></div>
+          <div><dt>Teilnahmegebühr</dt><dd>{tariffQuote?.context === tariffContext(form.email,form.vaccination_date_id,form.member_code) ? `${Number(tariffQuote.amount).toLocaleString('de-DE',{style:'currency',currency:'EUR'})} · ${tariffQuote.source === 'guest' ? 'Regulärer Tarif' : 'Mitgliedertarif bestätigt'}` : `${club?.guest_price ?? 10} € regulär · ${club?.member_price ?? 5} € für Mitglieder`}</dd></div>
         </dl>
       </aside>
       </div>

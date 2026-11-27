@@ -49,7 +49,7 @@ export default function MembershipTariff({ email='', appointmentId, memberCode='
     } catch(error){if(scopeRef.current===requestScope) setMessage(error.message)}finally{setBusy(false)}
   }
   return <div className="membership-tariff">
-    <p>{showTariff?'Aktive Mitglieder werden anhand ihrer hinterlegten E-Mail-Adresse automatisch zum Mitgliedertarif zugeordnet. Ein E-Mail-Einmalcode ist dafür nicht erforderlich. Alternativ bleibt der Mitgliedercode gültig.':'Für die Änderung oder Korrektur einer bestehenden Anmeldung bestätigen Sie bitte Ihre E-Mail-Adresse.'}</p>
+    <p>{showTariff?'Aktive Mitglieder erhalten den Mitgliedertarif automatisch, wenn sie ihre hinterlegte E-Mail-Adresse angeben.':'Für die Änderung oder Korrektur einer bestehenden Anmeldung bestätigen Sie bitte Ihre E-Mail-Adresse.'}</p>
     {!appointmentId && <p>Bitte zuerst einen Impftermin auswählen.</p>}
     <button type="button" className="ghost" disabled={busy||!appointmentId||!email.trim()} onClick={()=>verify('membership-challenge')}>{busy?'Wird geprüft …':currentProof?'E-Mail erneut bestätigen':showTariff?'E-Mail optional bestätigen':'E-Mail für Mitgliederprüfung bestätigen'}</button>
     {challenge?.scope===scope && <div>
