@@ -4968,9 +4968,10 @@ if (!showForm) {
               <Input label="Telefon" name="phone" value={form.phone} onChange={update}/>
               <label htmlFor="signup-tsk-number">
                 <span>TSK-Betriebsnummer <span aria-hidden="true">*</span></span>
-                <input id="signup-tsk-number" name="tsk_number" inputMode="numeric" pattern="[0-9]+"
+                <input id="signup-tsk-number" name="tsk_number" inputMode="numeric" pattern="276059[0-9]+"
+                  title="Die TSK-Betriebsnummer muss mit 276059 beginnen und darf nur Ziffern enthalten."
                   aria-describedby="signup-tsk-hint" value={form.tsk_number} onChange={update} required/>
-                <small id="signup-tsk-hint" className="signup-input-hint">Nur Ziffern, z. B. beginnend mit 276059</small>
+                <small id="signup-tsk-hint" className="signup-input-hint">Muss mit 276059 beginnen. Nur Ziffern.</small>
               </label>
               <div hidden>
                 <Input label="Mitgliedercode (optional)" name="member_code" value={form.member_code} onChange={update}/>

@@ -222,6 +222,9 @@ return async function handler(req, res) {
     if (typeof input.tsk_number !== 'string' || /[^0-9]/.test(input.tsk_number)) {
       return res.status(400).json({ error: 'Die TSK-Betriebsnummer darf nur Ziffern enthalten.' })
     }
+    if (!input.tsk_number.startsWith('276059') || input.tsk_number.length === 6) {
+      return res.status(400).json({ error: 'Die TSK-Betriebsnummer muss mit 276059 beginnen. Bitte geben Sie die vollständige Nummer ein.' })
+    }
     const animalRegistration = buildAnimalRegistration(input)
     if (animalRegistration.error) {
       return res.status(400).json({ error: animalRegistration.error })
