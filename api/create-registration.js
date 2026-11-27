@@ -219,6 +219,9 @@ return async function handler(req, res) {
     if (!vaccinationDateId || !input.firstname || !input.lastname || !input.email || !input.tsk_number) {
       return res.status(400).json({ error: 'Bitte alle Pflichtfelder ausfüllen.' })
     }
+    if (typeof input.tsk_number !== 'string' || /[^0-9]/.test(input.tsk_number)) {
+      return res.status(400).json({ error: 'Die TSK-Betriebsnummer darf nur Ziffern enthalten.' })
+    }
     const animalRegistration = buildAnimalRegistration(input)
     if (animalRegistration.error) {
       return res.status(400).json({ error: animalRegistration.error })

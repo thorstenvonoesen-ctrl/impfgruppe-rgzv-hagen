@@ -7295,6 +7295,8 @@ footer a { color: var(--aurora-blue) !important; }
 }
 .signup-step input[readonly] { color: #59637e; background: #f1f3f8; }
 .signup-field-note { margin: -7px 0 0; color: #75809a; font-size: 12px; line-height: 1.55; }
+.signup-page .signup-holder-row > label:has(.signup-input-hint) { white-space: normal; }
+.signup-input-hint { display: block; margin-top: 4px; color: var(--rgzv-muted); font-size: 12px; font-weight: 400; }
 .signup-step .signup-animal-counts {
   padding: 13px;
   grid-template-columns: repeat(3,minmax(0,1fr));

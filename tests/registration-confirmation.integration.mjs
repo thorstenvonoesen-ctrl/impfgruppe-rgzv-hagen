@@ -49,7 +49,7 @@ try {
   // Exact reported failure path: queue exists but no registration trigger.
   assert.equal((await drainMail({db,participantId:old,transport})).sent,0)
   assert.equal(await scalar('select count(*)::int from mail_deliveries'),0)
-  const body={vaccination_date_id:date,firstname:'New',lastname:'Fixture',email:'new@example.invalid',tsk_number:'FIXTURE',chicken_count:2,bantam_count:0,turkey_count:0,member_code:'KEEP-CODE'}
+  const body={vaccination_date_id:date,firstname:'New',lastname:'Fixture',email:'new@example.invalid',tsk_number:'276059000001',chicken_count:2,bantam_count:0,turkey_count:0,member_code:'KEEP-CODE'}
   assert.equal((await request(handler,body)).code,503)
   assert.equal(await scalar('select count(*)::int from participants'),1)
   const repair=await readFile(new URL('../supabase/repair/COMPLETE_REGISTRATION_REPAIR.sql',import.meta.url),'utf8')

@@ -4377,6 +4377,7 @@ function PublicSignup() {
 
   const update = e => {
     const { name, value } = e.target
+    if (name === 'tsk_number' && /[^0-9]/.test(value)) return
     if (participantAnimalCountFields.some(item => item.field === name) && value !== '' && !/^\d+$/.test(value)) return
     setForm(current => ({ ...current, [name]: value }))
 
@@ -4454,7 +4455,7 @@ function PublicSignup() {
         zipcode: profile.zipcode || '',
         city: profile.city || '',
         phone: profile.phone || '',
-        tsk_number: profile.tsk_number || ''
+        tsk_number: /[^0-9]/.test(profile.tsk_number || '') ? '' : String(profile.tsk_number || '')
       }))
       setReuseLookup({ status: 'applied', email: lookupEmail, token: '' })
       setReuseConfirmation('Ihre Stammdaten wurden übernommen. Bitte prüfen Sie die Angaben und ergänzen Sie Tierzahl, Impfstoff und Impftermin.')
@@ -4965,7 +4966,12 @@ if (!showForm) {
             <div className="signup-fields-row signup-address-row"><Input label="Straße" name="street" value={form.street} onChange={update}/><Input label="Hausnummer" name="housenumber" value={form.housenumber} onChange={update}/><Input label="PLZ" name="zipcode" value={form.zipcode} onChange={update}/><Input label="Ort" name="city" value={form.city} onChange={update}/></div>
             <div className="signup-fields-row signup-fields-row-three signup-holder-row">
               <Input label="Telefon" name="phone" value={form.phone} onChange={update}/>
-              <Input label="TSK Betriebsnummer." name="tsk_number" value={form.tsk_number} onChange={update} required/>
+              <label htmlFor="signup-tsk-number">
+                TSK-Betriebsnummer (Pflichtfeld)
+                <input id="signup-tsk-number" name="tsk_number" inputMode="numeric" pattern="[0-9]+"
+                  aria-describedby="signup-tsk-hint" value={form.tsk_number} onChange={update} required/>
+                <small id="signup-tsk-hint" className="signup-input-hint">Nur Ziffern eingeben. Die Nummer beginnt zum Beispiel mit 276059.</small>
+              </label>
               <Input label="Mitgliedercode (optional)" name="member_code" value={form.member_code} onChange={update}/>
             </div>
             <p className="signup-field-note">Optional: Mitglieder Ihres Vereins erhalten bei Eingabe eines gültigen Mitgliedscodes automatisch den vergünstigten Preis.</p>

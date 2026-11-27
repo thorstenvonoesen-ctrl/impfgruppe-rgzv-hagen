@@ -54,7 +54,7 @@ try{
   await pg.exec(normalization);await pg.exec(normalization)
   assert.equal(Number(await scalar('select payment_amount from participants where id=$1',[legacy])),4.2)
   assert.deepEqual(await scalar('select jsonb_agg(m order by id) from club_members m'),membersBefore)
-  const signup={vaccination_date_id:date,firstname:'Fixture',lastname:'Person',tsk_number:'FIXTURE',chicken_count:2,bantam_count:0,turkey_count:0}
+  const signup={vaccination_date_id:date,firstname:'Fixture',lastname:'Person',tsk_number:'276059000001',chicken_count:2,bantam_count:0,turkey_count:0}
   const quote=async(email,proof,memberCode)=>request({action:'registration-price',email,vaccinationDateId:date,proof,memberCode})
   const mixedProof=await verify('mixed@example.invalid')
   assert.equal((await quote(' MIXED@EXAMPLE.INVALID ',mixedProof)).body.amount,6.75)
