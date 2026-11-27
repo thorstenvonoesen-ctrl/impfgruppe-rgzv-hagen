@@ -679,6 +679,26 @@ const HOME_BENEFITS = [
 
 const LANDING_BENEFITS = [HOME_BENEFITS[0], HOME_BENEFITS[2], HOME_BENEFITS[4], HOME_BENEFITS[5]]
 
+function TskRegistrationNotice() {
+  const [paused, setPaused] = useState(false)
+  const notice = 'Für die Anmeldung ist die TSK-Betriebsnummer Pflicht. Sie muss mit 276059 beginnen und darf nur Ziffern enthalten.'
+
+  return (
+    <aside className="landing-tsk-notice" aria-label="Neue Vorgabe zur Impfanmeldung">
+      <strong>Wichtiger Hinweis</strong>
+      <div className="landing-tsk-window">
+        <div className="landing-tsk-track" data-paused={paused}>
+          <span>{notice}</span>
+          <span aria-hidden="true">{notice}</span>
+        </div>
+      </div>
+      <button type="button" className="landing-tsk-toggle" onClick={() => setPaused(current => !current)}>
+        {paused ? 'Starten' : 'Pausieren'}
+      </button>
+    </aside>
+  )
+}
+
 function HomeBenefitInfoField({ benefit, index, isOpen, onOpen, onClose, onToggle }) {
   const [Icon, label, title, description] = benefit
   const fieldRef = useRef(null)
@@ -1509,6 +1529,7 @@ export function ClubSelect({ heroVisual, preview = false }) {
       <Header preview={preview} />
 
       <main className="landing-main">
+        <TskRegistrationNotice />
         <section className="landing-hero">
           <div className="landing-hero-copy">
             <span className="landing-eyebrow"><ShieldCheck size={15}/> Newcastle-Sammelimpfung</span>
