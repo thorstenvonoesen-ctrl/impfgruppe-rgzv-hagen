@@ -681,11 +681,11 @@ const LANDING_BENEFITS = [HOME_BENEFITS[0], HOME_BENEFITS[2], HOME_BENEFITS[4], 
 
 function TskRegistrationNotice() {
   const [paused, setPaused] = useState(false)
-  const notice = 'Für die Anmeldung ist die TSK-Betriebsnummer Pflicht. Sie muss mit 276059 beginnen und darf nur Ziffern enthalten.'
+  const notice = 'Bei der Impfanmeldung ist die TSK-Betriebsnummer jetzt ein Pflichtfeld. Bitte geben Sie die vollständige Nummer ein. Sie muss mit 276059 beginnen und darf nur Ziffern enthalten.'
 
   return (
     <aside className="landing-tsk-notice" aria-label="Neue Vorgabe zur Impfanmeldung">
-      <strong>Wichtiger Hinweis</strong>
+      <strong>Neu bei der Impfanmeldung</strong>
       <div className="landing-tsk-window">
         <div className="landing-tsk-track" data-paused={paused}>
           <span>{notice}</span>
