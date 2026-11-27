@@ -1544,7 +1544,7 @@ body { background: #163a2f; }
 .signup-page .signup-fields-row { gap: 8px; }
 .signup-page .signup-personal-row { grid-template-columns: minmax(0, .8fr) minmax(0, .9fr) minmax(0, 1.3fr); }
 .signup-page .signup-address-row { grid-template-columns: minmax(0, 2fr) minmax(62px, .55fr) minmax(62px, .55fr) minmax(0, 1.3fr) !important; }
-.signup-page .signup-holder-row { grid-template-columns: minmax(0, .85fr) minmax(0, 1.15fr) minmax(0, 1.1fr); }
+.signup-page .signup-holder-row { grid-template-columns: minmax(0, .85fr) minmax(0, 1.15fr) minmax(0, 1.1fr); align-items: start; }
 .signup-page .signup-step label { gap: 3px; }
 .signup-page .signup-step input:not([type="radio"]):not([type="checkbox"]),
 .signup-page .signup-step select { min-height: 40px; padding: 7px 11px; border-radius: 9px; }
@@ -7296,7 +7296,7 @@ footer a { color: var(--aurora-blue) !important; }
 .signup-step input[readonly] { color: #59637e; background: #f1f3f8; }
 .signup-field-note { margin: -7px 0 0; color: #75809a; font-size: 12px; line-height: 1.55; }
 .signup-page .signup-holder-row > label:has(.signup-input-hint) { white-space: normal; }
-.signup-input-hint { display: block; margin-top: 4px; color: var(--rgzv-muted); font-size: 12px; font-weight: 400; }
+.signup-input-hint { color: var(--rgzv-muted); font-size: 11px; font-weight: 400; line-height: 1.35; }
 .signup-step .signup-animal-counts {
   padding: 13px;
   grid-template-columns: repeat(3,minmax(0,1fr));

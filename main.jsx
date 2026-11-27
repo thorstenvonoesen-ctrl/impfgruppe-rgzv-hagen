@@ -4967,10 +4967,10 @@ if (!showForm) {
             <div className="signup-fields-row signup-fields-row-three signup-holder-row">
               <Input label="Telefon" name="phone" value={form.phone} onChange={update}/>
               <label htmlFor="signup-tsk-number">
-                TSK-Betriebsnummer (Pflichtfeld)
+                <span>TSK-Betriebsnummer <span aria-hidden="true">*</span></span>
                 <input id="signup-tsk-number" name="tsk_number" inputMode="numeric" pattern="[0-9]+"
                   aria-describedby="signup-tsk-hint" value={form.tsk_number} onChange={update} required/>
-                <small id="signup-tsk-hint" className="signup-input-hint">Nur Ziffern eingeben. Die Nummer beginnt zum Beispiel mit 276059.</small>
+                <small id="signup-tsk-hint" className="signup-input-hint">Nur Ziffern, z. B. beginnend mit 276059</small>
               </label>
               <Input label="Mitgliedercode (optional)" name="member_code" value={form.member_code} onChange={update}/>
             </div>
