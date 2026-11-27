@@ -6003,6 +6003,7 @@ function AdminDashboard({ onLogout, logoutError, adminContext }) {
   const [isVaccinationDay, setIsVaccinationDay] = useState(false)
   const [q, setQ] = useState('')
   const [statusFilter, setStatusFilter] = useState('all')
+  const [participantDateId, setParticipantDateId] = useState('')
   const [loading, setLoading] = useState(true)
   const [mailDialogOpen, setMailDialogOpen] = useState(false)
   const [campaignKind, setCampaignKind] = useState('appointment-change')
@@ -6653,8 +6654,12 @@ setIsVaccinationDay(
   const activeDashboardParticipants = activeDashboardAppointment
     ? bindingParticipants.filter(participant => String(participant.vaccination_date_id) === String(activeDashboardAppointment.id))
     : []
-  const filtered = activeParticipants.filter(p => {
-  const matchesSearch = `${p.firstname} ${p.lastname} ${p.city} ${p.email}`.toLowerCase().includes(q.toLowerCase())
+  const participantDate = activeVaccinationDates.find(date => String(date.id) === participantDateId)
+  const appointmentParticipants = participantDate
+    ? activeParticipants.filter(p => String(p.vaccination_date_id) === participantDateId)
+    : []
+  const filtered = appointmentParticipants.filter(p => {
+  const matchesSearch = `${p.firstname} ${p.lastname} ${p.city} ${p.email} ${p.tsk_number || ''}`.toLowerCase().includes(q.toLowerCase())
   const matchesStatus =
     (statusFilter === 'all' && isBindingRegistration(p)) ||
     (statusFilter === 'paid' && isBindingRegistration(p) && p.payment_status === 'bezahlt') ||
@@ -7477,6 +7482,16 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
       marginBottom: '20px'
     }}
   >
+    <label className="participant-date-control">
+      Impftermin
+      <select value={participantDate?.id ?? ''} onChange={event => setParticipantDateId(event.target.value)} disabled={loading}>
+        <option value="">Impftermin auswählen</option>
+        {activeVaccinationDates.map(date => (
+          <option key={date.id} value={date.id}>{date.title} · {formatGermanVaccinationDate(date.date)}</option>
+        ))}
+      </select>
+    </label>
+    {participantDate && <>
     <div className="search" style={{ flex: '1' }}>
       <Search size={18} />
       <input
@@ -7500,15 +7515,20 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
       <option value="payment_failed">Zahlung fehlgeschlagen</option>
     </select>
 
-    <details className="participant-export-actions"><summary>Export und Bescheinigungen</summary><ExportButtons
+    <details key={participantDateId} className="participant-export-actions"><summary>Export und Bescheinigungen</summary><ExportButtons
       participants={filtered.filter(isBindingRegistration)}
-      certificateParticipants={activeParticipants}
-      vaccinationDates={activeVaccinationDates}
+      certificateParticipants={appointmentParticipants}
+      vaccinationDates={[participantDate]}
     /></details>
+    </>}
   </div>
 
   {loading ? (
     <p>Lade...</p>
+  ) : !participantDate ? (
+    <p>{activeVaccinationDates.length ? 'Bitte wählen Sie einen Impftermin aus, um die Teilnehmer anzuzeigen.' : 'Es sind keine Impftermine verfügbar.'}</p>
+  ) : !filtered.length ? (
+    <p>Für diesen Impftermin wurden mit den aktuellen Filtern keine Teilnehmer gefunden.</p>
   ) : (
     <div className="table-scroll">
     <table>

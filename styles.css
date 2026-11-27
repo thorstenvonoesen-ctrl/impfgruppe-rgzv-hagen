@@ -8488,6 +8488,8 @@ footer a { color: var(--aurora-blue) !important; }
 .admin-mail-tools[open] > summary, .info-compact-details[open] > summary { margin-bottom: 16px; }
 .admin .admin-compact-layout .admin-mail-tools { border-style: dashed !important; }
 .admin-compact-layout .participant-toolbar { display: grid !important; grid-template-columns: minmax(200px, 1fr) minmax(180px, .7fr); gap: 12px !important; }
+.participant-date-control { grid-column: 1 / -1; display: grid; gap: 6px; width: min(100%, 480px); }
+.participant-date-control select { width: 100%; min-height: 44px; }
 .participant-toolbar .search { min-width: 0; }
 .participant-toolbar > select { width: 100%; min-width: 0; min-height: 44px; }
 .participant-toolbar .participant-export-actions { grid-column: 1 / -1; border-top: 1px solid #ddd6ca; }
