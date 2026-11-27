@@ -182,6 +182,10 @@ function participantAnimalBreakdown(participant) {
     : []
 }
 
+function participantAnimalTotal(participant) {
+  return Number(participant.animal_count || participantAnimalBreakdown(participant).reduce((sum, item) => sum + item.count, 0))
+}
+
 function formatParticipantAnimals(participant) {
   const breakdown = participantAnimalBreakdown(participant)
   const total = Number(participant?.animal_count || breakdown.reduce((sum, item) => sum + item.count, 0))
@@ -6701,13 +6705,13 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
 
   autoTable(doc, {
     startY: 48,
-    head: [['Name', 'Adresse', 'E-Mail', 'TSK Betriebsnummer.', 'Tiere', 'Impfung', 'Zahlung']],
+    head: [['Name', 'Adresse', 'E-Mail', 'TSK Betriebsnummer.', 'Tierzahl', 'Impfung', 'Zahlung']],
     body: list.map(p => [
       `${p.firstname} ${p.lastname}`,
       `${p.street || ''} ${p.housenumber || ''}, ${p.zipcode || ''} ${p.city || ''}`,
       p.email || '',
       p.tsk_number || '',
-      formatParticipantAnimals(p),
+      participantAnimalTotal(p),
       p.vaccine || '',
       p.payment_status || 'offen'
     ])
@@ -6762,13 +6766,12 @@ doc.text(`Impftermin: ${v.title} - ${v.date}`, 14, 40)
 
       autoTable(doc, {
         startY: 120,
-        head: [['Name', 'Adresse', 'TSK Betriebsnummer', 'Tierart', 'Anzahl']],
+        head: [['Name', 'Adresse', 'TSK Betriebsnummer', 'Tierzahl']],
         body: list.map(participant => [
           `${participant.firstname || ''} ${participant.lastname || ''}`.trim(),
           `${participant.street || ''} ${participant.housenumber || ''}, ${participant.zipcode || ''} ${participant.city || ''}`.trim(),
           participant.tsk_number || '',
-          formatParticipantAnimals(participant),
-          participant.animal_count || ''
+          participantAnimalTotal(participant)
         ])
       })
 
@@ -7730,13 +7733,13 @@ function ExportButtons({ participants, certificateParticipants, vaccinationDates
   async function pdf() {
     const doc = new jsPDF({ orientation: 'landscape', format: 'a4' })
     autoTable(doc, {
-      head:[['Name','Adresse','E-Mail','TSK','Tiere','Impfung','Zahlung']],
+      head:[['Name','Adresse','E-Mail','TSK','Tierzahl','Impfung','Zahlung']],
       body: participants.map(p => [
         `${p.firstname} ${p.lastname}`,
         `${p.street||''} ${p.housenumber||''}, ${p.zipcode||''} ${p.city||''}`,
         p.email || '',
         p.tsk_number || '',
-        formatParticipantAnimals(p),
+        participantAnimalTotal(p),
         p.vaccine || '',
         p.payment_status || ''
       ])
@@ -7775,13 +7778,12 @@ function ExportButtons({ participants, certificateParticipants, vaccinationDates
 
     autoTable(doc, {
       startY: 120,
-      head:[['Name','Adresse','TSK Betriebsnummer','Tierart','Anzahl']],
+      head:[['Name','Adresse','TSK Betriebsnummer','Tierzahl']],
       body: checkedParticipants.map(p => [
         `${p.firstname} ${p.lastname}`,
         `${p.street||''} ${p.housenumber||''}, ${p.zipcode||''} ${p.city||''}`,
         p.tsk_number || '',
-        formatParticipantAnimals(p),
-        p.animal_count || ''
+        participantAnimalTotal(p)
       ])
     })
 
@@ -7837,13 +7839,12 @@ function ExportButtons({ participants, certificateParticipants, vaccinationDates
 
     autoTable(doc, {
       startY: 120,
-      head:[['Name','Adresse','TSK Betriebsnummer','Tierart','Anzahl']],
+      head:[['Name','Adresse','TSK Betriebsnummer','Tierzahl']],
       body: checkedParticipants.map(p => [
         `${p.firstname} ${p.lastname}`,
         `${p.street||''} ${p.housenumber||''}, ${p.zipcode||''} ${p.city||''}`,
         p.tsk_number || '',
-        formatParticipantAnimals(p),
-        p.animal_count || ''
+        participantAnimalTotal(p)
       ])
     })
 
