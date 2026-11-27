@@ -7728,7 +7728,7 @@ function ExportButtons({ participants, certificateParticipants, vaccinationDates
   }
 
   async function pdf() {
-    const doc = new jsPDF()
+    const doc = new jsPDF({ orientation: 'landscape', format: 'a4' })
     autoTable(doc, {
       head:[['Name','Adresse','E-Mail','TSK','Tiere','Impfung','Zahlung']],
       body: participants.map(p => [
